@@ -25,5 +25,6 @@ public class OSTest {
         System.out.println("path separator: " + OS.PATH_SEPARATOR);
         System.out.println("is mac os: " + OS.IS_MAC);
         System.out.println("is windows system: " + OS.IS_WINDOWS);
+        System.out.println("is windows 10: " + OS.IS_WINDOWS_10);
     }
 }

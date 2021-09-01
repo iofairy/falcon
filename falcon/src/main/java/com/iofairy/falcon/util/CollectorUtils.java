@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 /**
  * Collection Utils
- * @version 0.0.1
+ * @since 0.0.1
  */
 public class CollectorUtils {
 
@@ -36,9 +36,7 @@ public class CollectorUtils {
      * </pre>
      * <b>divided result:</b>
      * <pre>
-     * [0, 1, 2]
-     * [3, 4, 5]
-     * [6, 7]
+     * [[0, 1, 2], [3, 4, 5], [6, 7]]
      * </pre>
      *
      * @param arr array

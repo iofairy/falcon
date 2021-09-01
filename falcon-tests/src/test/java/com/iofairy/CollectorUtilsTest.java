@@ -13,6 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CollectorUtilsTest {
     @Test
     public void testDivideArr() {
+        System.out.println("\n>>> testDivideArr");
+
         Integer[] intArr = {0, 1, 2, 3, 4, 5, 6, 7};
         List<Integer[]> divide = CollectorUtils.divide(intArr, 1);
         for (Integer[] integers : divide) {
@@ -41,6 +43,8 @@ public class CollectorUtilsTest {
 
     @Test
     public void testDivideList() {
+        System.out.println("\n>>> testDivideList");
+
         Integer[] intArr = {0, 1, 2, 3, 4, 5, 6};
         List<Integer> intList = Arrays.asList(intArr);
         List<List<Integer>> divideList = CollectorUtils.divide(intList, 2);
@@ -74,6 +78,8 @@ public class CollectorUtilsTest {
 
     @Test
     public void testDivideSet() {
+        System.out.println("\n>>> testDivideSet");
+
         Set<Integer> intSet = new HashSet<>();
         intSet.add(1);
         intSet.add(2);
@@ -94,6 +100,8 @@ public class CollectorUtilsTest {
 
     @Test
     public void testDivideMap() {
+        System.out.println("\n>>> testDivideMap");
+
         Map<String, Integer> map = new HashMap<>();
         map.put("a", 1);
         map.put("b", 2);

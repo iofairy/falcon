@@ -22,7 +22,7 @@ import java.io.File;
 /**
  * OS for getting operating system info. <br>
  * 获取操作系统信息类
- * @version 0.0.1
+ * @since 0.0.1
  */
 public final class OS {
     /**

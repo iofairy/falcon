@@ -11,11 +11,15 @@
 
     <artifactId>falcon-tests</artifactId>
 
+    <properties>
+        <falcon.version>0.0.1</falcon.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.iofairy</groupId>
             <artifactId>falcon</artifactId>
-            <version>0.0.1</version>
+            <version>${falcon.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
