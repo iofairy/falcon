@@ -142,7 +142,7 @@ public class CollectorUtils {
      * map.put("b", 2);
      * map.put("c", 3);
      *
-     * List&lt;Map&lt;String, Integer&gt&gt divided = divide(map, 2);
+     * List&lt;Map&lt;String, Integer&gt;&gt; divided = divide(map, 2);
      * </pre>
      * <b>divided result:</b>
      * <pre>

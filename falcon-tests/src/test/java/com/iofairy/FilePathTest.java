@@ -25,6 +25,7 @@ public class FilePathTest {
         String path9 = FilePath.path("./a", "b", "./c", "/d///");
         String path10 = FilePath.path("./a", "\\  /\\ ././b", "./c", "/d///");
         String path11 = FilePath.path("\\/", "./a.");
+        String path12 = FilePath.path("/abc/", "./a.", "b", "/c/", "d/");
 
         assertEquals("./a/b/c/d", path1);
         assertEquals("/", path2);
@@ -37,6 +38,7 @@ public class FilePathTest {
         assertEquals("./a/b/c/d", path9);
         assertEquals("./a/\\  /\\ ./b/c/d", path10); //   ./a/\  /\ ./b/c/d
         assertEquals("\\/a.", path11);               //   \/a.
+        assertEquals("/abc/a./b/c/d", path12);
     }
 
     @Test
@@ -54,6 +56,7 @@ public class FilePathTest {
         String path9 = FilePath.pathWin("./a", "b", "./c", "/d///");
         String path10 = FilePath.pathWin("./a", "\\  /\\ ././b", "./c", "/d///");
         String path11 = FilePath.pathWin("\\/", "./a.");
+        String path12 = FilePath.pathWin("/abc/", "./a.", "b", "/c/", "d/", "\\e");
 
         assertEquals(".\\a\\b\\c\\d", path1);
         assertEquals("\\", path2);
@@ -66,6 +69,7 @@ public class FilePathTest {
         assertEquals(".\\a\\b\\c\\d", path9);
         assertEquals(".\\a\\  \\ .\\b\\c\\d", path10);
         assertEquals("\\a.", path11);
+        assertEquals("\\abc\\a.\\b\\c\\d\\e", path12);
 
     }
 
@@ -84,6 +88,7 @@ public class FilePathTest {
         String path9 = FilePath.pathSlash("./a", "b", "./c", "/d///");
         String path10 = FilePath.pathSlash("./a", "\\  /\\ ././b", "./c", "/d///");
         String path11 = FilePath.pathSlash("\\/", "./a.");
+        String path12 = FilePath.pathSlash("/abc/", "./a.", "b", "/c/", "d/", "\\e");
 
         assertEquals("./a/b/c/d", path1);
         assertEquals("/", path2);
@@ -96,6 +101,7 @@ public class FilePathTest {
         assertEquals("./a/b/c/d", path9);
         assertEquals("./a/  / ./b/c/d", path10);
         assertEquals("/a.", path11);
+        assertEquals("/abc/a./b/c/d/e", path12);
 
     }
 
