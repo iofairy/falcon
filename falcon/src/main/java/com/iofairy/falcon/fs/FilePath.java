@@ -26,6 +26,7 @@ public class FilePath {
     public final static String ROOT = "/";
     public final static String SLASH = "/";             // 斜杠
     public final static String BACKSLASH = "\\";        // 反斜杠
+    public final static String EMPTY = "";              // 空字符串
     public final static String DOT = ".";               // 当前目录
     public final static String DOTSLASH = "./";         // UNIX当前目录
     public final static String DOTBACKSLASH = ".\\";    // Win当前目录
@@ -46,7 +47,6 @@ public class FilePath {
      * @return a full path
      */
     public static String path(String firstPath, String... subPaths) {
-        if (G.isEmpty(firstPath) || G.hasEmpty(subPaths)) return null;
         return concatPath(false, firstPath, subPaths);
     }
 
@@ -64,7 +64,6 @@ public class FilePath {
      * @return a full path
      */
     public static String pathWin(String firstPath, String... subPaths) {
-        if (G.isEmpty(firstPath) || G.hasEmpty(subPaths)) return null;
         String path = concatPath(true, firstPath, subPaths);
         return slashToBackslash(path);
     }
@@ -83,7 +82,6 @@ public class FilePath {
      * @return a full path
      */
     public static String pathSlash(String firstPath, String... subPaths) {
-        if (G.isEmpty(firstPath) || G.hasEmpty(subPaths)) return null;
         return concatPath(true, firstPath, subPaths);
     }
 
@@ -95,10 +93,30 @@ public class FilePath {
      * @return path
      */
     private static String concatPath(boolean isWin, String firstPath, String... subPaths) {
+        if (null == firstPath) return null;
+        boolean isFirstPathEmpty = EMPTY.equals(firstPath);
         StringBuffer pathBuffer = new StringBuffer(firstPath);
-        for (String path : subPaths) {
-            pathBuffer.append(SLASH).append(path);
+        if (subPaths != null && subPaths.length != 0) {
+            // subPaths 中的元素不能有 null 值
+            if (G.hasNull(subPaths)) return null;
+
+            boolean isFirstNonEmptySubPath = true;
+            for (String path : subPaths) {
+                if (!G.isEmpty(path)) {
+                    /*
+                     * 如果 firstPath 为 ""，且 subPaths 中有不为 "" 的路径，那么第一个
+                     * 不为 "" 的 subPath 前面不加 "/"，当作 firstPath 来使用
+                     */
+                    if (isFirstNonEmptySubPath && isFirstPathEmpty) {
+                        isFirstNonEmptySubPath = false;
+                        pathBuffer.append(path);
+                        continue;
+                    }
+                    pathBuffer.append(SLASH).append(path);
+                }
+            }
         }
+
         String tempPath = pathBuffer.toString();
         tempPath = isWin ? backslashToSlash(tempPath) : tempPath;
         // 对'/'和'./' 去重
