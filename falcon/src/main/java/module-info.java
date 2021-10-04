@@ -19,5 +19,6 @@ module iofairy.falcon {
 
     exports com.iofairy.falcon.fs;
     exports com.iofairy.falcon.os;
+    exports com.iofairy.falcon.time;
     exports com.iofairy.falcon.util;
 }

@@ -194,6 +194,7 @@ public class CollectorUtils {
      * @param listList 待分配的 {@code List} 列表
      * @param <E> 元素类型
      * @return 分配后 {@code List} 列表
+     * @since 0.0.2
      */
     public static <E> List<List<E>> balance(int partitions, List<List<E>> listList) {
         if (partitions <= 0 || G.isEmpty(listList)) return null;
@@ -208,7 +209,7 @@ public class CollectorUtils {
         for (int i = 0; i < min; i++) {
             map.put(i, sortedLists.remove(0));
         }
-        // sort map by value.size
+        // sort map by value.size. 按 map 中的value的size 从小到大排序
         List<Map.Entry<Integer, List<E>>> entries = MapUtils.sortBy(map, kv -> kv.getValue().size());
         for (List<E> list : sortedLists) {
             entries.get(0).getValue().addAll(list);
@@ -227,6 +228,7 @@ public class CollectorUtils {
      * @param <E> 元素类型
      * @return 分配后 {@code List} 列表
      * @see #balance(int, List)
+     * @since 0.0.2
      */
     @SafeVarargs
     public static <E> List<List<E>> balance(int partitions, List<E>... listArray) {
@@ -242,6 +244,7 @@ public class CollectorUtils {
      * @param <E> 元素类型
      * @return 分配后 {@code List} 列表
      * @see #balance(int, List)
+     * @since 0.0.2
      */
     @SafeVarargs
     public static <E> List<List<E>> balance(int partitions, E[]... arrays) {
@@ -250,6 +253,14 @@ public class CollectorUtils {
         return balance(partitions, lists);
     }
 
+    /**
+     * Fast Sort For {@link #balance(int, List)}<br>
+     * 针对 {@link #balance(int, List)} 方法的快速排序
+     * @param sortedEntries sortedEntries
+     * @param <E> elements type in List
+     * @see #balance(int, List)
+     * @since 0.0.2
+     */
     private static <E> void fastSortForBalance(List<Map.Entry<Integer, List<E>>> sortedEntries) {
         if (G.isEmpty(sortedEntries) || sortedEntries.size() <= 1) return;
 
