@@ -6,3 +6,17 @@ Common libraries for Java
 + Apache maven 3.6.1
 
 
+## 💿集成方式（兼容Java 8及Java 9+）
+### Maven
+```xml
+<dependency>
+  <groupId>com.iofairy</groupId>
+  <artifactId>falcon</artifactId>
+  <version>0.0.2</version>
+</dependency>
+```
+
+### Gradle
+```
+implementation 'com.iofairy:falcon:0.0.2'
+```
