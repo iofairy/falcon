@@ -273,6 +273,7 @@ public class DateTimePattern {
         switch (length) {
             case 3:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case NO_SEPARATOR:
                         return matchPattern(Y, dateTime, FM_Y);
@@ -289,6 +290,7 @@ public class DateTimePattern {
 
             case 4:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case NO_SEPARATOR:
                         return matchPattern(Y, dateTime, FM_Y);
@@ -308,6 +310,7 @@ public class DateTimePattern {
                 return null;
             case 5:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case COLON_DOT:
                         return matchPattern(McSS, dateTime, FM_McSS);
@@ -333,6 +336,7 @@ public class DateTimePattern {
                 return null;
             case 6:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case NO_SEPARATOR:
                         return matchPattern(YM, dateTime, FM_YM);
@@ -363,6 +367,7 @@ public class DateTimePattern {
                 return null;
             case 7:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case COLON_DOT:
                         return matchPattern(cs(HcMcSS, McSS), dateTime, FM_HcMcSS, FM_McSS);
@@ -381,7 +386,7 @@ public class DateTimePattern {
                     case COLON:
                         return matchPattern(HcMcS, dateTime, FM_HcMcS);
                     case ZH_TIME_MS:
-                        return matchPattern(MzSzSz,  dateTime, FM_MzSzSz);
+                        return matchPattern(MzSzSz, dateTime, FM_MzSzSz);
                     case ZH_ZH:
                         return matchPattern(cs(MzDzHz, MzDzHo), dateTime, FM_MzDzHz, FM_MzDzHo);
                     case ZH_TIME:
@@ -395,6 +400,7 @@ public class DateTimePattern {
                 format = matchPattern(HcMcS, dateTime, FM_HcMcS);
                 if (null == format) {
                     dts = separatorForDate(dateTime);
+                    if (null == dts) return null;
                     switch (dts) {
                         case NO_SEPARATOR:
                             return matchPattern(YMD, dateTime, FM_YMD);
@@ -413,7 +419,7 @@ public class DateTimePattern {
                         case DOT:
                             return matchPattern(YoMoD, dateTime, FM_YoMoD);
                         case ZH_TIME_MS:
-                            return matchPattern(MzSzSz,  dateTime, FM_MzSzSz);
+                            return matchPattern(MzSzSz, dateTime, FM_MzSzSz);
                         case ZH_ZH:
                             return matchPattern(cs(MzDzHzMz, MzDzHoMz, MzDzHz, MzDzHo), dateTime,
                                     FM_MzDzHzMz, FM_MzDzHoMz, FM_MzDzHz, FM_MzDzHo);
@@ -423,11 +429,12 @@ public class DateTimePattern {
                             return matchPattern(cs(YzMzDz, YzMz), dateTime, FM_YzMzDz, FM_YzMz);
                     }
                     return null;
-                }else {
+                } else {
                     return format;
                 }
             case 9:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case COLON_DOT:
                         return matchPattern(cs(HcMcSS, McSS), dateTime, FM_HcMcSS, FM_McSS);
@@ -444,7 +451,7 @@ public class DateTimePattern {
                     case DOT:
                         return matchPattern(YoMoD, dateTime, FM_YoMoD);
                     case ZH_TIME_MS:
-                        return matchPattern(cs(HzMzSzSz, HoMzSzSz, MzSzSz),  dateTime, FM_HzMzSzSz, FM_HoMzSzSz, FM_MzSzSz);
+                        return matchPattern(cs(HzMzSzSz, HoMzSzSz, MzSzSz), dateTime, FM_HzMzSzSz, FM_HoMzSzSz, FM_MzSzSz);
                     case ZH_ZH:
                         return matchPattern(cs(MzDzHzMz, MzDzHoMz, MzDzHz, MzDzHo), dateTime,
                                 FM_MzDzHzMz, FM_MzDzHoMz, FM_MzDzHz, FM_MzDzHo);
@@ -459,6 +466,7 @@ public class DateTimePattern {
                 format = matchPattern(YdMdD, dateTime, FM_YdMdD);
                 if (null == format) {
                     dts = separatorForDate(dateTime);
+                    if (null == dts) return null;
                     switch (dts) {
                         case NO_SEPARATOR:
                             return matchPattern(YMDH, dateTime, FM_YMDH);
@@ -467,7 +475,7 @@ public class DateTimePattern {
                         case SLASH_COLON:
                             return matchPattern(cs(YsMsDH, MsDHcMcS, MsDHcM), dateTime, FM_YsMsDH, FM_MsDHcMcS, FM_MsDHcM);
                         case DASH_COLON:
-                            return matchPattern(cs(YdMdDH, MdDHcMcS, MdDHcM), dateTime,  FM_YdMdDH, FM_MdDHcMcS, FM_MdDHcM);
+                            return matchPattern(cs(YdMdDH, MdDHcMcS, MdDHcM), dateTime, FM_YdMdDH, FM_MdDHcMcS, FM_MdDHcM);
                         case DOT_COLON:
                             return matchPattern(cs(YoMoDH, MoDHcMcS, MoDHcM), dateTime, FM_YoMoDH, FM_MoDHcMcS, FM_MoDHcM);
                         case SLASH:
@@ -475,7 +483,7 @@ public class DateTimePattern {
                         case DOT:
                             return matchPattern(YoMoD, dateTime, FM_YoMoD);
                         case ZH_TIME_MS:
-                            return matchPattern(cs(HzMzSzSz, HoMzSzSz, MzSzSz),  dateTime, FM_HzMzSzSz, FM_HoMzSzSz, FM_MzSzSz);
+                            return matchPattern(cs(HzMzSzSz, HoMzSzSz, MzSzSz), dateTime, FM_HzMzSzSz, FM_HoMzSzSz, FM_MzSzSz);
                         case ZH_ZH:
                             return matchPattern(cs(YzMzDzHz, YzMzDzHo, MzDzHzMzSz, MzDzHoMzSz, MzDzHzMz, MzDzHoMz), dateTime,
                                     FM_YzMzDzHz, FM_YzMzDzHo, FM_MzDzHzMzSz, FM_MzDzHoMzSz, FM_MzDzHzMz, FM_MzDzHoMz);
@@ -483,12 +491,13 @@ public class DateTimePattern {
                             return matchPattern(YzMzDz, dateTime, FM_YzMzDz);
                     }
                     return null;
-                }else {
+                } else {
                     return format;
                 }
 
             case 11:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case DASH_COLON_DOT:
                         return matchPattern(MdDHcMcSS, dateTime, FM_MdDHcMcSS);
@@ -518,6 +527,7 @@ public class DateTimePattern {
                 return null;
             case 12:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case NO_SEPARATOR:
                         return matchPattern(YMDHM, dateTime, FM_YMDHM);
@@ -536,7 +546,7 @@ public class DateTimePattern {
                     case DOT_COLON:
                         return matchPattern(cs(YoMoDHcM, YoMoDH, MoDHcMcS), dateTime, FM_YoMoDHcM, FM_YoMoDH, FM_MoDHcMcS);
                     case ZH_TIME_MS:
-                        return matchPattern(cs(HzMzSzSz, HoMzSzSz),  dateTime, FM_HzMzSzSz, FM_HoMzSzSz);
+                        return matchPattern(cs(HzMzSzSz, HoMzSzSz), dateTime, FM_HzMzSzSz, FM_HoMzSzSz);
                     case ZH_ZH:
                         return matchPattern(cs(YzMzDzHzMz, YzMzDzHoMz, YzMzDzHz, YzMzDzHo, MzDzHzMzSz, MzDzHoMzSz, MzDzHzMz, MzDzHoMz), dateTime,
                                 FM_YzMzDzHzMz, FM_YzMzDzHoMz, FM_YzMzDzHz, FM_YzMzDzHo, FM_MzDzHzMzSz, FM_MzDzHoMzSz, FM_MzDzHzMz, FM_MzDzHoMz);
@@ -544,6 +554,7 @@ public class DateTimePattern {
                 return null;
             case 13:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case DASH_COLON_DOT:
                         return matchPattern(MdDHcMcSS, dateTime, FM_MdDHcMcSS);
@@ -561,9 +572,9 @@ public class DateTimePattern {
                         return matchPattern(cs(YoMoDHcMcS, YoMoDHcM, YoMoDH, MoDHcMcS), dateTime,
                                 FM_YoMoDHcMcS, FM_YoMoDHcM, FM_YoMoDH, FM_MoDHcMcS);
                     case ZH_ZH_MS:
-                        return matchPattern(cs(MzDzHzMzSzSz, MzDzHoMzSzSz),  dateTime, FM_MzDzHzMzSzSz, FM_MzDzHoMzSzSz);
+                        return matchPattern(cs(MzDzHzMzSzSz, MzDzHoMzSzSz), dateTime, FM_MzDzHzMzSzSz, FM_MzDzHoMzSzSz);
                     case ZH_TIME_MS:
-                        return matchPattern(cs(HzMzSzSz, HoMzSzSz),  dateTime, FM_HzMzSzSz, FM_HoMzSzSz);
+                        return matchPattern(cs(HzMzSzSz, HoMzSzSz), dateTime, FM_HzMzSzSz, FM_HoMzSzSz);
                     case ZH_ZH:
                         return matchPattern(cs(YzMzDzHzMz, YzMzDzHoMz, YzMzDzHz, YzMzDzHo, MzDzHzMzSz, MzDzHoMzSz), dateTime,
                                 FM_YzMzDzHzMz, FM_YzMzDzHoMz, FM_YzMzDzHz, FM_YzMzDzHo, FM_MzDzHzMzSz, FM_MzDzHoMzSz);
@@ -571,6 +582,7 @@ public class DateTimePattern {
                 return null;
             case 14:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case NO_SEPARATOR:
                         return matchPattern(YMDHMS, dateTime, FM_YMDHMS);
@@ -597,6 +609,7 @@ public class DateTimePattern {
                 return null;
             case 15:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case DASH_COLON_DOT:
                         return matchPattern(cs(YdMdDHcMcSS, MdDHcMcSS), dateTime, FM_YdMdDHcMcSS, FM_MdDHcMcSS);
@@ -611,7 +624,7 @@ public class DateTimePattern {
                     case DOT_COLON:
                         return matchPattern(cs(YoMoDHcMcS, YoMoDHcM), dateTime, FM_YoMoDHcMcS, FM_YoMoDHcM);
                     case ZH_ZH_MS:
-                        return matchPattern(cs(MzDzHzMzSzSz, MzDzHoMzSzSz),  dateTime, FM_MzDzHzMzSzSz, FM_MzDzHoMzSzSz);
+                        return matchPattern(cs(MzDzHzMzSzSz, MzDzHoMzSzSz), dateTime, FM_MzDzHzMzSzSz, FM_MzDzHoMzSzSz);
                     case ZH_ZH:
                         return matchPattern(cs(YzMzDzHzMzSz, YzMzDzHoMzSz, YzMzDzHzMz, YzMzDzHoMz, MzDzHzMzSz, MzDzHoMzSz), dateTime,
                                 FM_YzMzDzHzMzSz, FM_YzMzDzHoMzSz, FM_YzMzDzHzMz, FM_YzMzDzHoMz, FM_MzDzHzMzSz, FM_MzDzHoMzSz);
@@ -619,6 +632,7 @@ public class DateTimePattern {
                 return null;
             case 16:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case DASH_COLON_DOT:
                         return matchPattern(cs(YdMdDHcMcSS, MdDHcMcSS), dateTime, FM_YdMdDHcMcSS, FM_MdDHcMcSS);
@@ -633,7 +647,7 @@ public class DateTimePattern {
                     case DOT_COLON:
                         return matchPattern(cs(YoMoDHcMcS, YoMoDHcM), dateTime, FM_YoMoDHcMcS, FM_YoMoDHcM);
                     case ZH_ZH_MS:
-                        return matchPattern(cs(MzDzHzMzSzSz, MzDzHoMzSzSz),  dateTime, FM_MzDzHzMzSzSz, FM_MzDzHoMzSzSz);
+                        return matchPattern(cs(MzDzHzMzSzSz, MzDzHoMzSzSz), dateTime, FM_MzDzHzMzSzSz, FM_MzDzHoMzSzSz);
                     case ZH_ZH:
                         return matchPattern(cs(YzMzDzHzMzSz, YzMzDzHoMzSz, YzMzDzHzMz, YzMzDzHoMz), dateTime,
                                 FM_YzMzDzHzMzSz, FM_YzMzDzHoMzSz, FM_YzMzDzHzMz, FM_YzMzDzHoMz);
@@ -641,6 +655,7 @@ public class DateTimePattern {
                 return null;
             case 17:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case NO_SEPARATOR:
                         return matchPattern(YMDHMSS, dateTime, FM_YMDHMSS);
@@ -657,7 +672,7 @@ public class DateTimePattern {
                     case DOT_COLON:
                         return matchPattern(YoMoDHcMcS, dateTime, FM_YoMoDHcMcS);
                     case ZH_ZH_MS:
-                        return matchPattern(cs(YzMzDzHzMzSzSz, YzMzDzHoMzSzSz, MzDzHzMzSzSz, MzDzHoMzSzSz),  dateTime,
+                        return matchPattern(cs(YzMzDzHzMzSzSz, YzMzDzHoMzSzSz, MzDzHzMzSzSz, MzDzHoMzSzSz), dateTime,
                                 FM_YzMzDzHzMzSzSz, FM_YzMzDzHoMzSzSz, FM_MzDzHzMzSzSz, FM_MzDzHoMzSzSz);
                     case ZH_ZH:
                         return matchPattern(cs(YzMzDzHzMzSz, YzMzDzHoMzSz, YzMzDzHzMz, YzMzDzHoMz), dateTime,
@@ -666,6 +681,7 @@ public class DateTimePattern {
                 return null;
             case 18:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case DASH_COLON_DOT:
                         return matchPattern(cs(YdMdDHcMcSS, MdDHcMcSS), dateTime, FM_YdMdDHcMcSS, FM_MdDHcMcSS);
@@ -680,7 +696,7 @@ public class DateTimePattern {
                     case DOT_COLON:
                         return matchPattern(YoMoDHcMcS, dateTime, FM_YoMoDHcMcS);
                     case ZH_ZH_MS:
-                        return matchPattern(cs(YzMzDzHzMzSzSz, YzMzDzHoMzSzSz, MzDzHzMzSzSz, MzDzHoMzSzSz),  dateTime,
+                        return matchPattern(cs(YzMzDzHzMzSzSz, YzMzDzHoMzSzSz, MzDzHzMzSzSz, MzDzHoMzSzSz), dateTime,
                                 FM_YzMzDzHzMzSzSz, FM_YzMzDzHoMzSzSz, FM_MzDzHzMzSzSz, FM_MzDzHoMzSzSz);
                     case ZH_ZH:
                         return matchPattern(cs(YzMzDzHzMzSz, YzMzDzHoMzSz), dateTime, FM_YzMzDzHzMzSz, FM_YzMzDzHoMzSz);
@@ -691,6 +707,7 @@ public class DateTimePattern {
                 format = matchPattern(YdMdDHcMcS, dateTime, FM_YdMdDHcMcS);
                 if (null == format) {
                     dts = separatorForDate(dateTime);
+                    if (null == dts) return null;
                     switch (dts) {
                         case DASH_COLON_DOT:
                             return matchPattern(YdMdDHcMcSS, dateTime, FM_YdMdDHcMcSS);
@@ -703,17 +720,18 @@ public class DateTimePattern {
                         case DOT_COLON:
                             return matchPattern(YoMoDHcMcS, dateTime, FM_YoMoDHcMcS);
                         case ZH_ZH_MS:
-                            return matchPattern(cs(YzMzDzHzMzSzSz, YzMzDzHoMzSzSz, MzDzHzMzSzSz, MzDzHoMzSzSz),  dateTime,
+                            return matchPattern(cs(YzMzDzHzMzSzSz, YzMzDzHoMzSzSz, MzDzHzMzSzSz, MzDzHoMzSzSz), dateTime,
                                     FM_YzMzDzHzMzSzSz, FM_YzMzDzHoMzSzSz, FM_MzDzHzMzSzSz, FM_MzDzHoMzSzSz);
                         case ZH_ZH:
                             return matchPattern(cs(YzMzDzHzMzSz, YzMzDzHoMzSz), dateTime, FM_YzMzDzHzMzSz, FM_YzMzDzHoMzSz);
                     }
                     return null;
-                }else {
+                } else {
                     return format;
                 }
             case 20:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case DASH_COLON_DOT:
                         return matchPattern(YdMdDHcMcSS, dateTime, FM_YdMdDHcMcSS);
@@ -722,7 +740,7 @@ public class DateTimePattern {
                     case DOT_COLON_DOT:
                         return matchPattern(YoMoDHcMcSS, dateTime, FM_YoMoDHcMcSS);
                     case ZH_ZH_MS:
-                        return matchPattern(cs(YzMzDzHzMzSzSz, YzMzDzHoMzSzSz, MzDzHzMzSzSz, MzDzHoMzSzSz),  dateTime,
+                        return matchPattern(cs(YzMzDzHzMzSzSz, YzMzDzHoMzSzSz, MzDzHzMzSzSz, MzDzHoMzSzSz), dateTime,
                                 FM_YzMzDzHzMzSzSz, FM_YzMzDzHoMzSzSz, FM_MzDzHzMzSzSz, FM_MzDzHoMzSzSz);
                     case ZH_ZH:
                         return matchPattern(cs(YzMzDzHzMzSz, YzMzDzHoMzSz), dateTime, FM_YzMzDzHzMzSz, FM_YzMzDzHoMzSz);
@@ -732,6 +750,7 @@ public class DateTimePattern {
             case 22:
             case 23:
                 dts = separatorForDate(dateTime);
+                if (null == dts) return null;
                 switch (dts) {
                     case DASH_COLON_DOT:
                         return matchPattern(YdMdDHcMcSS, dateTime, FM_YdMdDHcMcSS);
@@ -785,17 +804,16 @@ public class DateTimePattern {
         DateTimeSeparator dts = null;
         switch (length) {
             case 3:
+            case 4:
                 /*
+                 * case 3：  ----------------------------
                  * [M.d, H:m]
                  * -----------------------------------
                  * yyy（三位数的年份）
                  * M-d，M.d，M/d
                  * H:m （省略 m:s，无法与H:m区分）
-                 */
-                dts = checkSeparator(dateTime);
-                return null == dts ? NO_SEPARATOR : dts;
-            case 4:
-                /*
+                 *
+                 * case 4：  ----------------------------
                  * [M月d日, m分s秒, H时m分]
                  * -----------------------------------
                  * yyyy(忽略MMdd与HHmm，与yyyy冲突)
@@ -808,146 +826,162 @@ public class DateTimePattern {
                 /*
                  * [m:s.S, H:m:s, M.d H]
                  * -----------------------------------
-                 * yyyy年 或 MM月d日 或 M月dd日 或 MM-dd，MM.dd，MM/dd 或 M.d H，yyy-M,yyy/M,yyy.M
-                 * HH:mm 或 HH时m分 或 H点mm分 或 mm分s秒等 或 m:s.S 或 H:m:s
+                 * yyyy年 或 MM月d日 或 MM-dd，MM.dd，MM/dd 或 yyy-M,yyy/M,yyy.M
+                 * HH:mm 或 HH时m分 或 H点mm分 或 mm分s秒等 或 H:m:s
+                 * M.d H
+                 * m:s.S
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? null : checkSeparatorMore(dateTime, dts);
             case 6:
                 /*
                  * [yyyy.M, H时m分s秒, M月d日H时]
                  * -----------------------------------
-                 * yyyyMM （HHmmss这种省略，时分秒一般不这样写）
-                 * MM月dd日 或 MM.d H 或 yyyy-M,yyyy/M,yyyy.M 或 M月d日H时 或 yyy年M月
-                 * HH时mm分 或 HH点mm分 或 mm分ss秒等 或 mm:s.S 或 HH:m:s 等 或 H时m分s秒
+                 * yyyyMM （HHmmss这种省略，与yyyyMM有冲突）
+                 * MM月dd日 或 yyyy-M,yyyy/M,yyyy.M  或 yyy年M月
+                 * HH时mm分 或 mm分ss秒等  或 HH:m:s 等 或 H时m分s秒
+                 * MM.d H 或 M月d日H时
+                 * mm:s.S
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? NO_SEPARATOR : checkSeparatorMore(dateTime, dts);
             case 7:
                 /*
                  * [H:m:s.S, M.d H:m, yyyy年M月, m分s秒S毫秒]
                  * -----------------------------------
-                 * MM.dd H 或 yyyy-MM,yyyy/MM,yyyy.MM 或 MM月d日H时 或 M-d H:m, M.d H:m（. 在 : 之前） 日期时间混合 或 yyyy年M月 或 yyy年MM月 或 yyy-M-d, yyy/M/d, yyy.M.d
-                 * mm:ss.S（. 在 : 之后） 或 HH:mm:s 等 或 H时mm分s秒 或 H:m:s.S 或 m分s秒S毫秒
+                 * yyyy-MM,yyyy/MM,yyyy.MM 或 yyyy年M月 或 yyy年MM月 或 yyy-M-d, yyy/M/d, yyy.M.d
+                 * HH:mm:s 等 或 H时mm分s秒
+                 * MM.dd H 或 M.d H:m 或 MM月d日H时
+                 * mm:ss.S 或 H:m:s.S 或 m分s秒S毫秒
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? null : checkSeparatorMore(dateTime, dts);
             case 8:
                 /*
                  * [yyyy.M.d, M月d日H时m分]
                  * -----------------------------------
                  * yyyyMMdd
-                 * MM.dd HH 或 MM月dd日H时 或 MM-d H:m, M.dd H:m（. 在 : 之前） 日期时间混合 或 yyyy年MM月 或 yyyy-M-d, yyyy/M/d, yyyy.M.d 或 M月d日H时m分 或 yyy年M月d日
-                 * mm:ss.SS（. 在 : 之后） 或 HH:mm:ss  或 H时mm分ss秒 或 H:m:ss.S 或 m分ss秒S毫秒
+                 * yyyy-M-d, yyyy/M/d, yyyy.M.d 或 yyy年M月d日 或 yyyy年MM月
+                 * MM.dd HH 或 M.dd H:m 或 M月d日H时m分 或 MM月dd日H时
+                 * HH:mm:ss  或 H时mm分ss秒
+                 * mm:ss.SS 或 H:m:ss.S 或 m分ss秒S毫秒
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? NO_SEPARATOR : checkSeparatorMore(dateTime, dts);
             case 9:
                 /*
                  * [M.d H:m:s, yyyy年M月d日, H时m分s秒S毫秒]
                  * -----------------------------------
-                 * MM月dd日HH时 或 MM-dd H:m, MM.dd H:m（. 在 : 之前） 日期时间混合 或 yyyy-M-dd, yyyy/M/dd, yyyy.M.dd 或 M月dd日H时m分  或 M.d H:m:s 或 yyyy年M月d日 或 yyy.M.d H
-                 * mm:ss.SSS（. 在 : 之后） 或  HH时mm分ss秒 或 H:mm:ss.S 或 mm分ss秒S毫秒 或 H时m分s秒S毫秒
+                 * yyyy-M-dd, yyyy/M/dd, yyyy.M.dd 或 yyyy年M月d日
+                 * HH时mm分ss秒
+                 * M.d H:m:s 或 yyy.M.d H 或 MM.dd H:m 或 M月dd日H时m分 或 MM月dd日HH时
+                 * mm:ss.SSS 或 H:mm:ss.S 或 mm分ss秒S毫秒 或 H时m分s秒S毫秒
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? null : checkSeparatorMore(dateTime, dts);
             case 10:
                 /*
                  * [yyyy.M.d H, M月d日H时m分s秒]
                  * -----------------------------------
                  * yyyyMMddHH
-                 * MM-dd H:mm, MM.dd H:mm（. 在 : 之前） 日期时间混合 或 yyyy-MM-dd, yyyy/MM/dd, yyyy.MM.dd 或 MM月dd日H时m分
-                 * 或 MM.d H:m:s 或 yyyy年MM月d日 或 yyyy.M.d H, M月d日H时m分s秒 或 或 yyy年M月d日H时
+                 * yyyy-MM-dd, yyyy/MM/dd, yyyy.MM.dd 或 yyyy年MM月d日
+                 * MM.dd H:mm 或 MM.d H:m:s 或 yyyy.M.d H, M月d日H时m分s秒 或 yyy年M月d日H时 或  MM月dd日H时m分
                  * H:mm:ss.SS 或 mm分ss秒SS毫秒 或 H时m分s秒SS毫秒
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? NO_SEPARATOR : checkSeparatorMore(dateTime, dts);
             case 11:
                 /*
                  * [M.d H:m:s.S, yyyy年M月d日H时]
                  * -----------------------------------
-                 * MM-dd HH:mm, MM.dd HH:mm（. 在 : 之前） 日期时间混合 或 MM月dd日HH时m分  或 MM.d HH:m:s 或 yyyy年MM月dd日
-                 * 或 yyyy.M.dd H, M月dd日H时m分s秒 或 yyyy年M月d日H时  或 yyy.M.d H:m
-                 * H:mm:ss.SSS 或 mm分ss秒SSS毫秒 或 H时m分s秒SSS毫秒  或 M.d H:m:s.S
+                 * yyyy年MM月dd日
+                 * yyyy.M.dd H 或 yyy.M.d H:m 或 MM.dd HH:mm 或 MM.d HH:m:s 或 M月dd日H时m分s秒 或 yyyy年M月d日H时  或 MM月dd日HH时m分
+                 * M.d H:m:s.S
+                 * H:mm:ss.SSS 或 mm分ss秒SSS毫秒 或 H时m分s秒SSS毫秒
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? null : checkSeparatorMore(dateTime, dts);
             case 12:
                 /*
                  * [yyyy.M.d H:m]
                  * -----------------------------------
                  * yyyyMMddHHmm
-                 * MM月dd日HH时mm分  或 MM.dd HH:m:s 或 yyyy.MM.dd H, MM月dd日H时m分s秒 或 yyyy年MM月d日H时 或 yyyy.M.d H:m , yyy年M月d日H时m分
-                 * HH:mm:ss.SSS  或 HH时m分s秒SSS毫秒  或 MM.d H:m:s.S
+                 * yyyy.MM.dd H 或 yyyy.M.d H:m 或 MM.dd HH:m:s 或 MM月dd日HH时mm分  或 MM月dd日H时m分s秒 或 yyyy年MM月d日H时 或 yyy年M月d日H时m分
+                 * MM.d H:m:s.S
+                 * HH:mm:ss.SSS 或  HH时m分s秒SSS毫秒
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? NO_SEPARATOR : checkSeparatorMore(dateTime, dts);
             case 13:
                 /*
                  * [M月d日H时m分s秒S毫秒, yyyy年M月d日H时m分]
                  * -----------------------------------
-                 * MM.dd HH:mm:s 或 yyyy.MM.dd HH, MM月dd日HH时m分s秒 或 yyyy年MM月d日HH时 或 yyyy.M.d HH:m 或 M月d日H时m分s秒S毫秒, yyyy年M月d日H时m分 或 yyy.M.d H:m:s
-                 * HH时mm分s秒SSS毫秒  或 MM.d H:m:s.SS
+                 * MM.dd HH:mm:s 或 yyyy.M.d HH:m 或 yyyy.MM.dd HH 或 yyy.M.d H:m:s 或 MM月dd日HH时m分s秒 或 yyyy年MM月d日HH时 或 yyyy年M月d日H时m分
+                 * MM.d H:m:s.SS 或 M月d日H时m分s秒S毫秒
+                 * HH时mm分s秒SSS毫秒
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? null : checkSeparatorMore(dateTime, dts);
             case 14:
                 /*
                  * [yyyy.M.d H:m:s]
                  * -----------------------------------
                  * yyyyMMddHHmmss
-                 * MM.dd HH:mm:ss 或 MM月dd日HH时mm分s秒 或 yyyy年MM月dd日HH时 或 yyyy.MM.d HH:m 或 MM月d日H时m分s秒S毫秒, yyyy年MM月d日H时m分 或 yyyy.M.d H:m:s 或 yyy年M月d日H时m分s秒
-                 * HH时mm分ss秒SSS毫秒  或 MM.d H:m:s.SSS
+                 * MM.dd HH:mm:ss 或 yyyy.MM.d HH:m 或 yyyy.M.d H:m:s 或 MM月dd日HH时mm分s秒 或 yyyy年MM月dd日HH时 或 yyyy年MM月d日H时m分 或  yyy年M月d日H时m分s秒
+                 * MM.d H:m:s.SSS 或 MM月d日H时m分s秒S毫秒
+                 * HH时mm分ss秒SSS毫秒
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? NO_SEPARATOR : checkSeparatorMore(dateTime, dts);
             case 15:
                 /*
                  * [yyyy年M月d日H时m分s秒]
                  * -----------------------------------
-                 * MM月dd日HH时mm分ss秒  或 yyyy.MM.d HH:mm 或 MM月d日H时m分s秒SS毫秒, yyyy年MM月d日H时mm分 或 yyyy.M.d H:m:ss 或 yyyy年M月d日H时m分s秒 或 yyy.M.d H:m:s.S
-                 * MM.d H:m:ss.SSS
+                 * yyyy.MM.d HH:mm 或 yyyy.M.d H:m:ss 或 MM月dd日HH时mm分ss秒  或  yyyy年MM月d日H时mm分  或 yyyy年M月d日H时m分s秒
+                 * MM.d H:m:ss.SSS 或 yyy.M.d H:m:s.S 或 MM月d日H时m分s秒SS毫秒
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? null : checkSeparatorMore(dateTime, dts);
             case 16:
                 /*
                  * [yyyy.M.d H:m:s.S]
                  * -----------------------------------
-                 * yyyy.MM.dd HH:mm 或 MM月dd日H时m分s秒SS毫秒, yyyy年MM月dd日H时mm分 或 yyyy.M.dd H:m:ss 或 yyyy年M月d日H时m分ss秒 或 yyyy.M.d H:m:s.S
-                 * MM.d H:mm:ss.SSS
+                 * yyyy.MM.dd HH:mm 或 yyyy.M.dd H:m:ss 或 yyyy年MM月dd日H时mm分  或 yyyy年M月d日H时m分ss秒
+                 * MM.d H:mm:ss.SSS 或 yyyy.M.d H:m:s.S 或 MM月dd日H时m分s秒SS毫秒
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? null : checkSeparatorMore(dateTime, dts);
             case 17:
                 /*
                  * yyyyMMddHHmmssSSS
-                 * MM月dd日H时m分s秒SSS毫秒, yyyy年MM月dd日HH时mm分 或 yyyy.M.dd HH:m:ss 或 yyyy年M月d日HH时m分ss秒 或 yyyy.M.d HH:m:s.S 或  yyy年M月d日H时m分s秒S毫秒
-                 * MM.d HH:mm:ss.SSS
+                 * yyyy.M.dd HH:m:ss 或 yyyy年MM月dd日HH时mm分 或 yyyy年M月d日HH时m分ss秒
+                 * MM.d HH:mm:ss.SSS 或 yyyy.M.d HH:m:s.S 或 MM月dd日H时m分s秒SSS毫秒  或  yyy年M月d日H时m分s秒S毫秒
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? NO_SEPARATOR : checkSeparatorMore(dateTime, dts);
             case 18:
                 /*
                  * [yyyy年M月d日H时m分s秒S毫秒]
                  * -----------------------------------
-                 * MM月dd日HH时m分s秒SSS毫秒 或 yyyy.MM.dd HH:m:ss 或 yyyy年MM月d日HH时m分ss秒 或 yyyy.MM.d HH:m:s.S 或  yyyy年M月d日H时m分s秒S毫秒
-                 * MM.dd HH:mm:ss.SSS
+                 * yyyy.MM.dd HH:m:ss 或 yyyy年MM月d日HH时m分ss秒
+                 * MM.dd HH:mm:ss.SSS 或 yyyy.MM.d HH:m:s.S 或 MM月dd日HH时m分s秒SSS毫秒 或  yyyy年M月d日H时m分s秒S毫秒
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? null : checkSeparatorMore(dateTime, dts);
             case 19:
                 /*
-                 * MM月dd日HH时mm分s秒SSS毫秒 或 yyyy.MM.dd HH:mm:ss 或 yyyy年MM月d日HH时mm分ss秒 或 yyyy.MM.d HH:mm:s.S 或  yyyy年M月d日H时mm分s秒S毫秒
+                 * yyyy.MM.dd HH:mm:ss 或 yyyy年MM月d日HH时mm分ss秒
+                 * yyyy.MM.d HH:mm:s.S 或  MM月dd日HH时mm分s秒SSS毫秒 或 yyyy年M月d日H时mm分s秒S毫秒
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? null : checkSeparatorMore(dateTime, dts);
             case 20:
                 /*
-                 * MM月dd日HH时mm分ss秒SSS毫秒  或 yyyy年MM月dd日HH时mm分ss秒 或 yyyy.MM.dd HH:mm:s.S 或  yyyy年M月dd日H时mm分s秒S毫秒
+                 * yyyy年MM月dd日HH时mm分ss秒
+                 * yyyy.MM.dd HH:mm:s.S 或  MM月dd日HH时mm分ss秒SSS毫秒 或 yyyy年M月dd日H时mm分s秒S毫秒
                  */
                 dts = checkSeparator(dateTime);
-                return checkSeparatorMore(dateTime, dts);
+                return null == dts ? null : checkSeparatorMore(dateTime, dts);
             case 21:
             case 22:
             case 23:
@@ -975,8 +1009,9 @@ public class DateTimePattern {
 
     /**
      * 更进一步检测分隔符类型
+     *
      * @param dateTime dateTime
-     * @param dts 前面初步检测的分隔符
+     * @param dts      前面初步检测的分隔符
      * @return 时间串的分隔符类型
      */
     private static DateTimeSeparator checkSeparatorMore(final String dateTime, DateTimeSeparator dts) {
@@ -1006,8 +1041,8 @@ public class DateTimePattern {
                         .orElse(v -> null);
             case ZH_DATE:
                 return match()
-                        .when(zhTimeMs(dateTime), v -> ZH_ZH_MS)
-                        .when(zhTime(dateTime), v -> ZH_ZH)
+                        .when(zhTimeMs(dateTime),   v -> ZH_ZH_MS)
+                        .when(zhTime(dateTime),     v -> ZH_ZH)
                         .orElse(v -> ZH_DATE);
         }
 
@@ -1022,27 +1057,28 @@ public class DateTimePattern {
      */
     private static DateTimeSeparator checkSeparator(String dateTime) {
         return match(dateTime, CONTAIN)
-                .when(":", v -> COLON)
-                .when(" ", v -> SPACE)      // 没有检测到冒号，却检测到空格，说明 MM-dd HH 或 MM/dd HH 或 yyyy-MM-dd HH 这种情况
-                .when("-", v -> DASH)
-                .when("/", v -> SLASH)
-                .when(".", v -> DOT)        // 先检测 - / 再检测 . ，因为 秒与毫秒可能用 . 分隔
-                .when(zhDate(dateTime), v -> ZH_DATE)
-                .when(zhTimeMs(dateTime), v -> ZH_TIME_MS)
-                .when(zhTime(dateTime), v -> ZH_TIME)
+                .when(":",                  v -> COLON)
+                .when(" ",                  v -> SPACE)      // 没有检测到冒号，却检测到空格，说明 MM-dd HH 或 MM/dd HH 或 yyyy-MM-dd HH 这种情况
+                .when("-",                  v -> DASH)
+                .when("/",                  v -> SLASH)
+                .when(".",                  v -> DOT)        // 先检测 - / 再检测 . ，因为 秒与毫秒可能用 . 分隔
+                .when(zhDate(dateTime),     v -> ZH_DATE)
+                .when(zhTimeMs(dateTime),   v -> ZH_TIME_MS)
+                .when(zhTime(dateTime),     v -> ZH_TIME)
                 .orElse(v -> null);
     }
 
     /**
      * 针对特定情况的快速检测分隔符类型
+     *
      * @param dateTime 时间串
      * @return 时间串的分隔符类型
      */
     private static DateTimeSeparator checkSeparatorFast(String dateTime) {
         return match(dateTime, CONTAIN)
-                .when("-", v -> DASH_COLON_DOT)
-                .when("/", v -> SLASH_COLON_DOT)
-                .when(".", v -> DOT_COLON_DOT)        // 先检测 - / 再检测 . ，因为 秒与毫秒可能用 . 分隔
+                .when("-",              v -> DASH_COLON_DOT)
+                .when("/",              v -> SLASH_COLON_DOT)
+                .when(".",              v -> DOT_COLON_DOT)        // 先检测 - / 再检测 . ，因为 秒与毫秒可能用 . 分隔
                 .when(zhDate(dateTime), v -> ZH_ZH_MS)
                 .orElse(v -> null);
     }
