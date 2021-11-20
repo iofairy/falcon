@@ -1,17 +1,12 @@
-package com.iofairy;
+package com.iofairy.test;
 
 import com.iofairy.falcon.time.Interval;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
+import java.time.*;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

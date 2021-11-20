@@ -1,4 +1,4 @@
-package com.iofairy;
+package com.iofairy.test;
 
 import com.iofairy.falcon.time.DateTimePattern;
 import com.iofairy.tcf.Try;
@@ -9,6 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+
 /**
  * @author GG
  * @version 1.0
@@ -135,16 +137,18 @@ public class DateTimePatternTest {
     @Test
     public void testCostTime() {
         Try.sleep(1000);
+        int times = 10000000;
+
         long startTime = System.currentTimeMillis();
-        for (int i = 0; i < 10000000; i++) {
+        for (int i = 0; i < times; i++) {
             String fm = DateTimePattern.forDate("2020-01-02 06:06:06");
         }
-        System.out.println("cost time1: " + (System.currentTimeMillis() - startTime));  // 3774  3405  3777
+        System.out.println(times + " times cost time1: " + (System.currentTimeMillis() - startTime));  // 3774  3405  3777
         startTime = System.currentTimeMillis();
-        for (int i = 0; i < 10000000; i++) {
+        for (int i = 0; i < times; i++) {
             String fm = DateTimePattern.forDate("999-1-2 6:6:6");
         }
-        System.out.println("cost time2: " + (System.currentTimeMillis() - startTime));  // 4171  3705  3975
+        System.out.println(times + " times cost time2: " + (System.currentTimeMillis() - startTime));  // 4171  3705  3975
     }
 
 }
