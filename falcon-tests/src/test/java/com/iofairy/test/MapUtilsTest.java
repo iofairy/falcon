@@ -1,6 +1,8 @@
 package com.iofairy.test;
 
 import com.iofairy.falcon.util.MapUtils;
+import com.iofairy.top.G;
+import com.iofairy.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -52,5 +54,56 @@ public class MapUtilsTest {
 
         List<Map.Entry<String, List<Integer>>> entriesInt = MapUtils.sortByInt(listMap, kv -> -kv.getValue().size());
         assertEquals("[a=[1, 2, 3, 4, 5], c=[1, 2, 3, 4], d=[1, 2, 3], b=[1, 2], e=[]]", entriesInt.toString());
+    }
+
+    @Test
+    public void testMapToArray() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("id", 123456);
+        map.put("name", "zs");
+        map.put("age", 20);
+        map.put("nickname", "nickname");
+        map.put("hobby", "swim");
+        map.put(null, "null_value");
+        map.put("other", 'a');
+
+        Tuple2<String[], Object[]> tuple = MapUtils.mapToArray(map, String.class, Object.class);
+        assertEquals("([\"id\", \"name\", \"age\", \"nickname\", \"hobby\", null, \"other\"], " +
+                "[123456, \"zs\", 20, \"nickname\", \"swim\", \"null_value\", 'a'])", tuple.toString());
+        assertEquals("java.lang.Character", tuple._2[6].getClass().getName());
+        assertEquals(8, ((String) tuple._2[3]).length());
+        System.out.println(tuple);
+        System.out.println("tuple._2[6] class name: " + tuple._2[6].getClass().getName());
+        System.out.println("((String) tuple._2[3]).length(): " + ((String) tuple._2[3]).length());
+
+        Tuple2<String[], Object[]> tuple1 = MapUtils.mapToArray(map, String.class, Object.class, null);
+        assertEquals("([\"id\", \"name\", \"age\", \"nickname\", \"hobby\", null, \"other\"], " +
+                "[123456, \"zs\", 20, \"nickname\", \"swim\", \"null_value\", 'a'])", G.toString(tuple1));
+        System.out.println(tuple1);
+
+        Tuple2<String[], Object[]> tuple2 = MapUtils.mapToArray(map, String.class, Object.class, "other", null, "age");
+        assertEquals("([\"id\", \"name\", \"nickname\", \"hobby\"], [123456, \"zs\", \"nickname\", \"swim\"])", tuple2.toString());
+        System.out.println(tuple2);
+
+    }
+
+    @Test
+    public void testMapToArray1() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("id", 123456);
+        map.put("name", "zs");
+        map.put("age", 20);
+        map.put("nickname", "nickname");
+        map.put("hobby", "swim");
+        map.put(null, "null_value");
+        map.put("other", 'a');
+
+        String[] keys = MapUtils.keyToArray(map, String.class, "other", null);
+        Object[] values = MapUtils.valueToArray(map, Object.class, "other", null);
+        assertEquals("[\"id\", \"name\", \"age\", \"nickname\", \"hobby\"]", G.toString(keys));
+        assertEquals("[123456, \"zs\", 20, \"nickname\", \"swim\"]", G.toString(values));
+        System.out.println(G.toString(keys));
+        System.out.println(G.toString(values));
+
     }
 }
