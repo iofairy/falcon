@@ -18,19 +18,23 @@ package com.iofairy.falcon.fs;
 import com.iofairy.falcon.os.OS;
 import com.iofairy.top.G;
 
+import java.util.Arrays;
+
 /**
  * File Path
  * @since 0.0.1
  */
 public class FilePath {
-    public final static String ROOT = "/";
-    public final static String SLASH = "/";             // 斜杠
-    public final static String BACKSLASH = "\\";        // 反斜杠
-    public final static String EMPTY = "";              // 空字符串
-    public final static String DOT = ".";               // 当前目录
-    public final static String DOTSLASH = "./";         // UNIX当前目录
-    public final static String DOTBACKSLASH = ".\\";    // Win当前目录
-    public final static String SLASHDOT = "/.";
+    public final static String ROOT          =  "/";            // 根路径
+    public final static String SLASH         =  "/";            // 斜杠
+    public final static String BACKSLASH     =  "\\";           // 反斜杠
+    public final static String EMPTY         =  "";             // 空字符串
+    public final static String DOT           =  ".";            // 当前目录
+    public final static String DOTSLASH      =  "./";           // UNIX当前目录
+    public final static String DOTBACKSLASH  =  ".\\";          // Win当前目录
+    public final static String TWOBACKSLASH  =  "\\\\";         // 双反斜杠（用于正则匹配）
+    public final static String SLASHDOT      =  "/.";
+    public final static String BACKSLASHDOT  =  "\\.";
 
 
     /**
@@ -96,11 +100,11 @@ public class FilePath {
         if (null == firstPath) return null;
         boolean isFirstPathEmpty = EMPTY.equals(firstPath);
         StringBuffer pathBuffer = new StringBuffer(firstPath);
-        if (subPaths != null && subPaths.length != 0) {
+        if (!G.isEmpty(subPaths)) {
             // subPaths 中的元素不能有 null 值
             if (G.hasNull(subPaths)) return null;
 
-            boolean isFirstNonEmptySubPath = true;
+            boolean isFirstNonEmptySubPath = true;  // 是否是第一个不为空的子目录
             for (String path : subPaths) {
                 if (!G.isEmpty(path)) {
                     /*
@@ -127,7 +131,7 @@ public class FilePath {
     }
 
     /**
-     * The system-dependent subPaths. <br>
+     * The system-dependent for concat paths. <br>
      * On UNIX systems, it will call {@link #path(String, String...)}; <br>
      * On Windows systems, it will call {@link #pathSlash(String, String...)}. <br><br>
      * 根据系统自动选择拼接paths的方法。<br>
@@ -142,7 +146,7 @@ public class FilePath {
     }
 
     /**
-     * The system-dependent subPaths. <br>
+     * The system-dependent for concat paths. <br>
      * On UNIX systems, it will call {@link #path(String, String...)}; <br>
      * On Windows systems, it will call {@link #pathWin(String, String...)}. <br><br>
      * 根据系统自动选择拼接paths的方法。<br>
@@ -154,6 +158,108 @@ public class FilePath {
      */
     public static String pathAutoWin(String firstPath, String... subPaths) {
         return OS.IS_WINDOWS ? pathWin(firstPath, subPaths) : path(firstPath, subPaths);
+    }
+
+    /**
+     * PathInfo for UNIX systems. Using {@link SeparatorType#SLASH}.<br>
+     *
+     * @param filePath 文件路径
+     * @return PathInfo
+     * @since 0.0.6
+     */
+    public static PathInfo info(String filePath) {
+        return getPathInfo(filePath, SeparatorType.SLASH);
+    }
+
+    /**
+     * PathInfo for Windows systems. Using {@link SeparatorType#BACKSLASH}.<br>
+     *
+     * @param filePath 文件路径
+     * @return PathInfo
+     * @since 0.0.6
+     */
+    public static PathInfo infoWin(String filePath) {
+        return getPathInfo(filePath, SeparatorType.BACKSLASH);
+    }
+
+    /**
+     * PathInfo for Windows systems. Using {@link SeparatorType#WIN_SLASH}.<br>
+     *
+     * @param filePath 文件路径
+     * @return PathInfo
+     * @since 0.0.6
+     */
+    public static PathInfo infoSlash(String filePath) {
+        return getPathInfo(filePath, SeparatorType.WIN_SLASH);
+    }
+
+    /**
+     * The system-dependent for getting PathInfo.<br>
+     *
+     * @param filePath 文件路径
+     * @return PathInfo
+     * @since 0.0.6
+     */
+    public static PathInfo infoAuto(String filePath) {
+        return OS.IS_WINDOWS ? infoSlash(filePath) : info(filePath);
+    }
+
+    /**
+     * The system-dependent for getting PathInfo.<br>
+     *
+     * @param filePath 文件路径
+     * @return PathInfo
+     * @since 0.0.6
+     */
+    public static PathInfo infoAutoWin(String filePath) {
+        return OS.IS_WINDOWS ? infoWin(filePath) : info(filePath);
+    }
+
+    /**
+     * Get PathInfo
+     *
+     * @param filePath      filePath
+     * @param separatorType separatorType
+     * @return PathInfo
+     * @since 0.0.6
+     */
+    private static PathInfo getPathInfo(String filePath, SeparatorType separatorType) {
+        if (G.isEmpty(filePath)) return null;
+
+        String path;
+        String rootStr = SLASH;
+        String separator = SLASH;
+        switch (separatorType) {
+            case SLASH:
+                path = path(filePath);
+                break;
+            case WIN_SLASH:
+                path = pathSlash(filePath);
+                break;
+            default:
+                path = pathWin(filePath);
+                rootStr = BACKSLASH;
+                separator = BACKSLASH;
+        }
+
+        if (path.equals(rootStr)) return new PathInfo(true, rootStr, null, rootStr, new String[]{rootStr}, separator, separatorType);
+
+        String[] paths = path.split(separator.equals(SLASH) ? SLASH : TWOBACKSLASH);
+
+        if (path.startsWith(rootStr)) {
+            paths[0] = rootStr;     // paths[0] 原始值为 空字符串("")
+            String parentPath = rootStr + String.join(separator, Arrays.copyOfRange(paths, 1, paths.length - 1));
+            String fileName = paths[paths.length - 1];
+            return new PathInfo(true, parentPath, fileName, path, paths, separator, separatorType);
+        } else {
+            if (paths.length == 1) {
+                return new PathInfo(false, null, paths[0], paths[0], paths, separator, separatorType);
+            } else {
+                String parentPath = String.join(separator, Arrays.copyOfRange(paths, 0, paths.length - 1));
+                String fileName = paths[paths.length - 1];
+                return new PathInfo(false, parentPath, fileName, path, paths, separator, separatorType);
+            }
+        }
     }
 
     /**
