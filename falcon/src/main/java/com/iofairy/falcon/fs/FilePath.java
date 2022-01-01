@@ -90,11 +90,13 @@ public class FilePath {
     }
 
     /**
-     * Concat subPaths.
-     * @param isWin is Windows path
+     * Concat paths. <br>
+     * 拼接路径。<br>
+     *
+     * @param isWin     is Windows path or not
      * @param firstPath firstPath
-     * @param subPaths subPaths
-     * @return path
+     * @param subPaths  subPaths
+     * @return path. <b>Note:</b> it will return {@code null} when <b>{@code firstPath}</b> is {@code null} or there is {@code null} value in <b>{@code subPaths}</b>.
      */
     private static String concatPath(boolean isWin, String firstPath, String... subPaths) {
         if (null == firstPath) return null;
