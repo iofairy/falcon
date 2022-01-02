@@ -42,6 +42,9 @@ public class FilePathTest {
         String path22 = FilePath.path("/", null);
         String path23 = FilePath.path("./", (String[])null);
         String path24 = FilePath.path("/", new String[]{});
+        String path25 = FilePath.path("../..", "/.\\", "../", "/././a./.a/..");
+        String path26 = FilePath.path("../..", "/.\\", "../", "/././a./.a/.");
+        String path27 = FilePath.path("../..", "/.\\", "../", "/././a./.a/.\\");
 
         assertEquals("./a/b/c/d", path01);
         assertEquals("/", path02);
@@ -67,6 +70,9 @@ public class FilePathTest {
         assertEquals("/", path22);
         assertEquals(".", path23);
         assertEquals("/", path24);
+        assertEquals("../../.\\/../a./.a/..", path25);
+        assertEquals("../../.\\/../a./.a", path26);
+        assertEquals("../../.\\/../a./.a/.\\", path27);
 
     }
 
@@ -98,6 +104,9 @@ public class FilePathTest {
         String path22 = FilePath.pathWin("/", null);
         String path23 = FilePath.pathWin("./", (String[])null);
         String path24 = FilePath.pathWin("/", new String[]{});
+        String path25 = FilePath.pathWin("../..", "/.\\", "../", "/././a./.a/..");
+        String path26 = FilePath.pathWin("../..", "/.\\", "../", "/././a./.a/.");
+        String path27 = FilePath.pathWin("../..", "/.\\", "../", "/././a./.a/.\\");
 
         assertEquals(".\\a\\b\\c\\d", path01);
         assertEquals("\\", path02);
@@ -123,6 +132,10 @@ public class FilePathTest {
         assertEquals("\\", path22);
         assertEquals(".", path23);
         assertEquals("\\", path24);
+        assertEquals("..\\..\\..\\a.\\.a\\..", path25);
+        assertEquals("..\\..\\..\\a.\\.a", path26);
+        assertEquals("..\\..\\..\\a.\\.a", path27);
+
     }
 
     @Test
@@ -153,6 +166,9 @@ public class FilePathTest {
         String path22 = FilePath.pathSlash("/", null);
         String path23 = FilePath.pathSlash("./", (String[])null);
         String path24 = FilePath.pathSlash("/", new String[]{});
+        String path25 = FilePath.pathSlash("../..", "/.\\", "../", "/././a./.a/..");
+        String path26 = FilePath.pathSlash("../..", "/.\\", "../", "/././a./.a/.");
+        String path27 = FilePath.pathSlash("../..", "/.\\", "../", "/././a./.a/.\\");
 
         assertEquals("./a/b/c/d", path01);
         assertEquals("/", path02);
@@ -178,6 +194,10 @@ public class FilePathTest {
         assertEquals("/", path22);
         assertEquals(".", path23);
         assertEquals("/", path24);
+        assertEquals("../../../a./.a/..", path25);
+        assertEquals("../../../a./.a", path26);
+        assertEquals("../../../a./.a", path27);
+
     }
 
     @Test
