@@ -24,6 +24,7 @@ public class RegexTest {
         MatchInfo match4 = Regex.match(Pattern.compile("\\."), "");
         MatchInfo match5 = Regex.match(Pattern.compile("\\."), "0.0.1");
         MatchInfo match6 = Regex.match(Pattern.compile("\\d+"), "001a002b");
+
         assertNull(match1);
         assertNull(match2);
         assertEquals("[MatchIndex{start=0, end=0, length=0}]", match3.indices.toString());
@@ -41,6 +42,7 @@ public class RegexTest {
         System.out.println(match4);
         System.out.println(match5);
         System.out.println(match6);
+
     }
 
     @Test
@@ -53,6 +55,9 @@ public class RegexTest {
         MatchInfo match4 = Regex.matchOverlap(Pattern.compile("\\."), "");
         MatchInfo match5 = Regex.matchOverlap(Pattern.compile("\\."), "0.0.1");
         MatchInfo match6 = Regex.matchOverlap(Pattern.compile("\\d+"), "001a002b");
+        MatchInfo match7 = Regex.matchOverlap(Pattern.compile("\\d+"), "001");
+        MatchInfo match8 = Regex.matchOverlap(Pattern.compile("\\d+"), "0");
+
         assertNull(match1);
         assertNull(match2);
         assertEquals("[MatchIndex{start=0, end=0, length=0}]", match3.indices.toString());
@@ -63,6 +68,8 @@ public class RegexTest {
         assertEquals(".", match5.group(0));
         assertEquals(6, match6.count);
         assertEquals("1", match6.group(2));
+        assertEquals("01", match7.group(1));
+        assertEquals(1, match8.count);
 
         System.out.println(match1);
         System.out.println(match2);
@@ -70,5 +77,8 @@ public class RegexTest {
         System.out.println(match4);
         System.out.println(match5);
         System.out.println(match6);
+        System.out.println(match7);
+        System.out.println(match8);
+
     }
 }
