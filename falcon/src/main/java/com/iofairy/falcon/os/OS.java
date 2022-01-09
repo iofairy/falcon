@@ -22,6 +22,7 @@ import java.io.File;
 /**
  * OS for getting operating system info. <br>
  * 获取操作系统信息类
+ *
  * @since 0.0.1
  */
 public final class OS {
@@ -30,13 +31,21 @@ public final class OS {
      * 操作系统名称
      */
     public static final String OS_NAME = getProperty("os.name");
+    /**
+     * Operating System name (Lower Case). <br>
+     * 操作系统名称（小写）
+     */
     private static final String os = OS_NAME == null ? "" : OS_NAME.toLowerCase();
 
     /**
      * Operating System version. <br>
-     * 操作系统版本号
+     * 操作系统版本号（即数字类型版本号）
      */
     public static final String OS_VERSION = getProperty("os.version");
+    /**
+     * Operating System version. <br>
+     * 操作系统版本号（即数字类型版本号）
+     */
     private static final String osVersion = OS_VERSION == null ? "" : OS_VERSION;
 
     /**
@@ -107,28 +116,38 @@ public final class OS {
      **********************************************************************************
      */
     private static final boolean IS_PRE_MACOSX = os.startsWith("mac os x");
-    public static final boolean IS_MACOS_BIG_SUR_5 = macOSCompare("11.5");
-    public static final boolean IS_MACOS_BIG_SUR_4 = macOSCompare("11.4");
-    public static final boolean IS_MACOS_BIG_SUR_3 = macOSCompare("11.3");
-    public static final boolean IS_MACOS_BIG_SUR_2 = macOSCompare("11.2");
-    public static final boolean IS_MACOS_BIG_SUR_1 = macOSCompare("11.1");
-    public static final boolean IS_MACOS_BIG_SUR_0 = macOSCompare("11.0");
-    public static final boolean IS_MACOS_CATALINA = macOSCompare("10.15");
-    public static final boolean IS_MACOS_MOJAVE = macOSCompare("10.14");
-    public static final boolean IS_MACOS_HIGH_SIERRA = macOSCompare("10.13");
-    public static final boolean IS_MACOS_SIERRA = macOSCompare("10.12");
-    public static final boolean IS_MAC_OS_X_EL_CAPITAN = macOSCompare("10.11");
-    public static final boolean IS_MAC_OS_X_YOSEMITE = macOSCompare("10.10");
-    public static final boolean IS_MAC_OS_X_MAVERICKS = macOSCompare("10.9");
-    public static final boolean IS_MAC_OS_X_MOUNTAIN_LION = macOSCompare("10.8");
-    public static final boolean IS_MAC_OS_X_LION = macOSCompare("10.7");
-    public static final boolean IS_MAC_OS_X_SNOW_LEOPARD = macOSCompare("10.6");
-    public static final boolean IS_MAC_OS_X_LEOPARD = macOSCompare("10.5");
-    public static final boolean IS_MAC_OS_X_TIGER = macOSCompare("10.4");
-    public static final boolean IS_MAC_OS_X_PANTHER = macOSCompare("10.3");
-    public static final boolean IS_MAC_OS_X_JAGUAR = macOSCompare("10.2");
-    public static final boolean IS_MAC_OS_X_PUMA = macOSCompare("10.1");
-    public static final boolean IS_MAC_OS_X_CHEETAH = macOSCompare("10.0");
+
+    public static final boolean IS_MACOS_MONTEREY_2         = macOSCompare("12.2");
+    public static final boolean IS_MACOS_MONTEREY_1         = macOSCompare("12.1");
+    public static final boolean IS_MACOS_MONTEREY_0         = macOSCompare("12.0");
+    public static final boolean IS_MACOS_BIG_SUR_6          = macOSCompare("11.6");
+    public static final boolean IS_MACOS_BIG_SUR_5          = macOSCompare("11.5");
+    public static final boolean IS_MACOS_BIG_SUR_4          = macOSCompare("11.4");
+    public static final boolean IS_MACOS_BIG_SUR_3          = macOSCompare("11.3");
+    public static final boolean IS_MACOS_BIG_SUR_2          = macOSCompare("11.2");
+    public static final boolean IS_MACOS_BIG_SUR_1          = macOSCompare("11.1");
+    public static final boolean IS_MACOS_BIG_SUR_0          = macOSCompare("11.0");
+    public static final boolean IS_MACOS_CATALINA           = macOSCompare("10.15");
+    public static final boolean IS_MACOS_MOJAVE             = macOSCompare("10.14");
+    public static final boolean IS_MACOS_HIGH_SIERRA        = macOSCompare("10.13");
+    public static final boolean IS_MACOS_SIERRA             = macOSCompare("10.12");
+    public static final boolean IS_MAC_OS_X_EL_CAPITAN      = macOSCompare("10.11");
+    public static final boolean IS_MAC_OS_X_YOSEMITE        = macOSCompare("10.10");
+    public static final boolean IS_MAC_OS_X_MAVERICKS       = macOSCompare("10.9");
+    public static final boolean IS_MAC_OS_X_MOUNTAIN_LION   = macOSCompare("10.8");
+    public static final boolean IS_MAC_OS_X_LION            = macOSCompare("10.7");
+    public static final boolean IS_MAC_OS_X_SNOW_LEOPARD    = macOSCompare("10.6");
+    public static final boolean IS_MAC_OS_X_LEOPARD         = macOSCompare("10.5");
+    public static final boolean IS_MAC_OS_X_TIGER           = macOSCompare("10.4");
+    public static final boolean IS_MAC_OS_X_PANTHER         = macOSCompare("10.3");
+    public static final boolean IS_MAC_OS_X_JAGUAR          = macOSCompare("10.2");
+    public static final boolean IS_MAC_OS_X_PUMA            = macOSCompare("10.1");
+    public static final boolean IS_MAC_OS_X_CHEETAH         = macOSCompare("10.0");
+
+    public static final boolean IS_MAC_12_2 = IS_MACOS_MONTEREY_2;
+    public static final boolean IS_MAC_12_1 = IS_MACOS_MONTEREY_1;
+    public static final boolean IS_MAC_12_0 = IS_MACOS_MONTEREY_0;
+    public static final boolean IS_MAC_11_6 = IS_MACOS_BIG_SUR_6;
     public static final boolean IS_MAC_11_5 = IS_MACOS_BIG_SUR_5;
     public static final boolean IS_MAC_11_4 = IS_MACOS_BIG_SUR_4;
     public static final boolean IS_MAC_11_3 = IS_MACOS_BIG_SUR_3;
@@ -182,6 +201,7 @@ public final class OS {
      * 如果当前操作系统是Windows系统，那么值为true。
      */
     public static final boolean IS_WINDOWS = os.startsWith("windows");
+    public static final boolean IS_WINDOWS_11 = os.startsWith("windows 11");
     public static final boolean IS_WINDOWS_10 = os.startsWith("windows 10");
     public static final boolean IS_WINDOWS_8 = os.startsWith("windows 8");
     public static final boolean IS_WINDOWS_7 = os.startsWith("windows 7");
@@ -192,6 +212,7 @@ public final class OS {
     public static final boolean IS_WINDOWS_98 = os.startsWith("windows 98");
     public static final boolean IS_WINDOWS_95 = os.startsWith("windows 95");
     public static final boolean IS_WINDOWS_NT = os.startsWith("windows nt");
+    public static final boolean IS_WINDOWS_SERVER_2022 = os.startsWith("windows server 2022");
     public static final boolean IS_WINDOWS_SERVER_2019 = os.startsWith("windows server 2019");
     public static final boolean IS_WINDOWS_SERVER_2016 = os.startsWith("windows server 2016");
     public static final boolean IS_WINDOWS_SERVER_2012 = os.startsWith("windows server 2012");
@@ -242,7 +263,11 @@ public final class OS {
     }
 
     private static boolean isMacOS() {
-        return IS_MACOS_BIG_SUR_5
+        return IS_MACOS_MONTEREY_2
+                || IS_MACOS_MONTEREY_1
+                || IS_MACOS_MONTEREY_0
+                || IS_MACOS_BIG_SUR_6
+                || IS_MACOS_BIG_SUR_5
                 || IS_MACOS_BIG_SUR_4
                 || IS_MACOS_BIG_SUR_3
                 || IS_MACOS_BIG_SUR_2
