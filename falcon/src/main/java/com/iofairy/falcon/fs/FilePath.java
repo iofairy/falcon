@@ -17,8 +17,11 @@ package com.iofairy.falcon.fs;
 
 import com.iofairy.falcon.os.OS;
 import com.iofairy.top.G;
+import com.iofairy.tuple.Tuple;
+import com.iofairy.tuple.Tuple3;
 
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 /**
  * File Path
@@ -30,11 +33,14 @@ public class FilePath {
     public final static String BACKSLASH     =  "\\";           // 反斜杠
     public final static String EMPTY         =  "";             // 空字符串
     public final static String DOT           =  ".";            // 当前目录
+    public final static String PARENT_DIR    =  "..";           // 上级目录
     public final static String DOTSLASH      =  "./";           // UNIX当前目录
     public final static String DOTBACKSLASH  =  ".\\";          // Win当前目录
     public final static String TWOBACKSLASH  =  "\\\\";         // 双反斜杠（用于正则匹配）
     public final static String SLASHDOT      =  "/.";
     public final static String BACKSLASHDOT  =  "\\.";
+
+    public final static Pattern SLASH_PATTERN = Pattern.compile("[/\\\\]");
 
 
     /**
@@ -244,24 +250,39 @@ public class FilePath {
                 separator = BACKSLASH;
         }
 
-        if (path.equals(rootStr)) return new PathInfo(true, rootStr, null, rootStr, new String[]{rootStr}, separator, separatorType);
+        if (path.equals(rootStr))
+            return new PathInfo(true, rootStr, null, rootStr, new String[]{rootStr}, EMPTY, EMPTY, separator, separatorType);
 
         String[] paths = path.split(separator.equals(SLASH) ? SLASH : TWOBACKSLASH);
 
         if (path.startsWith(rootStr)) {
             paths[0] = rootStr;     // paths[0] 原始值为 空字符串("")
             String parentPath = rootStr + String.join(separator, Arrays.copyOfRange(paths, 1, paths.length - 1));
-            String fileName = paths[paths.length - 1];
-            return new PathInfo(true, parentPath, fileName, path, paths, separator, separatorType);
+            Tuple3<String, String, String> infoTuple = getPathInfo(paths);
+            return new PathInfo(true, parentPath, infoTuple._1, path, paths, infoTuple._2, infoTuple._3, separator, separatorType);
         } else {
             if (paths.length == 1) {
-                return new PathInfo(false, null, paths[0], paths[0], paths, separator, separatorType);
+                Tuple3<String, String, String> infoTuple = getPathInfo(paths);
+                return new PathInfo(false, null, infoTuple._1, paths[0], paths, infoTuple._2, infoTuple._3, separator, separatorType);
             } else {
                 String parentPath = String.join(separator, Arrays.copyOfRange(paths, 0, paths.length - 1));
-                String fileName = paths[paths.length - 1];
-                return new PathInfo(false, parentPath, fileName, path, paths, separator, separatorType);
+                Tuple3<String, String, String> infoTuple = getPathInfo(paths);
+                return new PathInfo(false, parentPath, infoTuple._1, path, paths, infoTuple._2, infoTuple._3, separator, separatorType);
             }
         }
+    }
+
+    /**
+     * Get fileName, ext, extNoDot
+     *
+     * @param paths path array
+     * @return fileName, ext, extNoDot
+     */
+    private static Tuple3<String, String, String> getPathInfo(String[] paths) {
+        String fileName = paths[paths.length - 1];
+        String ext = ext(fileName);
+        String extNoDot = ext == null ? null : ext.replace(DOT, EMPTY);
+        return Tuple.of(fileName, ext, extNoDot);
     }
 
     /**
@@ -501,6 +522,40 @@ public class FilePath {
     public static String mergeDotBackslash(String originPath) {
         if (G.isEmpty(originPath)) return originPath;
         return originPath.replaceAll("\\\\(\\.\\\\)+", "\\\\");
+    }
+
+    /**
+     * Get file extension from path or filename. <br>
+     * 从路径或文件名中获取文件扩展名。 <br>
+     * 注：Windows不能创建以 . 为后缀的文件或文件夹（会自动去除），Linux则可以。
+     *
+     * @param path path
+     * @return file extension, <b>eg</b>: {@code .txt}, {@code .csv}
+     */
+    public static String ext(String path) {
+        if (path == null) return null;
+        if (G.isBlank(path) || DOT.equals(path) || PARENT_DIR.equals(path)) return EMPTY;
+        int dotIndex = path.lastIndexOf(DOT);
+        if (dotIndex == -1) {
+            return EMPTY;
+        } else {
+            String subStr = path.substring(dotIndex);
+            return SLASH_PATTERN.matcher(subStr).find() ? EMPTY : subStr;
+        }
+    }
+
+    /**
+     * Get file extension without dot from path or filename. <br>
+     * 从路径或文件名中获取文件扩展名，不带点。 <br>
+     * 注：Windows不能创建以 . 为后缀的文件或文件夹（会自动去除），Linux则可以。
+     *
+     * @param path path
+     * @return file extension without dot, <b>eg</b>: {@code txt}, {@code csv}
+     */
+    public static String extNoDot(String path) {
+        String ext = ext(path);
+        if (ext == null) return null;
+        return ext.replace(DOT, EMPTY);
     }
 
     /**

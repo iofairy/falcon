@@ -45,6 +45,14 @@ public class PathInfo {
      */
     private String[] paths;
     /**
+     * 获取文件后缀名（如：.txt, .csv）
+     */
+    private String ext;
+    /**
+     * 获取文件后缀名，不带点（如：txt, csv）
+     */
+    private String extNoDot;
+    /**
      * 路径分隔符
      */
     private String separator;
@@ -56,12 +64,14 @@ public class PathInfo {
     public PathInfo() {
     }
 
-    public PathInfo(boolean hasRoot, String parentPath, String fileName, String fullPath, String[] paths, String separator, SeparatorType separatorType) {
+    public PathInfo(boolean hasRoot, String parentPath, String fileName, String fullPath, String[] paths, String ext, String extNoDot, String separator, SeparatorType separatorType) {
         this.hasRoot = hasRoot;
         this.parentPath = parentPath;
         this.fileName = fileName;
         this.fullPath = fullPath;
         this.paths = paths;
+        this.ext = ext;
+        this.extNoDot = extNoDot;
         this.separator = separator;
         this.separatorType = separatorType;
     }
@@ -106,6 +116,22 @@ public class PathInfo {
         this.paths = paths;
     }
 
+    public String getExt() {
+        return ext;
+    }
+
+    public void setExt(String ext) {
+        this.ext = ext;
+    }
+
+    public String getExtNoDot() {
+        return extNoDot;
+    }
+
+    public void setExtNoDot(String extNoDot) {
+        this.extNoDot = extNoDot;
+    }
+
     public String getSeparator() {
         return separator;
     }
@@ -127,12 +153,16 @@ public class PathInfo {
         String tmpParentPath = parentPath == null ? null : '\'' + parentPath + '\'';
         String tmpFileName = fileName == null ? null : '\'' + fileName + '\'';
         String tmpFullPath = fullPath == null ? null : '\'' + fullPath + '\'';
+        String tmpExt = ext == null ? null : '\'' + ext + '\'';
+        String tmpExtNoDot = extNoDot == null ? null : '\'' + extNoDot + '\'';
         return "PathInfo{" +
                 "hasRoot=" + hasRoot +
                 ", parentPath=" + tmpParentPath +
                 ", fileName=" + tmpFileName +
                 ", fullPath=" + tmpFullPath +
                 ", paths=" + G.toString(paths) +
+                ", ext=" + tmpExt +
+                ", extNoDot=" + tmpExtNoDot +
                 ", separator='" + separator + '\'' +
                 ", separatorType=" + separatorType +
                 '}';
