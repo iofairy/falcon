@@ -19,42 +19,42 @@ import static org.junit.jupiter.api.Assertions.*;
 public class DateTimePatternTest {
     @Test
     public void testForDate() {
-        assertEquals("yyyy年MM月dd日HH时mm分ss秒SSS毫秒", DateTimePattern.forDate("2020年1月2日6时6分6秒6毫秒"));
-        assertEquals("MM月dd日HH时mm分ss秒SSS毫秒", DateTimePattern.forDate("1月2日6时6分6秒6毫秒"));
-        assertEquals("yyyy年MM月dd日HH时mm分ss秒", DateTimePattern.forDate("2020年1月2日6时6分6秒"));
-        assertEquals("yyyy年MM月dd日HH点mm分", DateTimePattern.forDate("2020年1月2日6点6分"));
-        assertEquals("yyyy.MM.dd HH:mm:ss.SSS", DateTimePattern.forDate("999.1.2 6:6:6.6"));
-        assertEquals("yyyy-MM-dd HH:mm:ss.SSS", DateTimePattern.forDate("2020-1-2 6:6:6.6"));
-        assertEquals("yyyy/MM/dd HH:mm:ss.SSS", DateTimePattern.forDate("2020/1/2 6:6:6.6"));
-        assertEquals("yyyy-MM-dd HH:mm:ss", DateTimePattern.forDate("2020-01-02 06:06:06"));
-        assertEquals("yyyy-MM-dd HH:mm:ss", DateTimePattern.forDate("999-1-2 6:6:6"));
-        assertEquals("MM.dd HH:mm:ss.SSS", DateTimePattern.forDate("01.2 6:6:6.6"));
-        assertEquals("MM-dd HH:mm:ss.SSS", DateTimePattern.forDate("01-2 6:6:6.6"));
-        assertEquals("mm:ss.SSS", DateTimePattern.forDate("6:6.6"));
-        assertEquals("mm:ss.SSS", DateTimePattern.forDate("6:6.655"));
-        assertEquals("yyyyMMddHHmmssSSS", DateTimePattern.forDate("20200102060606006"));
-        assertEquals("yyyyMMddHHmmss", DateTimePattern.forDate("20200102060606"));
-        assertEquals("yyyy", DateTimePattern.forDate("999"));
-        assertEquals("yyyy", DateTimePattern.forDate("2020"));
-        assertEquals("yyyy年MM月dd日", DateTimePattern.forDate("2020年1月2日"));
-        assertEquals("yyyy年MM月dd日", DateTimePattern.forDate("2020年01月02日"));
-        assertEquals("MM月dd日HH时mm分ss秒SSS毫秒", DateTimePattern.forDate("1月2日6时6分6秒6毫秒"));
-        assertEquals("MM月dd日HH点mm分ss秒SSS毫秒", DateTimePattern.forDate("1月2日6点6分6秒6毫秒"));
-        assertEquals("yyyy-MM-dd", DateTimePattern.forDate("2020-01-02"));
-        assertEquals("yyyy-MM-dd", DateTimePattern.forDate("999-1-2"));
-        assertEquals("yyyy.MM.dd", DateTimePattern.forDate("2020.01.02"));
-        assertEquals("yyyy.MM.dd", DateTimePattern.forDate("999.1.2"));
-        assertEquals("HH:mm:ss", DateTimePattern.forDate("06:06:6"));
-        assertEquals("HH:mm:ss", DateTimePattern.forDate("6:6:6"));
-        assertEquals("MM.dd", DateTimePattern.forDate("1.2"));
-        assertEquals("MM.dd", DateTimePattern.forDate("01.02"));
+        assertEquals("yyyy年MM月dd日HH时mm分ss秒SSS毫秒", DateTimePattern.forSDF("2020年1月2日6时6分6秒6毫秒"));
+        assertEquals("MM月dd日HH时mm分ss秒SSS毫秒", DateTimePattern.forSDF("1月2日6时6分6秒6毫秒"));
+        assertEquals("yyyy年MM月dd日HH时mm分ss秒", DateTimePattern.forSDF("2020年1月2日6时6分6秒"));
+        assertEquals("yyyy年MM月dd日HH点mm分", DateTimePattern.forSDF("2020年1月2日6点6分"));
+        assertEquals("yyyy.MM.dd HH:mm:ss.SSS", DateTimePattern.forSDF("999.1.2 6:6:6.6"));
+        assertEquals("yyyy-MM-dd HH:mm:ss.SSS", DateTimePattern.forSDF("2020-1-2 6:6:6.6"));
+        assertEquals("yyyy/MM/dd HH:mm:ss.SSS", DateTimePattern.forSDF("2020/1/2 6:6:6.6"));
+        assertEquals("yyyy-MM-dd HH:mm:ss", DateTimePattern.forSDF("2020-01-02 06:06:06"));
+        assertEquals("yyyy-MM-dd HH:mm:ss", DateTimePattern.forSDF("999-1-2 6:6:6"));
+        assertEquals("MM.dd HH:mm:ss.SSS", DateTimePattern.forSDF("01.2 6:6:6.6"));
+        assertEquals("MM-dd HH:mm:ss.SSS", DateTimePattern.forSDF("01-2 6:6:6.6"));
+        assertEquals("mm:ss.SSS", DateTimePattern.forSDF("6:6.6"));
+        assertEquals("mm:ss.SSS", DateTimePattern.forSDF("6:6.655"));
+        assertEquals("yyyyMMddHHmmssSSS", DateTimePattern.forSDF("20200102060606006"));
+        assertEquals("yyyyMMddHHmmss", DateTimePattern.forSDF("20200102060606"));
+        assertEquals("yyyy", DateTimePattern.forSDF("999"));
+        assertEquals("yyyy", DateTimePattern.forSDF("2020"));
+        assertEquals("yyyy年MM月dd日", DateTimePattern.forSDF("2020年1月2日"));
+        assertEquals("yyyy年MM月dd日", DateTimePattern.forSDF("2020年01月02日"));
+        assertEquals("MM月dd日HH时mm分ss秒SSS毫秒", DateTimePattern.forSDF("1月2日6时6分6秒6毫秒"));
+        assertEquals("MM月dd日HH点mm分ss秒SSS毫秒", DateTimePattern.forSDF("1月2日6点6分6秒6毫秒"));
+        assertEquals("yyyy-MM-dd", DateTimePattern.forSDF("2020-01-02"));
+        assertEquals("yyyy-MM-dd", DateTimePattern.forSDF("999-1-2"));
+        assertEquals("yyyy.MM.dd", DateTimePattern.forSDF("2020.01.02"));
+        assertEquals("yyyy.MM.dd", DateTimePattern.forSDF("999.1.2"));
+        assertEquals("HH:mm:ss", DateTimePattern.forSDF("06:06:6"));
+        assertEquals("HH:mm:ss", DateTimePattern.forSDF("6:6:6"));
+        assertEquals("MM.dd", DateTimePattern.forSDF("1.2"));
+        assertEquals("MM.dd", DateTimePattern.forSDF("01.02"));
 
 
-        assertNull(DateTimePattern.forDate("2020/1/2 6:6.:6.6"));
-        assertNull(DateTimePattern.forDate("20201266665"));
-        assertNull(DateTimePattern.forDate("99"));
-        assertNull(DateTimePattern.forDate("yyyy年MM月dd日HH时mm分ss秒SSS毫秒"));
-        assertNull(DateTimePattern.forDate("yyyy年MM月dd日HH时mm分ss秒SSSS毫秒"));
+        assertNull(DateTimePattern.forSDF("2020/1/2 6:6.:6.6"));
+        assertNull(DateTimePattern.forSDF("20201266665"));
+        assertNull(DateTimePattern.forSDF("99"));
+        assertNull(DateTimePattern.forSDF("yyyy年MM月dd日HH时mm分ss秒SSS毫秒"));
+        assertNull(DateTimePattern.forSDF("yyyy年MM月dd日HH时mm分ss秒SSSS毫秒"));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class DateTimePatternTest {
     }
 
     public static String dateTimeFormat(String dateTime) {
-        String format = DateTimePattern.forDate(dateTime);
+        String format = DateTimePattern.forSDF(dateTime);
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         Date date = null;
@@ -105,33 +105,33 @@ public class DateTimePatternTest {
 
     @Test
     public void testforLocalDT() {
-        assertEquals("yyyy年MM月dd日HH时mm分ss秒SSS毫秒", DateTimePattern.forLocalDT("2020年01月02日06时06分06秒066毫秒"));
-        assertEquals("yyyy年MM月dd日HH时mm分ss秒", DateTimePattern.forLocalDT("2020年01月02日06时06分06秒"));
-        assertEquals("yyyy.MM.dd HH:mm:ss.SSS", DateTimePattern.forLocalDT("2020.01.02 06:06:06.066"));
-        assertEquals("yyyy-MM-dd HH:mm:ss.SSS", DateTimePattern.forLocalDT("2020-01-02 06:06:06.066"));
-        assertEquals("yyyy/MM/dd HH:mm:ss.SSS", DateTimePattern.forLocalDT("2020/01/02 06:06:06.066"));
-        assertEquals("yyyy-MM-dd HH:mm:ss", DateTimePattern.forLocalDT("2020-01-02 06:06:06"));
-        assertEquals("yyyyMMddHHmmssSSS", DateTimePattern.forLocalDT("20200102060606006"));
-        assertEquals("yyyyMMddHHmmss", DateTimePattern.forLocalDT("20200102060606"));
-        assertEquals("yyyy", DateTimePattern.forLocalDT("2020"));
-        assertEquals("yyyy年MM月dd日", DateTimePattern.forLocalDT("2020年01月02日"));
-        assertEquals("yyyy-MM-dd", DateTimePattern.forLocalDT("2020-01-02"));
-        assertEquals("yyyy.MM.dd", DateTimePattern.forLocalDT("2020.01.02"));
-        assertEquals("HH:mm:ss", DateTimePattern.forLocalDT("06:06:06"));
+        assertEquals("yyyy年MM月dd日HH时mm分ss秒SSS毫秒", DateTimePattern.forDTF("2020年01月02日06时06分06秒066毫秒"));
+        assertEquals("yyyy年MM月dd日HH时mm分ss秒", DateTimePattern.forDTF("2020年01月02日06时06分06秒"));
+        assertEquals("yyyy.MM.dd HH:mm:ss.SSS", DateTimePattern.forDTF("2020.01.02 06:06:06.066"));
+        assertEquals("yyyy-MM-dd HH:mm:ss.SSS", DateTimePattern.forDTF("2020-01-02 06:06:06.066"));
+        assertEquals("yyyy/MM/dd HH:mm:ss.SSS", DateTimePattern.forDTF("2020/01/02 06:06:06.066"));
+        assertEquals("yyyy-MM-dd HH:mm:ss", DateTimePattern.forDTF("2020-01-02 06:06:06"));
+        assertEquals("yyyyMMddHHmmssSSS", DateTimePattern.forDTF("20200102060606006"));
+        assertEquals("yyyyMMddHHmmss", DateTimePattern.forDTF("20200102060606"));
+        assertEquals("yyyy", DateTimePattern.forDTF("2020"));
+        assertEquals("yyyy年MM月dd日", DateTimePattern.forDTF("2020年01月02日"));
+        assertEquals("yyyy-MM-dd", DateTimePattern.forDTF("2020-01-02"));
+        assertEquals("yyyy.MM.dd", DateTimePattern.forDTF("2020.01.02"));
+        assertEquals("HH:mm:ss", DateTimePattern.forDTF("06:06:06"));
 
 
-        assertNull(DateTimePattern.forLocalDT("2020年1月2日"));
-        assertNull(DateTimePattern.forLocalDT("999"));
-        assertNull(DateTimePattern.forLocalDT("2020-1-2 6:6:6.6"));
-        assertNull(DateTimePattern.forLocalDT("2020年1月2日6时6分6秒6毫秒"));
-        assertNull(DateTimePattern.forLocalDT("6:6:6"));
-        assertNull(DateTimePattern.forLocalDT("1.2"));
-        assertNull(DateTimePattern.forLocalDT("01.02"));
-        assertNull(DateTimePattern.forLocalDT("2020/1/2 6:6.:6.6"));
-        assertNull(DateTimePattern.forLocalDT("20201266665"));
-        assertNull(DateTimePattern.forLocalDT("99"));
-        assertNull(DateTimePattern.forLocalDT("yyyy年MM月dd日HH时mm分ss秒SSS毫秒"));
-        assertNull(DateTimePattern.forLocalDT("yyyy年MM月dd日HH时mm分ss秒SSSS毫秒"));
+        assertNull(DateTimePattern.forDTF("2020年1月2日"));
+        assertNull(DateTimePattern.forDTF("999"));
+        assertNull(DateTimePattern.forDTF("2020-1-2 6:6:6.6"));
+        assertNull(DateTimePattern.forDTF("2020年1月2日6时6分6秒6毫秒"));
+        assertNull(DateTimePattern.forDTF("6:6:6"));
+        assertNull(DateTimePattern.forDTF("1.2"));
+        assertNull(DateTimePattern.forDTF("01.02"));
+        assertNull(DateTimePattern.forDTF("2020/1/2 6:6.:6.6"));
+        assertNull(DateTimePattern.forDTF("20201266665"));
+        assertNull(DateTimePattern.forDTF("99"));
+        assertNull(DateTimePattern.forDTF("yyyy年MM月dd日HH时mm分ss秒SSS毫秒"));
+        assertNull(DateTimePattern.forDTF("yyyy年MM月dd日HH时mm分ss秒SSSS毫秒"));
     }
 
     @Test
@@ -141,12 +141,12 @@ public class DateTimePatternTest {
 
         long startTime = System.currentTimeMillis();
         for (int i = 0; i < times; i++) {
-            String fm = DateTimePattern.forDate("2020-01-02 06:06:06");
+            String fm = DateTimePattern.forSDF("2020-01-02 06:06:06");
         }
         System.out.println(times + " times cost time1: " + (System.currentTimeMillis() - startTime));  // 3774  3405  3777
         startTime = System.currentTimeMillis();
         for (int i = 0; i < times; i++) {
-            String fm = DateTimePattern.forDate("999-1-2 6:6:6");
+            String fm = DateTimePattern.forSDF("999-1-2 6:6:6");
         }
         System.out.println(times + " times cost time2: " + (System.currentTimeMillis() - startTime));  // 4171  3705  3975
     }

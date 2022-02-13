@@ -35,164 +35,172 @@ public class DateTimePattern {
      * COLON: c   :
      * ZH:    z   年月日时分秒毫秒
      */
-    public static final Pattern Y = Pattern.compile("\\d{3,4}");                                                                            // yyyy
-    public static final Pattern YM = Pattern.compile("\\d{6}");                                                                             // yyyyMM
-    public static final Pattern YMD = Pattern.compile("\\d{8}");                                                                            // yyyyMMdd
-    public static final Pattern YMDH = Pattern.compile("\\d{10}");                                                                          // yyyyMMddHH
-    public static final Pattern YMDHM = Pattern.compile("\\d{12}");                                                                         // yyyyMMddHHmm
-    public static final Pattern YMDHMS = Pattern.compile("\\d{14}");                                                                        // yyyyMMddHHmmss
-    public static final Pattern YMDHMSS = Pattern.compile("\\d{17}");                                                                       // yyyyMMddHHmmssSSS
-    public static final Pattern MdD = Pattern.compile("\\d{1,2}-\\d{1,2}");                                                                 // M-d
-    public static final Pattern MsD = Pattern.compile("\\d{1,2}/\\d{1,2}");                                                                 // M/d
-    public static final Pattern MoD = Pattern.compile("\\d{1,2}\\.\\d{1,2}");                                                               // M.d
-    public static final Pattern HcM = Pattern.compile("\\d{1,2}:\\d{1,2}");                                                                 // H:m
-    public static final Pattern Yz = Pattern.compile("\\d{3,4}年");                                                                          // yyyy年
-    public static final Pattern MzDz = Pattern.compile("\\d{1,2}月\\d{1,2}日");                                                              // M月d日
-    public static final Pattern MzSz = Pattern.compile("\\d{1,2}分\\d{1,2}秒");                                                              // m分s秒
-    public static final Pattern HzMz = Pattern.compile("\\d{1,2}时\\d{1,2}分");                                                              // H时m分
-    public static final Pattern HoMz = Pattern.compile("\\d{1,2}点\\d{1,2}分");                                                              // H点m分
-    public static final Pattern McSS = Pattern.compile("\\d{1,2}:\\d{1,2}\\.\\d{1,3}");                                                     // m:s.S
-    public static final Pattern HcMcS = Pattern.compile("\\d{1,2}:\\d{1,2}:\\d{1,2}");                                                      // H:m:s
-    public static final Pattern MdDH = Pattern.compile("\\d{1,2}-\\d{1,2} \\d{1,2}");                                                       // M-d H
-    public static final Pattern MsDH = Pattern.compile("\\d{1,2}/\\d{1,2} \\d{1,2}");                                                       // M/d H
-    public static final Pattern MoDH = Pattern.compile("\\d{1,2}\\.\\d{1,2} \\d{1,2}");                                                     // M.d H
-    public static final Pattern YdM = Pattern.compile("\\d{3,4}-\\d{1,2}");                                                                 // yyyy-M
-    public static final Pattern YsM = Pattern.compile("\\d{3,4}/\\d{1,2}");                                                                 // yyyy/M
-    public static final Pattern YoM = Pattern.compile("\\d{3,4}\\.\\d{1,2}");                                                               // yyyy.M
-    public static final Pattern HzMzSz = Pattern.compile("\\d{1,2}时\\d{1,2}分\\d{1,2}秒");                                                  // H时m分s秒
-    public static final Pattern HoMzSz = Pattern.compile("\\d{1,2}点\\d{1,2}分\\d{1,2}秒");                                                  // H点m分s秒
-    public static final Pattern MzDzHz = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}时");                                                  // M月d日H时
-    public static final Pattern MzDzHo = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}点");                                                  // M月d日H点
-    public static final Pattern HcMcSS = Pattern.compile("\\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");                                          // H:m:s.S
-    public static final Pattern MdDHcM = Pattern.compile("\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}");                                            // M-d H:m
-    public static final Pattern MsDHcM = Pattern.compile("\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}");                                            // M/d H:m
-    public static final Pattern MoDHcM = Pattern.compile("\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}");                                          // M.d H:m
-    public static final Pattern YzMz = Pattern.compile("\\d{3,4}年\\d{1,2}月");                                                              // yyyy年M月
-    public static final Pattern MzSzSz = Pattern.compile("\\d{1,2}分\\d{1,2}秒\\d{1,3}毫秒");                                                 // m分s秒S毫秒
-    public static final Pattern YdMdD = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2}");                                                      // yyyy-M-d
-    public static final Pattern YsMsD = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2}");                                                      // yyyy/M/d
-    public static final Pattern YoMoD = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2}");                                                  // yyyy.M.d
-    public static final Pattern MzDzHzMz = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}时\\d{1,2}分");                                       // M月d日H时m分
-    public static final Pattern MzDzHoMz = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}点\\d{1,2}分");                                       // M月d日H点m分
-    public static final Pattern MdDHcMcS = Pattern.compile("\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}");                                 // M-d H:m:s
-    public static final Pattern MsDHcMcS = Pattern.compile("\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}");                                 // M/d H:m:s
-    public static final Pattern MoDHcMcS = Pattern.compile("\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}");                               // M.d H:m:s
-    public static final Pattern YzMzDz = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日");                                                  // yyyy年M月d日
-    public static final Pattern HzMzSzSz = Pattern.compile("\\d{1,2}时\\d{1,2}分\\d{1,2}秒\\d{1,3}毫秒");                                     // H时m分s秒S毫秒
-    public static final Pattern HoMzSzSz = Pattern.compile("\\d{1,2}点\\d{1,2}分\\d{1,2}秒\\d{1,3}毫秒");                                     // H点m分s秒S毫秒
-    public static final Pattern YdMdDH = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2} \\d{1,2}");                                            // yyyy-M-d H
-    public static final Pattern YsMsDH = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2} \\d{1,2}");                                            // yyyy/M/d H
-    public static final Pattern YoMoDH = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2} \\d{1,2}");                                        // yyyy.M.d H
-    public static final Pattern MzDzHzMzSz = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}时\\d{1,2}分\\d{1,2}秒");                           // M月d日H时m分s秒
-    public static final Pattern MzDzHoMzSz = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}点\\d{1,2}分\\d{1,2}秒");                           // M月d日H点m分s秒
-    public static final Pattern MdDHcMcSS = Pattern.compile("\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");                     // M-d H:m:s.S
-    public static final Pattern MsDHcMcSS = Pattern.compile("\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");                     // M/d H:m:s.S
-    public static final Pattern MoDHcMcSS = Pattern.compile("\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");                   // M.d H:m:s.S
-    public static final Pattern YzMzDzHz = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}时");                                       // yyyy年M月d日H时
-    public static final Pattern YzMzDzHo = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}点");                                       // yyyy年M月d日H点
-    public static final Pattern YdMdDHcM = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}");                                 // yyyy-M-d H:m
-    public static final Pattern YsMsDHcM = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}");                                 // yyyy/M/d H:m
-    public static final Pattern YoMoDHcM = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}");                             // yyyy.M.d H:m
-    public static final Pattern MzDzHzMzSzSz = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}时\\d{1,2}分\\d{1,2}秒\\d{1,3}毫秒");              // M月d日H时m分s秒S毫秒
-    public static final Pattern MzDzHoMzSzSz = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}点\\d{1,2}分\\d{1,2}秒\\d{1,3}毫秒");              // M月d日H点m分s秒S毫秒
-    public static final Pattern YzMzDzHzMz = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}时\\d{1,2}分");                           // yyyy年M月d日H时m分
-    public static final Pattern YzMzDzHoMz = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}点\\d{1,2}分");                           // yyyy年M月d日H点m分
-    public static final Pattern YdMdDHcMcS = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}");                      // yyyy-M-d H:m:s
-    public static final Pattern YsMsDHcMcS = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}");                      // yyyy/M/d H:m:s
-    public static final Pattern YoMoDHcMcS = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}");                  // yyyy.M.d H:m:s
-    public static final Pattern YzMzDzHzMzSz = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}时\\d{1,2}分\\d{1,2}秒");               // yyyy年M月d日H时m分s秒
-    public static final Pattern YzMzDzHoMzSz = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}点\\d{1,2}分\\d{1,2}秒");               // yyyy年M月d日H点m分s秒
-    public static final Pattern YdMdDHcMcSS = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");          // yyyy-M-d H:m:s.S
-    public static final Pattern YsMsDHcMcSS = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");          // yyyy/M/d H:m:s.S
-    public static final Pattern YoMoDHcMcSS = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");      // yyyy.M.d H:m:s.S
-    public static final Pattern YzMzDzHzMzSzSz = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}时\\d{1,2}分\\d{1,2}秒\\d{1,3}毫秒");  // yyyy年M月d日H时m分s秒S毫秒
-    public static final Pattern YzMzDzHoMzSzSz = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}点\\d{1,2}分\\d{1,2}秒\\d{1,3}毫秒");  // yyyy年M月d日H点m分s秒S毫秒
+    public static final Pattern Y               = Pattern.compile("\\d{3,4}");                                                                    // yyyy
+    public static final Pattern YM              = Pattern.compile("\\d{6}");                                                                      // yyyyMM
+    public static final Pattern YMD             = Pattern.compile("\\d{8}");                                                                      // yyyyMMdd
+    public static final Pattern YMDH            = Pattern.compile("\\d{10}");                                                                     // yyyyMMddHH
+    public static final Pattern YMDHM           = Pattern.compile("\\d{12}");                                                                     // yyyyMMddHHmm
+    public static final Pattern YMDHMS          = Pattern.compile("\\d{14}");                                                                     // yyyyMMddHHmmss
+    public static final Pattern YMDHMSS         = Pattern.compile("\\d{17}");                                                                     // yyyyMMddHHmmssSSS
+    public static final Pattern MdD             = Pattern.compile("\\d{1,2}-\\d{1,2}");                                                           // M-d
+    public static final Pattern MsD             = Pattern.compile("\\d{1,2}/\\d{1,2}");                                                           // M/d
+    public static final Pattern MoD             = Pattern.compile("\\d{1,2}\\.\\d{1,2}");                                                         // M.d
+    public static final Pattern HcM             = Pattern.compile("\\d{1,2}:\\d{1,2}");                                                           // H:m
+    public static final Pattern Yz              = Pattern.compile("\\d{3,4}年");                                                                  // yyyy年
+    public static final Pattern MzDz            = Pattern.compile("\\d{1,2}月\\d{1,2}日");                                                        // M月d日
+    public static final Pattern MzSz            = Pattern.compile("\\d{1,2}分\\d{1,2}秒");                                                        // m分s秒
+    public static final Pattern HzMz            = Pattern.compile("\\d{1,2}时\\d{1,2}分");                                                        // H时m分
+    public static final Pattern HoMz            = Pattern.compile("\\d{1,2}点\\d{1,2}分");                                                        // H点m分
+    public static final Pattern McSS            = Pattern.compile("\\d{1,2}:\\d{1,2}\\.\\d{1,3}");                                               // m:s.S
+    public static final Pattern HcMcS           = Pattern.compile("\\d{1,2}:\\d{1,2}:\\d{1,2}");                                                 // H:m:s
+    public static final Pattern MdDH            = Pattern.compile("\\d{1,2}-\\d{1,2} \\d{1,2}");                                                 // M-d H
+    public static final Pattern MsDH            = Pattern.compile("\\d{1,2}/\\d{1,2} \\d{1,2}");                                                 // M/d H
+    public static final Pattern MoDH            = Pattern.compile("\\d{1,2}\\.\\d{1,2} \\d{1,2}");                                               // M.d H
+    public static final Pattern YdM             = Pattern.compile("\\d{3,4}-\\d{1,2}");                                                          // yyyy-M
+    public static final Pattern YsM             = Pattern.compile("\\d{3,4}/\\d{1,2}");                                                          // yyyy/M
+    public static final Pattern YoM             = Pattern.compile("\\d{3,4}\\.\\d{1,2}");                                                        // yyyy.M
+    public static final Pattern HzMzSz          = Pattern.compile("\\d{1,2}时\\d{1,2}分\\d{1,2}秒");                                              // H时m分s秒
+    public static final Pattern HoMzSz          = Pattern.compile("\\d{1,2}点\\d{1,2}分\\d{1,2}秒");                                              // H点m分s秒
+    public static final Pattern MzDzHz          = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}时");                                              // M月d日H时
+    public static final Pattern MzDzHo          = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}点");                                              // M月d日H点
+    public static final Pattern HcMcSS          = Pattern.compile("\\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");                                      // H:m:s.S
+    public static final Pattern MdDHcM          = Pattern.compile("\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}");                                        // M-d H:m
+    public static final Pattern MsDHcM          = Pattern.compile("\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}");                                        // M/d H:m
+    public static final Pattern MoDHcM          = Pattern.compile("\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}");                                      // M.d H:m
+    public static final Pattern YzMz            = Pattern.compile("\\d{3,4}年\\d{1,2}月");                                                        // yyyy年M月
+    public static final Pattern MzSzSz          = Pattern.compile("\\d{1,2}分\\d{1,2}秒\\d{1,3}毫秒");                                            // m分s秒S毫秒
+    public static final Pattern YdMdD           = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2}");                                                // yyyy-M-d
+    public static final Pattern YsMsD           = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2}");                                                // yyyy/M/d
+    public static final Pattern YoMoD           = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2}");                                            // yyyy.M.d
+    public static final Pattern MzDzHzMz        = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}时\\d{1,2}分");                                   // M月d日H时m分
+    public static final Pattern MzDzHoMz        = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}点\\d{1,2}分");                                   // M月d日H点m分
+    public static final Pattern MdDHcMcS        = Pattern.compile("\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}");                              // M-d H:m:s
+    public static final Pattern MsDHcMcS        = Pattern.compile("\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}");                              // M/d H:m:s
+    public static final Pattern MoDHcMcS        = Pattern.compile("\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}");                            // M.d H:m:s
+    public static final Pattern YzMzDz          = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日");                                             // yyyy年M月d日
+    public static final Pattern HzMzSzSz        = Pattern.compile("\\d{1,2}时\\d{1,2}分\\d{1,2}秒\\d{1,3}毫秒");                                 // H时m分s秒S毫秒
+    public static final Pattern HoMzSzSz        = Pattern.compile("\\d{1,2}点\\d{1,2}分\\d{1,2}秒\\d{1,3}毫秒");                                 // H点m分s秒S毫秒
+    public static final Pattern YdMdDH          = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2} \\d{1,2}");                                      // yyyy-M-d H
+    public static final Pattern YsMsDH          = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2} \\d{1,2}");                                      // yyyy/M/d H
+    public static final Pattern YoMoDH          = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2} \\d{1,2}");                                  // yyyy.M.d H
+    public static final Pattern MzDzHzMzSz      = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}时\\d{1,2}分\\d{1,2}秒");                        // M月d日H时m分s秒
+    public static final Pattern MzDzHoMzSz      = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}点\\d{1,2}分\\d{1,2}秒");                        // M月d日H点m分s秒
+    public static final Pattern MdDHcMcSS       = Pattern.compile("\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");                 // M-d H:m:s.S
+    public static final Pattern MsDHcMcSS       = Pattern.compile("\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");                 // M/d H:m:s.S
+    public static final Pattern MoDHcMcSS       = Pattern.compile("\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");               // M.d H:m:s.S
+    public static final Pattern YzMzDzHz        = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}时");                                 // yyyy年M月d日H时
+    public static final Pattern YzMzDzHo        = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}点");                                 // yyyy年M月d日H点
+    public static final Pattern YdMdDHcM        = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}");                            // yyyy-M-d H:m
+    public static final Pattern YsMsDHcM        = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}");                            // yyyy/M/d H:m
+    public static final Pattern YoMoDHcM        = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}");                        // yyyy.M.d H:m
+    public static final Pattern MzDzHzMzSzSz    = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}时\\d{1,2}分\\d{1,2}秒\\d{1,3}毫秒");            // M月d日H时m分s秒S毫秒
+    public static final Pattern MzDzHoMzSzSz    = Pattern.compile("\\d{1,2}月\\d{1,2}日\\d{1,2}点\\d{1,2}分\\d{1,2}秒\\d{1,3}毫秒");            // M月d日H点m分s秒S毫秒
+    public static final Pattern YzMzDzHzMz      = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}时\\d{1,2}分");                       // yyyy年M月d日H时m分
+    public static final Pattern YzMzDzHoMz      = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}点\\d{1,2}分");                       // yyyy年M月d日H点m分
+    public static final Pattern YdMdDHcMcS      = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}");                  // yyyy-M-d H:m:s
+    public static final Pattern YsMsDHcMcS      = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}");                  // yyyy/M/d H:m:s
+    public static final Pattern YoMoDHcMcS      = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}");              // yyyy.M.d H:m:s
+    public static final Pattern YzMzDzHzMzSz    = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}时\\d{1,2}分\\d{1,2}秒");             // yyyy年M月d日H时m分s秒
+    public static final Pattern YzMzDzHoMzSz    = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}点\\d{1,2}分\\d{1,2}秒");             // yyyy年M月d日H点m分s秒
+    public static final Pattern YdMdDHcMcSS     = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");       // yyyy-M-d H:m:s.S
+    public static final Pattern YsMsDHcMcSS     = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");       // yyyy/M/d H:m:s.S
+    public static final Pattern YoMoDHcMcSS     = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");   // yyyy.M.d H:m:s.S
+    public static final Pattern YzMzDzHzMzSzSz  = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}时\\d{1,2}分\\d{1,2}秒\\d{1,3}毫秒");  // yyyy年M月d日H时m分s秒S毫秒
+    public static final Pattern YzMzDzHoMzSzSz  = Pattern.compile("\\d{3,4}年\\d{1,2}月\\d{1,2}日\\d{1,2}点\\d{1,2}分\\d{1,2}秒\\d{1,3}毫秒");  // yyyy年M月d日H点m分s秒S毫秒
     /*
      * 时间格式化（FORMAT）字符串
      */
-    public static final String FM_Y = "yyyy";
-    public static final String FM_YM = "yyyyMM";
-    public static final String FM_YMD = "yyyyMMdd";
-    public static final String FM_YMDH = "yyyyMMddHH";
-    public static final String FM_YMDHM = "yyyyMMddHHmm";
-    public static final String FM_YMDHMS = "yyyyMMddHHmmss";
-    public static final String FM_YMDHMSS = "yyyyMMddHHmmssSSS";
-    public static final String FM_MdD = "MM-dd";
-    public static final String FM_MsD = "MM/dd";
-    public static final String FM_MoD = "MM.dd";
-    public static final String FM_HcM = "HH:mm";
-    public static final String FM_Yz = "yyyy年";
-    public static final String FM_MzDz = "MM月dd日";
-    public static final String FM_MzSz = "mm分ss秒";
-    public static final String FM_HzMz = "HH时mm分";
-    public static final String FM_HoMz = "HH点mm分";
-    public static final String FM_McSS = "mm:ss.SSS";
-    public static final String FM_HcMcS = "HH:mm:ss";
-    public static final String FM_MdDH = "MM-dd HH";
-    public static final String FM_MsDH = "MM/dd HH";
-    public static final String FM_MoDH = "MM.dd HH";
-    public static final String FM_YdM = "yyyy-MM";
-    public static final String FM_YsM = "yyyy/MM";
-    public static final String FM_YoM = "yyyy.MM";
-    public static final String FM_HzMzSz = "HH时mm分ss秒";
-    public static final String FM_HoMzSz = "HH点mm分ss秒";
-    public static final String FM_MzDzHz = "MM月dd日HH时";
-    public static final String FM_MzDzHo = "MM月dd日HH点";
-    public static final String FM_HcMcSS = "HH:mm:ss.SSS";
-    public static final String FM_MdDHcM = "MM-dd HH:mm";
-    public static final String FM_MsDHcM = "MM/dd HH:mm";
-    public static final String FM_MoDHcM = "MM.dd HH:mm";
-    public static final String FM_YzMz = "yyyy年MM月";
-    public static final String FM_MzSzSz = "mm分ss秒SSS毫秒";
-    public static final String FM_YdMdD = "yyyy-MM-dd";
-    public static final String FM_YsMsD = "yyyy/MM/dd";
-    public static final String FM_YoMoD = "yyyy.MM.dd";
-    public static final String FM_MzDzHzMz = "MM月dd日HH时mm分";
-    public static final String FM_MzDzHoMz = "MM月dd日HH点mm分";
-    public static final String FM_MdDHcMcS = "MM-dd HH:mm:ss";
-    public static final String FM_MsDHcMcS = "MM/dd HH:mm:ss";
-    public static final String FM_MoDHcMcS = "MM.dd HH:mm:ss";
-    public static final String FM_YzMzDz = "yyyy年MM月dd日";
-    public static final String FM_HzMzSzSz = "HH时mm分ss秒SSS毫秒";
-    public static final String FM_HoMzSzSz = "HH点mm分ss秒SSS毫秒";
-    public static final String FM_YdMdDH = "yyyy-MM-dd HH";
-    public static final String FM_YsMsDH = "yyyy/MM/dd HH";
-    public static final String FM_YoMoDH = "yyyy.MM.dd HH";
-    public static final String FM_MzDzHzMzSz = "MM月dd日HH时mm分ss秒";
-    public static final String FM_MzDzHoMzSz = "MM月dd日HH点mm分ss秒";
-    public static final String FM_MdDHcMcSS = "MM-dd HH:mm:ss.SSS";
-    public static final String FM_MsDHcMcSS = "MM/dd HH:mm:ss.SSS";
-    public static final String FM_MoDHcMcSS = "MM.dd HH:mm:ss.SSS";
-    public static final String FM_YzMzDzHz = "yyyy年MM月dd日HH时";
-    public static final String FM_YzMzDzHo = "yyyy年MM月dd日HH点";
-    public static final String FM_YdMdDHcM = "yyyy-MM-dd HH:mm";
-    public static final String FM_YsMsDHcM = "yyyy/MM/dd HH:mm";
-    public static final String FM_YoMoDHcM = "yyyy.MM.dd HH:mm";
-    public static final String FM_MzDzHzMzSzSz = "MM月dd日HH时mm分ss秒SSS毫秒";
-    public static final String FM_MzDzHoMzSzSz = "MM月dd日HH点mm分ss秒SSS毫秒";
-    public static final String FM_YzMzDzHzMz = "yyyy年MM月dd日HH时mm分";
-    public static final String FM_YzMzDzHoMz = "yyyy年MM月dd日HH点mm分";
-    public static final String FM_YdMdDHcMcS = "yyyy-MM-dd HH:mm:ss";
-    public static final String FM_YsMsDHcMcS = "yyyy/MM/dd HH:mm:ss";
-    public static final String FM_YoMoDHcMcS = "yyyy.MM.dd HH:mm:ss";
-    public static final String FM_YzMzDzHzMzSz = "yyyy年MM月dd日HH时mm分ss秒";
-    public static final String FM_YzMzDzHoMzSz = "yyyy年MM月dd日HH点mm分ss秒";
-    public static final String FM_YdMdDHcMcSS = "yyyy-MM-dd HH:mm:ss.SSS";
-    public static final String FM_YsMsDHcMcSS = "yyyy/MM/dd HH:mm:ss.SSS";
-    public static final String FM_YoMoDHcMcSS = "yyyy.MM.dd HH:mm:ss.SSS";
-    public static final String FM_YzMzDzHzMzSzSz = "yyyy年MM月dd日HH时mm分ss秒SSS毫秒";
-    public static final String FM_YzMzDzHoMzSzSz = "yyyy年MM月dd日HH点mm分ss秒SSS毫秒";
+    public static final String FM_Y                 = "yyyy";
+    public static final String FM_YM                = "yyyyMM";
+    public static final String FM_YMD               = "yyyyMMdd";
+    public static final String FM_YMDH              = "yyyyMMddHH";
+    public static final String FM_YMDHM             = "yyyyMMddHHmm";
+    public static final String FM_YMDHMS            = "yyyyMMddHHmmss";
+    public static final String FM_YMDHMSS           = "yyyyMMddHHmmssSSS";
+    public static final String FM_MdD               = "MM-dd";
+    public static final String FM_MsD               = "MM/dd";
+    public static final String FM_MoD               = "MM.dd";
+    public static final String FM_HcM               = "HH:mm";
+    public static final String FM_Yz                = "yyyy年";
+    public static final String FM_MzDz              = "MM月dd日";
+    public static final String FM_MzSz              = "mm分ss秒";
+    public static final String FM_HzMz              = "HH时mm分";
+    public static final String FM_HoMz              = "HH点mm分";
+    public static final String FM_McSS              = "mm:ss.SSS";
+    public static final String FM_HcMcS             = "HH:mm:ss";
+    public static final String FM_MdDH              = "MM-dd HH";
+    public static final String FM_MsDH              = "MM/dd HH";
+    public static final String FM_MoDH              = "MM.dd HH";
+    public static final String FM_YdM               = "yyyy-MM";
+    public static final String FM_YsM               = "yyyy/MM";
+    public static final String FM_YoM               = "yyyy.MM";
+    public static final String FM_HzMzSz            = "HH时mm分ss秒";
+    public static final String FM_HoMzSz            = "HH点mm分ss秒";
+    public static final String FM_MzDzHz            = "MM月dd日HH时";
+    public static final String FM_MzDzHo            = "MM月dd日HH点";
+    public static final String FM_HcMcSS            = "HH:mm:ss.SSS";
+    public static final String FM_MdDHcM            = "MM-dd HH:mm";
+    public static final String FM_MsDHcM            = "MM/dd HH:mm";
+    public static final String FM_MoDHcM            = "MM.dd HH:mm";
+    public static final String FM_YzMz              = "yyyy年MM月";
+    public static final String FM_MzSzSz            = "mm分ss秒SSS毫秒";
+    public static final String FM_YdMdD             = "yyyy-MM-dd";
+    public static final String FM_YsMsD             = "yyyy/MM/dd";
+    public static final String FM_YoMoD             = "yyyy.MM.dd";
+    public static final String FM_MzDzHzMz          = "MM月dd日HH时mm分";
+    public static final String FM_MzDzHoMz          = "MM月dd日HH点mm分";
+    public static final String FM_MdDHcMcS          = "MM-dd HH:mm:ss";
+    public static final String FM_MsDHcMcS          = "MM/dd HH:mm:ss";
+    public static final String FM_MoDHcMcS          = "MM.dd HH:mm:ss";
+    public static final String FM_YzMzDz            = "yyyy年MM月dd日";
+    public static final String FM_HzMzSzSz          = "HH时mm分ss秒SSS毫秒";
+    public static final String FM_HoMzSzSz          = "HH点mm分ss秒SSS毫秒";
+    public static final String FM_YdMdDH            = "yyyy-MM-dd HH";
+    public static final String FM_YsMsDH            = "yyyy/MM/dd HH";
+    public static final String FM_YoMoDH            = "yyyy.MM.dd HH";
+    public static final String FM_MzDzHzMzSz        = "MM月dd日HH时mm分ss秒";
+    public static final String FM_MzDzHoMzSz        = "MM月dd日HH点mm分ss秒";
+    public static final String FM_MdDHcMcSS         = "MM-dd HH:mm:ss.SSS";
+    public static final String FM_MsDHcMcSS         = "MM/dd HH:mm:ss.SSS";
+    public static final String FM_MoDHcMcSS         = "MM.dd HH:mm:ss.SSS";
+    public static final String FM_YzMzDzHz          = "yyyy年MM月dd日HH时";
+    public static final String FM_YzMzDzHo          = "yyyy年MM月dd日HH点";
+    public static final String FM_YdMdDHcM          = "yyyy-MM-dd HH:mm";
+    public static final String FM_YsMsDHcM          = "yyyy/MM/dd HH:mm";
+    public static final String FM_YoMoDHcM          = "yyyy.MM.dd HH:mm";
+    public static final String FM_MzDzHzMzSzSz      = "MM月dd日HH时mm分ss秒SSS毫秒";
+    public static final String FM_MzDzHoMzSzSz      = "MM月dd日HH点mm分ss秒SSS毫秒";
+    public static final String FM_YzMzDzHzMz        = "yyyy年MM月dd日HH时mm分";
+    public static final String FM_YzMzDzHoMz        = "yyyy年MM月dd日HH点mm分";
+    public static final String FM_YdMdDHcMcS        = "yyyy-MM-dd HH:mm:ss";
+    public static final String FM_YsMsDHcMcS        = "yyyy/MM/dd HH:mm:ss";
+    public static final String FM_YoMoDHcMcS        = "yyyy.MM.dd HH:mm:ss";
+    public static final String FM_YzMzDzHzMzSz      = "yyyy年MM月dd日HH时mm分ss秒";
+    public static final String FM_YzMzDzHoMzSz      = "yyyy年MM月dd日HH点mm分ss秒";
+    public static final String FM_YdMdDHcMcSS       = "yyyy-MM-dd HH:mm:ss.SSS";
+    public static final String FM_YsMsDHcMcSS       = "yyyy/MM/dd HH:mm:ss.SSS";
+    public static final String FM_YoMoDHcMcSS       = "yyyy.MM.dd HH:mm:ss.SSS";
+    public static final String FM_YzMzDzHzMzSzSz    = "yyyy年MM月dd日HH时mm分ss秒SSS毫秒";
+    public static final String FM_YzMzDzHoMzSzSz    = "yyyy年MM月dd日HH点mm分ss秒SSS毫秒";
 
+    /*###################################################################################
+     ************************************************************************************
+     ------------------------------------------------------------------------------------
+     *********************************        方法        ********************************
+     ------------------------------------------------------------------------------------
+     ************************************************************************************
+     ###################################################################################*/
 
     /**
-     * Pattern for new date api {@link java.time.LocalDateTime}, {@link java.time.LocalDate},
-     * {@link java.time.LocalTime} using {@link java.time.format.DateTimeFormatter} <br>
+     * Pattern for Java8 new date api ({@link java.time.ZonedDateTime}, {@link java.time.OffsetDateTime},
+     * {@link java.time.LocalDateTime}, {@link java.time.LocalDate}, {@link java.time.LocalTime} and so on)
+     * using {@link java.time.format.DateTimeFormatter} <br>
      * 通过给定的时间串解析出匹配的时间格式串，适用于 {@link java.time.format.DateTimeFormatter}
      *
      * @param dateTime 时间串
      * @return 时间格式串，如：yyyy-MM-dd HH:mm:ss.SSS
      */
-    public static String forLocalDT(final String dateTime) {
+    public static String forDTF(final String dateTime) {
         if (G.isBlank(dateTime)) return null;
         int length = dateTime.length();
         if (length < 4 || length > 25) return null;
@@ -263,7 +271,7 @@ public class DateTimePattern {
      * @param dateTime 时间串
      * @return 时间格式串，如：yyyy-MM-dd HH:mm:ss.SSS
      */
-    public static String forDate(final String dateTime) {
+    public static String forSDF(final String dateTime) {
         if (G.isBlank(dateTime)) return null;
         int length = dateTime.length();
         if (length < 3 || length > 25) return null;

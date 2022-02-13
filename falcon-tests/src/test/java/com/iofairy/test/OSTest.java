@@ -26,5 +26,10 @@ public class OSTest {
         System.out.println("is mac os: " + OS.IS_MAC);
         System.out.println("is windows system: " + OS.IS_WINDOWS);
         System.out.println("is windows 10: " + OS.IS_WINDOWS_10);
+        System.out.println("DEFAULT_LOCALE: " + OS.DEFAULT_LOCALE);
+        System.out.println("DEFAULT_LANG: " + OS.DEFAULT_LANG);
+        System.out.println("DEFAULT_COUNTRY: " + OS.DEFAULT_COUNTRY);
+        System.out.println("IS_ZH_LANG: " + OS.IS_ZH_LANG);
+        System.out.println("DEFAULT_ZONE_ID: " + OS.ZONE_ID);
     }
 }

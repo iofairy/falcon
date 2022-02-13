@@ -18,6 +18,8 @@ package com.iofairy.falcon.os;
 import com.iofairy.tcf.Try;
 
 import java.io.File;
+import java.time.ZoneId;
+import java.util.Locale;
 
 /**
  * OS for getting operating system info. <br>
@@ -47,6 +49,23 @@ public final class OS {
      * 操作系统版本号（即数字类型版本号）
      */
     private static final String osVersion = OS_VERSION == null ? "" : OS_VERSION;
+    /**
+     * Default Locale
+     */
+    public static final Locale DEFAULT_LOCALE = Locale.getDefault();
+    /**
+     * Default Language
+     */
+    public static final String DEFAULT_LANG = DEFAULT_LOCALE == null ? "" : DEFAULT_LOCALE.getLanguage();
+    /**
+     * Default Country
+     */
+    public static final String DEFAULT_COUNTRY = DEFAULT_LOCALE == null ? "" : DEFAULT_LOCALE.getCountry();
+    /**
+     * Is the default language Chinese? <br>
+     * 默认语言是否是中文？
+     */
+    public static final boolean IS_ZH_LANG = DEFAULT_LANG.equals(new Locale("zh").getLanguage());
 
     /**
      * Operating System architecture. <br>
@@ -76,7 +95,10 @@ public final class OS {
      * 当前用户使用的时区
      */
     public static final String USER_TIMEZONE = getProperty("user.timezone");
-
+    /**
+     * Default ZoneId
+     */
+    public static final ZoneId ZONE_ID = Try.tcf(() -> ZoneId.systemDefault(), false);
     /**
      * The system-dependent Awt Toolkit class name. <br>
      * 当前操作系统Awt Toolkit类名
@@ -144,32 +166,32 @@ public final class OS {
     public static final boolean IS_MAC_OS_X_PUMA            = macOSCompare("10.1");
     public static final boolean IS_MAC_OS_X_CHEETAH         = macOSCompare("10.0");
 
-    public static final boolean IS_MAC_12_2 = IS_MACOS_MONTEREY_2;
-    public static final boolean IS_MAC_12_1 = IS_MACOS_MONTEREY_1;
-    public static final boolean IS_MAC_12_0 = IS_MACOS_MONTEREY_0;
-    public static final boolean IS_MAC_11_6 = IS_MACOS_BIG_SUR_6;
-    public static final boolean IS_MAC_11_5 = IS_MACOS_BIG_SUR_5;
-    public static final boolean IS_MAC_11_4 = IS_MACOS_BIG_SUR_4;
-    public static final boolean IS_MAC_11_3 = IS_MACOS_BIG_SUR_3;
-    public static final boolean IS_MAC_11_2 = IS_MACOS_BIG_SUR_2;
-    public static final boolean IS_MAC_11_1 = IS_MACOS_BIG_SUR_1;
-    public static final boolean IS_MAC_11_0 = IS_MACOS_BIG_SUR_0;
-    public static final boolean IS_MAC_10_15 = IS_MACOS_CATALINA;
-    public static final boolean IS_MAC_10_14 = IS_MACOS_MOJAVE;
-    public static final boolean IS_MAC_10_13 = IS_MACOS_HIGH_SIERRA;
-    public static final boolean IS_MAC_10_12 = IS_MACOS_SIERRA;
-    public static final boolean IS_MAC_10_11 = IS_MAC_OS_X_EL_CAPITAN;
-    public static final boolean IS_MAC_10_10 = IS_MAC_OS_X_YOSEMITE;
-    public static final boolean IS_MAC_10_9 = IS_MAC_OS_X_MAVERICKS;
-    public static final boolean IS_MAC_10_8 = IS_MAC_OS_X_MOUNTAIN_LION;
-    public static final boolean IS_MAC_10_7 = IS_MAC_OS_X_LION;
-    public static final boolean IS_MAC_10_6 = IS_MAC_OS_X_SNOW_LEOPARD;
-    public static final boolean IS_MAC_10_5 = IS_MAC_OS_X_LEOPARD;
-    public static final boolean IS_MAC_10_4 = IS_MAC_OS_X_TIGER;
-    public static final boolean IS_MAC_10_3 = IS_MAC_OS_X_PANTHER;
-    public static final boolean IS_MAC_10_2 = IS_MAC_OS_X_JAGUAR;
-    public static final boolean IS_MAC_10_1 = IS_MAC_OS_X_PUMA;
-    public static final boolean IS_MAC_10_0 = IS_MAC_OS_X_CHEETAH;
+    public static final boolean IS_MAC_12_2     = IS_MACOS_MONTEREY_2;
+    public static final boolean IS_MAC_12_1     = IS_MACOS_MONTEREY_1;
+    public static final boolean IS_MAC_12_0     = IS_MACOS_MONTEREY_0;
+    public static final boolean IS_MAC_11_6     = IS_MACOS_BIG_SUR_6;
+    public static final boolean IS_MAC_11_5     = IS_MACOS_BIG_SUR_5;
+    public static final boolean IS_MAC_11_4     = IS_MACOS_BIG_SUR_4;
+    public static final boolean IS_MAC_11_3     = IS_MACOS_BIG_SUR_3;
+    public static final boolean IS_MAC_11_2     = IS_MACOS_BIG_SUR_2;
+    public static final boolean IS_MAC_11_1     = IS_MACOS_BIG_SUR_1;
+    public static final boolean IS_MAC_11_0     = IS_MACOS_BIG_SUR_0;
+    public static final boolean IS_MAC_10_15    = IS_MACOS_CATALINA;
+    public static final boolean IS_MAC_10_14    = IS_MACOS_MOJAVE;
+    public static final boolean IS_MAC_10_13    = IS_MACOS_HIGH_SIERRA;
+    public static final boolean IS_MAC_10_12    = IS_MACOS_SIERRA;
+    public static final boolean IS_MAC_10_11    = IS_MAC_OS_X_EL_CAPITAN;
+    public static final boolean IS_MAC_10_10    = IS_MAC_OS_X_YOSEMITE;
+    public static final boolean IS_MAC_10_9     = IS_MAC_OS_X_MAVERICKS;
+    public static final boolean IS_MAC_10_8     = IS_MAC_OS_X_MOUNTAIN_LION;
+    public static final boolean IS_MAC_10_7     = IS_MAC_OS_X_LION;
+    public static final boolean IS_MAC_10_6     = IS_MAC_OS_X_SNOW_LEOPARD;
+    public static final boolean IS_MAC_10_5     = IS_MAC_OS_X_LEOPARD;
+    public static final boolean IS_MAC_10_4     = IS_MAC_OS_X_TIGER;
+    public static final boolean IS_MAC_10_3     = IS_MAC_OS_X_PANTHER;
+    public static final boolean IS_MAC_10_2     = IS_MAC_OS_X_JAGUAR;
+    public static final boolean IS_MAC_10_1     = IS_MAC_OS_X_PUMA;
+    public static final boolean IS_MAC_10_0     = IS_MAC_OS_X_CHEETAH;
     /**
      * The value is {@code true} if current Operating System is Mac. <br>
      * 如果当前操作系统是Mac系统，那么值为true。
@@ -200,24 +222,24 @@ public final class OS {
      * The value is {@code true} if current Operating System is Windows. <br>
      * 如果当前操作系统是Windows系统，那么值为true。
      */
-    public static final boolean IS_WINDOWS = os.startsWith("windows");
-    public static final boolean IS_WINDOWS_11 = os.startsWith("windows 11");
-    public static final boolean IS_WINDOWS_10 = os.startsWith("windows 10");
-    public static final boolean IS_WINDOWS_8 = os.startsWith("windows 8");
-    public static final boolean IS_WINDOWS_7 = os.startsWith("windows 7");
-    public static final boolean IS_WINDOWS_VISTA = os.startsWith("windows vista");
-    public static final boolean IS_WINDOWS_XP = os.startsWith("windows xp");
-    public static final boolean IS_WINDOWS_ME = os.startsWith("windows me");
-    public static final boolean IS_WINDOWS_2000 = os.startsWith("windows 2000");
-    public static final boolean IS_WINDOWS_98 = os.startsWith("windows 98");
-    public static final boolean IS_WINDOWS_95 = os.startsWith("windows 95");
-    public static final boolean IS_WINDOWS_NT = os.startsWith("windows nt");
-    public static final boolean IS_WINDOWS_SERVER_2022 = os.startsWith("windows server 2022");
-    public static final boolean IS_WINDOWS_SERVER_2019 = os.startsWith("windows server 2019");
-    public static final boolean IS_WINDOWS_SERVER_2016 = os.startsWith("windows server 2016");
-    public static final boolean IS_WINDOWS_SERVER_2012 = os.startsWith("windows server 2012");
-    public static final boolean IS_WINDOWS_SERVER_2008 = os.startsWith("windows server 2008");
-    public static final boolean IS_WINDOWS_SERVER_2003 = os.startsWith("windows server 2003");
+    public static final boolean IS_WINDOWS              = os.startsWith("windows");
+    public static final boolean IS_WINDOWS_11           = os.startsWith("windows 11");
+    public static final boolean IS_WINDOWS_10           = os.startsWith("windows 10");
+    public static final boolean IS_WINDOWS_8            = os.startsWith("windows 8");
+    public static final boolean IS_WINDOWS_7            = os.startsWith("windows 7");
+    public static final boolean IS_WINDOWS_VISTA        = os.startsWith("windows vista");
+    public static final boolean IS_WINDOWS_XP           = os.startsWith("windows xp");
+    public static final boolean IS_WINDOWS_ME           = os.startsWith("windows me");
+    public static final boolean IS_WINDOWS_2000         = os.startsWith("windows 2000");
+    public static final boolean IS_WINDOWS_98           = os.startsWith("windows 98");
+    public static final boolean IS_WINDOWS_95           = os.startsWith("windows 95");
+    public static final boolean IS_WINDOWS_NT           = os.startsWith("windows nt");
+    public static final boolean IS_WINDOWS_SERVER_2022  = os.startsWith("windows server 2022");
+    public static final boolean IS_WINDOWS_SERVER_2019  = os.startsWith("windows server 2019");
+    public static final boolean IS_WINDOWS_SERVER_2016  = os.startsWith("windows server 2016");
+    public static final boolean IS_WINDOWS_SERVER_2012  = os.startsWith("windows server 2012");
+    public static final boolean IS_WINDOWS_SERVER_2008  = os.startsWith("windows server 2008");
+    public static final boolean IS_WINDOWS_SERVER_2003  = os.startsWith("windows server 2003");
 
 
     /*
@@ -231,16 +253,16 @@ public final class OS {
      * The value is {@code true} if current Operating System is Linux. <br>
      * 如果当前操作系统是Linux系统，那么值为true。
      */
-    public static final boolean IS_LINUX = os.startsWith("linux");
-    public static final boolean IS_FREEBSD = os.startsWith("freebsd");
-    public static final boolean IS_NETBSD = os.startsWith("netbsd");
-    public static final boolean IS_SOLARIS = os.startsWith("solaris");
-    public static final boolean IS_SUNOS = os.startsWith("sunos");
-    public static final boolean IS_HP_UX = os.startsWith("hp-ux");
-    public static final boolean IS_FUCHSIA = os.startsWith("fuchsia");
-    public static final boolean IS_OS_400 = os.startsWith("os/400");
-    public static final boolean IS_OS_2 = os.startsWith("os/2");
-    public static final boolean IS_Z_OS = os.startsWith("z/os");
+    public static final boolean IS_LINUX    = os.startsWith("linux");
+    public static final boolean IS_FREEBSD  = os.startsWith("freebsd");
+    public static final boolean IS_NETBSD   = os.startsWith("netbsd");
+    public static final boolean IS_SOLARIS  = os.startsWith("solaris");
+    public static final boolean IS_SUNOS    = os.startsWith("sunos");
+    public static final boolean IS_HP_UX    = os.startsWith("hp-ux");
+    public static final boolean IS_FUCHSIA  = os.startsWith("fuchsia");
+    public static final boolean IS_OS_400   = os.startsWith("os/400");
+    public static final boolean IS_OS_2     = os.startsWith("os/2");
+    public static final boolean IS_Z_OS     = os.startsWith("z/os");
 
     /**
      * The value is {@code true} if current Operating System is Unix. <br>
