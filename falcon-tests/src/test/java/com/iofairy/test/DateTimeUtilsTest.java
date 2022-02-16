@@ -1,14 +1,14 @@
 package com.iofairy.test;
 
+import com.iofairy.falcon.time.TZ;
 import com.iofairy.falcon.util.DateTimeUtils;
+import com.iofairy.top.G;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
+import java.time.*;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,6 +17,32 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version 1.0
  */
 public class DateTimeUtilsTest {
+    @Test
+    public void testToUTCZonedDT() {
+        ZoneOffset zoneOffset = DateTimeUtils.defaultOffset();
+        LocalDateTime localDateTime = LocalDateTime.of(2022, 1, 1, 10, 10, 5, 987656789);
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, TZ.SHANGHAI);
+        OffsetDateTime offsetDateTime = OffsetDateTime.of(localDateTime, zoneOffset);
+        Instant instant = localDateTime.toInstant(zoneOffset);
+        // 转换成 ZonedDateTime
+        ZonedDateTime zonedDateTime1 = DateTimeUtils.toUTCZonedDT(localDateTime);
+        ZonedDateTime zonedDateTime2 = DateTimeUtils.toUTCZonedDT(zonedDateTime);
+        ZonedDateTime zonedDateTime3 = DateTimeUtils.toUTCZonedDT(offsetDateTime);
+        ZonedDateTime zonedDateTime4 = DateTimeUtils.toUTCZonedDT(instant);
+        // System.out.println(localDateTime);
+        // System.out.println(zonedDateTime);
+        // System.out.println(offsetDateTime);
+        // System.out.println(instant);
+        // System.out.println(G.dtDetail(zonedDateTime1));
+        // System.out.println(G.dtDetail(zonedDateTime2));
+        // System.out.println(G.dtDetail(zonedDateTime3));
+        // System.out.println(G.dtDetail(zonedDateTime4));
+        assertEquals("2022-01-01 02:10:05.987656789 [UTC +00:00 GMT 周六]", G.dtDetail(zonedDateTime1));
+        assertEquals("2022-01-01 02:10:05.987656789 [UTC +00:00 GMT 周六]", G.dtDetail(zonedDateTime2));
+        assertEquals("2022-01-01 02:10:05.987656789 [UTC +00:00 GMT 周六]", G.dtDetail(zonedDateTime3));
+        assertEquals("2022-01-01 02:10:05.987656789 [UTC +00:00 GMT 周六]", G.dtDetail(zonedDateTime4));
+    }
+
     @Test
     public void testDateToTZ() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

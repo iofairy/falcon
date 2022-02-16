@@ -18,7 +18,6 @@ package com.iofairy.falcon.os;
 import com.iofairy.tcf.Try;
 
 import java.io.File;
-import java.time.ZoneId;
 import java.util.Locale;
 
 /**
@@ -95,10 +94,6 @@ public final class OS {
      * 当前用户使用的时区
      */
     public static final String USER_TIMEZONE = getProperty("user.timezone");
-    /**
-     * Default ZoneId
-     */
-    public static final ZoneId ZONE_ID = Try.tcf(() -> ZoneId.systemDefault(), false);
     /**
      * The system-dependent Awt Toolkit class name. <br>
      * 当前操作系统Awt Toolkit类名
