@@ -17,6 +17,7 @@ package com.iofairy.falcon.time;
 
 /**
  * 时间串分隔符的类型
+ *
  * @since 0.0.2
  */
 public enum DateTimeSeparator {

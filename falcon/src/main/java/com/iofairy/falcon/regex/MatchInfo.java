@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  * Match info <br>
  * 字符串正则匹配的结果
  *
- * @since 0.0.7
+ * @since 0.1.0
  */
 public class MatchInfo {
     /**

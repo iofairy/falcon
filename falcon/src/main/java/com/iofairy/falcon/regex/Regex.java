@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  * Regex <br>
  * 正则表达式匹配
  *
- * @since 0.0.7
+ * @since 0.1.0
  */
 public class Regex {
     /**
