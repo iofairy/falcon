@@ -4,10 +4,13 @@ import com.iofairy.falcon.time.Interval;
 import com.iofairy.falcon.time.SignedInterval;
 import com.iofairy.falcon.time.TZ;
 import com.iofairy.falcon.util.DateTimeUtils;
+import com.iofairy.tcf.Try;
 import com.iofairy.top.G;
 import org.junit.jupiter.api.Test;
 
+import java.text.SimpleDateFormat;
 import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.*;
 
@@ -383,4 +386,148 @@ public class IntervalTest {
         System.out.println(interval11.toFullString());
     }
 
+    @Test
+    public void testSignedIntervalPlusMinus() {
+        SignedInterval signedInterval01 = SignedInterval.of(3, ChronoUnit.DAYS);
+        SignedInterval signedInterval02 = SignedInterval.of(-2, ChronoUnit.DAYS);
+        SignedInterval signedInterval03 = SignedInterval.ofMonths(2);
+        SignedInterval signedInterval04 = SignedInterval.ofMonths(-5);
+        SignedInterval signedInterval05 = signedInterval01.plus(signedInterval03);
+        SignedInterval signedInterval06 = signedInterval01.plus(signedInterval04);
+        SignedInterval signedInterval07 = signedInterval02.plus(5, ChronoUnit.DAYS);
+        SignedInterval signedInterval08 = signedInterval03.plus(-5, ChronoUnit.MONTHS);
+        SignedInterval signedInterval09 = signedInterval04.plus(2, ChronoUnit.YEARS);
+        SignedInterval signedInterval10 = signedInterval04.plus(6, ChronoUnit.MONTHS);
+        SignedInterval signedInterval11 = signedInterval04.plus(2, ChronoUnit.MONTHS);
+        SignedInterval signedInterval12 = signedInterval03.minus(5, ChronoUnit.MONTHS);
+        SignedInterval signedInterval13 = signedInterval04.minus(-2, ChronoUnit.YEARS);
+        SignedInterval signedInterval14 = signedInterval04.minus(-6, ChronoUnit.MONTHS);
+        SignedInterval signedInterval15 = signedInterval04.minus(-2, ChronoUnit.MONTHS);
+
+        assertEquals("3天0时0分0秒0毫秒", signedInterval01.toString());
+        assertEquals("-2天0时0分0秒0毫秒", signedInterval02.toString());
+        assertEquals("2月0天0时0分0秒0毫秒", signedInterval03.toString());
+        assertEquals("-5月0天0时0分0秒0毫秒", signedInterval04.toString());
+        assertEquals("2月3天0时0分0秒0毫秒", signedInterval05.toString());
+        assertEquals("-5月3天0时0分0秒0毫秒", signedInterval06.toString());
+        assertEquals("3天0时0分0秒0毫秒", signedInterval07.toString());
+        assertEquals("-3月0天0时0分0秒0毫秒", signedInterval08.toString());
+        assertEquals("2年-5月0天0时0分0秒0毫秒", signedInterval09.toString());
+        assertEquals("1月0天0时0分0秒0毫秒", signedInterval10.toString());
+        assertEquals("-3月0天0时0分0秒0毫秒", signedInterval11.toString());
+        assertEquals("-3月0天0时0分0秒0毫秒", signedInterval12.toString());
+        assertEquals("2年-5月0天0时0分0秒0毫秒", signedInterval13.toString());
+        assertEquals("1月0天0时0分0秒0毫秒", signedInterval14.toString());
+        assertEquals("-3月0天0时0分0秒0毫秒", signedInterval15.toString());
+        System.out.println("signedInterval01: " + signedInterval01);
+        System.out.println("signedInterval02: " + signedInterval02);
+        System.out.println("signedInterval03: " + signedInterval03);
+        System.out.println("signedInterval04: " + signedInterval04);
+        System.out.println("signedInterval05: " + signedInterval05);
+        System.out.println("signedInterval06: " + signedInterval06);
+        System.out.println("signedInterval07: " + signedInterval07);
+        System.out.println("signedInterval08: " + signedInterval08);
+        System.out.println("signedInterval09: " + signedInterval09);
+        System.out.println("signedInterval10: " + signedInterval10);
+        System.out.println("signedInterval11: " + signedInterval11);
+        System.out.println("signedInterval12: " + signedInterval12);
+        System.out.println("signedInterval13: " + signedInterval13);
+        System.out.println("signedInterval14: " + signedInterval14);
+        System.out.println("signedInterval15: " + signedInterval15);
+    }
+
+    @Test
+    public void testIntervalPlusMinus() {
+        Interval interval01 = Interval.of(3, ChronoUnit.DAYS);
+        // Interval interval02 = Interval.of(-2, ChronoUnit.DAYS);
+        Interval interval03 = Interval.ofMonths(2);
+        Interval interval04 = Interval.ofMonths(5);
+        Interval interval05 = interval01.plus(interval03);
+        Interval interval06 = interval01.plus(interval04);
+        // Interval interval07 = interval02.plus(5, ChronoUnit.DAYS);
+        // Interval interval08 = interval03.plus(-5, ChronoUnit.MONTHS);
+        Interval interval09 = interval04.plus(2, ChronoUnit.YEARS);
+        Interval interval10 = interval04.plus(6, ChronoUnit.MONTHS);
+        Interval interval11 = interval04.plus(-2, ChronoUnit.MONTHS);
+        Interval interval12 = interval03.minus(-5, ChronoUnit.MONTHS);
+        // Interval interval13 = interval04.minus(2, ChronoUnit.YEARS);
+        // Interval interval14 = interval04.minus(6, ChronoUnit.MONTHS);
+        Interval interval15 = interval04.minus(2, ChronoUnit.MONTHS);
+
+        assertEquals("3天0时0分0秒0毫秒", interval01.toString());
+        assertEquals("2月0天0时0分0秒0毫秒", interval03.toString());
+        assertEquals("5月0天0时0分0秒0毫秒", interval04.toString());
+        assertEquals("2月3天0时0分0秒0毫秒", interval05.toString());
+        assertEquals("5月3天0时0分0秒0毫秒", interval06.toString());
+        assertEquals("2年5月0天0时0分0秒0毫秒", interval09.toString());
+        assertEquals("11月0天0时0分0秒0毫秒", interval10.toString());
+        assertEquals("3月0天0时0分0秒0毫秒", interval11.toString());
+        assertEquals("7月0天0时0分0秒0毫秒", interval12.toString());
+        assertEquals("3月0天0时0分0秒0毫秒", interval15.toString());
+
+        System.out.println("interval01: " + interval01);
+        // System.out.println("interval02: " + interval02);
+        System.out.println("interval03: " + interval03);
+        System.out.println("interval04: " + interval04);
+        System.out.println("interval05: " + interval05);
+        System.out.println("interval06: " + interval06);
+        // System.out.println("interval07: " + interval07);
+        // System.out.println("interval08: " + interval08);
+        System.out.println("interval09: " + interval09);
+        System.out.println("interval10: " + interval10);
+        System.out.println("interval11: " + interval11);
+        System.out.println("interval12: " + interval12);
+        // System.out.println("interval13: " + interval13);
+        // System.out.println("interval14: " + interval14);
+        System.out.println("interval15: " + interval15);
+    }
+
+    @Test
+    public void testDatePlusMinus() {
+        SignedInterval signedInterval1 = SignedInterval.ofDays(5);
+        SignedInterval signedInterval2 = SignedInterval.ofDays(-5);
+        Interval interval = Interval.ofDays(5);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = Try.tcf(() -> sdf.parse("2022-03-02 10:00:00"), false);
+        Calendar calendar = DateTimeUtils.calendar(date);
+
+        Date date1 = signedInterval1.addTo(date);                       // +5
+        Date date2 = signedInterval2.addTo(date);                       // +(-5)
+        Date date3 = interval.addTo(date);                              // +5
+        Date date4 = signedInterval1.subtractFrom(date);                // -5
+        Date date5 = signedInterval2.subtractFrom(date);                // -(-5)
+        Date date6 = interval.subtractFrom(date);                       // -5
+        Calendar calendar1 = signedInterval1.addTo(calendar);           // +5
+        Calendar calendar2 = signedInterval2.addTo(calendar);           // +(-5)
+        Calendar calendar3 = interval.addTo(calendar);                  // +5
+        Calendar calendar4 = signedInterval1.subtractFrom(calendar);    // -5
+        Calendar calendar5 = signedInterval2.subtractFrom(calendar);    // -(-5)
+        Calendar calendar6 = interval.subtractFrom(calendar);           // -5
+
+        assertEquals("2022-03-07 10:00:00.000", G.dtSimple(date1));
+        assertEquals("2022-02-25 10:00:00.000", G.dtSimple(date2));
+        assertEquals("2022-03-07 10:00:00.000", G.dtSimple(date3));
+        assertEquals("2022-02-25 10:00:00.000", G.dtSimple(date4));
+        assertEquals("2022-03-07 10:00:00.000", G.dtSimple(date5));
+        assertEquals("2022-02-25 10:00:00.000", G.dtSimple(date6));
+        assertEquals("2022-03-07 10:00:00.000", G.dtSimple(calendar1));
+        assertEquals("2022-02-25 10:00:00.000", G.dtSimple(calendar2));
+        assertEquals("2022-03-07 10:00:00.000", G.dtSimple(calendar3));
+        assertEquals("2022-02-25 10:00:00.000", G.dtSimple(calendar4));
+        assertEquals("2022-03-07 10:00:00.000", G.dtSimple(calendar5));
+        assertEquals("2022-02-25 10:00:00.000", G.dtSimple(calendar6));
+        // System.out.println("2022-03-02 10:00:00 *** +5: " + G.dtSimple(date1));
+        // System.out.println("2022-03-02 10:00:00 *** +(-5): " + G.dtSimple(date2));
+        // System.out.println("2022-03-02 10:00:00 *** +5: " + G.dtSimple(date3));
+        // System.out.println("2022-03-02 10:00:00 *** -5: " + G.dtSimple(date4));
+        // System.out.println("2022-03-02 10:00:00 *** -(-5): " + G.dtSimple(date5));
+        // System.out.println("2022-03-02 10:00:00 *** -5: " + G.dtSimple(date6));
+        // System.out.println("2022-03-02 10:00:00 *** +5: " + G.dtSimple(calendar1));
+        // System.out.println("2022-03-02 10:00:00 *** +(-5): " + G.dtSimple(calendar2));
+        // System.out.println("2022-03-02 10:00:00 *** +5: " + G.dtSimple(calendar3));
+        // System.out.println("2022-03-02 10:00:00 *** -5: " + G.dtSimple(calendar4));
+        // System.out.println("2022-03-02 10:00:00 *** -(-5): " + G.dtSimple(calendar5));
+        // System.out.println("2022-03-02 10:00:00 *** -5: " + G.dtSimple(calendar6));
+    }
 }

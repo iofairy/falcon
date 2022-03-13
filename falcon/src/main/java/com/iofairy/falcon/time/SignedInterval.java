@@ -114,6 +114,8 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      */
     protected Temporal startTime, endTime;
 
+    public static final SignedInterval ZERO = new SignedInterval(0, 0, 0);
+
     private static final List<TemporalUnit> SUPPORTED_UNITS =
             Collections.unmodifiableList(Arrays.<TemporalUnit>asList(CENTURIES, YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS, MILLIS, MICROS, NANOS));
     /**
@@ -149,6 +151,214 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
 
     public SignedInterval(long years, long months, long days, long hours, long minutes) {
         this(0, years, months, days, hours, minutes, 0, 0, 0, 0);
+    }
+
+    public SignedInterval(long months, long days, long hours, long minutes) {
+        this(0, 0, months, days, hours, minutes, 0, 0, 0, 0);
+    }
+
+    public SignedInterval(long days, long hours, long minutes) {
+        this(0, 0, 0, days, hours, minutes, 0, 0, 0, 0);
+    }
+
+    public static SignedInterval of(long centuries, long years, long months, long days, long hours, long minutes, long seconds, long millis, long micros, long nanos) {
+        return new SignedInterval(centuries, years, months, days, hours, minutes, seconds, millis, micros, nanos);
+    }
+
+    public static SignedInterval of(long centuries, long years, long months, long days, long hours, long minutes, long seconds, long millis) {
+        return new SignedInterval(centuries, years, months, days, hours, minutes, seconds, millis, 0, 0);
+    }
+
+    public static SignedInterval of(long years, long months, long days, long hours, long minutes, long seconds, long millis) {
+        return new SignedInterval(0, years, months, days, hours, minutes, seconds, millis, 0, 0);
+    }
+
+    public static SignedInterval of(long years, long months, long days, long hours, long minutes, long seconds) {
+        return new SignedInterval(0, years, months, days, hours, minutes, seconds, 0, 0, 0);
+    }
+
+    public static SignedInterval of(long years, long months, long days, long hours, long minutes) {
+        return new SignedInterval(0, years, months, days, hours, minutes, 0, 0, 0, 0);
+    }
+
+    public static SignedInterval of(long months, long days, long hours, long minutes) {
+        return new SignedInterval(0, 0, months, days, hours, minutes, 0, 0, 0, 0);
+    }
+
+    public static SignedInterval of(long days, long hours, long minutes) {
+        return new SignedInterval(0, 0, 0, days, hours, minutes, 0, 0, 0, 0);
+    }
+
+    public static SignedInterval of(long amount, TemporalUnit unit) {
+        return ZERO.plus(amount, unit);
+    }
+
+    public static SignedInterval ofCenturies(long centuries) {
+        return ZERO.plus(centuries, CENTURIES);
+    }
+
+    public static SignedInterval ofYears(long years) {
+        return ZERO.plus(years, YEARS);
+    }
+
+    public static SignedInterval ofMonths(long months) {
+        return ZERO.plus(months, MONTHS);
+    }
+
+    public static SignedInterval ofDays(long days) {
+        return ZERO.plus(days, DAYS);
+    }
+
+    public static SignedInterval ofHours(long hours) {
+        return ZERO.plus(hours, HOURS);
+    }
+
+    public static SignedInterval ofMinutes(long minutes) {
+        return ZERO.plus(minutes, MINUTES);
+    }
+
+    public static SignedInterval ofSeconds(long seconds) {
+        return ZERO.plus(seconds, SECONDS);
+    }
+
+    public static SignedInterval ofMillis(long millis) {
+        return ZERO.plus(millis, MILLIS);
+    }
+
+    public static SignedInterval ofMicros(long micros) {
+        return ZERO.plus(micros, MICROS);
+    }
+
+    public static SignedInterval ofNanos(long nanos) {
+        return ZERO.plus(nanos, NANOS);
+    }
+
+    public SignedInterval plus(SignedInterval signedInterval) {
+        long centuries = this.centuries + signedInterval.centuries;
+        long years = this.years + signedInterval.years;
+        long months = this.months + signedInterval.months;
+        long days = this.days + signedInterval.days;
+        long hours = this.hours + signedInterval.hours;
+        long minutes = this.minutes + signedInterval.minutes;
+        long seconds = this.seconds + signedInterval.seconds;
+        long millis = this.millis + signedInterval.millis;
+        long micros = this.micros + signedInterval.micros;
+        long nanos = this.nanos + signedInterval.nanos;
+        return new SignedInterval(centuries, years, months, days, hours, minutes, seconds, millis, micros, nanos);
+    }
+
+    public SignedInterval plus(long amount, TemporalUnit unit) {
+        if (unit instanceof ChronoUnit) {
+            long centuries = this.centuries;
+            long years = this.years;
+            long months = this.months;
+            long days = this.days;
+            long hours = this.hours;
+            long minutes = this.minutes;
+            long seconds = this.seconds;
+            long millis = this.millis;
+            long micros = this.micros;
+            long nanos = this.nanos;
+            ChronoUnit chronoUnit = (ChronoUnit) unit;
+            switch (chronoUnit) {
+                case CENTURIES:
+                    centuries = centuries + amount;
+                    break;
+                case YEARS:
+                    years = years + amount;
+                    break;
+                case MONTHS:
+                    months = months + amount;
+                    break;
+                case DAYS:
+                    days = days + amount;
+                    break;
+                case HOURS:
+                    hours = hours + amount;
+                    break;
+                case MINUTES:
+                    minutes = minutes + amount;
+                    break;
+                case SECONDS:
+                    seconds = seconds + amount;
+                    break;
+                case MILLIS:
+                    millis = millis + amount;
+                    break;
+                case MICROS:
+                    micros = micros + amount;
+                    break;
+                case NANOS:
+                    nanos = nanos + amount;
+                    break;
+            }
+            return new SignedInterval(centuries, years, months, days, hours, minutes, seconds, millis, micros, nanos);
+        }
+        throw new UnsupportedTemporalTypeException("Unsupported unit: " + unit);
+    }
+
+    public SignedInterval minus(SignedInterval signedInterval) {
+        long centuries = this.centuries - signedInterval.centuries;
+        long years = this.years - signedInterval.years;
+        long months = this.months - signedInterval.months;
+        long days = this.days - signedInterval.days;
+        long hours = this.hours - signedInterval.hours;
+        long minutes = this.minutes - signedInterval.minutes;
+        long seconds = this.seconds - signedInterval.seconds;
+        long millis = this.millis - signedInterval.millis;
+        long micros = this.micros - signedInterval.micros;
+        long nanos = this.nanos - signedInterval.nanos;
+        return new SignedInterval(centuries, years, months, days, hours, minutes, seconds, millis, micros, nanos);
+    }
+
+    public SignedInterval minus(long amount, TemporalUnit unit) {
+        if (unit instanceof ChronoUnit) {
+            long centuries = this.centuries;
+            long years = this.years;
+            long months = this.months;
+            long days = this.days;
+            long hours = this.hours;
+            long minutes = this.minutes;
+            long seconds = this.seconds;
+            long millis = this.millis;
+            long micros = this.micros;
+            long nanos = this.nanos;
+            ChronoUnit chronoUnit = (ChronoUnit) unit;
+            switch (chronoUnit) {
+                case CENTURIES:
+                    centuries = centuries - amount;
+                    break;
+                case YEARS:
+                    years = years - amount;
+                    break;
+                case MONTHS:
+                    months = months - amount;
+                    break;
+                case DAYS:
+                    days = days - amount;
+                    break;
+                case HOURS:
+                    hours = hours - amount;
+                    break;
+                case MINUTES:
+                    minutes = minutes - amount;
+                    break;
+                case SECONDS:
+                    seconds = seconds - amount;
+                    break;
+                case MILLIS:
+                    millis = millis - amount;
+                    break;
+                case MICROS:
+                    micros = micros - amount;
+                    break;
+                case NANOS:
+                    nanos = nanos - amount;
+                    break;
+            }
+            return new SignedInterval(centuries, years, months, days, hours, minutes, seconds, millis, micros, nanos);
+        }
+        throw new UnsupportedTemporalTypeException("Unsupported unit: " + unit);
     }
 
     /**
@@ -306,16 +516,20 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         boolean isInstant = temporal instanceof Instant;
         temporal = isInstant ? DateTimeUtils.toUTCZonedDT(temporal) : temporal;
 
-        temporal = temporal.plus(centuries * 100 + years, YEARS);
-        temporal = temporal.plus(months, MONTHS);
-        temporal = temporal.plus(days, DAYS);
-        temporal = temporal.plus(hours, HOURS);
-        temporal = temporal.plus(minutes, MINUTES);
-        temporal = temporal.plus(seconds, SECONDS);
-        temporal = temporal.plus(millis, MILLIS);
-        temporal = temporal.plus(micros, MICROS);
-        temporal = temporal.plus(nanos, NANOS);
+        temporal = plus(temporal, centuries * 100 + years, YEARS);
+        temporal = plus(temporal, months, MONTHS);
+        temporal = plus(temporal, days, DAYS);
+        temporal = plus(temporal, hours, HOURS);
+        temporal = plus(temporal, minutes, MINUTES);
+        temporal = plus(temporal, seconds, SECONDS);
+        temporal = plus(temporal, millis, MILLIS);
+        temporal = plus(temporal, micros, MICROS);
+        temporal = plus(temporal, nanos, NANOS);
         return isInstant ? ((ZonedDateTime) temporal).toInstant() : temporal;
+    }
+
+    protected Temporal plus(Temporal temporal, long amountToAdd, TemporalUnit unit) {
+        return amountToAdd == 0 ? temporal : temporal.plus(amountToAdd, unit);
     }
 
     @Override
@@ -337,16 +551,20 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         boolean isInstant = temporal instanceof Instant;
         temporal = isInstant ? DateTimeUtils.toUTCZonedDT(temporal) : temporal;
 
-        temporal = temporal.minus(centuries * 100 + years, YEARS);
-        temporal = temporal.minus(months, MONTHS);
-        temporal = temporal.minus(days, DAYS);
-        temporal = temporal.minus(hours, HOURS);
-        temporal = temporal.minus(minutes, MINUTES);
-        temporal = temporal.minus(seconds, SECONDS);
-        temporal = temporal.minus(millis, MILLIS);
-        temporal = temporal.minus(micros, MICROS);
-        temporal = temporal.minus(nanos, NANOS);
+        temporal = minus(temporal, centuries * 100 + years, YEARS);
+        temporal = minus(temporal, months, MONTHS);
+        temporal = minus(temporal, days, DAYS);
+        temporal = minus(temporal, hours, HOURS);
+        temporal = minus(temporal, minutes, MINUTES);
+        temporal = minus(temporal, seconds, SECONDS);
+        temporal = minus(temporal, millis, MILLIS);
+        temporal = minus(temporal, micros, MICROS);
+        temporal = minus(temporal, nanos, NANOS);
         return isInstant ? ((ZonedDateTime) temporal).toInstant() : temporal;
+    }
+
+    protected Temporal minus(Temporal temporal, long amountToSubtract, TemporalUnit unit) {
+        return amountToSubtract == 0 ? temporal : temporal.minus(amountToSubtract, unit);
     }
 
     @Override
