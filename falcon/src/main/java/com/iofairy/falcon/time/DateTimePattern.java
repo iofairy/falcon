@@ -15,7 +15,7 @@
  */
 package com.iofairy.falcon.time;
 
-import com.iofairy.top.G;
+import com.iofairy.top.S;
 
 import java.util.regex.Pattern;
 
@@ -201,7 +201,7 @@ public class DateTimePattern {
      * @return 时间格式串，如：yyyy-MM-dd HH:mm:ss.SSS
      */
     public static String forDTF(final String dateTime) {
-        if (G.isBlank(dateTime)) return null;
+        if (S.isBlank(dateTime)) return null;
         int length = dateTime.length();
         if (length < 4 || length > 25) return null;
 
@@ -272,7 +272,7 @@ public class DateTimePattern {
      * @return 时间格式串，如：yyyy-MM-dd HH:mm:ss.SSS
      */
     public static String forSDF(final String dateTime) {
-        if (G.isBlank(dateTime)) return null;
+        if (S.isBlank(dateTime)) return null;
         int length = dateTime.length();
         if (length < 3 || length > 25) return null;
 
@@ -805,7 +805,7 @@ public class DateTimePattern {
      * @return 时间格式类型
      */
     private static DateTimeSeparator separatorForDate(final String dateTime) {
-        if (G.isBlank(dateTime)) return null;
+        if (S.isBlank(dateTime)) return null;
         int length = dateTime.length();
         if (length < 3 || length > 25) return null;
 

@@ -17,6 +17,7 @@ package com.iofairy.falcon.fs;
 
 import com.iofairy.falcon.os.OS;
 import com.iofairy.top.G;
+import com.iofairy.top.S;
 import com.iofairy.tuple.Tuple;
 import com.iofairy.tuple.Tuple3;
 
@@ -52,6 +53,7 @@ public class FilePath {
      * FilePath.path("./a", "b", "./c/", "/d")  returns "./a/b/c/d"
      * FilePath.path("./", "./", "//", "/.")    returns "."
      * </pre>
+     *
      * @param firstPath firstPath
      * @param subPaths subPaths
      * @return a full path
@@ -69,6 +71,7 @@ public class FilePath {
      * FilePath.pathWin("./a", "\\\\b", "\\\\./c", "/d")    returns ".\a\b\c\d"
      * FilePath.pathWin("./.", "./")                        returns "."
      * </pre>
+     *
      * @param firstPath firstPath
      * @param subPaths subPaths
      * @return a full path
@@ -87,6 +90,7 @@ public class FilePath {
      * FilePath.pathSlash("./a", "\\\\b", "\\\\./c", "/d")  returns "./a/b/c/d"
      * FilePath.pathSlash("/", "./")                        returns "/"
      * </pre>
+     *
      * @param firstPath firstPath
      * @param subPaths subPaths
      * @return a full path
@@ -145,6 +149,7 @@ public class FilePath {
      * 根据系统自动选择拼接paths的方法。<br>
      * 在Unix系统，会调用 {@link #path(String, String...)}；<br>
      * 在Windows系统，则会调用 {@link #pathSlash(String, String...)}。
+     *
      * @param firstPath firstPath
      * @param subPaths subPaths
      * @return a full path
@@ -160,6 +165,7 @@ public class FilePath {
      * 根据系统自动选择拼接paths的方法。<br>
      * 在Unix系统，会调用 {@link #path(String, String...)}；<br>
      * 在Windows系统，则会调用 {@link #pathWin(String, String...)}。
+     *
      * @param firstPath firstPath
      * @param subPaths subPaths
      * @return a full path
@@ -288,6 +294,7 @@ public class FilePath {
     /**
      * Merge multi {@code "/"} and {@code "./"} to one first, and then add {@code "./"} to head. <br>
      * 先去除重复的{@code "/"}和{@code "./"}，再添加头部的 {@code "./"}
+     *
      * @param originPath originPath
      * @return path
      */
@@ -298,6 +305,7 @@ public class FilePath {
     /**
      * Add {@code "./"} to head. <br>
      * 添加头部的 {@code "./"}
+     *
      * @param originPath originPath
      * @param isNeedMerge is need merge {@code "/"} and {@code "./"} first
      * @return path
@@ -312,6 +320,7 @@ public class FilePath {
     /**
      * Merge multi {@code "/"} and {@code "./"} to one first, and then remove {@code "./"} at the head. <br>
      * 先去除重复的{@code "/"}和{@code "./"}，再删除头部的 {@code "./"}
+     *
      * @param originPath originPath
      * @return path
      */
@@ -322,6 +331,7 @@ public class FilePath {
     /**
      * Remove {@code "./"} at the head. <br>
      * 删除头部的 {@code "./"}
+     *
      * @param originPath originPath
      * @param isNeedMerge is need merge {@code "/"} and {@code "./"} first
      * @return path
@@ -336,6 +346,7 @@ public class FilePath {
     /**
      * Merge multi {@code "/"} and {@code "./"} to one first, and then remove tail {@code "/."}. <br>
      * 先去除重复的{@code "/"}和{@code "./"}，再删除尾部的 {@code "/."}
+     *
      * @param originPath originPath
      * @return path
      */
@@ -346,6 +357,7 @@ public class FilePath {
     /**
      * Remove tail {@code "/."}. <br>
      * 删除尾部的 {@code "/."}
+     *
      * @param originPath originPath
      * @param isNeedMerge is need merge {@code "/"} and {@code "./"} first
      * @return path
@@ -360,6 +372,7 @@ public class FilePath {
     /**
      * Merge multi {@code "/"} and {@code "./"} to one first, and then remove tail {@code "/"}. <br>
      * 先去除重复的{@code "/"}和{@code "./"}，再去除路径尾部 {@code '/'}
+     *
      * @param originPath originPath
      * @return path
      */
@@ -370,6 +383,7 @@ public class FilePath {
     /**
      * Remove tail {@code "/"}. <br>
      * 去除路径尾部 {@code '/'}
+     *
      * @param originPath originPath
      * @param isNeedMerge is need merge {@code "/"} and {@code "./"} first
      * @return path
@@ -385,6 +399,7 @@ public class FilePath {
     /**
      * Merge multi {@code "/"} and {@code "./"} to one first, and then remove {@code "/"} at the head. <br>
      * 先去除重复的{@code "/"}和{@code "./"}，再去除路径头部 {@code '/'}
+     *
      * @param originPath originPath
      * @return path
      */
@@ -395,6 +410,7 @@ public class FilePath {
     /**
      * Remove {@code "/"} at the head. <br>
      * 去除路径头部 {@code '/'}
+     *
      * @param originPath originPath
      * @param isNeedMerge is need merge {@code "/"} and {@code "./"} first
      * @return path
@@ -410,6 +426,7 @@ public class FilePath {
     /**
      * Merge multi {@code "/"} and {@code "./"} to one first, and then add {@code "/"} to head. <br>
      * 先去除重复的{@code "/"}和{@code "./"}，再添加头部 {@code '/'}
+     *
      * @param originPath originPath
      * @return path
      */
@@ -420,6 +437,7 @@ public class FilePath {
     /**
      * Add {@code "/"} to head. <br>
      * 添加头部 {@code '/'}
+     *
      * @param originPath originPath
      * @param isNeedMerge is need merge {@code "/"} and {@code "./"} first
      * @return path
@@ -435,6 +453,7 @@ public class FilePath {
     /**
      * Merge multi {@code "/"} and {@code "./"} to one first, and then add tail {@code "/"}. <br>
      * 先去除重复的{@code "/"}和{@code "./"}，再添加尾部 {@code '/'}
+     *
      * @param originPath originPath
      * @return path
      */
@@ -445,6 +464,7 @@ public class FilePath {
     /**
      * Add tail {@code "/"}. <br>
      * 添加尾部 {@code '/'}
+     *
      * @param originPath originPath
      * @param isNeedMerge is need merge {@code "/"} and {@code "./"} first
      * @return path
@@ -460,6 +480,7 @@ public class FilePath {
     /**
      * For Windows systems, transform {@code '\'} to {@code '/'}, and <b>merge multi {@code '/'} to one</b> in file path. <br>
      * 针对Windows系统，将路径中的 {@code '\'} 转成 {@code '/'}，并<b>合并多个重复的{@code '/'}</b>。
+     *
      * @param originPath originPath
      * @return parsed path
      */
@@ -471,6 +492,7 @@ public class FilePath {
     /**
      * For Windows systems, transform {@code '/'} to {@code '\'}, and <b>merge multi {@code '\'} to one</b> in file path. <br>
      * 针对Windows系统，将路径中的 {@code '/'} 转成 {@code '\'}，并<b>合并多个重复的{@code '\'}</b>。
+     *
      * @param originPath originPath
      * @return parsed path
      */
@@ -482,6 +504,7 @@ public class FilePath {
     /**
      * Merge multi {@code '/'} to one first, and then merge multi {@code "./"} to one. <br>
      * 先去除重复的 {@code '/'}，再去除重复的 {@code "./"}。
+     *
      * @param originPath originPath
      * @return merged path
      */
@@ -492,6 +515,7 @@ public class FilePath {
     /**
      * Merge multi {@code '/'} or {@code '\'} to one. <br>
      * 合并多个 {@code '/'} 或 {@code '\'} 成一个。
+     *
      * @param originPath originPath
      * @param whetherMergeSlash if {@code true}, merge {@code '/'}; otherwise, merge {@code '\'}
      * @return merged path
@@ -505,6 +529,7 @@ public class FilePath {
     /**
      * Merge multi {@code './'} to one. <br>
      * 合并多个 {@code './'} 成一个。
+     *
      * @param originPath originPath
      * @return merged path
      */
@@ -516,6 +541,7 @@ public class FilePath {
     /**
      * Merge multi {@code '.\'} to one. <br>
      * 合并多个 {@code '.\'} 成一个。
+     *
      * @param originPath originPath
      * @return merged path
      */
@@ -534,7 +560,7 @@ public class FilePath {
      */
     public static String ext(String path) {
         if (path == null) return null;
-        if (G.isBlank(path) || DOT.equals(path) || PARENT_DIR.equals(path)) return EMPTY;
+        if (S.isBlank(path) || DOT.equals(path) || PARENT_DIR.equals(path)) return EMPTY;
         int dotIndex = path.lastIndexOf(DOT);
         if (dotIndex == -1) {
             return EMPTY;
@@ -561,11 +587,12 @@ public class FilePath {
     /**
      * Verify params. <br>
      * 校验参数的有效性
+     *
      * @param firstPath firstPath
      * @param subPaths subPaths
      */
     private static void verifyParams(String firstPath, String... subPaths) {
-        if (G.isEmpty(firstPath) || G.hasEmpty(subPaths))
+        if (S.isEmpty(firstPath) || S.hasEmpty(subPaths))
             throw new NullPointerException("`firstPath` or `subPaths` must be not empty! 参数`firstPath` or `subPaths`必须是非空！");
     }
 

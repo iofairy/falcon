@@ -16,6 +16,7 @@
 package com.iofairy.falcon.util;
 
 import com.iofairy.top.G;
+import com.iofairy.top.O;
 import com.iofairy.tuple.Tuple;
 import com.iofairy.tuple.Tuple2;
 
@@ -103,8 +104,8 @@ public class MapUtils {
     @SafeVarargs
     public static <K, V> Tuple2<K[], V[]> mapToArray(Map<K, V> map, Class<K> kClass, Class<V> vClass, K... removeKeys) {
         Tuple2<List<K>, List<V>> tuple2 = mapToList(map, removeKeys);
-        K[] ks = tuple2._1 == null ? null : tuple2._1.toArray(G.arrayO(kClass));
-        V[] vs = tuple2._2 == null ? null : tuple2._2.toArray(G.arrayO(vClass));
+        K[] ks = tuple2._1 == null ? null : tuple2._1.toArray(O.arrayO(kClass));
+        V[] vs = tuple2._2 == null ? null : tuple2._2.toArray(O.arrayO(vClass));
         return Tuple.of(ks, vs);
     }
 
@@ -122,7 +123,7 @@ public class MapUtils {
     @SafeVarargs
     public static <K, V> K[] keyToArray(Map<K, V> map, Class<K> kClass, K... removeKeys) {
         List<K> ks = keyToList(map, removeKeys);
-        return ks == null ? null : ks.toArray(G.arrayO(kClass));
+        return ks == null ? null : ks.toArray(O.arrayO(kClass));
     }
 
     /**
@@ -139,7 +140,7 @@ public class MapUtils {
     @SafeVarargs
     public static <K, V> V[] valueToArray(Map<K, V> map, Class<V> vClass, K... removeKeys) {
         List<V> vs = valueToList(map, removeKeys);
-        return vs == null ? null : vs.toArray(G.arrayO(vClass));
+        return vs == null ? null : vs.toArray(O.arrayO(vClass));
     }
 
     /**
