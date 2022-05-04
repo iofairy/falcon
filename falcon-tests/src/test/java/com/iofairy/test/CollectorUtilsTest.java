@@ -1,14 +1,12 @@
 package com.iofairy.test;
 
-import com.iofairy.falcon.util.CollectorUtils;
-import com.iofairy.falcon.util.MapUtils;
+import com.iofairy.falcon.iterable.CollectorUtils;
 import com.iofairy.tuple.Tuple;
 import com.iofairy.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
-import java.util.Map.Entry;
-import java.util.AbstractMap.SimpleEntry;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**

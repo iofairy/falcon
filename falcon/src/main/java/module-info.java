@@ -22,5 +22,7 @@ module iofairy.falcon {
     exports com.iofairy.falcon.regex;
     exports com.iofairy.falcon.time;
     exports com.iofairy.falcon.util;
+    exports com.iofairy.falcon.iterable;
+    exports com.iofairy.falcon.map;
     exports com.iofairy.falcon.string;
 }

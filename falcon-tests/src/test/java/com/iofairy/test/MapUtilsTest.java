@@ -1,6 +1,6 @@
 package com.iofairy.test;
 
-import com.iofairy.falcon.util.MapUtils;
+import com.iofairy.falcon.map.MapUtils;
 import com.iofairy.top.G;
 import com.iofairy.tuple.Tuple2;
 import org.junit.jupiter.api.Test;

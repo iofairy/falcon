@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iofairy.falcon.util;
+package com.iofairy.falcon.map;
 
 import com.iofairy.top.G;
 import com.iofairy.top.O;

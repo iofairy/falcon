@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iofairy.falcon.util;
+package com.iofairy.falcon.iterable;
 
+import com.iofairy.falcon.map.MapUtils;
 import com.iofairy.top.G;
 
 import java.util.*;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 /**
  * Collection Utils
+ *
  * @since 0.0.1
  */
 public class CollectorUtils {
@@ -39,9 +41,9 @@ public class CollectorUtils {
      * [[0, 1, 2], [3, 4, 5], [6, 7]]
      * </pre>
      *
-     * @param arr array
+     * @param arr          array
      * @param perBatchSize per batch size
-     * @param <T> type of array
+     * @param <T>          type of array
      * @return divided multi arrays
      */
     public static <T> List<T[]> divide(T[] arr, int perBatchSize) {
@@ -74,9 +76,9 @@ public class CollectorUtils {
      * [[a, b], [c, d], [e]]
      * </pre>
      *
-     * @param list list
+     * @param list         list
      * @param perBatchSize per batch size
-     * @param <T> type of list
+     * @param <T>          type of list
      * @return divided multi lists
      */
     public static <T> List<List<T>> divide(List<T> list, int perBatchSize) {
@@ -112,9 +114,9 @@ public class CollectorUtils {
      * [[1, 2], [3]]
      * </pre>
      *
-     * @param set set
+     * @param set          set
      * @param perBatchSize per batch size
-     * @param <T> type of set
+     * @param <T>          type of set
      * @return divided multi sets
      */
     public static <T> List<Set<T>> divide(Set<T> set, int perBatchSize) {
@@ -149,10 +151,10 @@ public class CollectorUtils {
      * [{a=1, b=2}, {c=3}]
      * </pre>
      *
-     * @param map map
+     * @param map          map
      * @param perBatchSize per batch size
-     * @param <K> type of key
-     * @param <V> type of value
+     * @param <K>          type of key
+     * @param <V>          type of value
      * @return divided multi maps
      */
     public static <K, V> List<Map<K, V>> divide(Map<K, V> map, int perBatchSize) {
@@ -190,9 +192,10 @@ public class CollectorUtils {
      * List&lt;List&lt;Integer&gt;&gt; balance2 = CollectorUtils.balance(4, lists);
      * //-- balance2: [[83, 84, 85], [57, 58, 59, 26], [30, 31, 71, 72], [11, 12, 13, 14, 15]]
      * </pre>
+     *
      * @param partitions 分配后 {@code List} 的数量
-     * @param listList 待分配的 {@code List} 列表
-     * @param <E> 元素类型
+     * @param listList   待分配的 {@code List} 列表
+     * @param <E>        元素类型
      * @return 分配后 {@code List} 列表
      * @since 0.0.2
      */
@@ -223,9 +226,10 @@ public class CollectorUtils {
     /**
      * 将多个 {@code List} 中的元素尽可能均匀分配在指定数量（partitions）的 {@code List} 中。
      * <b>但原来在同一个 {@code List} 中的元素，分配以后，依然在同一个 {@code List} 中。</b>
+     *
      * @param partitions 分配后 {@code List} 的数量
-     * @param listArray 待分配的 {@code List} 数组
-     * @param <E> 元素类型
+     * @param listArray  待分配的 {@code List} 数组
+     * @param <E>        元素类型
      * @return 分配后 {@code List} 列表
      * @see #balance(int, List)
      * @since 0.0.2
@@ -239,9 +243,10 @@ public class CollectorUtils {
     /**
      * 将多个数组中的元素尽可能均匀分配在指定数量（partitions）的 {@code List} 中。
      * <b>但原来在同一个数组中的元素，分配以后，会在同一个 {@code List} 中。</b>
+     *
      * @param partitions 分配后 {@code List} 的数量
-     * @param arrays 待分配的数组
-     * @param <E> 元素类型
+     * @param arrays     待分配的数组
+     * @param <E>        元素类型
      * @return 分配后 {@code List} 列表
      * @see #balance(int, List)
      * @since 0.0.2
@@ -256,8 +261,9 @@ public class CollectorUtils {
     /**
      * Fast Sort For {@link #balance(int, List)}<br>
      * 针对 {@link #balance(int, List)} 方法的快速排序
+     *
      * @param sortedEntries sortedEntries
-     * @param <E> elements type in List
+     * @param <E>           elements type in List
      * @see #balance(int, List)
      * @since 0.0.2
      */
@@ -273,7 +279,7 @@ public class CollectorUtils {
         for (int i = 1; i < entriesSize; i++) {
             if (firstValueSize > sortedEntries.get(i).getValue().size()) {
                 preGtIndex = i;
-            }else{
+            } else {
                 break;
             }
         }
