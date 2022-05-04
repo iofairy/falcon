@@ -16,7 +16,7 @@
 package com.iofairy.falcon.iterable;
 
 /**
- * Mode for {@code null} value when convert Collection or Array to primitive array
+ * Mode for handling {@code null} value when convert Collection or Array to primitive array
  *
  * @since 0.2.0
  */
@@ -34,7 +34,8 @@ public enum ToArrayMode {
     /**
      * Use <b>default value</b> when value is {@code null}<br>
      * 使用默认值来替代 {@code null} 值<br>
-     * <p>
+     * ------------------------------<br>
+     * <p>Default value for null value:
      * <table border="1" summary="Default value for null value">
      * <tr>
      *   <th>Wrapper Class</th>

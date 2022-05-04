@@ -110,6 +110,16 @@ public class PrimitiveArraysTest {
         boolean[] array10 = PrimitiveArrays.toBooleans(false, list);
         boolean[] array11 = PrimitiveArrays.toBooleans(true, set);
         boolean[] array12 = PrimitiveArrays.toBooleans(true, list);
+
+        boolean[] array13 = PrimitiveArrays.toBooleans(ToArrayMode.IGNORE_NULL);
+        boolean[] array14 = PrimitiveArrays.toBooleans(ToArrayMode.IGNORE_NULL, (Boolean[]) null);
+        boolean[] array15 = PrimitiveArrays.toBooleans(ToArrayMode.IGNORE_NULL, null, null);
+        boolean[] array16 = PrimitiveArrays.toBooleans(ToArrayMode.DEFAULT_VALUE);
+        boolean[] array17 = PrimitiveArrays.toBooleans(ToArrayMode.DEFAULT_VALUE, (Boolean[]) null);
+        boolean[] array18 = PrimitiveArrays.toBooleans(ToArrayMode.DEFAULT_VALUE, null, null);
+        boolean[] array19 = PrimitiveArrays.toBooleans(true);
+        boolean[] array20 = PrimitiveArrays.toBooleans(false, (Boolean[]) null);
+        boolean[] array21 = PrimitiveArrays.toBooleans(true, null, null);
         System.out.println(G.toString(array01));
         System.out.println(G.toString(array03));
         System.out.println(G.toString(array04));
@@ -120,9 +130,19 @@ public class PrimitiveArraysTest {
         System.out.println(G.toString(array10));
         System.out.println(G.toString(array11));
         System.out.println(G.toString(array12));
+        System.out.println(G.toString(array13));
+        System.out.println(G.toString(array14));
+        System.out.println(G.toString(array15));
+        System.out.println(G.toString(array16));
+        System.out.println(G.toString(array17));
+        System.out.println(G.toString(array18));
+        System.out.println(G.toString(array19));
+        System.out.println(G.toString(array20));
+        System.out.println(G.toString(array21));
 
         assertThrows(NullPointerException.class, () -> PrimitiveArrays.toBooleans(ToArrayMode.THROW_WHEN_NULL, set));
         assertThrows(NullPointerException.class, () -> PrimitiveArrays.toBooleans(ToArrayMode.THROW_WHEN_NULL, list));
+        assertThrows(NullPointerException.class, () -> PrimitiveArrays.toBooleans(ToArrayMode.THROW_WHEN_NULL, null, null));
         assertEquals(G.toString(array01), "[false, true]");
         assertEquals(G.toString(array03), "[false, false, true]");
         assertEquals(G.toString(array04), "[false, true]");
@@ -133,6 +153,16 @@ public class PrimitiveArraysTest {
         assertEquals(G.toString(array10), "[false, false, false, true, false]");
         assertEquals(G.toString(array11), "[false, true, true]");
         assertEquals(G.toString(array12), "[false, true, true, true, false]");
+
+        assertEquals(G.toString(array13), "[]");
+        assertNull(array14);
+        assertEquals(G.toString(array15), "[]");
+        assertEquals(G.toString(array16), "[]");
+        assertNull(array17);
+        assertEquals(G.toString(array18), "[false, false]");
+        assertEquals(G.toString(array19), "[]");
+        assertNull(array20);
+        assertEquals(G.toString(array21), "[true, true]");
     }
 
     @Test
@@ -243,6 +273,16 @@ public class PrimitiveArraysTest {
         int[] array08 = PrimitiveArrays.toInts(null, list);
         int[] array09 = PrimitiveArrays.toInts(-6, set);
         int[] array10 = PrimitiveArrays.toInts(6, list);
+
+        int[] array11 = PrimitiveArrays.toInts(ToArrayMode.IGNORE_NULL);
+        int[] array12 = PrimitiveArrays.toInts(ToArrayMode.IGNORE_NULL, (Integer[]) null);
+        int[] array13 = PrimitiveArrays.toInts(ToArrayMode.IGNORE_NULL, null, null);
+        int[] array14 = PrimitiveArrays.toInts(ToArrayMode.DEFAULT_VALUE);
+        int[] array15 = PrimitiveArrays.toInts(ToArrayMode.DEFAULT_VALUE, (Integer[]) null);
+        int[] array16 = PrimitiveArrays.toInts(ToArrayMode.DEFAULT_VALUE, null, null);
+        int[] array17 = PrimitiveArrays.toInts(-20);
+        int[] array18 = PrimitiveArrays.toInts(-20, (Integer[]) null);
+        int[] array19 = PrimitiveArrays.toInts(-20, null, null);
         System.out.println(G.toString(array01));
         System.out.println(G.toString(array03));
         System.out.println(G.toString(array04));
@@ -251,9 +291,19 @@ public class PrimitiveArraysTest {
         System.out.println(G.toString(array08));
         System.out.println(G.toString(array09));
         System.out.println(G.toString(array10));
+        System.out.println(G.toString(array11));
+        System.out.println(G.toString(array12));
+        System.out.println(G.toString(array13));
+        System.out.println(G.toString(array14));
+        System.out.println(G.toString(array15));
+        System.out.println(G.toString(array16));
+        System.out.println(G.toString(array17));
+        System.out.println(G.toString(array18));
+        System.out.println(G.toString(array19));
 
         assertThrows(NullPointerException.class, () -> PrimitiveArrays.toInts(ToArrayMode.THROW_WHEN_NULL, set));
         assertThrows(NullPointerException.class, () -> PrimitiveArrays.toInts(ToArrayMode.THROW_WHEN_NULL, list));
+        assertThrows(NullPointerException.class, () -> PrimitiveArrays.toInts(ToArrayMode.THROW_WHEN_NULL, null, null));
         assertEquals(G.toString(array01), "[1, -20, 15]");
         assertEquals(G.toString(array03), "[1, 0, -20, 15]");
         assertEquals(G.toString(array04), "[1, -20, 15]");
@@ -262,6 +312,15 @@ public class PrimitiveArraysTest {
         assertEquals(G.toString(array08), "[1, -20, 15]");
         assertEquals(G.toString(array09), "[1, -6, -20, 15]");
         assertEquals(G.toString(array10), "[1, 6, 6, -20, 15]");
+        assertEquals(G.toString(array11), "[]");
+        assertNull(array12);
+        assertEquals(G.toString(array13), "[]");
+        assertEquals(G.toString(array14), "[]");
+        assertNull(array15);
+        assertEquals(G.toString(array16), "[0, 0]");
+        assertEquals(G.toString(array17), "[]");
+        assertNull(array18);
+        assertEquals(G.toString(array19), "[-20, -20]");
     }
 
     @Test
