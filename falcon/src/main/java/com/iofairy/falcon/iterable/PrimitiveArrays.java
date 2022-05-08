@@ -516,11 +516,7 @@ public class PrimitiveArrays {
                 }
                 break;
             default:
-                Integer[] integerArray = ints.stream().filter(Objects::nonNull).toArray(Integer[]::new);
-                is = new int[integerArray.length];
-                for (int i = 0; i < integerArray.length; i++) {
-                    is[i] = integerArray[i];
-                }
+                is = ints.stream().filter(Objects::nonNull).mapToInt(Integer::intValue).toArray();
         }
         return is;
     }
@@ -572,11 +568,7 @@ public class PrimitiveArrays {
                 }
                 break;
             default:
-                Integer[] integerArray = Arrays.stream(ints).filter(Objects::nonNull).toArray(Integer[]::new);
-                is = new int[integerArray.length];
-                for (int i = 0; i < integerArray.length; i++) {
-                    is[i] = integerArray[i];
-                }
+                is = Arrays.stream(ints).filter(Objects::nonNull).mapToInt(Integer::intValue).toArray();
         }
         return is;
     }
@@ -744,11 +736,7 @@ public class PrimitiveArrays {
                 }
                 break;
             default:
-                Long[] longArray = longs.stream().filter(Objects::nonNull).toArray(Long[]::new);
-                ls = new long[longArray.length];
-                for (int i = 0; i < longArray.length; i++) {
-                    ls[i] = longArray[i];
-                }
+                ls = longs.stream().filter(Objects::nonNull).mapToLong(Long::longValue).toArray();
         }
         return ls;
     }
@@ -800,11 +788,7 @@ public class PrimitiveArrays {
                 }
                 break;
             default:
-                Long[] longArray = Arrays.stream(longs).filter(Objects::nonNull).toArray(Long[]::new);
-                ls = new long[longArray.length];
-                for (int i = 0; i < longArray.length; i++) {
-                    ls[i] = longArray[i];
-                }
+                ls = Arrays.stream(longs).filter(Objects::nonNull).mapToLong(Long::longValue).toArray();
         }
         return ls;
     }
@@ -858,11 +842,7 @@ public class PrimitiveArrays {
                 }
                 break;
             default:
-                Double[] doubleArray = doubles.stream().filter(Objects::nonNull).toArray(Double[]::new);
-                ds = new double[doubleArray.length];
-                for (int i = 0; i < doubleArray.length; i++) {
-                    ds[i] = doubleArray[i];
-                }
+                ds = doubles.stream().filter(Objects::nonNull).mapToDouble(Double::doubleValue).toArray();
         }
         return ds;
     }
@@ -914,11 +894,7 @@ public class PrimitiveArrays {
                 }
                 break;
             default:
-                Double[] doubleArray = Arrays.stream(doubles).filter(Objects::nonNull).toArray(Double[]::new);
-                ds = new double[doubleArray.length];
-                for (int i = 0; i < doubleArray.length; i++) {
-                    ds[i] = doubleArray[i];
-                }
+                ds = Arrays.stream(doubles).filter(Objects::nonNull).mapToDouble(Double::doubleValue).toArray();
         }
         return ds;
     }
