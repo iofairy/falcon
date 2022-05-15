@@ -1,11 +1,13 @@
 package com.iofairy.test;
 
 import com.iofairy.falcon.iterable.CollectorUtils;
+import com.iofairy.top.G;
 import com.iofairy.tuple.Tuple;
 import com.iofairy.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -128,19 +130,22 @@ public class CollectorUtilsTest {
 
         List<Integer> list0 = Arrays.asList(11, 12, 13, 14, 15);
         List<Integer> list1 = Arrays.asList(26);
-        List<Integer> list2 = Arrays.asList(57, 58, 59);
+        Set<Integer> list2 = new HashSet<>(Arrays.asList(57, 58, 59, 58, 59));
         List<Integer> list3 = Arrays.asList(30, 31);
         List<Integer> list4 = Arrays.asList(83, 84, 85);
         List<Integer> list5 = Arrays.asList(71, 72);
 
-        List<List<Integer>> lists = Arrays.asList(list0, list1, list2, list3, list4, list5);
+        List<Collection<Integer>> collections = Arrays.asList(list0, list1, list2, list3, list4, list5);
 
-        List<List<Integer>> balance1 = CollectorUtils.balance(2, lists);
+        List<List<Integer>> balance1 = CollectorUtils.balance(2, collections);
         System.out.println(balance1);
-        List<List<Integer>> balance2 = CollectorUtils.balance(3, lists);
+        List<List<Integer>> balance2 = CollectorUtils.balance(3, collections);
         System.out.println(balance2);
-        List<List<Integer>> balance3 = CollectorUtils.balance(4, lists);
+        List<List<Integer>> balance3 = CollectorUtils.balance(4, collections);
         System.out.println(balance3);
+        assertEquals(balance1.toString(), "[[11, 12, 13, 14, 15, 30, 31, 26], [57, 58, 59, 83, 84, 85, 71, 72]]");
+        assertEquals(balance2.toString(), "[[57, 58, 59, 30, 31], [11, 12, 13, 14, 15], [83, 84, 85, 71, 72, 26]]");
+        assertEquals(balance3.toString(), "[[83, 84, 85], [57, 58, 59, 26], [30, 31, 71, 72], [11, 12, 13, 14, 15]]");
 
     }
 
@@ -311,4 +316,119 @@ public class CollectorUtilsTest {
 
     }*/
 
+    @Test
+    public void testFindNth() {
+        String[] ss = {"a", "ae", "c", "ab", "d", "ae", "af", "af", "d", "g"};  // ["a", "ae", "c", "ab", "d", "ae", "af", "af", "d", "g"]
+        List<String> sList = Arrays.asList(ss);         // ["a", "ae", "c", "ab", "d", "ae", "af", "af", "d", "g"]
+        Set<String> sSet = new HashSet<>(sList);        // [a, ab, c, ae, d, af, g]
+        // ss  --->  e.startsWith("a")  --->  [a, ae, ab, ae, af, af]
+        // sSet  --->  e.startsWith("a")  --->  [a, ab, ae, af]
+
+        Tuple2<String, Integer> nth0 = CollectorUtils.findNth(ss, null, 2);         // ("c", 2)
+        Tuple2<String, Integer> nth1 = CollectorUtils.findNth(sList, null, 2);         // ("c", 2)
+        String nth2 = CollectorUtils.findNth(sSet, null, 2);         // c
+
+        Tuple2<String, Integer> nth3 = CollectorUtils.findNth(ss, e -> e.startsWith("a"), 2);         // ("ab", 3)
+        Tuple2<String, Integer> nth4 = CollectorUtils.findNth(sList, e -> e.startsWith("a"), 2);         // ("ab", 3)
+        String nth5 = CollectorUtils.findNth(sSet, e -> e.startsWith("a"), 2);         // ae
+
+        Tuple2<String, Integer> nth6 = CollectorUtils.findNth(ss, e -> e.startsWith("a"), 20);         // null
+        Tuple2<String, Integer> nth7 = CollectorUtils.findNth(sList, e -> e.startsWith("a"), 20);         // null
+        String nth8 = CollectorUtils.findNth(sSet, e -> e.startsWith("a"), 20);         // null
+
+        Tuple2<String, Integer> nth9 = CollectorUtils.findNth(ss, null, 20);         // null
+        Tuple2<String, Integer> nth10 = CollectorUtils.findNth(sList, null, 20);         // null
+        String nth11 = CollectorUtils.findNth(sSet, null, 20);         // null
+
+        Tuple2<String, Integer> nth12 = CollectorUtils.findNth(ss, null, 0);         // ("a", 0)
+        Tuple2<String, Integer> nth13 = CollectorUtils.findNth(sList, null, 0);         // ("a", 0)
+        String nth14 = CollectorUtils.findNth(sSet, null, 0);         // a
+
+        Tuple2<String, Integer> nth15 = CollectorUtils.findNth(ss, e -> e.startsWith("a"), 0);         // ("a", 0)
+        Tuple2<String, Integer> nth16 = CollectorUtils.findNth(sList, e -> e.startsWith("a"), 0);         // ("a", 0)
+        String nth17 = CollectorUtils.findNth(sSet, e -> e.startsWith("a"), 0);         // a
+
+        Tuple2<String, Integer> nth18 = CollectorUtils.findNth(ss, null, -1);         // ("g", 9)
+        Tuple2<String, Integer> nth19 = CollectorUtils.findNth(sList, null, -1);         // ("g", 9)
+        String nth20 = CollectorUtils.findNth(sSet, null, -1);         // g
+
+        Tuple2<String, Integer> nth21 = CollectorUtils.findNth(ss, e -> e.startsWith("a"), -1);         // ("af", 7)
+        Tuple2<String, Integer> nth22 = CollectorUtils.findNth(sList, e -> e.startsWith("a"), -1);         // ("af", 7)
+        String nth23 = CollectorUtils.findNth(sSet, e -> e.startsWith("a"), -1);         // af
+
+        assertEquals(nth0.toString(), "(\"c\", 2)");
+        assertEquals(nth1.toString(), "(\"c\", 2)");
+        assertEquals(nth2.toString(), "c");
+        assertEquals(nth3.toString(), "(\"ab\", 3)");
+        assertEquals(nth4.toString(), "(\"ab\", 3)");
+        assertEquals(nth5.toString(), "ae");
+        assertNull(nth6);
+        assertNull(nth7);
+        assertNull(nth8);
+        assertNull(nth9);
+        assertNull(nth10);
+        assertNull(nth11);
+        assertEquals(nth12.toString(), "(\"a\", 0)");
+        assertEquals(nth13.toString(), "(\"a\", 0)");
+        assertEquals(nth14.toString(), "a");
+        assertEquals(nth15.toString(), "(\"a\", 0)");
+        assertEquals(nth16.toString(), "(\"a\", 0)");
+        assertEquals(nth17.toString(), "a");
+        assertEquals(nth18.toString(), "(\"g\", 9)");
+        assertEquals(nth19.toString(), "(\"g\", 9)");
+        assertEquals(nth20.toString(), "g");
+        assertEquals(nth21.toString(), "(\"af\", 7)");
+        assertEquals(nth22.toString(), "(\"af\", 7)");
+        assertEquals(nth23.toString(), "af");
+
+        System.out.println("nth0: " + nth0);
+        System.out.println("nth1: " + nth1);
+        System.out.println("nth2: " + nth2);
+        System.out.println("nth3: " + nth3);
+        System.out.println("nth4: " + nth4);
+        System.out.println("nth5: " + nth5);
+        System.out.println("nth6: " + nth6);
+        System.out.println("nth7: " + nth7);
+        System.out.println("nth8: " + nth8);
+        System.out.println("nth9: " + nth9);
+        System.out.println("nth10: " + nth10);
+        System.out.println("nth11: " + nth11);
+        System.out.println("nth12: " + nth12);
+        System.out.println("nth13: " + nth13);
+        System.out.println("nth14: " + nth14);
+        System.out.println("nth15: " + nth15);
+        System.out.println("nth16: " + nth16);
+        System.out.println("nth17: " + nth17);
+        System.out.println("nth18: " + nth18);
+        System.out.println("nth19: " + nth19);
+        System.out.println("nth20: " + nth20);
+        System.out.println("nth21: " + nth21);
+        System.out.println("nth22: " + nth22);
+        System.out.println("nth23: " + nth23);
+    }
+
+    @Test
+    public void testFindRandom() {
+        String[] ss = {"a", "ae", "c", "ab", "d", "ae", "af", "af", "d", "g"};  // ["a", "ae", "c", "ab", "d", "ae", "af", "af", "d", "g"]
+        List<String> sList = Arrays.asList(ss);         // ["a", "ae", "c", "ab", "d", "ae", "af", "af", "d", "g"]
+        Set<String> sSet = new HashSet<>(sList);        // [a, ab, c, ae, d, af, g]
+        // ss  --->  e.startsWith("a")  --->  [a, ae, ab, ae, af, af]
+        // sSet  --->  e.startsWith("a")  --->  [a, ab, ae, af]
+
+        Tuple2<String, Integer> random0 = CollectorUtils.findRandom(ss, null);
+        Tuple2<String, Integer> random1 = CollectorUtils.findRandom(sList, null);
+        String random2 = CollectorUtils.findRandom(sSet, null);
+
+        Tuple2<String, Integer> random3 = CollectorUtils.findRandom(ss, e -> e.startsWith("a"));
+        Tuple2<String, Integer> random4 = CollectorUtils.findRandom(sList, e -> e.startsWith("a"));
+        String random5 = CollectorUtils.findRandom(sSet, e -> e.startsWith("a"));
+
+        System.out.println("random0: " + random0);
+        System.out.println("random1: " + random1);
+        System.out.println("random2: " + random2);
+        System.out.println("random3: " + random3);
+        System.out.println("random4: " + random4);
+        System.out.println("random5: " + random5);
+
+    }
 }

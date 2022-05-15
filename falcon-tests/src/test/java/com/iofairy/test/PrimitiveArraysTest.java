@@ -400,13 +400,13 @@ public class PrimitiveArraysTest {
         assertThrows(NullPointerException.class, () -> PrimitiveArrays.toFloats(ToArrayMode.THROW_WHEN_NULL, set));
         assertThrows(NullPointerException.class, () -> PrimitiveArrays.toFloats(ToArrayMode.THROW_WHEN_NULL, list));
         assertEquals(G.toString(array01), "[1.01, -20.29, 15.5]");
-        assertEquals(G.toString(array03), "[1.01, 0.0, -20.29, 15.5]");
+        assertEquals(G.toString(array03), "[1.01, 0, -20.29, 15.5]");
         assertEquals(G.toString(array04), "[1.01, -20.29, 15.5]");
         assertEquals(G.toString(array05), "[1.01, -20.29, 15.5]");
-        assertEquals(G.toString(array07), "[1.01, 0.0, 0.0, -20.29, 15.5]");
+        assertEquals(G.toString(array07), "[1.01, 0, 0, -20.29, 15.5]");
         assertEquals(G.toString(array08), "[1.01, -20.29, 15.5]");
-        assertEquals(G.toString(array09), "[1.01, -6.0, -20.29, 15.5]");
-        assertEquals(G.toString(array10), "[1.01, 6.0, 6.0, -20.29, 15.5]");
+        assertEquals(G.toString(array09), "[1.01, -6, -20.29, 15.5]");
+        assertEquals(G.toString(array10), "[1.01, 6, 6, -20.29, 15.5]");
     }
 
     @Test
@@ -443,13 +443,13 @@ public class PrimitiveArraysTest {
         assertThrows(NullPointerException.class, () -> PrimitiveArrays.toDoubles(ToArrayMode.THROW_WHEN_NULL, set));
         assertThrows(NullPointerException.class, () -> PrimitiveArrays.toDoubles(ToArrayMode.THROW_WHEN_NULL, list));
         assertEquals(G.toString(array01), "[1.01, -20.29, 15.5]");
-        assertEquals(G.toString(array03), "[1.01, 0.0, -20.29, 15.5]");
+        assertEquals(G.toString(array03), "[1.01, 0, -20.29, 15.5]");
         assertEquals(G.toString(array04), "[1.01, -20.29, 15.5]");
         assertEquals(G.toString(array05), "[1.01, -20.29, 15.5]");
-        assertEquals(G.toString(array07), "[1.01, 0.0, 0.0, -20.29, 15.5]");
+        assertEquals(G.toString(array07), "[1.01, 0, 0, -20.29, 15.5]");
         assertEquals(G.toString(array08), "[1.01, -20.29, 15.5]");
-        assertEquals(G.toString(array09), "[1.01, -6.0, -20.29, 15.5]");
-        assertEquals(G.toString(array10), "[1.01, 6.0, 6.0, -20.29, 15.5]");
+        assertEquals(G.toString(array09), "[1.01, -6, -20.29, 15.5]");
+        assertEquals(G.toString(array10), "[1.01, 6, 6, -20.29, 15.5]");
     }
 
     @Test

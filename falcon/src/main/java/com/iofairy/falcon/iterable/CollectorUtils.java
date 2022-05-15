@@ -17,8 +17,11 @@ package com.iofairy.falcon.iterable;
 
 import com.iofairy.falcon.map.MapUtils;
 import com.iofairy.top.G;
+import com.iofairy.tuple.Tuple;
+import com.iofairy.tuple.Tuple2;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -193,16 +196,16 @@ public class CollectorUtils {
      * //-- balance2: [[83, 84, 85], [57, 58, 59, 26], [30, 31, 71, 72], [11, 12, 13, 14, 15]]
      * </pre>
      *
-     * @param partitions 分配后 {@code List} 的数量
-     * @param listList   待分配的 {@code List} 列表
-     * @param <E>        元素类型
+     * @param partitions  分配后 {@code List} 的数量
+     * @param collections 待分配的 {@code List} 列表
+     * @param <E>         元素类型
      * @return 分配后 {@code List} 列表
      * @since 0.0.2
      */
-    public static <E> List<List<E>> balance(int partitions, List<List<E>> listList) {
-        if (partitions <= 0 || G.isEmpty(listList)) return null;
+    public static <E> List<List<E>> balance(int partitions, Collection<? extends Collection<E>> collections) {
+        if (partitions <= 0 || G.isEmpty(collections)) return null;
         // transform to `ArrayList` that is mutable list.
-        List<List<E>> sortedLists = listList.stream().filter(l -> !G.isEmpty(l)).map(ArrayList::new)
+        List<List<E>> sortedLists = collections.stream().filter(coll -> !G.isEmpty(coll)).map(ArrayList::new)
                 .sorted(Comparator.comparingInt(list -> -list.size())).collect(Collectors.toList());
 
         if (G.isEmpty(sortedLists)) return null;
@@ -231,11 +234,11 @@ public class CollectorUtils {
      * @param listArray  待分配的 {@code List} 数组
      * @param <E>        元素类型
      * @return 分配后 {@code List} 列表
-     * @see #balance(int, List)
+     * @see #balance(int, Collection)
      * @since 0.0.2
      */
     @SafeVarargs
-    public static <E> List<List<E>> balance(int partitions, List<E>... listArray) {
+    public static <E> List<List<E>> balance(int partitions, Collection<E>... listArray) {
         if (partitions <= 0 || G.isEmpty(listArray)) return null;
         return balance(partitions, Arrays.asList(listArray));
     }
@@ -248,7 +251,7 @@ public class CollectorUtils {
      * @param arrays     待分配的数组
      * @param <E>        元素类型
      * @return 分配后 {@code List} 列表
-     * @see #balance(int, List)
+     * @see #balance(int, Collection)
      * @since 0.0.2
      */
     @SafeVarargs
@@ -259,12 +262,12 @@ public class CollectorUtils {
     }
 
     /**
-     * Fast Sort For {@link #balance(int, List)}<br>
-     * 针对 {@link #balance(int, List)} 方法的快速排序
+     * Fast Sort For {@link #balance(int, Collection) }<br>
+     * 针对 {@link #balance(int, Collection) } 方法的快速排序
      *
      * @param sortedEntries sortedEntries
      * @param <E>           elements type in List
-     * @see #balance(int, List)
+     * @see #balance(int, Collection)
      * @since 0.0.2
      */
     private static <E> void fastSortForBalance(List<Map.Entry<Integer, List<E>>> sortedEntries) {
@@ -288,6 +291,199 @@ public class CollectorUtils {
             sortedEntries.add(preGtIndex + 1, firstEntry);
             sortedEntries.remove(0);
         }
+    }
+
+
+    /**
+     * 从过滤后的集合中获取第n个元素，超出元素范围，则返回 {@code null}
+     *
+     * @param ts     集合
+     * @param filter 对集合过滤，为 {@code null} 时，不过滤
+     * @param nth    第n个元素，从 0 开始， -1 则取最后一个元素
+     * @param <T>    集合元素类型
+     * @return 过滤后的集合的第n个元素
+     * @since 0.2.2
+     */
+    public static <T> T findNth(Collection<T> ts, Predicate<? super T> filter, int nth) {
+        if (G.isEmpty(ts) || nth < -1) return null;
+
+        int objNth = 0;
+        T t = null;
+        if (filter == null) {
+            nth = nth == -1 ? ts.size() - 1 : nth;
+            for (T t1 : ts) {
+                if (objNth == nth) {
+                    t = t1;
+                    break;
+                }
+                objNth++;
+            }
+        } else {
+            List<T> tList = new ArrayList<>();
+            for (T t1 : ts) {
+                if (filter.test(t1)) {
+                    if (nth == -1) {
+                        tList.add(t1);
+                    } else {
+                        if (objNth == nth) {
+                            t = t1;
+                            break;
+                        }
+                        objNth++;
+                    }
+                }
+            }
+            if (!G.isEmpty(tList)) {
+                t = tList.get(tList.size() - 1);
+            }
+        }
+        return t;
+    }
+
+    /**
+     * 从过滤后的列表中获取第n个元素及在原列表中的序号，超出元素范围，则返回 {@code null}
+     *
+     * @param ts     列表
+     * @param filter 对列表过滤，为 {@code null} 时，不过滤
+     * @param nth    第n个元素，从 0 开始，-1 则取最后一个元素
+     * @param <T>    列表元素类型
+     * @return 过滤后的列表的第n个元素及序号
+     * @since 0.2.2
+     */
+    public static <T> Tuple2<T, Integer> findNth(List<T> ts, Predicate<? super T> filter, int nth) {
+        if (G.isEmpty(ts) || nth < -1) return null;
+
+        int objNth = 0;
+        Tuple2<T, Integer> tuple = null;
+        if (filter == null) {
+            nth = nth == -1 ? ts.size() - 1 : nth;
+            if (ts.size() > nth) {
+                tuple = Tuple.of(ts.get(nth), nth);
+            }
+        } else {
+            List<Tuple2<T, Integer>> tList = new ArrayList<>();
+            for (int i = 0; i < ts.size(); i++) {
+                T t = ts.get(i);
+                if (filter.test(t)) {
+                    if (nth == -1) {
+                        tList.add(Tuple.of(t, i));
+                    } else {
+                        if (objNth == nth) {
+                            tuple = Tuple.of(t, i);
+                            break;
+                        }
+                        objNth++;
+                    }
+                }
+            }
+            if (!G.isEmpty(tList)) {
+                tuple = tList.get(tList.size() - 1);
+            }
+        }
+        return tuple;
+    }
+
+    /**
+     * 从获取过滤后的数组中获取第n个元素及在原数组中的序号，超出元素范围，则返回 {@code null}
+     *
+     * @param ts     数组
+     * @param filter 对数组过滤，为 {@code null} 时，不过滤
+     * @param nth    第n个元素，从 0 开始，-1 则取最后一个元素
+     * @param <T>    数组元素类型
+     * @return 过滤后的数组的第n个元素及序号
+     * @since 0.2.2
+     */
+    public static <T> Tuple2<T, Integer> findNth(T[] ts, Predicate<? super T> filter, int nth) {
+        if (G.isEmpty(ts) || nth < -1) return null;
+        return findNth(Arrays.asList(ts), filter, nth);
+    }
+
+    /**
+     * 从过滤后的集合中随机获取元素
+     *
+     * @param ts     集合
+     * @param filter 对集合过滤，为 {@code null} 时，不过滤
+     * @param <T>    集合元素类型
+     * @return 过滤后的集合中随机一个元素
+     * @since 0.2.2
+     */
+    public static <T> T findRandom(Collection<T> ts, Predicate<? super T> filter) {
+        if (G.isEmpty(ts)) return null;
+
+        T t = null;
+        Random random = new Random();
+        if (filter == null) {
+            int randomIndex = random.nextInt(ts.size());
+            int objNth = 0;
+            for (T t1 : ts) {
+                if (objNth == randomIndex) {
+                    t = t1;
+                    break;
+                }
+                objNth++;
+            }
+        } else {
+            List<T> tList = new ArrayList<>();
+            for (T t1 : ts) {
+                if (filter.test(t1)) {
+                    tList.add(t1);
+                }
+            }
+            if (!G.isEmpty(tList)) {
+                int randomIndex = random.nextInt(tList.size());
+                t = tList.get(randomIndex);
+            }
+        }
+        return t;
+    }
+
+    /**
+     * 从过滤后的列表中随机获取元素及在原列表中的序号
+     *
+     * @param ts     列表
+     * @param filter 对列表过滤，为 {@code null} 时，不过滤
+     * @param <T>    列表元素类型
+     * @return 过滤后的列表中随机一个元素及序号
+     * @since 0.2.2
+     */
+    public static <T> Tuple2<T, Integer> findRandom(List<T> ts, Predicate<? super T> filter) {
+        if (G.isEmpty(ts)) return null;
+
+        Tuple2<T, Integer> tuple = null;
+        Random random = new Random();
+        if (filter == null) {
+            int randomIndex = random.nextInt(ts.size());
+            tuple = Tuple.of(ts.get(randomIndex), randomIndex);
+        } else {
+            List<Tuple2<T, Integer>> tList = new ArrayList<>();
+            for (int i = 0; i < ts.size(); i++) {
+                T t = ts.get(i);
+                if (filter.test(t)) {
+                    tList.add(Tuple.of(t, i));
+                }
+            }
+
+            if (!G.isEmpty(tList)) {
+                int randomIndex = random.nextInt(tList.size());
+                tuple = tList.get(randomIndex);
+            }
+
+        }
+        return tuple;
+    }
+
+    /**
+     * 从过滤后的数组中随机获取元素及在原数组中的序号
+     *
+     * @param ts     数组
+     * @param filter 对数组过滤，为 {@code null} 时，不过滤
+     * @param <T>    数组元素类型
+     * @return 过滤后的数组中随机一个元素及序号
+     * @since 0.2.2
+     */
+    public static <T> Tuple2<T, Integer> findRandom(T[] ts, Predicate<? super T> filter) {
+        if (G.isEmpty(ts)) return null;
+        return findRandom(Arrays.asList(ts), filter);
     }
 
 }
