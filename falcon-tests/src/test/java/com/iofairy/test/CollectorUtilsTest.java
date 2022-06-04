@@ -356,6 +356,19 @@ public class CollectorUtilsTest {
         Tuple2<String, Integer> nth22 = CollectorUtils.findNth(sList, e -> e.startsWith("a"), -1);         // ("af", 7)
         String nth23 = CollectorUtils.findNth(sSet, e -> e.startsWith("a"), -1);         // af
 
+        Tuple2<String, Integer> nth24 = CollectorUtils.findNth(ss, null, -11);         // null
+        Tuple2<String, Integer> nth25 = CollectorUtils.findNth(sList, null, -10);         // ("a", 0)
+        String nth26 = CollectorUtils.findNth(sSet, null, -7);         // a
+
+        Tuple2<String, Integer> nth27 = CollectorUtils.findNth(ss, e -> e.startsWith("a"), -2);         // ("af", 6)
+        Tuple2<String, Integer> nth28 = CollectorUtils.findNth(sList, e -> e.startsWith("a"), -2);         // ("af", 6)
+        String nth29 = CollectorUtils.findNth(sSet, e -> e.startsWith("a"), -2);         // ae
+
+        Tuple2<String, Integer> nth30 = CollectorUtils.findNth(ss, e -> e.startsWith("a"), -6);         // ("a", 0)
+        Tuple2<String, Integer> nth31 = CollectorUtils.findNth(sList, e -> e.startsWith("a"), -7);         // null
+        String nth32 = CollectorUtils.findNth(sSet, e -> e.startsWith("a"), -4);         // a
+        String nth33 = CollectorUtils.findNth(sSet, e -> e.startsWith("a"), -5);         // null
+
         assertEquals(nth0.toString(), "(\"c\", 2)");
         assertEquals(nth1.toString(), "(\"c\", 2)");
         assertEquals(nth2.toString(), "c");
@@ -380,6 +393,16 @@ public class CollectorUtilsTest {
         assertEquals(nth21.toString(), "(\"af\", 7)");
         assertEquals(nth22.toString(), "(\"af\", 7)");
         assertEquals(nth23.toString(), "af");
+        assertNull(nth24);
+        assertEquals(nth25.toString(), "(\"a\", 0)");
+        assertEquals(nth26.toString(), "a");
+        assertEquals(nth27.toString(), "(\"af\", 6)");
+        assertEquals(nth28.toString(), "(\"af\", 6)");
+        assertEquals(nth29.toString(), "ae");
+        assertEquals(nth30.toString(), "(\"a\", 0)");
+        assertNull(nth31);
+        assertEquals(nth32.toString(), "a");
+        assertNull(nth33);
 
         System.out.println("nth0: " + nth0);
         System.out.println("nth1: " + nth1);
@@ -405,6 +428,16 @@ public class CollectorUtilsTest {
         System.out.println("nth21: " + nth21);
         System.out.println("nth22: " + nth22);
         System.out.println("nth23: " + nth23);
+        System.out.println("nth24: " + nth24);
+        System.out.println("nth25: " + nth25);
+        System.out.println("nth26: " + nth26);
+        System.out.println("nth27: " + nth27);
+        System.out.println("nth28: " + nth28);
+        System.out.println("nth29: " + nth29);
+        System.out.println("nth30: " + nth30);
+        System.out.println("nth31: " + nth31);
+        System.out.println("nth32: " + nth32);
+        System.out.println("nth33: " + nth33);
     }
 
     @Test

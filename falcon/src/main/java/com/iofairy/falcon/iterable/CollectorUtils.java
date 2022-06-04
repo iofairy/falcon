@@ -299,18 +299,19 @@ public class CollectorUtils {
      *
      * @param ts     集合
      * @param filter 对集合过滤，为 {@code null} 时，不过滤
-     * @param nth    第n个元素，从 0 开始， -1 则取最后一个元素
+     * @param nth    第n个元素，从 0 开始， 负数 则从最后一个元素开始往前面索引，-1 代表最后一个元素
      * @param <T>    集合元素类型
      * @return 过滤后的集合的第n个元素
      * @since 0.2.2
      */
     public static <T> T findNth(Collection<T> ts, Predicate<? super T> filter, int nth) {
-        if (G.isEmpty(ts) || nth < -1) return null;
+        // 负数时，Math.abs(nth) 可以 = ts.size()
+        if (G.isEmpty(ts) || Math.abs(nth) > ts.size()) return null;
 
         int objNth = 0;
         T t = null;
         if (filter == null) {
-            nth = nth == -1 ? ts.size() - 1 : nth;
+            nth = nth < 0 ? ts.size() + nth : nth;
             for (T t1 : ts) {
                 if (objNth == nth) {
                     t = t1;
@@ -322,7 +323,7 @@ public class CollectorUtils {
             List<T> tList = new ArrayList<>();
             for (T t1 : ts) {
                 if (filter.test(t1)) {
-                    if (nth == -1) {
+                    if (nth < 0) {
                         tList.add(t1);
                     } else {
                         if (objNth == nth) {
@@ -333,8 +334,9 @@ public class CollectorUtils {
                     }
                 }
             }
-            if (!G.isEmpty(tList)) {
-                t = tList.get(tList.size() - 1);
+            // nth 为负数时，tList 才可能不为空
+            if (!G.isEmpty(tList) && tList.size() + nth >= 0) {
+                t = tList.get(tList.size() + nth);
             }
         }
         return t;
@@ -345,19 +347,20 @@ public class CollectorUtils {
      *
      * @param ts     列表
      * @param filter 对列表过滤，为 {@code null} 时，不过滤
-     * @param nth    第n个元素，从 0 开始，-1 则取最后一个元素
+     * @param nth    第n个元素，从 0 开始，负数 则从最后一个元素开始往前面索引，-1 代表最后一个元素
      * @param <T>    列表元素类型
      * @return 过滤后的列表的第n个元素及序号
      * @since 0.2.2
      */
     public static <T> Tuple2<T, Integer> findNth(List<T> ts, Predicate<? super T> filter, int nth) {
-        if (G.isEmpty(ts) || nth < -1) return null;
+        // 负数时，Math.abs(nth) 可以 = ts.size()
+        if (G.isEmpty(ts) || Math.abs(nth) > ts.size()) return null;
 
         int objNth = 0;
         Tuple2<T, Integer> tuple = null;
         if (filter == null) {
-            nth = nth == -1 ? ts.size() - 1 : nth;
-            if (ts.size() > nth) {
+            nth = nth < 0 ? ts.size() + nth : nth;
+            if (nth >= 0 && ts.size() > nth) {
                 tuple = Tuple.of(ts.get(nth), nth);
             }
         } else {
@@ -365,7 +368,7 @@ public class CollectorUtils {
             for (int i = 0; i < ts.size(); i++) {
                 T t = ts.get(i);
                 if (filter.test(t)) {
-                    if (nth == -1) {
+                    if (nth < 0) {
                         tList.add(Tuple.of(t, i));
                     } else {
                         if (objNth == nth) {
@@ -376,8 +379,9 @@ public class CollectorUtils {
                     }
                 }
             }
-            if (!G.isEmpty(tList)) {
-                tuple = tList.get(tList.size() - 1);
+            // nth 为负数时，tList 才可能不为空
+            if (!G.isEmpty(tList) && tList.size() + nth >= 0) {
+                tuple = tList.get(tList.size() + nth);
             }
         }
         return tuple;
@@ -388,13 +392,14 @@ public class CollectorUtils {
      *
      * @param ts     数组
      * @param filter 对数组过滤，为 {@code null} 时，不过滤
-     * @param nth    第n个元素，从 0 开始，-1 则取最后一个元素
+     * @param nth    第n个元素，从 0 开始，负数 则从最后一个元素开始往前面索引，-1 代表最后一个元素
      * @param <T>    数组元素类型
      * @return 过滤后的数组的第n个元素及序号
      * @since 0.2.2
      */
     public static <T> Tuple2<T, Integer> findNth(T[] ts, Predicate<? super T> filter, int nth) {
-        if (G.isEmpty(ts) || nth < -1) return null;
+        // 负数时，Math.abs(nth) 可以 = ts.length
+        if (G.isEmpty(ts) || Math.abs(nth) > ts.length) return null;
         return findNth(Arrays.asList(ts), filter, nth);
     }
 
