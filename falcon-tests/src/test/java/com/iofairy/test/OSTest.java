@@ -31,4 +31,36 @@ public class OSTest {
         System.out.println("DEFAULT_COUNTRY: " + OS.DEFAULT_COUNTRY);
         System.out.println("IS_ZH_LANG: " + OS.IS_ZH_LANG);
     }
+
+    @Test
+    public void testOSJavaInfo() {
+        System.out.println("JAVA_HOME: " + OS.JAVA_HOME);
+        System.out.println("JAVA_CLASS_PATH: " + OS.JAVA_CLASS_PATH);
+        System.out.println("JAVA_COMPILER: " + OS.JAVA_COMPILER);
+        System.out.println("JAVA_LIBRARY_PATH: " + OS.JAVA_LIBRARY_PATH);
+        System.out.println("JAVA_EXT_DIRS: " + OS.JAVA_EXT_DIRS);
+        System.out.println("JAVA_VM_INFO: " + OS.JAVA_VM_INFO);
+        System.out.println("JAVA_AWT_PRINTERJOB: " + OS.JAVA_AWT_PRINTERJOB);
+        System.out.println("JAVA_IO_TMPDIR: " + OS.JAVA_IO_TMPDIR);
+        System.out.println("JAVA_VENDOR_URL_BUG: " + OS.JAVA_VENDOR_URL_BUG);
+        System.out.println("JAVA_ENDORSED_DIRS: " + OS.JAVA_ENDORSED_DIRS);
+        System.out.println("JAVA_AWT_GRAPHICSENV: " + OS.JAVA_AWT_GRAPHICSENV);
+        System.out.println("JAVA_VENDOR_URL: " + OS.JAVA_VENDOR_URL);
+        System.out.println("JAVA_VERSION: " + OS.JAVA_VERSION);
+        System.out.println("JAVA_SPECIFICATION_VERSION: " + OS.JAVA_SPECIFICATION_VERSION);
+        System.out.println("J_VERSION: " + OS.J_VERSION);
+        System.out.println("JAVA_VERSION_NUMBER: " + OS.JAVA_VERSION_NUMBER);
+        System.out.println("JAVA_CLASS_VERSION: " + OS.JAVA_CLASS_VERSION);
+        System.out.println("JAVA_RUNTIME_VERSION: " + OS.JAVA_RUNTIME_VERSION);
+        System.out.println("JAVA_VM_VERSION: " + OS.JAVA_VM_VERSION);
+        System.out.println("JAVA_VM_SPECIFICATION_VERSION: " + OS.JAVA_VM_SPECIFICATION_VERSION);
+        System.out.println("JAVA_SPECIFICATION_NAME: " + OS.JAVA_SPECIFICATION_NAME);
+        System.out.println("JAVA_RUNTIME_NAME: " + OS.JAVA_RUNTIME_NAME);
+        System.out.println("JAVA_VM_NAME: " + OS.JAVA_VM_NAME);
+        System.out.println("JAVA_VM_SPECIFICATION_NAME: " + OS.JAVA_VM_SPECIFICATION_NAME);
+        System.out.println("JAVA_VENDOR: " + OS.JAVA_VENDOR);
+        System.out.println("JAVA_SPECIFICATION_VENDOR: " + OS.JAVA_SPECIFICATION_VENDOR);
+        System.out.println("JAVA_VM_VENDOR: " + OS.JAVA_VM_VENDOR);
+        System.out.println("JAVA_VM_SPECIFICATION_VENDOR: " + OS.JAVA_VM_SPECIFICATION_VENDOR);
+    }
 }

@@ -127,6 +127,55 @@ public final class OS {
     /*
      **********************************************************************************
      ##################################################################################
+     #######                      Java相关信息（Java Info）                       #######
+     ##################################################################################
+     **********************************************************************************
+     */
+
+    public static final String JAVA_HOME                        = getProperty("java.home");
+    public static final String JAVA_CLASS_PATH                  = getProperty("java.class.path");
+    public static final String JAVA_COMPILER                    = getProperty("java.compiler");
+    public static final String JAVA_LIBRARY_PATH                = getProperty("java.library.path");
+
+    public static final String JAVA_EXT_DIRS                    = getProperty("java.ext.dirs");
+    public static final String JAVA_VM_INFO                     = getProperty("java.vm.info");
+    public static final String JAVA_AWT_PRINTERJOB              = getProperty("java.awt.printerjob");
+    public static final String JAVA_IO_TMPDIR                   = getProperty("java.io.tmpdir");
+    public static final String JAVA_VENDOR_URL_BUG              = getProperty("java.vendor.url.bug");
+    public static final String JAVA_ENDORSED_DIRS               = getProperty("java.endorsed.dirs");
+    public static final String JAVA_AWT_GRAPHICSENV             = getProperty("java.awt.graphicsenv");
+    public static final String JAVA_VENDOR_URL                  = getProperty("java.vendor.url");
+    /*
+     * version
+     */
+    public static final String JAVA_VERSION                     = getProperty("java.version");
+    public static final String JAVA_SPECIFICATION_VERSION       = getProperty("java.specification.version");
+    public static final JavaVersion J_VERSION                   = JavaVersion.of(JAVA_SPECIFICATION_VERSION);
+    public static final float JAVA_VERSION_NUMBER               = Try.tcf(() -> Float.valueOf(JAVA_SPECIFICATION_VERSION), 0.0f, false);
+    public static final String JAVA_CLASS_VERSION               = getProperty("java.class.version");
+    public static final String JAVA_RUNTIME_VERSION             = getProperty("java.runtime.version");
+    public static final String JAVA_VM_VERSION                  = getProperty("java.vm.version");
+    public static final String JAVA_VM_SPECIFICATION_VERSION    = getProperty("java.vm.specification.version");
+    /*
+     * name
+     */
+    public static final String JAVA_SPECIFICATION_NAME          = getProperty("java.specification.name");
+    public static final String JAVA_RUNTIME_NAME                = getProperty("java.runtime.name");
+    public static final String JAVA_VM_NAME                     = getProperty("java.vm.name");
+    public static final String JAVA_VM_SPECIFICATION_NAME       = getProperty("java.vm.specification.name");
+    /*
+     * vendor
+     */
+    public static final String JAVA_VENDOR                      = getProperty("java.vendor");
+    public static final String JAVA_SPECIFICATION_VENDOR        = getProperty("java.specification.vendor");
+    public static final String JAVA_VM_VENDOR                   = getProperty("java.vm.vendor");
+    public static final String JAVA_VM_SPECIFICATION_VENDOR     = getProperty("java.vm.specification.vendor");
+
+
+
+    /*
+     **********************************************************************************
+     ##################################################################################
      ##   Mac操作系统版本参考以下网址 （Mac OS version refer to the following website）：  ##
      ##            https://en.wikipedia.org/wiki/MacOS#Release_history               ##
      ##################################################################################

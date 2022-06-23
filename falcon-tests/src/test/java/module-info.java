@@ -19,4 +19,5 @@ module falcon.test {
     requires org.junit.jupiter.api;
 
     exports com.iofairy.test to org.junit.platform.commons;
+    exports com.iofairy.test.reflect to org.junit.platform.commons;
 }
