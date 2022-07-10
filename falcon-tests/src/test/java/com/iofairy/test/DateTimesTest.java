@@ -1,7 +1,7 @@
 package com.iofairy.test;
 
+import com.iofairy.falcon.time.DateTimes;
 import com.iofairy.falcon.time.TZ;
-import com.iofairy.falcon.util.DateTimeUtils;
 import com.iofairy.top.G;
 import org.junit.jupiter.api.Test;
 
@@ -16,19 +16,19 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author GG
  * @version 1.0
  */
-public class DateTimeUtilsTest {
+public class DateTimesTest {
     @Test
     public void testToUTCZonedDT() {
-        ZoneOffset zoneOffset = DateTimeUtils.defaultOffset();
+        ZoneOffset zoneOffset = DateTimes.defaultOffset();
         LocalDateTime localDateTime = LocalDateTime.of(2022, 1, 1, 10, 10, 5, 987656789);
         ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, TZ.SHANGHAI);
         OffsetDateTime offsetDateTime = OffsetDateTime.of(localDateTime, zoneOffset);
         Instant instant = localDateTime.toInstant(zoneOffset);
         // 转换成 ZonedDateTime
-        ZonedDateTime zonedDateTime1 = DateTimeUtils.toUTCZonedDT(localDateTime);
-        ZonedDateTime zonedDateTime2 = DateTimeUtils.toUTCZonedDT(zonedDateTime);
-        ZonedDateTime zonedDateTime3 = DateTimeUtils.toUTCZonedDT(offsetDateTime);
-        ZonedDateTime zonedDateTime4 = DateTimeUtils.toUTCZonedDT(instant);
+        ZonedDateTime zonedDateTime1 = DateTimes.toUTCZonedDT(localDateTime);
+        ZonedDateTime zonedDateTime2 = DateTimes.toUTCZonedDT(zonedDateTime);
+        ZonedDateTime zonedDateTime3 = DateTimes.toUTCZonedDT(offsetDateTime);
+        ZonedDateTime zonedDateTime4 = DateTimes.toUTCZonedDT(instant);
         // System.out.println(localDateTime);
         // System.out.println(zonedDateTime);
         // System.out.println(offsetDateTime);
@@ -56,14 +56,14 @@ public class DateTimeUtilsTest {
         System.out.println("origin date: \n" + sdf.format(date));
         System.out.println("-------------------------");
 
-        Date utcDate = DateTimeUtils.localDateToTZ(date, ZoneId.of("UTC"));
+        Date utcDate = DateTimes.localDateToTZ(date, ZoneId.of("UTC"));
         String utcDateStr = sdf.format(utcDate);
         System.out.println("local to utc date: \n" + utcDateStr);
         assertEquals("2019-12-31 21:01:50", utcDateStr);
         System.out.println("-------------------------");
 
         // ZoneId.of("Australia/Victoria")  +11:00
-        Date utcDate1 = DateTimeUtils.tzDateToTZ(date, ZoneId.of("Australia/Victoria"), ZoneId.of("UTC"));
+        Date utcDate1 = DateTimes.tzDateToTZ(date, ZoneId.of("Australia/Victoria"), ZoneId.of("UTC"));
         System.out.println("Australia/Victoria to utc date: \n" + sdf.format(utcDate1));
         assertEquals("2019-12-31 18:01:50", sdf.format(utcDate1));
         System.out.println("-------------------------");
@@ -89,7 +89,7 @@ public class DateTimeUtilsTest {
         assertEquals("2019-12-31 22:01:50", sdf.format(utcCalendar.getTime()));
         System.out.println("-------------------------");
 
-        Calendar calendar = DateTimeUtils.calendarToLocal(utcCalendar);
+        Calendar calendar = DateTimes.calendarToLocal(utcCalendar);
         System.out.println("calendar: \n" + calendar);
         System.out.println("calendar date: \n" + sdf.format(calendar.getTime()));
         assertEquals("2020-01-01 06:01:50", sdf.format(calendar.getTime()));
@@ -115,7 +115,7 @@ public class DateTimeUtilsTest {
         System.out.println("-------------------------");
 
         // ZoneId.of("Australia/Victoria")  +11:00
-        Calendar calendar = DateTimeUtils.calendarToTZ(utcCalendar, ZoneId.of("Australia/Victoria"));
+        Calendar calendar = DateTimes.calendarToTZ(utcCalendar, ZoneId.of("Australia/Victoria"));
         System.out.println("calendar: \n" + calendar);
         System.out.println("calendar date: \n" + sdf.format(calendar.getTime()));
         assertEquals("2020-01-01 09:01:50", sdf.format(calendar.getTime()));
@@ -141,7 +141,7 @@ public class DateTimeUtilsTest {
         System.out.println("-------------------------");
 
         // ZoneId.of("Australia/Victoria")  +11:00
-        Calendar calendar = DateTimeUtils.calendarToTZ(localCalendar, ZoneId.of("Australia/Victoria"));
+        Calendar calendar = DateTimes.calendarToTZ(localCalendar, ZoneId.of("Australia/Victoria"));
         System.out.println("calendar: \n" + calendar);
         System.out.println("calendar date: \n" + sdf.format(calendar.getTime()));
         assertEquals("2020-01-01 01:01:50", sdf.format(calendar.getTime()));

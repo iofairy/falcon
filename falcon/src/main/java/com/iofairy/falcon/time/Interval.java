@@ -17,12 +17,11 @@ package com.iofairy.falcon.time;
 
 import com.iofairy.except.UnexpectedParameterException;
 import com.iofairy.falcon.os.OS;
-import com.iofairy.falcon.util.DateTimeUtils;
+import com.iofairy.top.G;
 
 import java.time.*;
 import java.time.temporal.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.*;
 
@@ -277,13 +276,16 @@ public class Interval extends SignedInterval {
      * @return Interval
      */
     public static Interval between(Temporal startTemporal, Temporal endTemporal) {
-        Objects.requireNonNull(startTemporal);
-        Objects.requireNonNull(endTemporal);
+        if (G.hasNull(startTemporal, endTemporal)) throw new NullPointerException("Parameters `startTemporal` and `endTemporal` must be non-null!");
 
         if (!isSupported(startTemporal) || !isSupported(endTemporal))
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")) + "] is supported!");
+            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `startTemporal` and `endTemporal` parameters!");
 
-        boolean isBefore = DateTimeUtils.toUTCZonedDT(startTemporal).isBefore(DateTimeUtils.toUTCZonedDT(endTemporal));
+        ZoneOffset defaultOffset = DateTimes.defaultOffset();
+        startTemporal = DateTimes.toOffsetDT(startTemporal, defaultOffset);
+        endTemporal = DateTimes.toOffsetDT(endTemporal, defaultOffset);
+
+        boolean isBefore = ((OffsetDateTime) startTemporal).isBefore((OffsetDateTime) endTemporal);
         Temporal tmpStartTemporal = isBefore ? startTemporal : endTemporal;
         Temporal tmpEndTemporal = isBefore ? endTemporal : startTemporal;
 
@@ -314,7 +316,8 @@ public class Interval extends SignedInterval {
      * @return Interval
      */
     public static Interval between(Date startDate, Date endDate) {
-        return between(startDate.toInstant(), endDate.toInstant());
+        ZoneOffset defaultOffset = DateTimes.defaultOffset();
+        return between(DateTimes.toOffsetDT(startDate, defaultOffset), DateTimes.toOffsetDT(endDate, defaultOffset));
     }
 
     /**
@@ -326,17 +329,18 @@ public class Interval extends SignedInterval {
      * @return Interval
      */
     public static Interval between(Calendar startCalendar, Calendar endCalendar) {
-        return between(startCalendar.toInstant(), endCalendar.toInstant());
+        ZoneOffset defaultOffset = DateTimes.defaultOffset();
+        return between(DateTimes.toOffsetDT(startCalendar, defaultOffset), DateTimes.toOffsetDT(endCalendar, defaultOffset));
     }
 
     @Override
     public Temporal subtractFrom(Temporal temporal) {
         Objects.requireNonNull(temporal);
         if (!isSupported(temporal))
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")) + "] is supported!");
+            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `temporal` parameter!");
 
         boolean isInstant = temporal instanceof Instant;
-        temporal = isInstant ? DateTimeUtils.toUTCZonedDT(temporal) : temporal;
+        temporal = isInstant ? DateTimes.toDefaultOffsetDT(temporal) : temporal;
 
         temporal = minus(temporal, nanos, NANOS);
         temporal = minus(temporal, micros, MICROS);
@@ -347,7 +351,7 @@ public class Interval extends SignedInterval {
         temporal = minus(temporal, days, DAYS);
         temporal = minus(temporal, months, MONTHS);
         temporal = minus(temporal, centuries * 100 + years, YEARS);
-        return isInstant ? ((ZonedDateTime) temporal).toInstant() : temporal;
+        return isInstant ? ((OffsetDateTime) temporal).toInstant() : temporal;
     }
 
 }

@@ -13,18 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.iofairy.falcon.time;
 
-module iofairy.falcon {
-    requires transitive iofairy.functional;
+/**
+ * Rounding date time.<br>
+ * 对日期取整
+ *
+ * @since 0.2.5
+ */
+public enum RoundingDT {
+    /**
+     * 对日期向上取整
+     */
+    CEILING,
+    /**
+     * 对日期向下取整
+     */
+    FLOOR,
+    /**
+     * 对日期四舍五入（从最小日期开始）
+     */
+    HALF_UP
 
-    exports com.iofairy.falcon.fs;
-    exports com.iofairy.falcon.os;
-    exports com.iofairy.falcon.range;
-    exports com.iofairy.falcon.reflect;
-    exports com.iofairy.falcon.regex;
-    exports com.iofairy.falcon.time;
-    exports com.iofairy.falcon.util;
-    exports com.iofairy.falcon.iterable;
-    exports com.iofairy.falcon.map;
-    exports com.iofairy.falcon.string;
 }

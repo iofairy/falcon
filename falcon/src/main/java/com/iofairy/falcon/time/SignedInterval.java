@@ -16,7 +16,7 @@
 package com.iofairy.falcon.time;
 
 import com.iofairy.falcon.os.OS;
-import com.iofairy.falcon.util.DateTimeUtils;
+import com.iofairy.top.G;
 
 import java.math.BigInteger;
 import java.time.*;
@@ -123,6 +123,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      */
     public static final List<Class<? extends Temporal>> SUPPORTED_TEMPORAL =
             Collections.unmodifiableList(Arrays.asList(ZonedDateTime.class, OffsetDateTime.class, LocalDateTime.class, Instant.class));
+    protected static final String SUPPORTED_TEMPORAL_STRING = SUPPORTED_TEMPORAL.stream().map(Class::getSimpleName).collect(Collectors.joining(", "));
 
     public SignedInterval(long centuries, long years, long months, long days, long hours, long minutes, long seconds, long millis, long micros, long nanos) {
         this.centuries = centuries;
@@ -234,16 +235,16 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
     }
 
     public SignedInterval plus(SignedInterval signedInterval) {
-        long centuries = this.centuries + signedInterval.centuries;
-        long years = this.years + signedInterval.years;
-        long months = this.months + signedInterval.months;
-        long days = this.days + signedInterval.days;
-        long hours = this.hours + signedInterval.hours;
-        long minutes = this.minutes + signedInterval.minutes;
-        long seconds = this.seconds + signedInterval.seconds;
-        long millis = this.millis + signedInterval.millis;
-        long micros = this.micros + signedInterval.micros;
-        long nanos = this.nanos + signedInterval.nanos;
+        long centuries  = this.centuries + signedInterval.centuries;
+        long years      = this.years + signedInterval.years;
+        long months     = this.months + signedInterval.months;
+        long days       = this.days + signedInterval.days;
+        long hours      = this.hours + signedInterval.hours;
+        long minutes    = this.minutes + signedInterval.minutes;
+        long seconds    = this.seconds + signedInterval.seconds;
+        long millis     = this.millis + signedInterval.millis;
+        long micros     = this.micros + signedInterval.micros;
+        long nanos      = this.nanos + signedInterval.nanos;
         return new SignedInterval(centuries, years, months, days, hours, minutes, seconds, millis, micros, nanos);
     }
 
@@ -298,16 +299,16 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
     }
 
     public SignedInterval minus(SignedInterval signedInterval) {
-        long centuries = this.centuries - signedInterval.centuries;
-        long years = this.years - signedInterval.years;
-        long months = this.months - signedInterval.months;
-        long days = this.days - signedInterval.days;
-        long hours = this.hours - signedInterval.hours;
-        long minutes = this.minutes - signedInterval.minutes;
-        long seconds = this.seconds - signedInterval.seconds;
-        long millis = this.millis - signedInterval.millis;
-        long micros = this.micros - signedInterval.micros;
-        long nanos = this.nanos - signedInterval.nanos;
+        long centuries  = this.centuries - signedInterval.centuries;
+        long years      = this.years - signedInterval.years;
+        long months     = this.months - signedInterval.months;
+        long days       = this.days - signedInterval.days;
+        long hours      = this.hours - signedInterval.hours;
+        long minutes    = this.minutes - signedInterval.minutes;
+        long seconds    = this.seconds - signedInterval.seconds;
+        long millis     = this.millis - signedInterval.millis;
+        long micros     = this.micros - signedInterval.micros;
+        long nanos      = this.nanos - signedInterval.nanos;
         return new SignedInterval(centuries, years, months, days, hours, minutes, seconds, millis, micros, nanos);
     }
 
@@ -371,16 +372,18 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      * @return SignedInterval
      */
     public static SignedInterval between(Temporal startTemporal, Temporal endTemporal) {
-        Objects.requireNonNull(startTemporal);
-        Objects.requireNonNull(endTemporal);
+        if (G.hasNull(startTemporal, endTemporal)) throw new NullPointerException("Parameters `startTemporal` and `endTemporal` must be non-null!");
+
         if (!isSupported(startTemporal) || !isSupported(endTemporal))
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")) + "] is supported!");
+            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `startTemporal` and `endTemporal` parameters!");
+
 
         Temporal originalStartTemporal = startTemporal;
         Temporal originalEndTemporal = endTemporal;
 
-        startTemporal = DateTimeUtils.toUTCZonedDT(startTemporal);
-        endTemporal = DateTimeUtils.toUTCZonedDT(endTemporal);
+        // 将 startTemporal 转成 OffsetDateTime 比 ZonedDateTime 效率更高。因为 ZonedDateTime.until 方法底层也要转成 OffsetDateTime 计算
+        startTemporal = startTemporal instanceof OffsetDateTime ? startTemporal : DateTimes.toOffsetDT(startTemporal, DateTimes.defaultOffset());
+        endTemporal = DateTimes.toOffsetDT(endTemporal, ((OffsetDateTime) startTemporal).getOffset());
 
         long totalYears = startTemporal.until(endTemporal, YEARS);
         long totalMonths = startTemporal.until(endTemporal, MONTHS);
@@ -447,7 +450,8 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      * @return SignedInterval
      */
     public static SignedInterval between(Date startDate, Date endDate) {
-        return between(startDate.toInstant(), endDate.toInstant());
+        ZoneOffset defaultOffset = DateTimes.defaultOffset();
+        return between(DateTimes.toOffsetDT(startDate, defaultOffset), DateTimes.toOffsetDT(endDate, defaultOffset));
     }
 
     /**
@@ -459,7 +463,8 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      * @return SignedInterval
      */
     public static SignedInterval between(Calendar startCalendar, Calendar endCalendar) {
-        return between(startCalendar.toInstant(), endCalendar.toInstant());
+        ZoneOffset defaultOffset = DateTimes.defaultOffset();
+        return between(DateTimes.toOffsetDT(startCalendar, defaultOffset), DateTimes.toOffsetDT(endCalendar, defaultOffset));
     }
 
     /**
@@ -511,10 +516,10 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
     public Temporal addTo(Temporal temporal) {
         Objects.requireNonNull(temporal);
         if (!isSupported(temporal))
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")) + "] is supported!");
+            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `temporal` parameter!");
 
         boolean isInstant = temporal instanceof Instant;
-        temporal = isInstant ? DateTimeUtils.toUTCZonedDT(temporal) : temporal;
+        temporal = isInstant ? DateTimes.toDefaultOffsetDT(temporal) : temporal;
 
         temporal = plus(temporal, centuries * 100 + years, YEARS);
         temporal = plus(temporal, months, MONTHS);
@@ -525,7 +530,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         temporal = plus(temporal, millis, MILLIS);
         temporal = plus(temporal, micros, MICROS);
         temporal = plus(temporal, nanos, NANOS);
-        return isInstant ? ((ZonedDateTime) temporal).toInstant() : temporal;
+        return isInstant ? ((OffsetDateTime) temporal).toInstant() : temporal;
     }
 
     protected Temporal plus(Temporal temporal, long amountToAdd, TemporalUnit unit) {
@@ -539,17 +544,17 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
 
     @Override
     public Calendar addTo(Calendar calendar) {
-        return DateTimeUtils.calendar((Instant) addTo(calendar.toInstant()), calendar.getTimeZone());
+        return DateTimes.calendar((Instant) addTo(calendar.toInstant()), calendar.getTimeZone().toZoneId());
     }
 
     @Override
     public Temporal subtractFrom(Temporal temporal) {
         Objects.requireNonNull(temporal);
         if (!isSupported(temporal))
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")) + "] is supported!");
+            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `temporal` parameter!!");
 
         boolean isInstant = temporal instanceof Instant;
-        temporal = isInstant ? DateTimeUtils.toUTCZonedDT(temporal) : temporal;
+        temporal = isInstant ? DateTimes.toDefaultOffsetDT(temporal) : temporal;
 
         temporal = minus(temporal, centuries * 100 + years, YEARS);
         temporal = minus(temporal, months, MONTHS);
@@ -560,7 +565,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         temporal = minus(temporal, millis, MILLIS);
         temporal = minus(temporal, micros, MICROS);
         temporal = minus(temporal, nanos, NANOS);
-        return isInstant ? ((ZonedDateTime) temporal).toInstant() : temporal;
+        return isInstant ? ((OffsetDateTime) temporal).toInstant() : temporal;
     }
 
     protected Temporal minus(Temporal temporal, long amountToSubtract, TemporalUnit unit) {
@@ -574,7 +579,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
 
     @Override
     public Calendar subtractFrom(Calendar calendar) {
-        return DateTimeUtils.calendar((Instant) subtractFrom(calendar.toInstant()), calendar.getTimeZone());
+        return DateTimes.calendar((Instant) subtractFrom(calendar.toInstant()), calendar.getTimeZone().toZoneId());
     }
 
     public long toYears() {
@@ -648,17 +653,17 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
     }
 
     public String toFullString() {
-        String equivalentlyStr = OS.IS_ZH_LANG ? "\n相当于：\n" : "\nAlternative time units: \n";
-        String yearsStr = OS.IS_ZH_LANG ? " 年\n" : " years\n";
-        String monthsStr = OS.IS_ZH_LANG ? " 月\n" : " months\n";
-        String weeksStr = OS.IS_ZH_LANG ? " 周\n" : " weeks\n";
-        String daysStr = OS.IS_ZH_LANG ? " 天\n" : " days\n";
-        String hoursStr = OS.IS_ZH_LANG ? " 时\n" : " hours\n";
-        String minutesStr = OS.IS_ZH_LANG ? " 分\n" : " minutes\n";
-        String secondsStr = OS.IS_ZH_LANG ? " 秒\n" : " seconds\n";
-        String millisStr = OS.IS_ZH_LANG ? " 毫秒\n" : " millis\n";
-        String microsStr = OS.IS_ZH_LANG ? " 微秒\n" : " micros\n";
-        String nanosStr = OS.IS_ZH_LANG ? " 纳秒" : " nanos";
+        String equivalentlyStr  = OS.IS_ZH_LANG ? "\n相当于：\n" : "\nAlternative time units: \n";
+        String yearsStr         = OS.IS_ZH_LANG ? " 年\n" : " years\n";
+        String monthsStr        = OS.IS_ZH_LANG ? " 月\n" : " months\n";
+        String weeksStr         = OS.IS_ZH_LANG ? " 周\n" : " weeks\n";
+        String daysStr          = OS.IS_ZH_LANG ? " 天\n" : " days\n";
+        String hoursStr         = OS.IS_ZH_LANG ? " 时\n" : " hours\n";
+        String minutesStr       = OS.IS_ZH_LANG ? " 分\n" : " minutes\n";
+        String secondsStr       = OS.IS_ZH_LANG ? " 秒\n" : " seconds\n";
+        String millisStr        = OS.IS_ZH_LANG ? " 毫秒\n" : " millis\n";
+        String microsStr        = OS.IS_ZH_LANG ? " 微秒\n" : " micros\n";
+        String nanosStr         = OS.IS_ZH_LANG ? " 纳秒" : " nanos";
 
         return this + equivalentlyStr +
                 "● " + totalYears + yearsStr +
@@ -676,15 +681,15 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
     @Override
     public String toString() {
         String centuriesStr = OS.IS_ZH_LANG ? "世纪" : " centuries ";
-        String yearsStr = OS.IS_ZH_LANG ? "年" : " years ";
-        String monthsStr = OS.IS_ZH_LANG ? "月" : " months ";
-        String daysStr = OS.IS_ZH_LANG ? "天" : " days ";
-        String hoursStr = OS.IS_ZH_LANG ? "时" : " hours ";
-        String minutesStr = OS.IS_ZH_LANG ? "分" : " minutes ";
-        String secondsStr = OS.IS_ZH_LANG ? "秒" : " seconds ";
-        String millisStr = OS.IS_ZH_LANG ? "毫秒" : " millis";
-        String microsStr = OS.IS_ZH_LANG ? "微秒" : " micros";
-        String nanosStr = OS.IS_ZH_LANG ? "纳秒" : " nanos";
+        String yearsStr     = OS.IS_ZH_LANG ? "年" : " years ";
+        String monthsStr    = OS.IS_ZH_LANG ? "月" : " months ";
+        String daysStr      = OS.IS_ZH_LANG ? "天" : " days ";
+        String hoursStr     = OS.IS_ZH_LANG ? "时" : " hours ";
+        String minutesStr   = OS.IS_ZH_LANG ? "分" : " minutes ";
+        String secondsStr   = OS.IS_ZH_LANG ? "秒" : " seconds ";
+        String millisStr    = OS.IS_ZH_LANG ? "毫秒" : " millis";
+        String microsStr    = OS.IS_ZH_LANG ? "微秒" : " micros";
+        String nanosStr     = OS.IS_ZH_LANG ? "纳秒" : " nanos";
 
         String intervalStr = "";
         if (centuries != 0) {

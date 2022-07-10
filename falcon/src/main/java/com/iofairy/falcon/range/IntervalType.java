@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.iofairy.falcon.range;
 
-module iofairy.falcon {
-    requires transitive iofairy.functional;
+/**
+ * Classification of intervals<br>
+ * 区间的分类
+ *
+ * @since 0.2.5
+ */
+public enum IntervalType {
+    OPEN("(a, b)"),
+    CLOSED("[a, b]"),
+    OPEN_CLOSED("(a, b]"),
+    CLOSED_OPEN("[a, b)");
 
-    exports com.iofairy.falcon.fs;
-    exports com.iofairy.falcon.os;
-    exports com.iofairy.falcon.range;
-    exports com.iofairy.falcon.reflect;
-    exports com.iofairy.falcon.regex;
-    exports com.iofairy.falcon.time;
-    exports com.iofairy.falcon.util;
-    exports com.iofairy.falcon.iterable;
-    exports com.iofairy.falcon.map;
-    exports com.iofairy.falcon.string;
+    final String value;
+
+    IntervalType(final String value) {
+        this.value = value;
+    }
 }

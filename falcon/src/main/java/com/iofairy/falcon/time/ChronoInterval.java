@@ -16,6 +16,7 @@
 package com.iofairy.falcon.time;
 
 import java.io.Serializable;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Calendar;
 import java.util.Date;
@@ -44,6 +45,19 @@ public interface ChronoInterval extends TemporalAmount, Serializable {
     Calendar addTo(Calendar calendar);
 
     /**
+     * Adds this {@link ChronoInterval} to specified temporal object.
+     *
+     * @param temporal temporal
+     * @param <T>      Temporal type
+     * @return temporal
+     * @since 0.2.5
+     */
+    @SuppressWarnings("unchecked")
+    default <T extends Temporal> T plusTo(T temporal) {
+        return (T) this.addTo(temporal);
+    }
+
+    /**
      * Subtracts this object from the specified date object.
      *
      * @param date date
@@ -58,4 +72,17 @@ public interface ChronoInterval extends TemporalAmount, Serializable {
      * @return Calendar
      */
     Calendar subtractFrom(Calendar calendar);
+
+    /**
+     * Subtracts this {@link ChronoInterval} from specified temporal object.
+     *
+     * @param temporal temporal
+     * @param <T>      Temporal type
+     * @return temporal
+     * @since 0.2.5
+     */
+    @SuppressWarnings("unchecked")
+    default <T extends Temporal> T minusFrom(T temporal) {
+        return (T) this.subtractFrom(temporal);
+    }
 }
