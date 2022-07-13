@@ -32,4 +32,14 @@ public enum IntervalType {
     IntervalType(final String value) {
         this.value = value;
     }
+
+    public boolean isLeftClose() {
+        return this == CLOSED || this == CLOSED_OPEN;
+    }
+
+    public boolean isRightClose() {
+        return this == CLOSED || this == OPEN_CLOSED;
+    }
+
+
 }

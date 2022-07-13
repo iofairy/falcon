@@ -17,6 +17,7 @@ package com.iofairy.falcon.time;
 
 import com.iofairy.tcf.Try;
 import com.iofairy.top.G;
+import com.iofairy.top.S;
 
 import java.time.*;
 import java.time.chrono.ChronoLocalDate;
@@ -26,8 +27,6 @@ import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.time.temporal.ChronoUnit.*;
-
 /**
  * DateTime Utils
  *
@@ -35,24 +34,10 @@ import static java.time.temporal.ChronoUnit.*;
  */
 public final class DateTimes {
     /**
-     * Supported units for {@code round} methods.
-     */
-    private static final List<ChronoUnit> SUPPORTED_UNITS_FOR_ROUND = Arrays.asList(YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS);
-    /**
-     * Supported temporal for {@link #plus(Temporal, long, ChronoUnit)} and {@link #minus(Temporal, long, ChronoUnit)} methods.
-     */
-    private static final List<Class<? extends Temporal>> SUPPORTED_TEMPORAL_FOR_PM =
-            Arrays.asList(LocalDateTime.class, ZonedDateTime.class, OffsetDateTime.class, Instant.class);
-    /**
      * Supported temporal for {@code daysOfMonth} methods.
      */
     private static final List<Class<? extends Temporal>> SUPPORTED_TEMPORAL_FOR_DOM =
             Arrays.asList(LocalDateTime.class, ZonedDateTime.class, OffsetDateTime.class, Instant.class, YearMonth.class, ChronoLocalDate.class);
-    /**
-     * Supported temporal for {@code round} methods.
-     */
-    private static final List<Class<? extends Temporal>> SUPPORTED_TEMPORAL_FOR_ROUND =
-            Arrays.asList(LocalDateTime.class, ZonedDateTime.class, OffsetDateTime.class, Instant.class);
 
     /**
      * 获取当前时间的 ZoneOffset 以及对应的 ZoneId 列表。
@@ -386,6 +371,28 @@ public final class DateTimes {
     }
 
     /**
+     * ZonedDateTime 转 Calendar
+     *
+     * @param zonedDateTime zonedDateTime
+     * @return Calendar
+     */
+    public static Calendar calendar(ZonedDateTime zonedDateTime) {
+        if (zonedDateTime == null) return null;
+        return GregorianCalendar.from(zonedDateTime);
+    }
+
+    /**
+     * OffsetDateTime 转 Calendar
+     *
+     * @param offsetDateTime offsetDateTime
+     * @return Calendar
+     */
+    public static Calendar calendar(OffsetDateTime offsetDateTime) {
+        if (offsetDateTime == null) return null;
+        return GregorianCalendar.from(offsetDateTime.toZonedDateTime());
+    }
+
+    /**
      * Instant 转 Calendar
      *
      * @param instant instant
@@ -450,9 +457,9 @@ public final class DateTimes {
     }
 
     /**
-     * 对时间进行增减操作，支持的时间类型：{@link Instant}，{@link LocalDateTime}，{@link ZonedDateTime}，{@link OffsetDateTime}。<br>
+     * 对时间进行增减操作，支持的时间类型：{@link DTConst#SUPPORTED_TEMPORAL_COMMON}。<br>
      * 注：
-     * {@link Instant} 类型的时间会先转成 UTC 时区的 ZonedDateTime 进行增减。
+     * {@link Instant} 类型的时间会先转成 {@link #defaultOffset()} 时区的 OffsetDateTime 进行增减。
      *
      * @param temporal 时间
      * @param amount   增减的量
@@ -463,20 +470,51 @@ public final class DateTimes {
     @SuppressWarnings("unchecked")
     public static <T extends Temporal> T plus(T temporal, long amount, ChronoUnit unit) {
         if (temporal == null || amount == 0) return temporal;
-        if (!SUPPORTED_TEMPORAL_FOR_PM.contains(temporal.getClass())) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_FOR_PM.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")) + "] is supported for `temporal` parameter!");
+        if (!DTConst.SUPPORTED_TEMPORAL_COMMON.contains(temporal.getClass())) {
+            throw new UnsupportedTemporalTypeException("Only [" + DTConst.SUPPORTED_TEMPORAL_COMMON_STRING + "] is supported for `temporal` parameter!");
         }
         if (temporal instanceof Instant) {
-            ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant((Instant) temporal, TZ.UTC).plus(amount, unit);
-            return (T) zonedDateTime.toInstant();
+            OffsetDateTime odt = toDefaultOffsetDT(temporal).plus(amount, unit);
+            return (T) odt.toInstant();
         }
         return (T) temporal.plus(amount, unit);
     }
 
     /**
-     * 对时间进行增减操作，支持的时间类型：{@link Instant}，{@link LocalDateTime}，{@link ZonedDateTime}，{@link OffsetDateTime}。<br>
+     * 对时间进行增减操作
+     *
+     * @param calendar 时间
+     * @param amount   增减的量
+     * @param unit     时间单位
+     * @return 增减后的时间
+     */
+    public static Calendar plus(Calendar calendar, long amount, ChronoUnit unit) {
+        if (calendar == null) return calendar;
+        /*
+         * Calendar自带的add方法，无法执行 long 型的加减
+         */
+        ZonedDateTime zonedDateTime = toZonedDT(calendar, null);
+        zonedDateTime = plus(zonedDateTime, amount, unit);
+        return calendar(zonedDateTime);
+    }
+
+    /**
+     * 对时间进行增减操作
+     *
+     * @param date   时间
+     * @param amount 增减的量
+     * @param unit   时间单位
+     * @return 增减后的时间
+     */
+    public static Date plus(Date date, long amount, ChronoUnit unit) {
+        if (date == null) return null;
+        return Date.from(plus(date.toInstant(), amount, unit));
+    }
+
+    /**
+     * 对时间进行增减操作，支持的时间类型：{@link DTConst#SUPPORTED_TEMPORAL_COMMON}。<br>
      * 注：
-     * {@link Instant} 类型的时间会先转成 UTC 时区的 ZonedDateTime 进行增减。
+     * {@link Instant} 类型的时间会先转成 {@link #defaultOffset()} 时区的 OffsetDateTime 进行增减。
      *
      * @param temporal 时间
      * @param amount   增减的量
@@ -487,14 +525,45 @@ public final class DateTimes {
     @SuppressWarnings("unchecked")
     public static <T extends Temporal> T minus(T temporal, long amount, ChronoUnit unit) {
         if (temporal == null || amount == 0) return temporal;
-        if (!SUPPORTED_TEMPORAL_FOR_PM.contains(temporal.getClass())) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_FOR_PM.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")) + "] is supported for `temporal` parameter!");
+        if (!DTConst.SUPPORTED_TEMPORAL_COMMON.contains(temporal.getClass())) {
+            throw new UnsupportedTemporalTypeException("Only [" + DTConst.SUPPORTED_TEMPORAL_COMMON_STRING + "] is supported for `temporal` parameter!");
         }
         if (temporal instanceof Instant) {
-            ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant((Instant) temporal, TZ.UTC).minus(amount, unit);
-            return (T) zonedDateTime.toInstant();
+            OffsetDateTime odt = toDefaultOffsetDT(temporal).minus(amount, unit);
+            return (T) odt.toInstant();
         }
         return (T) temporal.minus(amount, unit);
+    }
+
+    /**
+     * 对时间进行增减操作
+     *
+     * @param calendar 时间
+     * @param amount   增减的量
+     * @param unit     时间单位
+     * @return 增减后的时间
+     */
+    public static Calendar minus(Calendar calendar, long amount, ChronoUnit unit) {
+        if (calendar == null) return calendar;
+        /*
+         * Calendar自带的add方法，无法执行 long 型的加减
+         */
+        ZonedDateTime zonedDateTime = toZonedDT(calendar, null);
+        zonedDateTime = minus(zonedDateTime, amount, unit);
+        return calendar(zonedDateTime);
+    }
+
+    /**
+     * 对时间进行增减操作
+     *
+     * @param date   时间
+     * @param amount 增减的量
+     * @param unit   时间单位
+     * @return 增减后的时间
+     */
+    public static Date minus(Date date, long amount, ChronoUnit unit) {
+        if (date == null) return null;
+        return Date.from(minus(date.toInstant(), amount, unit));
     }
 
     /**
@@ -571,280 +640,93 @@ public final class DateTimes {
     }
 
     /**
-     * 对时间进行取整
+     * 使用指定格式返回一天中的24小时
      *
-     * @param localDateTime 时间
-     * @param chronoUnit    按此时间单位作为取整后的精度
-     * @param roundingDT    取整类型，值为{code null}默认为：{@link RoundingDT#FLOOR}
-     * @return 取整后的时间
+     * @param withMode  0: 只返回小时；1：返回小时并在末尾拼接上00分钟；2：返回小时并在末尾拼接00分钟和00秒
+     * @param separator 当 withMode 为 1，2时，需要指定分隔符。如果为 {@code null}，则默认采用 {@code ""}
+     * @return 一天中的小时
      * @since 0.2.5
      */
-    public static LocalDateTime round(LocalDateTime localDateTime, ChronoUnit chronoUnit, RoundingDT roundingDT) {
-        Objects.requireNonNull(localDateTime, "Parameter `localDateTime` must be non-null!");
-        if (!SUPPORTED_UNITS_FOR_ROUND.contains(chronoUnit)) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_ROUND.stream().map(ChronoUnit::toString).collect(Collectors.joining(", ")) + "] is supported for `chronoUnit` parameter!");
+    public static List<String> hoursOfDay(int withMode, String separator) {
+        if (withMode == 0) return DTConst.HHs;
+        if (separator == null) separator = "";
+        List<String> hhs = new ArrayList<>();
+        if (withMode == 1) {
+            for (String hh : DTConst.HHs) {
+                hhs.add(hh + separator + "00");
+            }
+        } else {
+            for (String hh : DTConst.HHs) {
+                hhs.add(hh + separator + "00" + separator + "00");
+            }
         }
-        roundingDT = roundingDT == null ? RoundingDT.FLOOR : roundingDT;
-
-        LocalDateTime ldt = localDateTime;
-        switch (chronoUnit) {
-            case YEARS:
-                switch (roundingDT) {
-                    case CEILING:
-                        if (!(ldt.getMonth() == Month.JANUARY && ldt.getDayOfMonth() == 1 && ldt.getHour() == 0 && ldt.getMinute() == 0 && ldt.getSecond() == 0 && ldt.getNano() == 0)) {
-                            ldt = ldt.plusYears(1);
-                        }
-
-                        break;
-                    case HALF_UP:
-                        if (ldt.getMonthValue() >= 7) {     // 7月
-                            ldt = ldt.plusYears(1);
-                        }
-                        break;
-                }
-                return LocalDateTime.of(ldt.getYear(), Month.JANUARY, 1, 0, 0, 0, 0);
-            case MONTHS:
-                switch (roundingDT) {
-                    case CEILING:
-                        if (!(ldt.getDayOfMonth() == 1 && ldt.getHour() == 0 && ldt.getMinute() == 0 && ldt.getSecond() == 0 && ldt.getNano() == 0)) {
-                            ldt = ldt.plusMonths(1);
-                        }
-                        break;
-                    case HALF_UP:
-                        int dayOfMonth = ldt.getDayOfMonth();    // 当前是几号
-                        int halfUpDay = halfUpDay(daysOfMonth(ldt));
-                        if (dayOfMonth >= halfUpDay) {
-                            ldt = ldt.plusMonths(1);
-                        }
-                        break;
-                }
-                return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), 1, 0, 0, 0, 0);
-            case DAYS:
-                switch (roundingDT) {
-                    case CEILING:
-                        if (!(ldt.getHour() == 0 && ldt.getMinute() == 0 && ldt.getSecond() == 0 && ldt.getNano() == 0)) {
-                            ldt = ldt.plusDays(1);
-                        }
-
-                        break;
-                    case HALF_UP:
-                        if (ldt.getHour() >= 12) {
-                            ldt = ldt.plusDays(1);
-                        }
-                        break;
-                }
-                return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), ldt.getDayOfMonth(), 0, 0, 0, 0);
-            case HOURS:
-                switch (roundingDT) {
-                    case CEILING:
-                        if (!(ldt.getMinute() == 0 && ldt.getSecond() == 0 && ldt.getNano() == 0)) {
-                            ldt = ldt.plusHours(1);
-                        }
-
-                        break;
-                    case HALF_UP:
-                        if (ldt.getMinute() >= 30) {
-                            ldt = ldt.plusHours(1);
-                        }
-                        break;
-                }
-                return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), ldt.getDayOfMonth(), ldt.getHour(), 0, 0, 0);
-            case MINUTES:
-                switch (roundingDT) {
-                    case CEILING:
-                        if (!(ldt.getSecond() == 0 && ldt.getNano() == 0)) {
-                            ldt = ldt.plusMinutes(1);
-                        }
-                        break;
-                    case HALF_UP:
-                        if (ldt.getSecond() >= 30) {
-                            ldt = ldt.plusMinutes(1);
-                        }
-                        break;
-                }
-                return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), ldt.getDayOfMonth(), ldt.getHour(), ldt.getMinute(), 0, 0);
-            default:
-                switch (roundingDT) {
-                    case CEILING:
-                        if (!(ldt.getNano() == 0)) {
-                            ldt = ldt.plusSeconds(1);
-                        }
-                        break;
-                    case HALF_UP:
-                        if (ldt.getNano() >= 500000000) {
-                            ldt = ldt.plusSeconds(1);
-                        }
-                        break;
-                }
-                return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), ldt.getDayOfMonth(), ldt.getHour(), ldt.getMinute(), ldt.getSecond(), 0);
-        }
+        return hhs;
     }
 
     /**
-     * 对时间进行取整
+     * 一天中的所有分钟
      *
-     * @param temporal   时间，若时间类型为 {@code Instant}，则以 {@code UTC} 时区为准，进行取整运算。
-     * @param chronoUnit 按此时间单位作为取整后的精度
-     * @param roundingDT 取整类型，值为{code null}默认为：{@link RoundingDT#FLOOR}
-     * @param <T>        时间类型，若类型为 {@code Instant}，则以 {@code UTC} 时区为准，进行取整运算。
-     * @return 取整后的时间
+     * @param withZeroSecond 是否在末尾拼接00秒
+     * @param separator      拼接时采用的分隔符。如果为 {@code null}，则默认采用 {@code ""}
+     * @return 一天中的所有分钟
      * @since 0.2.5
      */
-    @SuppressWarnings("unchecked")
-    public static <T extends Temporal> T round(T temporal, ChronoUnit chronoUnit, RoundingDT roundingDT) {
-        if (!SUPPORTED_TEMPORAL_FOR_ROUND.contains(temporal.getClass())) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_FOR_ROUND.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")) + "] is supported for `temporal` parameter!");
+    public static List<String> hourMinutesOfDay(boolean withZeroSecond, String separator) {
+        if (separator == null) separator = "";
+        List<String> hhmms = new ArrayList<>();
+        if (withZeroSecond) {
+            for (String hh : DTConst.HHs) {
+                for (String ms : DTConst.MSs) {
+                    hhmms.add(hh + separator + ms + separator + "00");
+                }
+            }
+        } else {
+            for (String hh : DTConst.HHs) {
+                for (String ms : DTConst.MSs) {
+                    hhmms.add(hh + separator + ms);
+                }
+            }
         }
-        if (temporal instanceof ZonedDateTime) {
-            ZonedDateTime zdt = (ZonedDateTime) temporal;
-            LocalDateTime ldt = round(zdt.toLocalDateTime(), chronoUnit, roundingDT);
-            return (T) ldt.atZone(zdt.getZone());
-        }
-        if (temporal instanceof OffsetDateTime) {
-            OffsetDateTime odt = (OffsetDateTime) temporal;
-            LocalDateTime ldt = round(odt.toLocalDateTime(), chronoUnit, roundingDT);
-            return (T) ldt.atZone(odt.getOffset());
-        }
-        if (temporal instanceof Instant) {
-            Instant instant = (Instant) temporal;
-            LocalDateTime ldt = LocalDateTime.ofInstant(instant, TZ.UTC);
-            ldt = round(ldt, chronoUnit, roundingDT);
-            return (T) ldt.atZone(TZ.UTC).toInstant();
-        }
-
-        return (T) round((LocalDateTime) temporal, chronoUnit, roundingDT);
+        return hhmms;
     }
 
     /**
-     * 对时间进行取整
+     * 某个指定小时的所有分钟
      *
-     * @param date       时间
-     * @param chronoUnit 按此时间单位作为取整后的精度
-     * @param roundingDT 取整类型，值为{code null}默认为：{@link RoundingDT#FLOOR}
-     * @return 取整后的时间
+     * @param hour           时。如果为 {@code null}，则默认采用 {@code ""}
+     * @param withZeroSecond 是否在末尾拼接00秒
+     * @param separator      拼接时采用的分隔符。如果为 {@code null}，则默认采用 {@code ""}
+     * @return 某个指定小时的所有分钟
      * @since 0.2.5
      */
-    public static Date round(Date date, ChronoUnit chronoUnit, RoundingDT roundingDT) {
-        Objects.requireNonNull(date, "Parameter `date` must be non-null!");
-        return round(calendar(date), chronoUnit, roundingDT).getTime();
+    public static List<String> minutesOfHour(String hour, boolean withZeroSecond, String separator) {
+        if (separator == null) separator = "";
+        boolean isEmpty = S.isEmpty(hour);
+        hour = isEmpty ? "" : hour;
+        String hmSeparator = isEmpty ? "" : separator;  // 小时与分钟之间的分隔符
+        List<String> hhmms = new ArrayList<>();
+        if (withZeroSecond) {
+            for (String ms : DTConst.MSs) {
+                hhmms.add(hour + hmSeparator + ms + separator + "00");
+            }
+        } else {
+            for (String ms : DTConst.MSs) {
+                hhmms.add(hour + hmSeparator + ms);
+            }
+        }
+        return hhmms;
     }
 
     /**
-     * 对时间进行取整
+     * 某个指定分钟的所有秒
      *
-     * @param calendar   时间
-     * @param chronoUnit 按此时间单位作为取整后的精度
-     * @param roundingDT 取整类型，值为{code null}默认为：{@link RoundingDT#FLOOR}
-     * @return 取整后的时间
+     * @param minute    分钟。如果为 {@code null}，则默认采用 {@code ""}
+     * @param separator 拼接时采用的分隔符。如果为 {@code null}，则默认采用 {@code ""}
+     * @return 某个指定分钟的所有秒
      * @since 0.2.5
      */
-    public static Calendar round(Calendar calendar, ChronoUnit chronoUnit, RoundingDT roundingDT) {
-        Objects.requireNonNull(calendar, "Parameter `calendar` must be non-null!");
-        if (!SUPPORTED_UNITS_FOR_ROUND.contains(chronoUnit)) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_ROUND.stream().map(ChronoUnit::toString).collect(Collectors.joining(", ")) + "] is supported for `chronoUnit` parameter!");
-        }
-        roundingDT = roundingDT == null ? RoundingDT.FLOOR : roundingDT;
-
-        Calendar newCalendar = (Calendar) calendar.clone();
-        switch (chronoUnit) {
-            case YEARS:
-                switch (roundingDT) {
-                    case CEILING:
-                        if (!(newCalendar.get(Calendar.MONTH) == Calendar.JANUARY && newCalendar.get(Calendar.DAY_OF_MONTH) == 1
-                                && newCalendar.get(Calendar.HOUR_OF_DAY) == 0 && newCalendar.get(Calendar.MINUTE) == 0 && newCalendar.get(Calendar.SECOND) == 0)) {
-                            newCalendar.add(Calendar.YEAR, 1);
-                        }
-
-                        break;
-                    case HALF_UP:
-                        if (newCalendar.get(Calendar.MONTH) >= 6) {     // 6 代表 7月
-                            newCalendar.add(Calendar.YEAR, 1);
-                        }
-                        break;
-                }
-                newCalendar.set(newCalendar.get(Calendar.YEAR), Calendar.JANUARY, 1, 0, 0, 0);
-
-                break;
-            case MONTHS:
-                switch (roundingDT) {
-                    case CEILING:
-                        if (!(newCalendar.get(Calendar.DAY_OF_MONTH) == 1 && newCalendar.get(Calendar.HOUR_OF_DAY) == 0
-                                && newCalendar.get(Calendar.MINUTE) == 0 && newCalendar.get(Calendar.SECOND) == 0)) {
-                            newCalendar.add(Calendar.MONTH, 1);
-                        }
-                        break;
-                    case HALF_UP:
-                        int dayOfMonth = newCalendar.get(Calendar.DAY_OF_MONTH);    // 当前是几号
-                        int halfUpDay = halfUpDay(daysOfMonth(newCalendar));
-                        if (dayOfMonth >= halfUpDay) {
-                            newCalendar.add(Calendar.MONTH, 1);
-                        }
-                        break;
-                }
-                newCalendar.set(newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), 1, 0, 0, 0);
-
-                break;
-            case DAYS:
-                switch (roundingDT) {
-                    case CEILING:
-                        if (!(newCalendar.get(Calendar.HOUR_OF_DAY) == 0 && newCalendar.get(Calendar.MINUTE) == 0 && newCalendar.get(Calendar.SECOND) == 0)) {
-                            newCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                        }
-                        break;
-                    case HALF_UP:
-                        if (newCalendar.get(Calendar.HOUR_OF_DAY) >= 12) {
-                            newCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                        }
-                        break;
-                }
-                newCalendar.set(newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-
-                break;
-            case HOURS:
-                switch (roundingDT) {
-                    case CEILING:
-                        if (!(newCalendar.get(Calendar.MINUTE) == 0 && newCalendar.get(Calendar.SECOND) == 0)) {
-                            newCalendar.add(Calendar.HOUR_OF_DAY, 1);
-                        }
-                        break;
-                    case HALF_UP:
-                        if (newCalendar.get(Calendar.MINUTE) >= 30) {
-                            newCalendar.add(Calendar.HOUR_OF_DAY, 1);
-                        }
-                        break;
-                }
-                newCalendar.set(newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH),
-                        newCalendar.get(Calendar.HOUR_OF_DAY), 0, 0);
-
-                break;
-            case MINUTES:
-                switch (roundingDT) {
-                    case CEILING:
-                        if (!(newCalendar.get(Calendar.SECOND) == 0)) {
-                            newCalendar.add(Calendar.MINUTE, 1);
-                        }
-                        break;
-                    case HALF_UP:
-                        if (newCalendar.get(Calendar.SECOND) >= 30) {
-                            newCalendar.add(Calendar.MINUTE, 1);
-                        }
-                        break;
-                }
-                newCalendar.set(newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH),
-                        newCalendar.get(Calendar.HOUR_OF_DAY), newCalendar.get(Calendar.MINUTE), 0);
-                break;
-        }
-        return newCalendar;
+    public static List<String> secondsOfMinute(String minute, String separator) {
+        return minutesOfHour(minute, false, separator);
     }
 
-    /**
-     * 获取需要向上取整的最小天数
-     *
-     * @param daysOfMonth 当前月份的总天数
-     * @return 需要向上取整的最小天数
-     * @since 0.2.5
-     */
-    private static int halfUpDay(int daysOfMonth) {
-        return daysOfMonth == 28 || daysOfMonth == 29 ? 15 : 16;
-    }
 }
