@@ -26,29 +26,27 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 /**
- * RangeUtils
+ * Range Utils
  *
- * @since 0.1.0
- * @deprecated Since falcon version 0.3.0, replaced by {@link Ranges}
+ * @since 0.3.0
  */
-public class RangeUtils {
+public class Ranges {
     /**
      * 将一个Range（范围）分成多个小的Range（范围）
      *
      * @param beginIndex  range开始序号（包含）
      * @param endIndex    range结束序号（不包含）
-     * @param divideCount 分成几份
+     * @param divideCount 分成几份，取值范围：[2, +(endIndex - beginIndex)]。
      * @param skewRatio   数据倾斜率，取值范围：(-1, 1)。
      *                    如：skewRatio为0.1，则 每一个Range都比前一个Range多10%的大小；skewRatio为-0.1，则 每一个Range都比前一个Range少10%的大小。
      * @return range list
      */
     public static List<Tuple2<Long, Long>> divideRange(long beginIndex, long endIndex, int divideCount, float skewRatio) {
-        if (divideCount < 2) throw new UnexpectedParameterException("parameter `divideCount` must >= 2!");
-        if (endIndex - beginIndex < divideCount)
-            throw new UnexpectedParameterException("(`endIndex` - `beginIndex`) must be >= `divideCount`!");
-        if (skewRatio <= -1 || skewRatio >= 1)
-            throw new UnexpectedParameterException("parameter `skewRatio` must be in (-1, 1)!");
+        if (divideCount < 2) throw new UnexpectedParameterException("parameter `divideCount` must ≥ 2!");
         long dataCount = endIndex - beginIndex;
+        if (dataCount < divideCount) throw new UnexpectedParameterException("(`endIndex` - `beginIndex`) must be ≥ `divideCount`!");
+        if (skewRatio <= -1 || skewRatio >= 1) throw new UnexpectedParameterException("parameter `skewRatio` must be in (-1, 1)!");
+
         /*
          * x 为首个range大小
          *   x + x*(1+skewRatio)+ x*(1+skewRatio)² + x*(1+skewRatio)³... = dataCount

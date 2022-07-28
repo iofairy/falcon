@@ -2,6 +2,7 @@ package com.iofairy.test;
 
 import com.iofairy.except.UnexpectedParameterException;
 import com.iofairy.falcon.util.RangeUtils;
+import com.iofairy.falcon.util.Ranges;
 import com.iofairy.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
 
@@ -14,17 +15,21 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version 1.0
  * @date 2022/2/14 22:00
  */
-public class RangeUtilsTest {
+public class RangesTest {
     @Test
     public void testDivideRange() {
-        List<Tuple2<Long, Long>> ranges1 = RangeUtils.divideRange(0, 500, 5, 0);
-        List<Tuple2<Long, Long>> ranges2 = RangeUtils.divideRange(-600, -100, 5, -0.1f);
-        List<Tuple2<Long, Long>> ranges3 = RangeUtils.divideRange(-100, 400, 5, 0.1f);
-        List<Tuple2<Long, Long>> ranges4 = RangeUtils.divideRange(2, 48900568, 6, -0.1f);
+        List<Tuple2<Long, Long>> ranges1 = Ranges.divideRange(0, 500, 5, 0);
+        List<Tuple2<Long, Long>> ranges2 = Ranges.divideRange(-600, -100, 5, -0.1f);
+        List<Tuple2<Long, Long>> ranges3 = Ranges.divideRange(-100, 400, 5, 0.1f);
+        List<Tuple2<Long, Long>> ranges4 = Ranges.divideRange(2, 48900568, 6, -0.1f);
+        List<Tuple2<Long, Long>> ranges5 = Ranges.divideRange(0, 5, 5, 0);
+        List<Tuple2<Long, Long>> ranges6 = Ranges.divideRange(0, 5, 5, -0.2f);
         System.out.println(ranges1);
         System.out.println(ranges2);
         System.out.println(ranges3);
         System.out.println(ranges4);
+        System.out.println(ranges5);
+        System.out.println(ranges6);
 
         assertEquals("[(beginInclusive: 0, endExclusive: 100), " +
                 "(beginInclusive: 100, endExclusive: 200), " +
@@ -51,12 +56,24 @@ public class RangeUtilsTest {
                 "(beginInclusive: 35891378, endExclusive: 42738813), " +
                 "(beginInclusive: 42738813, endExclusive: 48900568)]", ranges4.toString());
 
+        assertEquals("[(beginInclusive: 0, endExclusive: 1), " +
+                "(beginInclusive: 1, endExclusive: 2), " +
+                "(beginInclusive: 2, endExclusive: 3), " +
+                "(beginInclusive: 3, endExclusive: 4), " +
+                "(beginInclusive: 4, endExclusive: 5)]", ranges5.toString());
+
+        assertEquals("[(beginInclusive: 0, endExclusive: 1), " +
+                "(beginInclusive: 1, endExclusive: 2), " +
+                "(beginInclusive: 2, endExclusive: 3), " +
+                "(beginInclusive: 3, endExclusive: 4), " +
+                "(beginInclusive: 4, endExclusive: 5)]", ranges6.toString());
+
     }
 
     @Test
     public void testDivideRange1() {
-        assertThrows(UnexpectedParameterException.class, () -> RangeUtils.divideRange(0, 500, 1, 0));
-        assertThrows(UnexpectedParameterException.class, () -> RangeUtils.divideRange(0, 4, 5, 0));
-        assertThrows(UnexpectedParameterException.class, () -> RangeUtils.divideRange(0, 500, 5, -1));
+        assertThrows(UnexpectedParameterException.class, () -> Ranges.divideRange(0, 500, 1, 0));
+        assertThrows(UnexpectedParameterException.class, () -> Ranges.divideRange(0, 4, 5, 0));
+        assertThrows(UnexpectedParameterException.class, () -> Ranges.divideRange(0, 500, 5, -1));
     }
 }

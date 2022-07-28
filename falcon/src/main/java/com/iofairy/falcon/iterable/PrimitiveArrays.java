@@ -17,9 +17,7 @@ package com.iofairy.falcon.iterable;
 
 import com.iofairy.string.Ascii;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Utils for Primitive Array ({@code char[], boolean[], byte[], short[], int[], float[], long[], double[]}).<br>
@@ -928,4 +926,261 @@ public class PrimitiveArrays {
     public static char[] toChars(CharSequence charSequence) {
         return charSequence == null ? null : charSequence.toString().toCharArray();
     }
+
+    /**
+     * 原始 char 数组 转 char 数组
+     *
+     * @param chars 原始 char 数组
+     * @return char 数组
+     * @since 0.3.0
+     */
+    public static Character[] toObjects(char... chars) {
+        if (chars == null) return null;
+        Character[] cs = new Character[chars.length];
+        for (int i = 0; i < chars.length; i++) {
+            cs[i] = chars[i];
+        }
+        return cs;
+    }
+
+    /**
+     * 原始 boolean 数组 转 boolean 数组
+     *
+     * @param booleans 原始 boolean 数组
+     * @return boolean 数组
+     * @since 0.3.0
+     */
+    public static Boolean[] toObjects(boolean... booleans) {
+        if (booleans == null) return null;
+        Boolean[] bs = new Boolean[booleans.length];
+        for (int i = 0; i < booleans.length; i++) {
+            bs[i] = booleans[i];
+        }
+        return bs;
+    }
+
+    /**
+     * 原始 byte 数组 转 byte 数组
+     *
+     * @param bytes 原始 byte 数组
+     * @return byte 数组
+     * @since 0.3.0
+     */
+    public static Byte[] toObjects(byte... bytes) {
+        if (bytes == null) return null;
+        Byte[] bs = new Byte[bytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            bs[i] = bytes[i];
+        }
+        return bs;
+    }
+
+    /**
+     * 原始 short 数组 转 short 数组
+     *
+     * @param shorts 原始 short 数组
+     * @return short 数组
+     * @since 0.3.0
+     */
+    public static Short[] toObjects(short... shorts) {
+        if (shorts == null) return null;
+        Short[] ss = new Short[shorts.length];
+        for (int i = 0; i < shorts.length; i++) {
+            ss[i] = shorts[i];
+        }
+        return ss;
+    }
+
+    /**
+     * 原始 int 数组 转 int 数组
+     *
+     * @param ints 原始 int 数组
+     * @return int 数组
+     * @since 0.3.0
+     */
+    public static Integer[] toObjects(int... ints) {
+        if (ints == null) return null;
+        Integer[] is = new Integer[ints.length];
+        for (int i = 0; i < ints.length; i++) {
+            is[i] = ints[i];
+        }
+        return is;
+    }
+
+    /**
+     * 原始 long 数组 转 long 数组
+     *
+     * @param longs 原始 long 数组
+     * @return long 数组
+     * @since 0.3.0
+     */
+    public static Long[] toObjects(long... longs) {
+        if (longs == null) return null;
+        Long[] ls = new Long[longs.length];
+        for (int i = 0; i < longs.length; i++) {
+            ls[i] = longs[i];
+        }
+        return ls;
+    }
+
+    /**
+     * 原始 float 数组 转 float 数组
+     *
+     * @param floats 原始 float 数组
+     * @return float 数组
+     * @since 0.3.0
+     */
+    public static Float[] toObjects(float... floats) {
+        if (floats == null) return null;
+        Float[] fs = new Float[floats.length];
+        for (int i = 0; i < floats.length; i++) {
+            fs[i] = floats[i];
+        }
+        return fs;
+    }
+
+    /**
+     * 原始 double 数组 转 double 数组
+     *
+     * @param doubles 原始 double 数组
+     * @return double 数组
+     * @since 0.3.0
+     */
+    public static Double[] toObjects(double... doubles) {
+        if (doubles == null) return null;
+        Double[] ds = new Double[doubles.length];
+        for (int i = 0; i < doubles.length; i++) {
+            ds[i] = doubles[i];
+        }
+        return ds;
+    }
+
+    /**
+     * char 数组 转 char 列表
+     *
+     * @param chars char 数组
+     * @return char 列表
+     * @since 0.3.0
+     */
+    public static List<Character> asList(char... chars) {
+        if (chars == null) return null;
+        List<Character> cs = new ArrayList<>();
+        for (char c : chars) {
+            cs.add(c);
+        }
+        return cs;
+    }
+
+    /**
+     * boolean 数组 转 boolean 列表
+     *
+     * @param booleans boolean 数组
+     * @return boolean 列表
+     * @since 0.3.0
+     */
+    public static List<Boolean> asList(boolean... booleans) {
+        if (booleans == null) return null;
+        List<Boolean> bs = new ArrayList<>();
+        for (boolean b : booleans) {
+            bs.add(b);
+        }
+        return bs;
+    }
+
+    /**
+     * byte 数组 转 byte 列表
+     *
+     * @param bytes byte 数组
+     * @return byte 列表
+     * @since 0.3.0
+     */
+    public static List<Byte> asList(byte... bytes) {
+        if (bytes == null) return null;
+        List<Byte> bs = new ArrayList<>();
+        for (byte b : bytes) {
+            bs.add(b);
+        }
+        return bs;
+    }
+
+    /**
+     * short 数组 转 short 列表
+     *
+     * @param shorts short 数组
+     * @return short 列表
+     * @since 0.3.0
+     */
+    public static List<Short> asList(short... shorts) {
+        if (shorts == null) return null;
+        List<Short> ss = new ArrayList<>();
+        for (short s : shorts) {
+            ss.add(s);
+        }
+        return ss;
+    }
+
+    /**
+     * int 数组 转 int 列表
+     *
+     * @param ints int 数组
+     * @return int 列表
+     * @since 0.3.0
+     */
+    public static List<Integer> asList(int... ints) {
+        if (ints == null) return null;
+        List<Integer> is = new ArrayList<>();
+        for (int i : ints) {
+            is.add(i);
+        }
+        return is;
+    }
+
+    /**
+     * long 数组 转 long 列表
+     *
+     * @param longs long 数组
+     * @return long 列表
+     * @since 0.3.0
+     */
+    public static List<Long> asList(long... longs) {
+        if (longs == null) return null;
+        List<Long> ls = new ArrayList<>();
+        for (long l : longs) {
+            ls.add(l);
+        }
+        return ls;
+    }
+
+    /**
+     * float 数组 转 float 列表
+     *
+     * @param floats float 数组
+     * @return float 列表
+     * @since 0.3.0
+     */
+    public static List<Float> asList(float... floats) {
+        if (floats == null) return null;
+        List<Float> fs = new ArrayList<>();
+        for (float f : floats) {
+            fs.add(f);
+        }
+        return fs;
+    }
+
+    /**
+     * double 数组 转 double 列表
+     *
+     * @param doubles double 数组
+     * @return double 列表
+     * @since 0.3.0
+     */
+    public static List<Double> asList(double... doubles) {
+        if (doubles == null) return null;
+        List<Double> ds = new ArrayList<>();
+        for (double d : doubles) {
+            ds.add(d);
+        }
+        return ds;
+    }
+
 }
