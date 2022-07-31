@@ -67,8 +67,8 @@ public final class OS {
     public static final boolean IS_ZH_LANG = DEFAULT_LANG.equals(new Locale("zh").getLanguage());
 
     /**
-     * Operating System architecture. <br>
-     * 操作系统架构
+     * Operating System architecture. But it is NOT the bitness of the OS, it is actually the bitness of the JVM. <br>
+     * 操作系统架构。但是这个实际上返回的是 JVM 的架构，当64位操作系统上安装32位JVM时，会返回32位，而不是64位。
      */
     public static final String OS_ARCH = getProperty("os.arch");
 

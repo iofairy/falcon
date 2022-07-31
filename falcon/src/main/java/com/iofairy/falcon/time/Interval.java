@@ -37,9 +37,9 @@ public class Interval extends SignedInterval {
     public Interval(long centuries, long years, long months, long days, long hours, long minutes, long seconds, long millis, long micros, long nanos) {
         super(centuries, years, months, days, hours, minutes, seconds, millis, micros, nanos);
 
-        String errorMsg = OS.IS_ZH_LANG ? "Interval构造函数的所有参数都必须 ≥ 0! " : "Interval Constructor all parameters must not be negative number! ";
-        if (centuries < 0 || years < 0 || months < 0 || days < 0 || hours < 0 || minutes < 0 || seconds < 0 || millis < 0 || micros < 0 || nanos < 0)
-            throw new UnexpectedParameterException(errorMsg);
+        if (this.centuries < 0 || this.years < 0 || this.months < 0 || this.days < 0 || this.hours < 0 || this.minutes < 0 || this.seconds < 0
+                || this.millis < 0 || this.micros < 0 || this.nanos < 0)
+            throw new UnexpectedParameterException(OS.IS_ZH_LANG ? "Interval构造函数的所有参数都必须 ≥ 0! " : "Interval Constructor all parameters must not be negative number! ");
     }
 
     public Interval(long centuries, long years, long months, long days, long hours, long minutes, long seconds, long millis) {
@@ -203,8 +203,7 @@ public class Interval extends SignedInterval {
     }
 
     public Interval minus(Interval interval) {
-        long centuries = this.centuries - interval.centuries;
-        long years = this.years - interval.years;
+        long years = (this.centuries * 100 + this.years) - (interval.centuries * 100 + interval.years);
         long months = this.months - interval.months;
         long days = this.days - interval.days;
         long hours = this.hours - interval.hours;
@@ -213,6 +212,7 @@ public class Interval extends SignedInterval {
         long millis = this.millis - interval.millis;
         long micros = this.micros - interval.micros;
         long nanos = this.nanos - interval.nanos;
+
         return new Interval(centuries, years, months, days, hours, minutes, seconds, millis, micros, nanos);
     }
 
@@ -281,9 +281,8 @@ public class Interval extends SignedInterval {
         if (!isSupported(startTemporal) || !isSupported(endTemporal))
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `startTemporal` and `endTemporal` parameters!");
 
-        ZoneOffset defaultOffset = DateTimes.defaultOffset();
-        startTemporal = DateTimes.toOffsetDT(startTemporal, defaultOffset);
-        endTemporal = DateTimes.toOffsetDT(endTemporal, defaultOffset);
+        startTemporal = DateTime.from(startTemporal).toOffsetDT(null);
+        endTemporal = DateTime.from(endTemporal).toOffsetDT(null);
 
         boolean isBefore = ((OffsetDateTime) startTemporal).isBefore((OffsetDateTime) endTemporal);
         Temporal tmpStartTemporal = isBefore ? startTemporal : endTemporal;
@@ -316,8 +315,9 @@ public class Interval extends SignedInterval {
      * @return Interval
      */
     public static Interval between(Date startDate, Date endDate) {
+        if (G.hasNull(startDate, endDate)) throw new NullPointerException("Parameters `startDate` and `endDate` must be non-null!");
         ZoneOffset defaultOffset = DateTimes.defaultOffset();
-        return between(DateTimes.toOffsetDT(startDate, defaultOffset), DateTimes.toOffsetDT(endDate, defaultOffset));
+        return between(DateTime.from(startDate).toOffsetDT(defaultOffset), DateTime.from(endDate).toOffsetDT(defaultOffset));
     }
 
     /**
@@ -329,18 +329,32 @@ public class Interval extends SignedInterval {
      * @return Interval
      */
     public static Interval between(Calendar startCalendar, Calendar endCalendar) {
-        ZoneOffset defaultOffset = DateTimes.defaultOffset();
-        return between(DateTimes.toOffsetDT(startCalendar, defaultOffset), DateTimes.toOffsetDT(endCalendar, defaultOffset));
+        if (G.hasNull(startCalendar, endCalendar)) throw new NullPointerException("Parameters `startCalendar` and `endCalendar` must be non-null!");
+        return between(DateTime.from(startCalendar).toOffsetDT(null), DateTime.from(endCalendar).toDefaultOffsetDT());
+    }
+
+    /**
+     * Obtain two {@link DateTime} interval. <br>
+     * 获取两个{@link DateTime}的时间间隔。
+     *
+     * @param startDateTime start DateTime
+     * @param endDateTime   end DateTime
+     * @return Interval
+     * @since 0.3.0
+     */
+    public static Interval between(DateTime<?> startDateTime, DateTime<?> endDateTime) {
+        if (G.hasNull(startDateTime, endDateTime)) throw new NullPointerException("Parameters `startDateTime` and `endDateTime` must be non-null!");
+        return between(startDateTime.toOffsetDT(null), endDateTime.toDefaultOffsetDT());
     }
 
     @Override
     public Temporal subtractFrom(Temporal temporal) {
-        Objects.requireNonNull(temporal);
+        Objects.requireNonNull(temporal, "Parameter `temporal` must be non-null!");
         if (!isSupported(temporal))
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `temporal` parameter!");
 
         boolean isInstant = temporal instanceof Instant;
-        temporal = isInstant ? DateTimes.toDefaultOffsetDT(temporal) : temporal;
+        temporal = isInstant ? DateTime.from(temporal).toDefaultOffsetDT() : temporal;
 
         temporal = minus(temporal, nanos, NANOS);
         temporal = minus(temporal, micros, MICROS);

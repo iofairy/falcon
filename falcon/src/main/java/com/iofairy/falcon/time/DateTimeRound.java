@@ -1,0 +1,690 @@
+/*
+ * Copyright (C) 2021 iofairy, <https://github.com/iofairy/falcon>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.iofairy.falcon.time;
+
+import com.iofairy.except.OutOfBoundsException;
+
+import java.time.*;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.time.temporal.UnsupportedTemporalTypeException;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static java.time.temporal.ChronoUnit.*;
+
+/**
+ * 对时间进行取整
+ *
+ * @since 0.3.0
+ */
+class DateTimeRound {
+    /**
+     * Supported units for {@code round} methods.
+     */
+    private static final List<ChronoUnit> SUPPORTED_UNITS_FOR_ROUND = Arrays.asList(YEARS, MONTHS, DAYS, HOURS, MINUTES, SECONDS);
+    private static final String SUPPORTED_UNITS_FOR_ROUND_STRING = SUPPORTED_UNITS_FOR_ROUND.stream().map(ChronoUnit::toString).collect(Collectors.joining(", "));
+    /**
+     * Supported units for {@code roundTime} methods.
+     */
+    private static final List<ChronoUnit> SUPPORTED_UNITS_FOR_ROUND_TIME = Arrays.asList(HOURS, MINUTES, SECONDS);
+    private static final String SUPPORTED_UNITS_FOR_ROUND_TIME_STRING = SUPPORTED_UNITS_FOR_ROUND_TIME.stream().map(ChronoUnit::toString).collect(Collectors.joining(", "));
+
+    /**
+     * 对时间进行取整
+     *
+     * @param localDateTime 时间
+     * @param chronoUnit    按此时间单位作为取整后的精度
+     * @param roundingDT    取整类型，值为{@code null}默认为：{@link RoundingDT#FLOOR}
+     * @return 取整后的时间
+     * @since 0.3.0
+     */
+    public static LocalDateTime round(LocalDateTime localDateTime, ChronoUnit chronoUnit, RoundingDT roundingDT) {
+        // if (localDateTime == null) return localDateTime;
+        if (!SUPPORTED_UNITS_FOR_ROUND.contains(chronoUnit)) {
+            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_ROUND_STRING + "] is supported for `chronoUnit` parameter!");
+        }
+        roundingDT = roundingDT == null ? RoundingDT.FLOOR : roundingDT;
+
+        LocalDateTime ldt = localDateTime;
+        switch (chronoUnit) {
+            case YEARS:
+                switch (roundingDT) {
+                    case CEILING:
+                        if (!(ldt.getMonth() == Month.JANUARY && ldt.getDayOfMonth() == 1 && ldt.getHour() == 0 && ldt.getMinute() == 0 && ldt.getSecond() == 0 && ldt.getNano() == 0)) {
+                            ldt = ldt.plusYears(1);
+                        }
+
+                        break;
+                    case HALF_UP:
+                        if (ldt.getMonthValue() >= 7) {     // 7月
+                            ldt = ldt.plusYears(1);
+                        }
+                        break;
+                }
+                return LocalDateTime.of(ldt.getYear(), Month.JANUARY, 1, 0, 0, 0, 0);
+            case MONTHS:
+                switch (roundingDT) {
+                    case CEILING:
+                        if (!(ldt.getDayOfMonth() == 1 && ldt.getHour() == 0 && ldt.getMinute() == 0 && ldt.getSecond() == 0 && ldt.getNano() == 0)) {
+                            ldt = ldt.plusMonths(1);
+                        }
+                        break;
+                    case HALF_UP:
+                        int dayOfMonth = ldt.getDayOfMonth();    // 当前是几号
+                        int halfUpDay = halfUpDay(DateTimes.daysOfMonth(ldt));
+                        if (dayOfMonth >= halfUpDay) {
+                            ldt = ldt.plusMonths(1);
+                        }
+                        break;
+                }
+                return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), 1, 0, 0, 0, 0);
+            case DAYS:
+                switch (roundingDT) {
+                    case CEILING:
+                        if (!(ldt.getHour() == 0 && ldt.getMinute() == 0 && ldt.getSecond() == 0 && ldt.getNano() == 0)) {
+                            ldt = ldt.plusDays(1);
+                        }
+
+                        break;
+                    case HALF_UP:
+                        if (ldt.getHour() >= 12) {
+                            ldt = ldt.plusDays(1);
+                        }
+                        break;
+                }
+                return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), ldt.getDayOfMonth(), 0, 0, 0, 0);
+            case HOURS:
+                switch (roundingDT) {
+                    case CEILING:
+                        if (!(ldt.getMinute() == 0 && ldt.getSecond() == 0 && ldt.getNano() == 0)) {
+                            ldt = ldt.plusHours(1);
+                        }
+
+                        break;
+                    case HALF_UP:
+                        if (ldt.getMinute() >= 30) {
+                            ldt = ldt.plusHours(1);
+                        }
+                        break;
+                }
+                return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), ldt.getDayOfMonth(), ldt.getHour(), 0, 0, 0);
+            case MINUTES:
+                switch (roundingDT) {
+                    case CEILING:
+                        if (!(ldt.getSecond() == 0 && ldt.getNano() == 0)) {
+                            ldt = ldt.plusMinutes(1);
+                        }
+                        break;
+                    case HALF_UP:
+                        if (ldt.getSecond() >= 30) {
+                            ldt = ldt.plusMinutes(1);
+                        }
+                        break;
+                }
+                return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), ldt.getDayOfMonth(), ldt.getHour(), ldt.getMinute(), 0, 0);
+            default:
+                switch (roundingDT) {
+                    case CEILING:
+                        if (!(ldt.getNano() == 0)) {
+                            ldt = ldt.plusSeconds(1);
+                        }
+                        break;
+                    case HALF_UP:
+                        if (ldt.getNano() >= 500000000) {
+                            ldt = ldt.plusSeconds(1);
+                        }
+                        break;
+                }
+                return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), ldt.getDayOfMonth(), ldt.getHour(), ldt.getMinute(), ldt.getSecond(), 0);
+        }
+    }
+
+    /**
+     * 对时间进行取整
+     *
+     * @param temporal   时间，若时间类型为 {@code Instant}，则以 {@code UTC} 时区为准，进行取整运算。
+     * @param chronoUnit 按此时间单位作为取整后的精度
+     * @param roundingDT 取整类型，值为{@code null}默认为：{@link RoundingDT#FLOOR}
+     * @param <T>        时间类型，若类型为 {@link Instant}，则以 {@link TZ#DEFAULT_ZONE} 时区为准，进行取整运算。
+     * @return 取整后的时间
+     * @since 0.3.0
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Temporal> T round(T temporal, ChronoUnit chronoUnit, RoundingDT roundingDT) {
+        // if (temporal == null) return temporal;
+        // if (!DTConst.SUPPORTED_TEMPORAL_COMMON.contains(temporal.getClass())) {
+        //     throw new UnsupportedTemporalTypeException("Only [" + DTConst.SUPPORTED_TEMPORAL_COMMON_STRING + "] is supported for `temporal` parameter!");
+        // }
+
+        if (temporal instanceof ZonedDateTime) {
+            ZonedDateTime zdt = (ZonedDateTime) temporal;
+            LocalDateTime ldt = round(zdt.toLocalDateTime(), chronoUnit, roundingDT);
+            return (T) ldt.atZone(zdt.getZone());
+        }
+        if (temporal instanceof OffsetDateTime) {
+            OffsetDateTime odt = (OffsetDateTime) temporal;
+            LocalDateTime ldt = round(odt.toLocalDateTime(), chronoUnit, roundingDT);
+            return (T) ldt.atZone(odt.getOffset());
+        }
+        if (temporal instanceof Instant) {
+            Instant instant = (Instant) temporal;
+            LocalDateTime ldt = LocalDateTime.ofInstant(instant, TZ.DEFAULT_ZONE);
+            ldt = round(ldt, chronoUnit, roundingDT);
+            return (T) ldt.atZone(TZ.DEFAULT_ZONE).toInstant();
+        }
+
+        return (T) round((LocalDateTime) temporal, chronoUnit, roundingDT);
+    }
+
+    /**
+     * 对时间进行取整
+     *
+     * @param date       时间
+     * @param chronoUnit 按此时间单位作为取整后的精度
+     * @param roundingDT 取整类型，值为{@code null}默认为：{@link RoundingDT#FLOOR}
+     * @return 取整后的时间
+     * @since 0.3.0
+     */
+    public static Date round(Date date, ChronoUnit chronoUnit, RoundingDT roundingDT) {
+        // if (date == null) return date;
+        return round(DateTimes.toCalendar(date, null), chronoUnit, roundingDT).getTime();
+    }
+
+    /**
+     * 对时间进行取整
+     *
+     * @param calendar   时间
+     * @param chronoUnit 按此时间单位作为取整后的精度
+     * @param roundingDT 取整类型，值为{@code null}默认为：{@link RoundingDT#FLOOR}
+     * @return 取整后的时间
+     * @since 0.3.0
+     */
+    public static Calendar round(Calendar calendar, ChronoUnit chronoUnit, RoundingDT roundingDT) {
+        // if (calendar == null) return calendar;
+        if (!SUPPORTED_UNITS_FOR_ROUND.contains(chronoUnit)) {
+            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_ROUND_STRING + "] is supported for `chronoUnit` parameter!");
+        }
+        roundingDT = roundingDT == null ? RoundingDT.FLOOR : roundingDT;
+
+        Calendar newCalendar = DateTimes.cloneCalendar(calendar);
+        switch (chronoUnit) {
+            case YEARS:
+                switch (roundingDT) {
+                    case CEILING:
+                        if (!(newCalendar.get(Calendar.MONTH) == Calendar.JANUARY && newCalendar.get(Calendar.DAY_OF_MONTH) == 1
+                                && newCalendar.get(Calendar.HOUR_OF_DAY) == 0 && newCalendar.get(Calendar.MINUTE) == 0
+                                && newCalendar.get(Calendar.SECOND) == 0 && newCalendar.get(Calendar.MILLISECOND) == 0)) {
+                            newCalendar.add(Calendar.YEAR, 1);
+                        }
+
+                        break;
+                    case HALF_UP:
+                        if (newCalendar.get(Calendar.MONTH) >= 6) {     // 6 代表 7月
+                            newCalendar.add(Calendar.YEAR, 1);
+                        }
+                        break;
+                }
+                newCalendar.set(newCalendar.get(Calendar.YEAR), Calendar.JANUARY, 1, 0, 0, 0);
+
+                break;
+            case MONTHS:
+                switch (roundingDT) {
+                    case CEILING:
+                        if (!(newCalendar.get(Calendar.DAY_OF_MONTH) == 1 && newCalendar.get(Calendar.HOUR_OF_DAY) == 0
+                                && newCalendar.get(Calendar.MINUTE) == 0 && newCalendar.get(Calendar.SECOND) == 0
+                                && newCalendar.get(Calendar.MILLISECOND) == 0)) {
+                            newCalendar.add(Calendar.MONTH, 1);
+                        }
+                        break;
+                    case HALF_UP:
+                        int dayOfMonth = newCalendar.get(Calendar.DAY_OF_MONTH);    // 当前是几号
+                        int halfUpDay = halfUpDay(DateTime.from(newCalendar).daysOfMonth());
+                        if (dayOfMonth >= halfUpDay) {
+                            newCalendar.add(Calendar.MONTH, 1);
+                        }
+                        break;
+                }
+                newCalendar.set(newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), 1, 0, 0, 0);
+
+                break;
+            case DAYS:
+                switch (roundingDT) {
+                    case CEILING:
+                        if (!(newCalendar.get(Calendar.HOUR_OF_DAY) == 0 && newCalendar.get(Calendar.MINUTE) == 0
+                                && newCalendar.get(Calendar.SECOND) == 0 && newCalendar.get(Calendar.MILLISECOND) == 0)) {
+                            newCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                        }
+                        break;
+                    case HALF_UP:
+                        if (newCalendar.get(Calendar.HOUR_OF_DAY) >= 12) {
+                            newCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                        }
+                        break;
+                }
+                newCalendar.set(newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+
+                break;
+            case HOURS:
+                switch (roundingDT) {
+                    case CEILING:
+                        if (!(newCalendar.get(Calendar.MINUTE) == 0 && newCalendar.get(Calendar.SECOND) == 0 && newCalendar.get(Calendar.MILLISECOND) == 0)) {
+                            newCalendar.add(Calendar.HOUR_OF_DAY, 1);
+                        }
+                        break;
+                    case HALF_UP:
+                        if (newCalendar.get(Calendar.MINUTE) >= 30) {
+                            newCalendar.add(Calendar.HOUR_OF_DAY, 1);
+                        }
+                        break;
+                }
+                newCalendar.set(newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH),
+                        newCalendar.get(Calendar.HOUR_OF_DAY), 0, 0);
+
+                break;
+            case MINUTES:
+                switch (roundingDT) {
+                    case CEILING:
+                        if (!(newCalendar.get(Calendar.SECOND) == 0 && newCalendar.get(Calendar.MILLISECOND) == 0)) {
+                            newCalendar.add(Calendar.MINUTE, 1);
+                        }
+                        break;
+                    case HALF_UP:
+                        if (newCalendar.get(Calendar.SECOND) >= 30) {
+                            newCalendar.add(Calendar.MINUTE, 1);
+                        }
+                        break;
+                }
+                newCalendar.set(newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH),
+                        newCalendar.get(Calendar.HOUR_OF_DAY), newCalendar.get(Calendar.MINUTE), 0);
+                break;
+            default:
+                switch (roundingDT) {
+                    case CEILING:
+                        if (!(newCalendar.get(Calendar.MILLISECOND) == 0)) {
+                            newCalendar.add(Calendar.SECOND, 1);
+                        }
+                        break;
+                    case HALF_UP:
+                        if (newCalendar.get(Calendar.MILLISECOND) >= 500) {
+                            newCalendar.add(Calendar.SECOND, 1);
+                        }
+                        break;
+                }
+                newCalendar.set(newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH),
+                        newCalendar.get(Calendar.HOUR_OF_DAY), newCalendar.get(Calendar.MINUTE), newCalendar.get(Calendar.SECOND));
+        }
+        newCalendar.set(Calendar.MILLISECOND, 0);
+        return newCalendar;
+    }
+
+    /**
+     * 对时间的 时，分，秒 进行取整。
+     *
+     * @param calendar   calendar
+     * @param chronoUnit 时间取整的精度
+     * @param amountUnit 时间步长
+     * @param roundingDT 取整类型，值为{@code null}默认为：{@link RoundingDT#FLOOR}
+     * @return 取整后的时间
+     * @since 0.3.0
+     */
+    public static Calendar roundTime(Calendar calendar, ChronoUnit chronoUnit, int amountUnit, RoundingDT roundingDT) {
+        // if (calendar == null) return calendar;
+
+        if (!SUPPORTED_UNITS_FOR_ROUND_TIME.contains(chronoUnit)) {
+            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_ROUND_TIME_STRING + "] is supported for `chronoUnit` parameter!");
+        }
+
+        roundingDT = roundingDT == null ? RoundingDT.FLOOR : roundingDT;
+
+        checkValidAmountUnit(chronoUnit, amountUnit);
+        final int newAmountUnit = Math.abs(amountUnit);
+
+        Calendar newCalendar = DateTimes.cloneCalendar(calendar);
+        if (newAmountUnit == 0) {
+            switch (chronoUnit) {
+                case HOURS:
+                    newCalendar.set(Calendar.MINUTE, 0);
+                    newCalendar.set(Calendar.SECOND, 0);
+                    break;
+                case MINUTES:
+                    newCalendar.set(Calendar.SECOND, 0);
+                    break;
+            }
+            newCalendar.set(Calendar.MILLISECOND, 0);
+            return newCalendar;
+        }
+
+
+        int remainder = 0;
+        int halfUpValue = halfUp(newAmountUnit);
+        int amountToAdd = 0;
+        switch (chronoUnit) {
+            case HOURS:
+                int hourOfDay = newCalendar.get(Calendar.HOUR_OF_DAY);
+                remainder = hourOfDay % newAmountUnit;
+                amountToAdd = newAmountUnit - remainder;
+                if (hourOfDay + amountToAdd > 24) {
+                    amountToAdd = amountToAdd - (hourOfDay + amountToAdd - 24);
+                }
+                switch (roundingDT) {
+                    case FLOOR:
+                        newCalendar.add(Calendar.HOUR_OF_DAY, -remainder);
+                        break;
+                    case HALF_UP:
+                        if (halfUpValue == -1) {
+                            newCalendar.add(Calendar.HOUR_OF_DAY, -remainder);
+                        } else {
+                            if (remainder >= halfUpValue) {
+                                newCalendar.add(Calendar.HOUR_OF_DAY, amountToAdd);
+                            } else {
+                                newCalendar.add(Calendar.HOUR_OF_DAY, -remainder);
+                            }
+                        }
+
+                        break;
+                    default:
+                        if (!(remainder == 0 && newCalendar.get(Calendar.MINUTE) == 0 && newCalendar.get(Calendar.SECOND) == 0
+                                && newCalendar.get(Calendar.MILLISECOND) == 0)) {
+                            newCalendar.add(Calendar.HOUR_OF_DAY, amountToAdd);
+                        }
+                }
+                newCalendar.set(Calendar.MINUTE, 0);
+                newCalendar.set(Calendar.SECOND, 0);
+
+                break;
+            case MINUTES:
+                int minute = newCalendar.get(Calendar.MINUTE);
+                remainder = minute % newAmountUnit;
+                amountToAdd = newAmountUnit - remainder;
+                if (minute + amountToAdd > 60) {
+                    amountToAdd = amountToAdd - (minute + amountToAdd - 60);
+                }
+                switch (roundingDT) {
+                    case FLOOR:
+                        newCalendar.add(Calendar.MINUTE, -remainder);
+                        break;
+                    case HALF_UP:
+                        if (halfUpValue == -1) {
+                            newCalendar.add(Calendar.MINUTE, -remainder);
+                        } else {
+                            if (remainder >= halfUpValue) {
+                                newCalendar.add(Calendar.MINUTE, amountToAdd);
+                            } else {
+                                newCalendar.add(Calendar.MINUTE, -remainder);
+                            }
+                        }
+
+                        break;
+                    default:
+                        if (!(remainder == 0 && newCalendar.get(Calendar.SECOND) == 0 && newCalendar.get(Calendar.MILLISECOND) == 0)) {
+                            newCalendar.add(Calendar.MINUTE, amountToAdd);
+                        }
+                }
+                newCalendar.set(Calendar.SECOND, 0);
+                break;
+            default:
+                int second = newCalendar.get(Calendar.SECOND);
+                remainder = second % newAmountUnit;
+                amountToAdd = newAmountUnit - remainder;
+                if (second + amountToAdd > 60) {
+                    amountToAdd = amountToAdd - (second + amountToAdd - 60);
+                }
+                switch (roundingDT) {
+                    case FLOOR:
+                        newCalendar.add(Calendar.SECOND, -remainder);
+                        break;
+                    case HALF_UP:
+                        if (halfUpValue == -1) {
+                            newCalendar.add(Calendar.SECOND, -remainder);
+                        } else {
+                            if (remainder >= halfUpValue) {
+                                newCalendar.add(Calendar.SECOND, amountToAdd);
+                            } else {
+                                newCalendar.add(Calendar.SECOND, -remainder);
+                            }
+                        }
+
+                        break;
+                    default:
+                        if (!(remainder == 0 && newCalendar.get(Calendar.MILLISECOND) == 0)) {
+                            newCalendar.add(Calendar.SECOND, amountToAdd);
+                        }
+                }
+        }
+
+        newCalendar.set(Calendar.MILLISECOND, 0);
+        return newCalendar;
+    }
+
+    /**
+     * 对时间的 时，分，秒 进行取整。
+     *
+     * @param date       date
+     * @param chronoUnit 时间取整的精度
+     * @param amountUnit 时间步长
+     * @param roundingDT 取整类型，值为{@code null}默认为：{@link RoundingDT#FLOOR}
+     * @return 取整后的时间
+     * @since 0.3.0
+     */
+    public static Date roundTime(Date date, ChronoUnit chronoUnit, int amountUnit, RoundingDT roundingDT) {
+        // if (date == null) return date;
+        return roundTime(DateTimes.toCalendar(date, null), chronoUnit, amountUnit, roundingDT).getTime();
+    }
+
+    /**
+     * 对时间的 时，分，秒 进行取整。
+     *
+     * @param localDateTime localDateTime
+     * @param chronoUnit    时间取整的精度
+     * @param amountUnit    时间步长
+     * @param roundingDT    取整类型，值为{@code null}默认为：{@link RoundingDT#FLOOR}
+     * @return 取整后的时间
+     * @since 0.3.0
+     */
+    public static LocalDateTime roundTime(LocalDateTime localDateTime, ChronoUnit chronoUnit, int amountUnit, RoundingDT roundingDT) {
+
+        if (!SUPPORTED_UNITS_FOR_ROUND_TIME.contains(chronoUnit)) {
+            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_ROUND_TIME_STRING + "] is supported for `chronoUnit` parameter!");
+        }
+
+        roundingDT = roundingDT == null ? RoundingDT.FLOOR : roundingDT;
+
+        checkValidAmountUnit(chronoUnit, amountUnit);
+        final int newAmountUnit = Math.abs(amountUnit);
+
+        LocalDateTime ldt = localDateTime;
+        if (newAmountUnit == 0) {
+            switch (chronoUnit) {
+                case HOURS:
+                    return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), ldt.getDayOfMonth(), ldt.getHour(), 0, 0, 0);
+                case MINUTES:
+                    return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), ldt.getDayOfMonth(), ldt.getHour(), ldt.getMinute(), 0, 0);
+                default:
+                    return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), ldt.getDayOfMonth(), ldt.getHour(), ldt.getMinute(), ldt.getSecond(), 0);
+            }
+        }
+
+        int remainder = 0;
+        int halfUpValue = halfUp(newAmountUnit);
+        int amountToAdd = 0;
+        switch (chronoUnit) {
+            case HOURS:
+                int hourOfDay = ldt.getHour();
+                remainder = hourOfDay % newAmountUnit;
+                amountToAdd = newAmountUnit - remainder;
+                if (hourOfDay + amountToAdd > 24) {
+                    amountToAdd = amountToAdd - (hourOfDay + amountToAdd - 24);
+                }
+                switch (roundingDT) {
+                    case FLOOR:
+                        ldt = ldt.plusHours(-remainder);
+                        break;
+                    case HALF_UP:
+                        if (halfUpValue == -1) {
+                            ldt = ldt.plusHours(-remainder);
+                        } else {
+                            if (remainder >= halfUpValue) {
+                                ldt = ldt.plusHours(amountToAdd);
+                            } else {
+                                ldt = ldt.plusHours(-remainder);
+                            }
+                        }
+                        break;
+                    default:
+                        if (!(remainder == 0 && ldt.getMinute() == 0 && ldt.getSecond() == 0 && ldt.getNano() == 0)) {
+                            ldt = ldt.plusHours(amountToAdd);
+                        }
+
+                }
+                return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), ldt.getDayOfMonth(), ldt.getHour(), 0, 0, 0);
+            case MINUTES:
+                int minute = ldt.getMinute();
+                remainder = minute % newAmountUnit;
+                amountToAdd = newAmountUnit - remainder;
+                if (minute + amountToAdd > 60) {
+                    amountToAdd = amountToAdd - (minute + amountToAdd - 60);
+                }
+                switch (roundingDT) {
+                    case FLOOR:
+                        ldt = ldt.plusMinutes(-remainder);
+                        break;
+                    case HALF_UP:
+                        if (halfUpValue == -1) {
+                            ldt = ldt.plusMinutes(-remainder);
+                        } else {
+                            if (remainder >= halfUpValue) {
+                                ldt = ldt.plusMinutes(amountToAdd);
+                            } else {
+                                ldt = ldt.plusMinutes(-remainder);
+                            }
+                        }
+                        break;
+                    default:
+                        if (!(remainder == 0 && ldt.getSecond() == 0 && ldt.getNano() == 0)) {
+                            ldt = ldt.plusMinutes(amountToAdd);
+                        }
+                }
+                return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), ldt.getDayOfMonth(), ldt.getHour(), ldt.getMinute(), 0, 0);
+            default:
+                int second = ldt.getSecond();
+                remainder = second % newAmountUnit;
+                amountToAdd = newAmountUnit - remainder;
+                if (second + amountToAdd > 60) {
+                    amountToAdd = amountToAdd - (second + amountToAdd - 60);
+                }
+                switch (roundingDT) {
+                    case FLOOR:
+                        ldt = ldt.plusSeconds(-remainder);
+                        break;
+                    case HALF_UP:
+                        if (halfUpValue == -1) {
+                            ldt = ldt.plusSeconds(-remainder);
+                        } else {
+                            if (remainder >= halfUpValue) {
+                                ldt = ldt.plusSeconds(amountToAdd);
+                            } else {
+                                ldt = ldt.plusSeconds(-remainder);
+                            }
+                        }
+                        break;
+                    default:
+                        if (!(remainder == 0 && ldt.getNano() == 0)) {
+                            ldt = ldt.plusSeconds(amountToAdd);
+                        }
+                }
+                return LocalDateTime.of(ldt.getYear(), ldt.getMonth(), ldt.getDayOfMonth(), ldt.getHour(), ldt.getMinute(), ldt.getSecond(), 0);
+        }
+    }
+
+    /**
+     * 对时间进行取整
+     *
+     * @param temporal   时间，若时间类型为 {@code Instant}，则以 {@code UTC} 时区为准，进行取整运算。
+     * @param chronoUnit 按此时间单位作为取整后的精度
+     * @param amountUnit 时间步长
+     * @param roundingDT 取整类型，值为{@code null}默认为：{@link RoundingDT#FLOOR}
+     * @param <T>        时间类型，若类型为 {@link Instant}，则以 {@link TZ#DEFAULT_ZONE} 时区为准，进行取整运算。
+     * @return 取整后的时间
+     * @since 0.3.0
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Temporal> T roundTime(T temporal, ChronoUnit chronoUnit, int amountUnit, RoundingDT roundingDT) {
+
+        if (temporal instanceof ZonedDateTime) {
+            ZonedDateTime zdt = (ZonedDateTime) temporal;
+            LocalDateTime ldt = roundTime(zdt.toLocalDateTime(), chronoUnit, amountUnit, roundingDT);
+            return (T) ldt.atZone(zdt.getZone());
+        }
+        if (temporal instanceof OffsetDateTime) {
+            OffsetDateTime odt = (OffsetDateTime) temporal;
+            LocalDateTime ldt = roundTime(odt.toLocalDateTime(), chronoUnit, amountUnit, roundingDT);
+            return (T) ldt.atZone(odt.getOffset());
+        }
+        if (temporal instanceof Instant) {
+            Instant instant = (Instant) temporal;
+            LocalDateTime ldt = LocalDateTime.ofInstant(instant, TZ.DEFAULT_ZONE);
+            ldt = roundTime(ldt, chronoUnit, amountUnit, roundingDT);
+            return (T) ldt.atZone(TZ.DEFAULT_ZONE).toInstant();
+        }
+
+        return (T) roundTime((LocalDateTime) temporal, chronoUnit, amountUnit, roundingDT);
+    }
+
+    /**
+     * 根据指定的 ChronoUnit 校验 amountUnit 的值是否合法
+     *
+     * @param chronoUnit 时间单位
+     * @param amountUnit 时间步长
+     * @since 0.3.0
+     */
+    private static void checkValidAmountUnit(ChronoUnit chronoUnit, int amountUnit) {
+        if (chronoUnit == HOURS) {
+            if (amountUnit < -24 || amountUnit > 24) {
+                throw new OutOfBoundsException(amountUnit, "The `amountUnit`'s range is [-24, 24] when `chronoUnit` is `HOURS`.");
+            }
+        } else {
+            if (amountUnit < -60 || amountUnit > 60) {
+                throw new OutOfBoundsException(amountUnit, "The `amountUnit`'s range is [-60, 60] when `chronoUnit` is `MINUTES` or `SECONDS`.");
+            }
+        }
+    }
+
+    /**
+     * 获取需要向上取整的最小天数
+     *
+     * @param daysOfMonth 当前月份的总天数
+     * @return 需要向上取整的最小天数
+     * @since 0.3.0
+     */
+    private static int halfUpDay(int daysOfMonth) {
+        return daysOfMonth == 28 || daysOfMonth == 29 ? 15 : 16;
+    }
+
+    /**
+     * 获取需要向上取整的最小值
+     *
+     * @param value 待计算的值
+     * @return 需要向上取整的最小值（-1，代表不支持四舍五入，则采用 向下取整）
+     * @since 0.3.0
+     */
+    private static int halfUp(int value) {
+        int quotient = value / 2;
+        int remainder = value % 2;
+        return value <= 2 ? -1 : (remainder == 0 ? quotient : quotient + 1);
+    }
+
+}

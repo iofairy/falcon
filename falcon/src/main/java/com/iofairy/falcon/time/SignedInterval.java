@@ -130,12 +130,15 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         this.years = years;
         this.months = months;
         this.days = days;
-        this.hours = hours;
-        this.minutes = minutes;
-        this.seconds = seconds;
-        this.millis = millis;
-        this.micros = micros;
-        this.nanos = nanos;
+        // 这里一定要将 hours 也加入计算，否则可能正数的结果，因为没有 hours 的参与，得到负数的结果
+        BigInteger totalNanos = toNanos(hours, HOURS).add(toNanos(minutes, MINUTES)).add(toNanos(seconds, SECONDS)).add(toNanos(millis, MILLIS)).add(toNanos(micros, MICROS)).add(toNanos(nanos, NANOS));
+        long[] timeValues = standardizingTime(totalNanos);
+        this.hours = timeValues[0];
+        this.minutes = timeValues[1];
+        this.seconds = timeValues[2];
+        this.millis = timeValues[3];
+        this.micros = timeValues[4];
+        this.nanos = timeValues[5];
     }
 
     public SignedInterval(long centuries, long years, long months, long days, long hours, long minutes, long seconds, long millis) {
@@ -381,9 +384,12 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         Temporal originalStartTemporal = startTemporal;
         Temporal originalEndTemporal = endTemporal;
 
-        // 将 startTemporal 转成 OffsetDateTime 比 ZonedDateTime 效率更高。因为 ZonedDateTime.until 方法底层也要转成 OffsetDateTime 计算
-        startTemporal = startTemporal instanceof OffsetDateTime ? startTemporal : DateTimes.toOffsetDT(startTemporal, DateTimes.defaultOffset());
-        endTemporal = DateTimes.toOffsetDT(endTemporal, ((OffsetDateTime) startTemporal).getOffset());
+        /*
+         * 将 startTemporal 转成 OffsetDateTime 比 ZonedDateTime 效率更高。因为 ZonedDateTime.until 方法底层也要转成 OffsetDateTime 计算。
+         * 尽可能采用 startTemporal 自己的时区进行计算，因为不同时区计算结果是不一样的，所以采用 toOffsetDT(null) 方法。
+         */
+        startTemporal = startTemporal instanceof OffsetDateTime ? startTemporal : DateTime.from(startTemporal).toOffsetDT(null);
+        endTemporal = DateTime.from(endTemporal).toOffsetDT(((OffsetDateTime) startTemporal).getOffset());
 
         long totalYears = startTemporal.until(endTemporal, YEARS);
         long totalMonths = startTemporal.until(endTemporal, MONTHS);
@@ -450,8 +456,9 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      * @return SignedInterval
      */
     public static SignedInterval between(Date startDate, Date endDate) {
+        if (G.hasNull(startDate, endDate)) throw new NullPointerException("Parameters `startDate` and `endDate` must be non-null!");
         ZoneOffset defaultOffset = DateTimes.defaultOffset();
-        return between(DateTimes.toOffsetDT(startDate, defaultOffset), DateTimes.toOffsetDT(endDate, defaultOffset));
+        return between(DateTime.from(startDate).toOffsetDT(defaultOffset), DateTime.from(endDate).toOffsetDT(defaultOffset));
     }
 
     /**
@@ -463,8 +470,22 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      * @return SignedInterval
      */
     public static SignedInterval between(Calendar startCalendar, Calendar endCalendar) {
-        ZoneOffset defaultOffset = DateTimes.defaultOffset();
-        return between(DateTimes.toOffsetDT(startCalendar, defaultOffset), DateTimes.toOffsetDT(endCalendar, defaultOffset));
+        if (G.hasNull(startCalendar, endCalendar)) throw new NullPointerException("Parameters `startCalendar` and `endCalendar` must be non-null!");
+        return between(DateTime.from(startCalendar).toOffsetDT(null), DateTime.from(endCalendar).toDefaultOffsetDT());
+    }
+
+    /**
+     * Obtain two {@link DateTime} interval. <br>
+     * 获取两个{@link DateTime}的时间间隔。
+     *
+     * @param startDateTime start DateTime
+     * @param endDateTime   end DateTime
+     * @return SignedInterval
+     * @since 0.3.0
+     */
+    public static SignedInterval between(DateTime<?> startDateTime, DateTime<?> endDateTime) {
+        if (G.hasNull(startDateTime, endDateTime)) throw new NullPointerException("Parameters `startDateTime` and `endDateTime` must be non-null!");
+        return between(startDateTime.toOffsetDT(null), endDateTime.toDefaultOffsetDT());
     }
 
     /**
@@ -474,7 +495,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      * @return true if the temporal can be added/subtracted, false if not
      */
     public static boolean isSupported(final Temporal temporal) {
-        return temporal != null && SUPPORTED_TEMPORAL.stream().anyMatch(e -> e == temporal.getClass());
+        return temporal != null && SUPPORTED_TEMPORAL.stream().anyMatch(c -> c.isAssignableFrom(temporal.getClass()));
     }
 
     @Override
@@ -514,12 +535,12 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
 
     @Override
     public Temporal addTo(Temporal temporal) {
-        Objects.requireNonNull(temporal);
+        Objects.requireNonNull(temporal, "Parameter `temporal` must be non-null!");
         if (!isSupported(temporal))
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `temporal` parameter!");
 
         boolean isInstant = temporal instanceof Instant;
-        temporal = isInstant ? DateTimes.toDefaultOffsetDT(temporal) : temporal;
+        temporal = isInstant ? DateTime.from(temporal).toDefaultOffsetDT() : temporal;
 
         temporal = plus(temporal, centuries * 100 + years, YEARS);
         temporal = plus(temporal, months, MONTHS);
@@ -538,23 +559,13 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
     }
 
     @Override
-    public Date addTo(Date date) {
-        return Date.from((Instant) addTo(date.toInstant()));
-    }
-
-    @Override
-    public Calendar addTo(Calendar calendar) {
-        return DateTimes.calendar((Instant) addTo(calendar.toInstant()), calendar.getTimeZone().toZoneId());
-    }
-
-    @Override
     public Temporal subtractFrom(Temporal temporal) {
-        Objects.requireNonNull(temporal);
+        Objects.requireNonNull(temporal, "Parameter `temporal` must be non-null!");
         if (!isSupported(temporal))
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `temporal` parameter!!");
 
         boolean isInstant = temporal instanceof Instant;
-        temporal = isInstant ? DateTimes.toDefaultOffsetDT(temporal) : temporal;
+        temporal = isInstant ? DateTime.from(temporal).toDefaultOffsetDT() : temporal;
 
         temporal = minus(temporal, centuries * 100 + years, YEARS);
         temporal = minus(temporal, months, MONTHS);
@@ -570,16 +581,6 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
 
     protected Temporal minus(Temporal temporal, long amountToSubtract, TemporalUnit unit) {
         return amountToSubtract == 0 ? temporal : temporal.minus(amountToSubtract, unit);
-    }
-
-    @Override
-    public Date subtractFrom(Date date) {
-        return Date.from((Instant) subtractFrom(date.toInstant()));
-    }
-
-    @Override
-    public Calendar subtractFrom(Calendar calendar) {
-        return DateTimes.calendar((Instant) subtractFrom(calendar.toInstant()), calendar.getTimeZone().toZoneId());
     }
 
     public long toYears() {
@@ -742,4 +743,64 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
 
         return intervalStr;
     }
+
+    /**
+     * 将总纳秒数转化成标准的 <b>时-分-秒-毫秒-微秒-纳秒</b>
+     *
+     * @param totalNanos 总纳秒数
+     * @return 时-分-秒-毫秒-微秒-纳秒
+     * @since 0.3.0
+     */
+    protected long[] standardizingTime(BigInteger totalNanos) {
+        long[] timeValues = new long[6];
+
+        if (!totalNanos.equals(BigInteger.ZERO)) {
+            BigInteger[] hoursAndRemainder = totalNanos.divideAndRemainder(BigInteger.valueOf(3600000000000L));
+            timeValues[0] = hoursAndRemainder[0].longValue();
+            if (!hoursAndRemainder[1].equals(BigInteger.ZERO)) {
+                BigInteger[] minutesAndRemainder = hoursAndRemainder[1].divideAndRemainder(BigInteger.valueOf(60000000000L));
+                timeValues[1] = minutesAndRemainder[0].longValue();
+                if (!minutesAndRemainder[1].equals(BigInteger.ZERO)) {
+                    BigInteger[] secondsAndRemainder = minutesAndRemainder[1].divideAndRemainder(BigInteger.valueOf(1000000000L));
+                    timeValues[2] = secondsAndRemainder[0].longValue();
+                    if (!secondsAndRemainder[1].equals(BigInteger.ZERO)) {
+                        BigInteger[] millisAndRemainder = secondsAndRemainder[1].divideAndRemainder(BigInteger.valueOf(1000000L));
+                        timeValues[3] = millisAndRemainder[0].longValue();
+                        if (!millisAndRemainder[1].equals(BigInteger.ZERO)) {
+                            BigInteger[] microsAndRemainder = millisAndRemainder[1].divideAndRemainder(BigInteger.valueOf(1000L));
+                            timeValues[4] = microsAndRemainder[0].longValue();
+                            timeValues[5] = microsAndRemainder[1].longValue();
+                        }
+                    }
+                }
+            }
+        }
+
+        return timeValues;
+    }
+
+    /**
+     * 将某个时间类型转为微秒
+     *
+     * @param amount     时间量
+     * @param chronoUnit 时间单位
+     * @return 总微秒数
+     * @since 0.3.0
+     */
+    protected BigInteger toMicros(long amount, ChronoUnit chronoUnit) {
+        return DateTimes.toMicros(amount, chronoUnit);
+    }
+
+    /**
+     * 将某个时间类型转为纳秒
+     *
+     * @param amount     时间量
+     * @param chronoUnit 时间单位
+     * @return 总纳秒数
+     * @since 0.3.0
+     */
+    protected BigInteger toNanos(long amount, ChronoUnit chronoUnit) {
+        return DateTimes.toNanos(amount, chronoUnit);
+    }
+
 }

@@ -19,7 +19,7 @@ package com.iofairy.falcon.range;
  * Classification of intervals<br>
  * 区间的分类
  *
- * @since 0.2.5
+ * @since 0.3.0
  */
 public enum IntervalType {
     OPEN("(a, b)"),

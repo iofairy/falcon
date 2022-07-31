@@ -24,7 +24,7 @@ import java.util.stream.IntStream;
 /**
  * DateTime Constant
  *
- * @since 0.2.5
+ * @since 0.3.0
  */
 public class DTConst {
     /**

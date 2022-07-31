@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  *
  * @see com.iofairy.falcon.time.DateTimes
  * @since 0.0.2
- * @deprecated Since falcon version 0.2.5, replaced by {@link com.iofairy.falcon.time.DateTimes}
+ * @deprecated Since falcon version 0.3.0, replaced by {@link com.iofairy.falcon.time.DateTimes}
  */
 @Deprecated
 public class DateTimeUtils {

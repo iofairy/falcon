@@ -19,7 +19,7 @@ package com.iofairy.falcon.time;
  * Rounding date time.<br>
  * 对日期取整
  *
- * @since 0.2.5
+ * @since 0.3.0
  */
 public enum RoundingDT {
     /**

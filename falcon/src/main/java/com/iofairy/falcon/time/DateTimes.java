@@ -19,6 +19,7 @@ import com.iofairy.tcf.Try;
 import com.iofairy.top.G;
 import com.iofairy.top.S;
 
+import java.math.BigInteger;
 import java.time.*;
 import java.time.chrono.ChronoLocalDate;
 import java.time.temporal.ChronoUnit;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 /**
  * DateTime Utils
  *
- * @since 0.2.5
+ * @since 0.3.0
  */
 public final class DateTimes {
     /**
@@ -114,306 +115,14 @@ public final class DateTimes {
     }
 
     /**
-     * 将temporal转为 {@link TZ#UTC} 时区的ZonedDateTime
-     *
-     * @param temporal temporal
-     * @return ZonedDateTime
-     */
-    public static ZonedDateTime toUTCZonedDT(Temporal temporal) {
-        return toZonedDT(temporal, TZ.UTC);
-    }
-
-    /**
-     * 将temporal转为 {@link TZ#DEFAULT_ZONE} 时区的ZonedDateTime
-     *
-     * @param temporal temporal
-     * @return ZonedDateTime
-     */
-    public static ZonedDateTime toDefaultZonedDT(Temporal temporal) {
-        return toZonedDT(temporal, TZ.DEFAULT_ZONE);
-    }
-
-    /**
-     * 将temporal转为指定时区的ZonedDateTime
-     *
-     * @param temporal temporal
-     * @param zoneId   zoneId. 当 zoneId为{@code null}时，且temporal是ZonedDateTime类型时，默认采用temporal自己的时区；
-     *                 temporal不是ZonedDateTime类型时，默认采用{@link TZ#DEFAULT_ZONE}
-     * @return ZonedDateTime
-     */
-    public static ZonedDateTime toZonedDT(Temporal temporal, ZoneId zoneId) {
-        if (temporal == null) return null;
-
-        if (temporal instanceof ZonedDateTime) {
-            ZonedDateTime zdt = (ZonedDateTime) temporal;
-            return (zoneId == null || zdt.getZone().equals(zoneId)) ? zdt : zdt.withZoneSameInstant(zoneId);
-        }
-
-        if (zoneId == null) zoneId = TZ.DEFAULT_ZONE;
-        if (temporal instanceof OffsetDateTime) return ((OffsetDateTime) temporal).atZoneSameInstant(zoneId);
-        if (temporal instanceof LocalDateTime) return ((LocalDateTime) temporal).atZone(TZ.DEFAULT_ZONE).withZoneSameInstant(zoneId);
-        if (temporal instanceof Instant) return ZonedDateTime.ofInstant((Instant) temporal, zoneId);
-
-        throw new UnsupportedTemporalTypeException("Only [ZonedDateTime, OffsetDateTime, LocalDateTime, Instant] is supported!");
-    }
-
-    /**
-     * 将calendar转为 {@link TZ#UTC} 时区的ZonedDateTime
-     *
-     * @param calendar calendar
-     * @return ZonedDateTime
-     */
-    public static ZonedDateTime toUTCZonedDT(Calendar calendar) {
-        return toZonedDT(calendar, TZ.UTC);
-    }
-
-    /**
-     * 将calendar转为 {@link TZ#DEFAULT_ZONE} 时区的ZonedDateTime
-     *
-     * @param calendar calendar
-     * @return ZonedDateTime
-     */
-    public static ZonedDateTime toDefaultZonedDT(Calendar calendar) {
-        return toZonedDT(calendar, TZ.DEFAULT_ZONE);
-    }
-
-    /**
-     * 将calendar转为指定时区的ZonedDateTime
-     *
-     * @param calendar calendar
-     * @param zoneId   zoneId. 当 zoneId为{@code null}时，默认采用 calendar 的时区
-     * @return ZonedDateTime
-     */
-    public static ZonedDateTime toZonedDT(Calendar calendar, ZoneId zoneId) {
-        if (calendar == null) return null;
-        if (zoneId == null) zoneId = calendar.getTimeZone().toZoneId();
-        return calendar.toInstant().atZone(zoneId);
-    }
-
-    /**
-     * 将date转为 {@link TZ#UTC} 时区的ZonedDateTime
-     *
-     * @param date date
-     * @return ZonedDateTime
-     */
-    public static ZonedDateTime toUTCZonedDT(Date date) {
-        return toZonedDT(date, TZ.UTC);
-    }
-
-    /**
-     * 将date转为 {@link TZ#DEFAULT_ZONE} 时区的ZonedDateTime
-     *
-     * @param date date
-     * @return ZonedDateTime
-     */
-    public static ZonedDateTime toDefaultZonedDT(Date date) {
-        return toZonedDT(date, TZ.DEFAULT_ZONE);
-    }
-
-    /**
-     * 将date转为指定时区的ZonedDateTime
-     *
-     * @param date   date
-     * @param zoneId zoneId. 当 zoneId为{@code null}时，默认采用 {@link TZ#DEFAULT_ZONE} 时区
-     * @return ZonedDateTime
-     */
-    public static ZonedDateTime toZonedDT(Date date, ZoneId zoneId) {
-        if (date == null) return null;
-        if (zoneId == null) zoneId = TZ.DEFAULT_ZONE;
-        return date.toInstant().atZone(zoneId);
-    }
-
-    /**
-     * 将temporal转为 {@link ZoneOffset#UTC} 时区的OffsetDateTime
-     *
-     * @param temporal temporal
-     * @return OffsetDateTime
-     */
-    public static OffsetDateTime toUTCOffsetDT(Temporal temporal) {
-        return toOffsetDT(temporal, ZoneOffset.UTC);
-    }
-
-    /**
-     * 将temporal转为 {@link #defaultOffset()} 时区的OffsetDateTime
-     *
-     * @param temporal temporal
-     * @return OffsetDateTime
-     */
-    public static OffsetDateTime toDefaultOffsetDT(Temporal temporal) {
-        return toOffsetDT(temporal, defaultOffset());
-    }
-
-    /**
-     * 将temporal转为指定时区的OffsetDateTime
-     *
-     * @param temporal   temporal
-     * @param zoneOffset zoneOffset. 当 zoneOffset为{@code null}时，且temporal是OffsetDateTime类型时，默认采用temporal自己的时区偏移；
-     *                   temporal不是OffsetDateTime类型时，默认采用{@link #defaultOffset()}时区偏移
-     * @return OffsetDateTime
-     */
-    public static OffsetDateTime toOffsetDT(Temporal temporal, ZoneOffset zoneOffset) {
-        if (temporal == null) return null;
-
-        if (temporal instanceof OffsetDateTime) {
-            OffsetDateTime odt = (OffsetDateTime) temporal;
-            return (zoneOffset == null || odt.getOffset().equals(zoneOffset)) ? odt : odt.withOffsetSameInstant(zoneOffset);
-        }
-
-        if (zoneOffset == null) zoneOffset = defaultOffset();
-        if (temporal instanceof ZonedDateTime) return ((ZonedDateTime) temporal).toOffsetDateTime().withOffsetSameInstant(zoneOffset);
-        if (temporal instanceof LocalDateTime) return ((LocalDateTime) temporal).atOffset(defaultOffset()).withOffsetSameInstant(zoneOffset);
-        if (temporal instanceof Instant) return OffsetDateTime.ofInstant((Instant) temporal, zoneOffset);
-
-        throw new UnsupportedTemporalTypeException("Only [ZonedDateTime, OffsetDateTime, LocalDateTime, Instant] is supported!");
-    }
-
-    /**
-     * 将calendar转为 {@link ZoneOffset#UTC} 时区的OffsetDateTime
-     *
-     * @param calendar calendar
-     * @return OffsetDateTime
-     */
-    public static OffsetDateTime toUTCOffsetDT(Calendar calendar) {
-        return toOffsetDT(calendar, ZoneOffset.UTC);
-    }
-
-    /**
-     * 将calendar转为 {@link #defaultOffset()} 时区的OffsetDateTime
-     *
-     * @param calendar calendar
-     * @return OffsetDateTime
-     */
-    public static OffsetDateTime toDefaultOffsetDT(Calendar calendar) {
-        return toOffsetDT(calendar, defaultOffset());
-    }
-
-    /**
-     * 将calendar转为指定时区的OffsetDateTime
-     *
-     * @param calendar   calendar
-     * @param zoneOffset zoneOffset. 当 zoneOffset为{@code null}时，默认采用 calendar 的时区
-     * @return OffsetDateTime
-     */
-    public static OffsetDateTime toOffsetDT(Calendar calendar, ZoneOffset zoneOffset) {
-        if (calendar == null) return null;
-        if (zoneOffset == null) zoneOffset = zoneOffset(calendar);
-        return calendar.toInstant().atOffset(zoneOffset);
-    }
-
-    /**
-     * 将date转为 {@link ZoneOffset#UTC} 时区的OffsetDateTime
-     *
-     * @param date date
-     * @return OffsetDateTime
-     */
-    public static OffsetDateTime toUTCOffsetDT(Date date) {
-        return toOffsetDT(date, ZoneOffset.UTC);
-    }
-
-    /**
-     * 将date转为 {@link #defaultOffset()} 时区的OffsetDateTime
-     *
-     * @param date date
-     * @return OffsetDateTime
-     */
-    public static OffsetDateTime toDefaultOffsetDT(Date date) {
-        return toOffsetDT(date, defaultOffset());
-    }
-
-    /**
-     * 将date转为指定时区的OffsetDateTime
-     *
-     * @param date       date
-     * @param zoneOffset zoneOffset. 当 zoneId为{@code null}时，默认采用 {@link #defaultOffset()} 时区
-     * @return OffsetDateTime
-     */
-    public static OffsetDateTime toOffsetDT(Date date, ZoneOffset zoneOffset) {
-        if (date == null) return null;
-        if (zoneOffset == null) zoneOffset = defaultOffset();
-        return date.toInstant().atOffset(zoneOffset);
-    }
-
-    /**
-     * Date 转 Calendar
-     *
-     * @param date date
-     * @return Calendar
-     */
-    public static Calendar calendar(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar;
-    }
-
-    /**
-     * Date 转 Calendar
-     *
-     * @param date   date
-     * @param zoneId timeZone
-     * @return Calendar
-     */
-    public static Calendar calendar(Date date, ZoneId zoneId) {
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(zoneId));
-        calendar.setTime(date);
-        return calendar;
-    }
-
-    /**
-     * Instant 转 Calendar
-     *
-     * @param instant instant
-     * @return Calendar
-     */
-    public static Calendar calendar(Instant instant) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(instant.toEpochMilli());
-        return calendar;
-    }
-
-    /**
-     * ZonedDateTime 转 Calendar
-     *
-     * @param zonedDateTime zonedDateTime
-     * @return Calendar
-     */
-    public static Calendar calendar(ZonedDateTime zonedDateTime) {
-        if (zonedDateTime == null) return null;
-        return GregorianCalendar.from(zonedDateTime);
-    }
-
-    /**
-     * OffsetDateTime 转 Calendar
-     *
-     * @param offsetDateTime offsetDateTime
-     * @return Calendar
-     */
-    public static Calendar calendar(OffsetDateTime offsetDateTime) {
-        if (offsetDateTime == null) return null;
-        return GregorianCalendar.from(offsetDateTime.toZonedDateTime());
-    }
-
-    /**
-     * Instant 转 Calendar
-     *
-     * @param instant instant
-     * @param zoneId  timeZone
-     * @return Calendar
-     */
-    public static Calendar calendar(Instant instant, ZoneId zoneId) {
-        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(zoneId));
-        calendar.setTimeInMillis(instant.toEpochMilli());
-        return calendar;
-    }
-
-    /**
      * Convert local Date object to another timezone <br>
-     * 将本地Date时间对象转成另一个时区的Date对象
+     * 将默认Date时间对象转成另一个时区的Date对象
      *
      * @param date   date
      * @param zoneId zoneId
      * @return another timezone Date
      */
-    public static Date localDateToTZ(Date date, ZoneId zoneId) {
+    public static Date defaultDateToTZ(Date date, ZoneId zoneId) {
         return tzDateToTZ(date, TZ.DEFAULT_ZONE, zoneId);
     }
 
@@ -422,148 +131,197 @@ public final class DateTimes {
      * 将Date对象从一个时区转成另一个时区的Date对象
      *
      * @param date       date
-     * @param fromZoneId fromZoneId
-     * @param toZoneId   toZoneId
+     * @param fromZoneId fromZoneId. 当 {@code fromZoneId} 为 null时，采用 {@link TZ#DEFAULT_ZONE}
+     * @param toZoneId   toZoneId. 当 {@code toZoneId} 为 null时，采用 {@link TZ#DEFAULT_ZONE}
      * @return another timezone Date
      */
     public static Date tzDateToTZ(Date date, ZoneId fromZoneId, ZoneId toZoneId) {
+        if (fromZoneId == null) fromZoneId = TZ.DEFAULT_ZONE;
+        if (toZoneId == null) toZoneId = TZ.DEFAULT_ZONE;
+        if (fromZoneId.equals(toZoneId)) return date;
         return Date.from(date.toInstant().atZone(toZoneId).withZoneSameLocal(fromZoneId).toInstant());
     }
 
     /**
-     * Convert calendar to local calendar <br>
-     * 将calendar对象转成本地的calendar对象
+     * Convert local LocalDateTime object to another timezone <br>
+     * 将默认LocalDateTime时间对象转成另一个时区的LocalDateTime对象
+     *
+     * @param localDateTime LocalDateTime
+     * @param zoneId        zoneId
+     * @return another timezone LocalDateTime
+     */
+    public static LocalDateTime defaultLocalDTToTZ(LocalDateTime localDateTime, ZoneId zoneId) {
+        return tzLocalDTToTZ(localDateTime, TZ.DEFAULT_ZONE, zoneId);
+    }
+
+    /**
+     * Convert fromZoneId LocalDateTime to toZoneId <br>
+     * 将LocalDateTime对象从一个时区转成另一个时区的LocalDateTime对象
+     *
+     * @param localDateTime LocalDateTime
+     * @param fromZoneId    fromZoneId. 当 {@code fromZoneId} 为 null时，采用 {@link TZ#DEFAULT_ZONE}
+     * @param toZoneId      toZoneId. 当 {@code toZoneId} 为 null时，采用 {@link TZ#DEFAULT_ZONE}
+     * @return another timezone LocalDateTime
+     */
+    public static LocalDateTime tzLocalDTToTZ(LocalDateTime localDateTime, ZoneId fromZoneId, ZoneId toZoneId) {
+        if (fromZoneId == null) fromZoneId = TZ.DEFAULT_ZONE;
+        if (toZoneId == null) toZoneId = TZ.DEFAULT_ZONE;
+        if (fromZoneId.equals(toZoneId)) return localDateTime;
+        return localDateTime.atZone(fromZoneId).withZoneSameInstant(toZoneId).toLocalDateTime();
+    }
+
+    /**
+     * Convert date from fromZoneId Date to toZoneId ZonedDateTime <br>
+     * 将 一个时区 的 Date 转成另一个时区的 ZonedDateTime
+     *
+     * @param date       date
+     * @param fromZoneId fromZoneId. 当 {@code fromZoneId} 为 null时，采用 {@link TZ#DEFAULT_ZONE}
+     * @param toZoneId   toZoneId. 当 {@code toZoneId} 为 null时，采用 {@link TZ#DEFAULT_ZONE}
+     * @return ZonedDateTime
+     */
+    public static ZonedDateTime tzDateToZonedDT(Date date, ZoneId fromZoneId, ZoneId toZoneId) {
+        if (fromZoneId == null) fromZoneId = TZ.DEFAULT_ZONE;
+        if (toZoneId == null) toZoneId = TZ.DEFAULT_ZONE;
+        return date.toInstant().atZone(TZ.DEFAULT_ZONE).withZoneSameLocal(fromZoneId).withZoneSameInstant(toZoneId);
+    }
+
+    /**
+     * Date 转 Calendar
+     *
+     * @param date   date
+     * @param zoneId 时区。当前 zoneId 为 null 时，采用默认时区。
+     * @return Calendar
+     * @since 0.3.0
+     */
+    public static Calendar toCalendar(Date date, ZoneId zoneId) {
+        Calendar calendar = zoneId == null ? Calendar.getInstance() : Calendar.getInstance(TimeZone.getTimeZone(zoneId));
+        calendar.setTime(date);
+        return calendar;
+    }
+
+    /**
+     * Calendar 转成 其他时区，返回新的 Calendar 对象
      *
      * @param calendar calendar
-     * @return local calendar
+     * @param zoneId   时区。当前 zoneId 为 null 时，采用默认时区。
+     * @return Calendar
+     * @since 0.3.0
      */
-    public static Calendar calendarToLocal(Calendar calendar) {
-        return calendarToTZ(calendar, TZ.DEFAULT_ZONE);
+    public static Calendar toCalendar(Calendar calendar, ZoneId zoneId) {
+        if (calendar == null) return null;
+        if (zoneId == null) {
+            return cloneCalendar(calendar);
+        } else {
+            Calendar newCalendar = cloneCalendar(calendar);
+            newCalendar.setTimeZone(TimeZone.getTimeZone(zoneId));
+            return newCalendar;
+        }
     }
 
     /**
-     * Convert calendar to another timezone calendar <br>
-     * 将calendar对象转成另一个时区的calendar对象
+     * Instant 转成 Calendar
+     *
+     * @param instant instant
+     * @return Calendar
+     * @since 0.3.0
+     */
+    public static Calendar toCalendar(Instant instant) {
+        if (instant == null) return null;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(instant.toEpochMilli());
+        return calendar;
+    }
+
+    /**
+     * ZonedDateTime 转成 Calendar
+     *
+     * @param zonedDateTime zonedDateTime
+     * @return Calendar
+     * @since 0.3.0
+     */
+    public static Calendar toCalendar(ZonedDateTime zonedDateTime) {
+        if (zonedDateTime == null) return null;
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(zonedDateTime.getZone()));
+        calendar.setTimeInMillis(zonedDateTime.toInstant().toEpochMilli());
+        return calendar;
+    }
+
+    /**
+     * OffsetDateTime 转成 Calendar
+     *
+     * @param offsetDateTime offsetDateTime
+     * @return Calendar
+     * @since 0.3.0
+     */
+    public static Calendar toCalendar(OffsetDateTime offsetDateTime) {
+        if (offsetDateTime == null) return null;
+        return toCalendar(offsetDateTime.toZonedDateTime());
+    }
+
+    /**
+     * 克隆一个 Calendar
      *
      * @param calendar calendar
-     * @param zoneId   zoneId
-     * @return calendar with another timezone
+     * @return Calendar
+     * @since 0.3.0
      */
-    public static Calendar calendarToTZ(Calendar calendar, ZoneId zoneId) {
-        Date newDate = tzDateToTZ(calendar.getTime(), calendar.getTimeZone().toZoneId(), zoneId);
-        Calendar newCalendar = Calendar.getInstance(TimeZone.getTimeZone(zoneId));
-        newCalendar.setTime(newDate);
-        return newCalendar;
+    public static Calendar cloneCalendar(Calendar calendar) {
+        if (calendar == null) return null;
+        return (Calendar) calendar.clone();
     }
 
     /**
-     * 对时间进行增减操作，支持的时间类型：{@link DTConst#SUPPORTED_TEMPORAL_COMMON}。<br>
-     * 注：
-     * {@link Instant} 类型的时间会先转成 {@link #defaultOffset()} 时区的 OffsetDateTime 进行增减。
+     * 将某个时间类型转为微秒
      *
-     * @param temporal 时间
-     * @param amount   增减的量
-     * @param unit     时间单位
-     * @param <T>      时间类型
-     * @return 增减后的时间
+     * @param amount     时间量
+     * @param chronoUnit 时间单位
+     * @return 总微秒数
+     * @since 0.3.0
      */
-    @SuppressWarnings("unchecked")
-    public static <T extends Temporal> T plus(T temporal, long amount, ChronoUnit unit) {
-        if (temporal == null || amount == 0) return temporal;
-        if (!DTConst.SUPPORTED_TEMPORAL_COMMON.contains(temporal.getClass())) {
-            throw new UnsupportedTemporalTypeException("Only [" + DTConst.SUPPORTED_TEMPORAL_COMMON_STRING + "] is supported for `temporal` parameter!");
+    public static BigInteger toMicros(long amount, ChronoUnit chronoUnit) {
+        if (amount == 0) return BigInteger.ZERO;
+        switch (chronoUnit) {
+            case HOURS:
+                return BigInteger.valueOf(amount).multiply(BigInteger.valueOf(3600000000L));
+            case MINUTES:
+                return BigInteger.valueOf(amount).multiply(BigInteger.valueOf(60000000L));
+            case SECONDS:
+                return BigInteger.valueOf(amount).multiply(BigInteger.valueOf(1000000L));
+            case MILLIS:
+                return BigInteger.valueOf(amount).multiply(BigInteger.valueOf(1000L));
+            case MICROS:
+                return BigInteger.valueOf(amount);
+            case NANOS:
+                return BigInteger.valueOf(0);
         }
-        if (temporal instanceof Instant) {
-            OffsetDateTime odt = toDefaultOffsetDT(temporal).plus(amount, unit);
-            return (T) odt.toInstant();
+        throw new UnsupportedTemporalTypeException("Unsupported unit: " + chronoUnit);
+    }
+
+    /**
+     * 将某个时间类型转为纳秒
+     *
+     * @param amount     时间量
+     * @param chronoUnit 时间单位
+     * @return 总纳秒数
+     * @since 0.3.0
+     */
+    public static BigInteger toNanos(long amount, ChronoUnit chronoUnit) {
+        if (amount == 0) return BigInteger.ZERO;
+        switch (chronoUnit) {
+            case HOURS:
+                return BigInteger.valueOf(amount).multiply(BigInteger.valueOf(3600000000000L));
+            case MINUTES:
+                return BigInteger.valueOf(amount).multiply(BigInteger.valueOf(60000000000L));
+            case SECONDS:
+                return BigInteger.valueOf(amount).multiply(BigInteger.valueOf(1000000000L));
+            case MILLIS:
+                return BigInteger.valueOf(amount).multiply(BigInteger.valueOf(1000000L));
+            case MICROS:
+                return BigInteger.valueOf(amount).multiply(BigInteger.valueOf(1000L));
+            case NANOS:
+                return BigInteger.valueOf(amount);
         }
-        return (T) temporal.plus(amount, unit);
-    }
-
-    /**
-     * 对时间进行增减操作
-     *
-     * @param calendar 时间
-     * @param amount   增减的量
-     * @param unit     时间单位
-     * @return 增减后的时间
-     */
-    public static Calendar plus(Calendar calendar, long amount, ChronoUnit unit) {
-        if (calendar == null) return calendar;
-        /*
-         * Calendar自带的add方法，无法执行 long 型的加减
-         */
-        ZonedDateTime zonedDateTime = toZonedDT(calendar, null);
-        zonedDateTime = plus(zonedDateTime, amount, unit);
-        return calendar(zonedDateTime);
-    }
-
-    /**
-     * 对时间进行增减操作
-     *
-     * @param date   时间
-     * @param amount 增减的量
-     * @param unit   时间单位
-     * @return 增减后的时间
-     */
-    public static Date plus(Date date, long amount, ChronoUnit unit) {
-        if (date == null) return null;
-        return Date.from(plus(date.toInstant(), amount, unit));
-    }
-
-    /**
-     * 对时间进行增减操作，支持的时间类型：{@link DTConst#SUPPORTED_TEMPORAL_COMMON}。<br>
-     * 注：
-     * {@link Instant} 类型的时间会先转成 {@link #defaultOffset()} 时区的 OffsetDateTime 进行增减。
-     *
-     * @param temporal 时间
-     * @param amount   增减的量
-     * @param unit     时间单位
-     * @param <T>      时间类型
-     * @return 增减后的时间
-     */
-    @SuppressWarnings("unchecked")
-    public static <T extends Temporal> T minus(T temporal, long amount, ChronoUnit unit) {
-        if (temporal == null || amount == 0) return temporal;
-        if (!DTConst.SUPPORTED_TEMPORAL_COMMON.contains(temporal.getClass())) {
-            throw new UnsupportedTemporalTypeException("Only [" + DTConst.SUPPORTED_TEMPORAL_COMMON_STRING + "] is supported for `temporal` parameter!");
-        }
-        if (temporal instanceof Instant) {
-            OffsetDateTime odt = toDefaultOffsetDT(temporal).minus(amount, unit);
-            return (T) odt.toInstant();
-        }
-        return (T) temporal.minus(amount, unit);
-    }
-
-    /**
-     * 对时间进行增减操作
-     *
-     * @param calendar 时间
-     * @param amount   增减的量
-     * @param unit     时间单位
-     * @return 增减后的时间
-     */
-    public static Calendar minus(Calendar calendar, long amount, ChronoUnit unit) {
-        if (calendar == null) return calendar;
-        /*
-         * Calendar自带的add方法，无法执行 long 型的加减
-         */
-        ZonedDateTime zonedDateTime = toZonedDT(calendar, null);
-        zonedDateTime = minus(zonedDateTime, amount, unit);
-        return calendar(zonedDateTime);
-    }
-
-    /**
-     * 对时间进行增减操作
-     *
-     * @param date   时间
-     * @param amount 增减的量
-     * @param unit   时间单位
-     * @return 增减后的时间
-     */
-    public static Date minus(Date date, long amount, ChronoUnit unit) {
-        if (date == null) return null;
-        return Date.from(minus(date.toInstant(), amount, unit));
+        throw new UnsupportedTemporalTypeException("Unsupported unit: " + chronoUnit);
     }
 
     /**
@@ -572,33 +330,10 @@ public final class DateTimes {
      * @param year  当前年份
      * @param month 当前月份
      * @return 当前月的总天数
-     * @since 0.2.5
+     * @since 0.3.0
      */
     public static int daysOfMonth(int year, int month) {
-        YearMonth yearMonth = YearMonth.of(year, month);
-        return yearMonth.lengthOfMonth();
-    }
-
-    /**
-     * 获取某个月的总天数
-     *
-     * @param calendar calendar
-     * @return 当前月的总天数
-     * @since 0.2.5
-     */
-    public static int daysOfMonth(Calendar calendar) {
-        return calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
-    }
-
-    /**
-     * 获取某个月的总天数
-     *
-     * @param date date
-     * @return 当前月的总天数
-     * @since 0.2.5
-     */
-    public static int daysOfMonth(Date date) {
-        return daysOfMonth(calendar(date));
+        return YearMonth.of(year, month).lengthOfMonth();
     }
 
     /**
@@ -606,37 +341,18 @@ public final class DateTimes {
      *
      * @param temporal temporal
      * @return 当前月的总天数
-     * @since 0.2.5
+     * @since 0.3.0
      */
     public static int daysOfMonth(Temporal temporal) {
         Objects.requireNonNull(temporal, "Parameter `temporal` must be non-null!");
-        if (!SUPPORTED_TEMPORAL_FOR_DOM.contains(temporal.getClass())) {
+        if (SUPPORTED_TEMPORAL_FOR_DOM.stream().noneMatch(c -> c.isAssignableFrom(temporal.getClass()))) {
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_FOR_DOM.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")) + "] is supported for `temporal` parameter!");
         }
+
         if (temporal instanceof ChronoLocalDate) return ((ChronoLocalDate) temporal).lengthOfMonth();
         if (temporal instanceof YearMonth) return ((YearMonth) temporal).lengthOfMonth();
 
-        int year;
-        int month;
-        if (temporal instanceof LocalDateTime) {
-            LocalDateTime localDateTime = (LocalDateTime) temporal;
-            year = localDateTime.getYear();
-            month = localDateTime.getMonthValue();
-        } else if (temporal instanceof OffsetDateTime) {
-            OffsetDateTime offsetDateTime = (OffsetDateTime) temporal;
-            year = offsetDateTime.getYear();
-            month = offsetDateTime.getMonthValue();
-        } else if (temporal instanceof ZonedDateTime) {
-            ZonedDateTime zonedDateTime = (ZonedDateTime) temporal;
-            year = zonedDateTime.getYear();
-            month = zonedDateTime.getMonthValue();
-        } else {
-            LocalDateTime localDateTime = LocalDateTime.ofInstant((Instant) temporal, TZ.DEFAULT_ZONE);
-            year = localDateTime.getYear();
-            month = localDateTime.getMonthValue();
-        }
-
-        return daysOfMonth(year, month);
+        return DateTime.of(temporal).daysOfMonth();
     }
 
     /**
@@ -645,7 +361,7 @@ public final class DateTimes {
      * @param withMode  0: 只返回小时；1：返回小时并在末尾拼接上00分钟；2：返回小时并在末尾拼接00分钟和00秒
      * @param separator 当 withMode 为 1，2时，需要指定分隔符。如果为 {@code null}，则默认采用 {@code ""}
      * @return 一天中的小时
-     * @since 0.2.5
+     * @since 0.3.0
      */
     public static List<String> hoursOfDay(int withMode, String separator) {
         if (withMode == 0) return DTConst.HHs;
@@ -669,7 +385,7 @@ public final class DateTimes {
      * @param withZeroSecond 是否在末尾拼接00秒
      * @param separator      拼接时采用的分隔符。如果为 {@code null}，则默认采用 {@code ""}
      * @return 一天中的所有分钟
-     * @since 0.2.5
+     * @since 0.3.0
      */
     public static List<String> hourMinutesOfDay(boolean withZeroSecond, String separator) {
         if (separator == null) separator = "";
@@ -697,7 +413,7 @@ public final class DateTimes {
      * @param withZeroSecond 是否在末尾拼接00秒
      * @param separator      拼接时采用的分隔符。如果为 {@code null}，则默认采用 {@code ""}
      * @return 某个指定小时的所有分钟
-     * @since 0.2.5
+     * @since 0.3.0
      */
     public static List<String> minutesOfHour(String hour, boolean withZeroSecond, String separator) {
         if (separator == null) separator = "";
@@ -723,7 +439,7 @@ public final class DateTimes {
      * @param minute    分钟。如果为 {@code null}，则默认采用 {@code ""}
      * @param separator 拼接时采用的分隔符。如果为 {@code null}，则默认采用 {@code ""}
      * @return 某个指定分钟的所有秒
-     * @since 0.2.5
+     * @since 0.3.0
      */
     public static List<String> secondsOfMinute(String minute, String separator) {
         return minutesOfHour(minute, false, separator);
