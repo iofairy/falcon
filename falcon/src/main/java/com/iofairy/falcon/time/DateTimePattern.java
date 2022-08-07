@@ -350,7 +350,7 @@ public class DateTimePattern {
     static {
         DTF_MAP.put(FM_DTF_Y, DTF_Y);
         DTF_MAP.put(FM_DTF_Yz, DTF_Y_ZH);
-        DTF_MAP.put(FM_Y, DTF_Y_ZH);
+        DTF_MAP.put(FM_Y, DTF_Y);
         DTF_MAP.put(FM_Yz, DTF_Y_ZH);
 
         DTF_MAP.put(FM_YM, DTF_YM);
