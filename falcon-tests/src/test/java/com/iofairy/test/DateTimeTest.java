@@ -1,10 +1,7 @@
 package com.iofairy.test;
 
 import com.iofairy.falcon.range.IntervalType;
-import com.iofairy.falcon.time.DateTime;
-import com.iofairy.falcon.time.RoundingDT;
-import com.iofairy.falcon.time.TZ;
-import com.iofairy.tcf.Try;
+import com.iofairy.falcon.time.*;
 import com.iofairy.top.G;
 import org.junit.jupiter.api.Test;
 
@@ -317,7 +314,7 @@ public class DateTimeTest {
         System.out.println(dt14.dtDetail());        // 2022-02-27 08:00:10.000000100 [Asia/Shanghai +08:00 GMT+8 周日]
         System.out.println(dt15.dtDetail());        // 2022-02-27 00:00:10.000000100 [+00:00 GMT 周日]
         System.out.println(dt16.dtDetail());        // 2022-02-26 19:00:10.000000000 [America/New_York -05:00 GMT-5 周六]
-        System.out.println(dt17.dtDetail());        // 2022-02-27 08:00:10.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        System.out.println(dt17.dtDetail());        // 2022-02-27 08:00:09.999000000 [Asia/Shanghai +08:00 GMT+8 周日]
 
         assertEquals("2022-03-01 08:00:10.000000100 [周二]", dt01.dtDetail());
         assertEquals("2022-07-27 08:00:10.000000100 [Asia/Shanghai +08:00 GMT+8 周三]", dt02.dtDetail());
@@ -332,7 +329,7 @@ public class DateTimeTest {
         assertEquals("2022-02-27 08:00:10.000000100 [Asia/Shanghai +08:00 GMT+8 周日]", dt14.dtDetail());
         assertEquals("2022-02-27 00:00:10.000000100 [+00:00 GMT 周日]", dt15.dtDetail());
         assertEquals("2022-02-26 19:00:10.000000000 [America/New_York -05:00 GMT-5 周六]", dt16.dtDetail());
-        assertEquals("2022-02-27 08:00:10.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt17.dtDetail());
+        assertEquals("2022-02-27 08:00:09.999000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt17.dtDetail());
 
     }
 
@@ -1019,4 +1016,185 @@ public class DateTimeTest {
 
     }
 
+    @Test
+    public void testParse() {
+        DateTime<LocalDateTime> dt0 = DateTime.parse("2022-8-01 10:5:15");
+        DateTime<LocalDateTime> dt1 = DateTime.parse("2022-8-01T10:5:15", "y-M-d'T'H:m:s");
+        DateTime<LocalDateTime> dt2 = DateTime.parse("2022-8-01T10:5:15.987", "yyyy-MM-dd'T'HH:mm:ss.SSS");
+        DateTime<LocalDateTime> dt3 = DateTime.parse("2022", "y");
+        DateTime<LocalDateTime> dt4 = DateTime.parse("10点5分", "HH点mm分");
+        DateTime<Date> dt00 = DateTime.parseDate("2022-8-01 10:5:15", TZ.UTC);
+        DateTime<Date> dt01 = DateTime.parseDate("2022-8-01T10:5:15.987", "yyyy-MM-dd'T'HH:mm:ss.SSS");
+        DateTime<Date> dt02 = DateTime.parseDate("2022-8-01T10:5:15.987", "y-M-d'T'H:m:s.SSS", TZ.MOSCOW);
+        DateTime<Date> dt03 = DateTime.parseDate("2022", "y");
+        DateTime<Date> dt04 = DateTime.parseDate("2点5分", "H点m分", TZ.NEW_YORK);
+        System.out.println(dt0.dtDetail());         // 2022-08-01 10:05:15.000000000 [周一]
+        System.out.println(dt1.dtDetail());         // 2022-08-01 10:05:15.000000000 [周一]
+        System.out.println(dt2.dtDetail());         // 2022-08-01 10:05:15.987000000 [周一]
+        System.out.println(dt3.dtDetail());         // 2022-01-01 00:00:00.000000000 [周六]
+        System.out.println(dt4.dtDetail());         // 1970-01-01 10:05:00.000000000 [周四]
+        System.out.println(dt00.dtDetail());        // 2022-08-01 18:05:15.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        System.out.println(dt01.dtDetail());        // 2022-08-01 10:05:15.987000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        System.out.println(dt02.dtDetail());        // 2022-08-01 15:05:15.987000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        System.out.println(dt03.dtDetail());        // 2022-01-01 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周六]
+        System.out.println(dt04.dtDetail());        // 1970-01-01 15:05:00.000000000 [Asia/Shanghai +08:00 GMT+8 周四]
+
+        assertEquals(dt0.dtDetail(), "2022-08-01 10:05:15.000000000 [周一]");
+        assertEquals(dt1.dtDetail(), "2022-08-01 10:05:15.000000000 [周一]");
+        assertEquals(dt2.dtDetail(), "2022-08-01 10:05:15.987000000 [周一]");
+        assertEquals(dt3.dtDetail(), "2022-01-01 00:00:00.000000000 [周六]");
+        assertEquals(dt4.dtDetail(), "1970-01-01 10:05:00.000000000 [周四]");
+        assertEquals(dt00.dtDetail(), "2022-08-01 18:05:15.000000000 [Asia/Shanghai +08:00 GMT+8 周一]");
+        assertEquals(dt01.dtDetail(), "2022-08-01 10:05:15.987000000 [Asia/Shanghai +08:00 GMT+8 周一]");
+        assertEquals(dt02.dtDetail(), "2022-08-01 15:05:15.987000000 [Asia/Shanghai +08:00 GMT+8 周一]");
+        assertEquals(dt03.dtDetail(), "2022-01-01 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周六]");
+        assertEquals(dt04.dtDetail(), "1970-01-01 15:05:00.000000000 [Asia/Shanghai +08:00 GMT+8 周四]");
+    }
+
+    @Test
+    public void testFill() {
+        DateTime<LocalDateTime> dt1 = DateTime.parse("2022-08-01 10:05:15.987", "yyyy-MM-dd HH:mm:ss.SSS");
+        DateTime<Date> dt2 = DateTime.parseDate("2022-08-01 10:05:15.987", "yyyy-MM-dd HH:mm:ss.SSS");
+        DateTime<LocalDateTime> dt3 = DateTime.parse("2022-07-10 10:05:15.987", "yyyy-MM-dd HH:mm:ss.SSS");
+        DateTime<Date> dt4 = DateTime.parseDate("2022-07-10 10:05:15.987", "yyyy-MM-dd HH:mm:ss.SSS");
+
+        DateTime<ZonedDateTime> zonedDT = DateTime.of(DateTime.parse("2022-02-10 10:05:15.987654789", "yyyy-MM-dd HH:mm:ss.SSSSSSSSS").toZonedDT(TZ.DUBAI));
+        System.out.println(zonedDT.dtDetail());        // 2022-02-10 10:05:15.987654789 [Asia/Dubai +04:00 GMT+4 周四]
+
+        DateTime<LocalDateTime> dt01 = dt1.fill0(ChronoUnit.MONTHS);        // 2022-08-01 00:00:00.000000000 [周一]
+        DateTime<LocalDateTime> dt02 = dt1.fill0(ChronoUnit.DAYS);      // 2022-08-01 00:00:00.000000000 [周一]
+        DateTime<LocalDateTime> dt03 = dt1.fill0(ChronoUnit.HOURS);     // 2022-08-01 10:00:00.000000000 [周一]
+        DateTime<Date> dt04 = dt2.fill0(ChronoUnit.MONTHS);     // 2022-08-01 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt05 = dt2.fill0(ChronoUnit.DAYS);       // 2022-08-01 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt06 = dt2.fill0(ChronoUnit.HOURS);      // 2022-08-01 10:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<LocalDateTime> dt07 = dt3.fill0(ChronoUnit.MONTHS);        // 2022-07-01 00:00:00.000000000 [周五]
+        DateTime<LocalDateTime> dt08 = dt3.fill0(ChronoUnit.DAYS);      // 2022-07-10 00:00:00.000000000 [周日]
+        DateTime<LocalDateTime> dt09 = dt3.fill0(ChronoUnit.HOURS);     // 2022-07-10 10:00:00.000000000 [周日]
+        DateTime<Date> dt10 = dt4.fill0(ChronoUnit.MONTHS);     // 2022-07-01 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周五]
+        DateTime<Date> dt11 = dt4.fill0(ChronoUnit.DAYS);       // 2022-07-10 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt12 = dt4.fill0(ChronoUnit.HOURS);      // 2022-07-10 10:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<LocalDateTime> dt21 = dt1.fill9(ChronoUnit.MONTHS);        // 2022-08-31 23:59:59.999999999 [周三]
+        DateTime<LocalDateTime> dt22 = dt1.fill9(ChronoUnit.DAYS);      // 2022-08-01 23:59:59.999999999 [周一]
+        DateTime<LocalDateTime> dt23 = dt1.fill9(ChronoUnit.HOURS);     // 2022-08-01 10:59:59.999999999 [周一]
+        DateTime<Date> dt24 = dt2.fill9(ChronoUnit.MONTHS);     // 2022-08-31 23:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周三]
+        DateTime<Date> dt25 = dt2.fill9(ChronoUnit.DAYS);       // 2022-08-01 23:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt26 = dt2.fill9(ChronoUnit.HOURS);      // 2022-08-01 10:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<LocalDateTime> dt27 = dt3.fill9(ChronoUnit.MONTHS);        // 2022-07-31 23:59:59.999999999 [周日]
+        DateTime<LocalDateTime> dt28 = dt3.fill9(ChronoUnit.DAYS);      // 2022-07-10 23:59:59.999999999 [周日]
+        DateTime<LocalDateTime> dt29 = dt3.fill9(ChronoUnit.HOURS);     // 2022-07-10 10:59:59.999999999 [周日]
+        DateTime<Date> dt30 = dt4.fill9(ChronoUnit.MONTHS);     // 2022-07-31 23:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt31 = dt4.fill9(ChronoUnit.DAYS);       // 2022-07-10 23:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt32 = dt4.fill9(ChronoUnit.HOURS);      // 2022-07-10 10:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周日]
+
+        DateTime<LocalDateTime> dateTime1 = dt1.fill0(ChronoUnit.YEARS);        // 2022-01-01 00:00:00.000000000 [周六]
+        DateTime<Date> dateTime2 = dt2.fill0(ChronoUnit.YEARS);             // 2022-01-01 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周六]
+        DateTime<LocalDateTime> dateTime3 = dt3.fill0(ChronoUnit.YEARS);        // 2022-01-01 00:00:00.000000000 [周六]
+        DateTime<Date> dateTime4 = dt4.fill0(ChronoUnit.YEARS);             // 2022-01-01 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周六]
+        DateTime<LocalDateTime> dateTime5 = dt1.fill9(ChronoUnit.YEARS);        // 2022-12-31 23:59:59.999999999 [周六]
+        DateTime<Date> dateTime6 = dt2.fill9(ChronoUnit.YEARS);             // 2022-12-31 23:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周六]
+        DateTime<LocalDateTime> dateTime7 = dt3.fill9(ChronoUnit.YEARS);        // 2022-12-31 23:59:59.999999999 [周六]
+        DateTime<Date> dateTime8 = dt4.fill9(ChronoUnit.YEARS);             // 2022-12-31 23:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周六]
+
+        DateTime<ZonedDateTime> zdt01 = zonedDT.fill0(ChronoUnit.YEARS);    // 2022-01-01 00:00:00.000000000 [Asia/Dubai +04:00 GMT+4 周六]
+        DateTime<ZonedDateTime> zdt02 = zonedDT.fill0(ChronoUnit.MONTHS);   // 2022-02-01 00:00:00.000000000 [Asia/Dubai +04:00 GMT+4 周二]
+        DateTime<ZonedDateTime> zdt03 = zonedDT.fill0(ChronoUnit.DAYS);     // 2022-02-10 00:00:00.000000000 [Asia/Dubai +04:00 GMT+4 周四]
+        DateTime<ZonedDateTime> zdt04 = zonedDT.fill0(ChronoUnit.HOURS);    // 2022-02-10 10:00:00.000000000 [Asia/Dubai +04:00 GMT+4 周四]
+        DateTime<ZonedDateTime> zdt05 = zonedDT.fill0(ChronoUnit.MINUTES);  // 2022-02-10 10:05:00.000000000 [Asia/Dubai +04:00 GMT+4 周四]
+        DateTime<ZonedDateTime> zdt06 = zonedDT.fill9(ChronoUnit.YEARS);    // 2022-12-31 23:59:59.999999999 [Asia/Dubai +04:00 GMT+4 周六]
+        DateTime<ZonedDateTime> zdt07 = zonedDT.fill9(ChronoUnit.MONTHS);   // 2022-02-28 23:59:59.999999999 [Asia/Dubai +04:00 GMT+4 周一]
+        DateTime<ZonedDateTime> zdt08 = zonedDT.fill9(ChronoUnit.DAYS);     // 2022-02-10 23:59:59.999999999 [Asia/Dubai +04:00 GMT+4 周四]
+        DateTime<ZonedDateTime> zdt09 = zonedDT.fill9(ChronoUnit.HOURS);    // 2022-02-10 10:59:59.999999999 [Asia/Dubai +04:00 GMT+4 周四]
+        DateTime<ZonedDateTime> zdt10 = zonedDT.fill9(ChronoUnit.MINUTES);  // 2022-02-10 10:05:59.999999999 [Asia/Dubai +04:00 GMT+4 周四]
+
+        System.out.println(dt01.dtDetail());
+        System.out.println(dt02.dtDetail());
+        System.out.println(dt03.dtDetail());
+        System.out.println(dt04.dtDetail());
+        System.out.println(dt05.dtDetail());
+        System.out.println(dt06.dtDetail());
+        System.out.println(dt07.dtDetail());
+        System.out.println(dt08.dtDetail());
+        System.out.println(dt09.dtDetail());
+        System.out.println(dt10.dtDetail());
+        System.out.println(dt11.dtDetail());
+        System.out.println(dt12.dtDetail());
+        System.out.println(dt21.dtDetail());
+        System.out.println(dt22.dtDetail());
+        System.out.println(dt23.dtDetail());
+        System.out.println(dt24.dtDetail());
+        System.out.println(dt25.dtDetail());
+        System.out.println(dt26.dtDetail());
+        System.out.println(dt27.dtDetail());
+        System.out.println(dt28.dtDetail());
+        System.out.println(dt29.dtDetail());
+        System.out.println(dt30.dtDetail());
+        System.out.println(dt31.dtDetail());
+        System.out.println(dt32.dtDetail());
+
+        System.out.println(dateTime1.dtDetail());
+        System.out.println(dateTime2.dtDetail());
+        System.out.println(dateTime3.dtDetail());
+        System.out.println(dateTime4.dtDetail());
+        System.out.println(dateTime5.dtDetail());
+        System.out.println(dateTime6.dtDetail());
+        System.out.println(dateTime7.dtDetail());
+        System.out.println(dateTime8.dtDetail());
+
+        System.out.println(zdt01.dtDetail());
+        System.out.println(zdt02.dtDetail());
+        System.out.println(zdt03.dtDetail());
+        System.out.println(zdt04.dtDetail());
+        System.out.println(zdt05.dtDetail());
+        System.out.println(zdt06.dtDetail());
+        System.out.println(zdt07.dtDetail());
+        System.out.println(zdt08.dtDetail());
+        System.out.println(zdt09.dtDetail());
+        System.out.println(zdt10.dtDetail());
+
+        assertEquals(dt01.dtDetail(), "2022-08-01 00:00:00.000000000 [周一]");
+        assertEquals(dt02.dtDetail(), "2022-08-01 00:00:00.000000000 [周一]");
+        assertEquals(dt03.dtDetail(), "2022-08-01 10:00:00.000000000 [周一]");
+        assertEquals(dt04.dtDetail(), "2022-08-01 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周一]");
+        assertEquals(dt05.dtDetail(), "2022-08-01 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周一]");
+        assertEquals(dt06.dtDetail(), "2022-08-01 10:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周一]");
+        assertEquals(dt07.dtDetail(), "2022-07-01 00:00:00.000000000 [周五]");
+        assertEquals(dt08.dtDetail(), "2022-07-10 00:00:00.000000000 [周日]");
+        assertEquals(dt09.dtDetail(), "2022-07-10 10:00:00.000000000 [周日]");
+        assertEquals(dt10.dtDetail(), "2022-07-01 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周五]");
+        assertEquals(dt11.dtDetail(), "2022-07-10 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周日]");
+        assertEquals(dt12.dtDetail(), "2022-07-10 10:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周日]");
+        assertEquals(dt21.dtDetail(), "2022-08-31 23:59:59.999999999 [周三]");
+        assertEquals(dt22.dtDetail(), "2022-08-01 23:59:59.999999999 [周一]");
+        assertEquals(dt23.dtDetail(), "2022-08-01 10:59:59.999999999 [周一]");
+        assertEquals(dt24.dtDetail(), "2022-08-31 23:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周三]");
+        assertEquals(dt25.dtDetail(), "2022-08-01 23:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周一]");
+        assertEquals(dt26.dtDetail(), "2022-08-01 10:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周一]");
+        assertEquals(dt27.dtDetail(), "2022-07-31 23:59:59.999999999 [周日]");
+        assertEquals(dt28.dtDetail(), "2022-07-10 23:59:59.999999999 [周日]");
+        assertEquals(dt29.dtDetail(), "2022-07-10 10:59:59.999999999 [周日]");
+        assertEquals(dt30.dtDetail(), "2022-07-31 23:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周日]");
+        assertEquals(dt31.dtDetail(), "2022-07-10 23:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周日]");
+        assertEquals(dt32.dtDetail(), "2022-07-10 10:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周日]");
+
+        assertEquals(dateTime1.dtDetail(), "2022-01-01 00:00:00.000000000 [周六]");
+        assertEquals(dateTime2.dtDetail(), "2022-01-01 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周六]");
+        assertEquals(dateTime3.dtDetail(), "2022-01-01 00:00:00.000000000 [周六]");
+        assertEquals(dateTime4.dtDetail(), "2022-01-01 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周六]");
+        assertEquals(dateTime5.dtDetail(), "2022-12-31 23:59:59.999999999 [周六]");
+        assertEquals(dateTime6.dtDetail(), "2022-12-31 23:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周六]");
+        assertEquals(dateTime7.dtDetail(), "2022-12-31 23:59:59.999999999 [周六]");
+        assertEquals(dateTime8.dtDetail(), "2022-12-31 23:59:59.999000000 [Asia/Shanghai +08:00 GMT+8 周六]");
+
+        assertEquals(zdt01.dtDetail(), "2022-01-01 00:00:00.000000000 [Asia/Dubai +04:00 GMT+4 周六]");
+        assertEquals(zdt02.dtDetail(), "2022-02-01 00:00:00.000000000 [Asia/Dubai +04:00 GMT+4 周二]");
+        assertEquals(zdt03.dtDetail(), "2022-02-10 00:00:00.000000000 [Asia/Dubai +04:00 GMT+4 周四]");
+        assertEquals(zdt04.dtDetail(), "2022-02-10 10:00:00.000000000 [Asia/Dubai +04:00 GMT+4 周四]");
+        assertEquals(zdt05.dtDetail(), "2022-02-10 10:05:00.000000000 [Asia/Dubai +04:00 GMT+4 周四]");
+        assertEquals(zdt06.dtDetail(), "2022-12-31 23:59:59.999999999 [Asia/Dubai +04:00 GMT+4 周六]");
+        assertEquals(zdt07.dtDetail(), "2022-02-28 23:59:59.999999999 [Asia/Dubai +04:00 GMT+4 周一]");
+        assertEquals(zdt08.dtDetail(), "2022-02-10 23:59:59.999999999 [Asia/Dubai +04:00 GMT+4 周四]");
+        assertEquals(zdt09.dtDetail(), "2022-02-10 10:59:59.999999999 [Asia/Dubai +04:00 GMT+4 周四]");
+        assertEquals(zdt10.dtDetail(), "2022-02-10 10:05:59.999999999 [Asia/Dubai +04:00 GMT+4 周四]");
+
+    }
 }

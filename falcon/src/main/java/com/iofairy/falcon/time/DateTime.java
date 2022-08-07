@@ -16,16 +16,15 @@
 package com.iofairy.falcon.time;
 
 import com.iofairy.falcon.range.IntervalType;
-import com.iofairy.falcon.util.Numbers;
 import com.iofairy.top.G;
 import com.iofairy.top.S;
 import com.iofairy.tuple.Tuple;
 import com.iofairy.tuple.Tuple2;
 
 import java.io.Serializable;
-import java.math.RoundingMode;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -361,22 +360,10 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
             return DateTime.from((T) zdt.toInstant());
         }
         if (dateTime instanceof Calendar) {
-            if (unit == ChronoUnit.MICROS) {
-                amount = Numbers.round(amount, -3, RoundingMode.DOWN).longValue();
-            }
-            if (unit == ChronoUnit.NANOS) {
-                amount = Numbers.round(amount, -6, RoundingMode.DOWN).longValue();
-            }
             ZonedDateTime zdt = zonedDateTime.plus(amount, unit);
             return DateTime.from((T) toCalendar((Calendar) dateTime, zdt));
         }
         if (dateTime instanceof Date) {
-            if (unit == ChronoUnit.MICROS) {
-                amount = Numbers.round(amount, -3, RoundingMode.DOWN).longValue();
-            }
-            if (unit == ChronoUnit.NANOS) {
-                amount = Numbers.round(amount, -6, RoundingMode.DOWN).longValue();
-            }
             ZonedDateTime zdt = zonedDateTime.plus(amount, unit);
             return DateTime.from((T) Date.from(zdt.toInstant()));
         }
@@ -468,22 +455,10 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
             return DateTime.from((T) zdt.toInstant());
         }
         if (dateTime instanceof Calendar) {
-            if (unit == ChronoUnit.MICROS) {
-                amount = Numbers.round(amount, -3, RoundingMode.DOWN).longValue();
-            }
-            if (unit == ChronoUnit.NANOS) {
-                amount = Numbers.round(amount, -6, RoundingMode.DOWN).longValue();
-            }
             ZonedDateTime zdt = zonedDateTime.minus(amount, unit);
             return DateTime.from((T) toCalendar((Calendar) dateTime, zdt));
         }
         if (dateTime instanceof Date) {
-            if (unit == ChronoUnit.MICROS) {
-                amount = Numbers.round(amount, -3, RoundingMode.DOWN).longValue();
-            }
-            if (unit == ChronoUnit.NANOS) {
-                amount = Numbers.round(amount, -6, RoundingMode.DOWN).longValue();
-            }
             ZonedDateTime zdt = zonedDateTime.minus(amount, unit);
             return DateTime.from((T) Date.from(zdt.toInstant()));
         }
@@ -760,6 +735,28 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     }
 
     /**
+     * 保留所提供的chronoUnit以及比chronoUnit大的单位的值，填充比 chronoUnit 小的单位的值为 0。
+     *
+     * @param chronoUnit 时间单位
+     * @return DateTime
+     * @since 0.3.1
+     */
+    public DateTime<T> fill0(ChronoUnit chronoUnit) {
+        return round(chronoUnit, RoundingDT.FLOOR);
+    }
+
+    /**
+     * 保留所提供的chronoUnit以及比chronoUnit大的单位的值，填充比 chronoUnit 小的单位的值为 所允许的最大值。
+     *
+     * @param chronoUnit 时间单位
+     * @return DateTime
+     * @since 0.3.1
+     */
+    public DateTime<T> fill9(ChronoUnit chronoUnit) {
+        return round(chronoUnit, RoundingDT.FLOOR).plus(1, chronoUnit).minusNanos(1);
+    }
+
+    /**
      * 获取某个月的总天数
      *
      * @return 当前月的总天数
@@ -789,13 +786,70 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         return dateTime instanceof LocalDateTime ? localDateTime.format(formatter) : zonedDateTime.format(formatter);
     }
 
+    public static DateTime<LocalDateTime> parse(CharSequence text) {
+        return parse(text, "y-M-d H:m:s[.SSS][.SS][.S]");
+    }
+
+    public static DateTime<LocalDateTime> parse(CharSequence text, String dtPattern) {
+        return parse(text, DateTimePattern.getDTF(dtPattern));
+    }
+
+    /**
+     * Obtains an instance of {@code DateTime<LocalDateTime>} from a text string using a specific formatter.
+     * <p>
+     * The text is parsed using the formatter, returning a date-time.
+     *
+     * @param text      the text to parse, not null
+     * @param formatter the formatter to use, not null
+     * @return DateTime of LocalDateTime
+     * @throws DateTimeParseException if the text cannot be parsed
+     * @since 0.3.1
+     */
+    public static DateTime<LocalDateTime> parse(CharSequence text, DateTimeFormatter formatter) {
+        return DateTime.from(LocalDateTime.parse(text, formatter));
+    }
+
+    public static DateTime<Date> parseDate(CharSequence text) {
+        return parseDate(text, DateTimePattern.getDTF("y-M-d H:m:s[.SSS][.SS][.S]"), TZ.DEFAULT_ZONE);
+    }
+
+    public static DateTime<Date> parseDate(CharSequence text, ZoneId zoneId) {
+        return parseDate(text, DateTimePattern.getDTF("y-M-d H:m:s[.SSS][.SS][.S]"), zoneId);
+    }
+
+    public static DateTime<Date> parseDate(CharSequence text, String dtPattern) {
+        return parseDate(text, DateTimePattern.getDTF(dtPattern), TZ.DEFAULT_ZONE);
+    }
+
+    public static DateTime<Date> parseDate(CharSequence text, String dtPattern, ZoneId zoneId) {
+        return parseDate(text, DateTimePattern.getDTF(dtPattern), zoneId);
+    }
+
+    public static DateTime<Date> parseDate(CharSequence text, DateTimeFormatter formatter) {
+        return parseDate(text, formatter, TZ.DEFAULT_ZONE);
+    }
+
+    /**
+     * 从 时间格式串 中获取 {@code DateTime<Date>}
+     *
+     * @param text      时间格式串
+     * @param formatter formatter
+     * @param zoneId    时间格式串所属的时区。null 则为 默认时区。
+     * @return DateTime&lt;Date&gt;
+     * @since 0.3.1
+     */
+    public static DateTime<Date> parseDate(CharSequence text, DateTimeFormatter formatter, ZoneId zoneId) {
+        LocalDateTime ldt = LocalDateTime.parse(text, formatter);
+        ZonedDateTime zdt = ldt.atZone(zoneId == null ? TZ.DEFAULT_ZONE : zoneId);
+        return DateTime.from(Date.from(zdt.toInstant()));
+    }
+
     @Override
     public long until(Temporal endExclusive, TemporalUnit unit) {
         OffsetDateTime offsetDateTime = toOffsetDT(null);
         OffsetDateTime endOffsetDateTime = DateTime.of(endExclusive).toOffsetDT(offsetDateTime.getOffset());
         return offsetDateTime.until(endOffsetDateTime, unit);
     }
-
 
     @Override
     public boolean isSupported(TemporalUnit unit) {
@@ -827,6 +881,14 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
     public boolean isAfter(DateTime<?> otherDT) {
         return this.compareTo(otherDT) > 0;
+    }
+
+    public boolean isBeforeOrEquals(DateTime<?> otherDT) {
+        return this.compareTo(otherDT) <= 0;
+    }
+
+    public boolean isAfterOrEquals(DateTime<?> otherDT) {
+        return this.compareTo(otherDT) >= 0;
     }
 
     @Override
