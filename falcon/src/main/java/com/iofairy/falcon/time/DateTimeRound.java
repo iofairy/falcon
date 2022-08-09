@@ -220,7 +220,7 @@ class DateTimeRound {
         }
         roundingDT = roundingDT == null ? RoundingDT.FLOOR : roundingDT;
 
-        Calendar newCalendar = DateTimes.cloneCalendar(calendar);
+        Calendar newCalendar = DateTimes.clone(calendar);
         switch (chronoUnit) {
             case YEARS:
                 switch (roundingDT) {
@@ -353,7 +353,7 @@ class DateTimeRound {
         checkValidAmountUnit(chronoUnit, amountUnit);
         final int newAmountUnit = Math.abs(amountUnit);
 
-        Calendar newCalendar = DateTimes.cloneCalendar(calendar);
+        Calendar newCalendar = DateTimes.clone(calendar);
         if (newAmountUnit == 0) {
             switch (chronoUnit) {
                 case HOURS:

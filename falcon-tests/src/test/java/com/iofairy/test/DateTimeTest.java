@@ -1,6 +1,6 @@
 package com.iofairy.test;
 
-import com.iofairy.falcon.range.IntervalType;
+import com.iofairy.except.UnexpectedParameterException;
 import com.iofairy.falcon.time.*;
 import com.iofairy.top.G;
 import org.junit.jupiter.api.Test;
@@ -10,6 +10,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static com.iofairy.falcon.range.IntervalType.*;
 
 /**
  * @author GG
@@ -911,22 +912,22 @@ public class DateTimeTest {
         DateTime<OffsetDateTime> dt12 = DateTime.of(odt2);      // 2022-02-28 16:00:10.900000000 [+00:00 GMT 周一] --> 2022-03-01 00:00:10.900000000 [Asia/Shanghai +08:00 GMT+8 周二]
         DateTime<Calendar> dt13 = DateTime.of(calendar2);       // 2022-02-28 11:00:10.700000000 [America/New_York -05:00 GMT-5 周一] --> 2022-03-01 00:00:10.700000000 [Asia/Shanghai +08:00 GMT+8 周二]
 
-        List<Instant> instants01 = dt01.datesFromRange(dt02, 3, ChronoUnit.DAYS, IntervalType.CLOSED);
-        List<Instant> instants02 = dt01.datesFromRange(dt03, 3, ChronoUnit.DAYS, IntervalType.CLOSED);
-        List<Instant> instants03 = dt01.datesFromRange(dt02, 3, ChronoUnit.DAYS, IntervalType.CLOSED_OPEN);
-        List<Instant> instants04 = dt01.datesFromRange(dt03, 3, ChronoUnit.DAYS, IntervalType.CLOSED_OPEN);
-        List<Instant> instants05 = dt01.datesFromRange(dt02, 3, ChronoUnit.DAYS, IntervalType.OPEN);
-        List<Instant> instants06 = dt01.datesFromRange(dt03, 3, ChronoUnit.DAYS, IntervalType.OPEN);
-        List<Instant> instants07 = dt01.datesFromRange(dt02, 3, ChronoUnit.DAYS, IntervalType.OPEN_CLOSED);
-        List<Instant> instants08 = dt01.datesFromRange(dt03, 3, ChronoUnit.DAYS, IntervalType.OPEN_CLOSED);
-        List<OffsetDateTime> offsetDateTimes01 = dt02.datesFromRange(dt01, 3, ChronoUnit.DAYS, IntervalType.CLOSED);
-        List<Calendar> calendars01 = dt03.datesFromRange(dt01, 3, ChronoUnit.DAYS, IntervalType.CLOSED);
-        List<OffsetDateTime> offsetDateTimes02 = dt02.datesFromRange(dt01, 3, ChronoUnit.DAYS, IntervalType.CLOSED_OPEN);
-        List<Calendar> calendars02 = dt03.datesFromRange(dt01, 3, ChronoUnit.DAYS, IntervalType.CLOSED_OPEN);
-        List<OffsetDateTime> offsetDateTimes03 = dt02.datesFromRange(dt01, 3, ChronoUnit.DAYS, IntervalType.OPEN);
-        List<Calendar> calendars03 = dt03.datesFromRange(dt01, 3, ChronoUnit.DAYS, IntervalType.OPEN);
-        List<OffsetDateTime> offsetDateTimes04 = dt02.datesFromRange(dt01, 3, ChronoUnit.DAYS, IntervalType.OPEN_CLOSED);
-        List<Calendar> calendars04 = dt03.datesFromRange(dt01, 3, ChronoUnit.DAYS, IntervalType.OPEN_CLOSED);
+        List<Instant> instants01 = dt01.datesFromRange(dt02, 3, ChronoUnit.DAYS, CLOSED);
+        List<Instant> instants02 = dt01.datesFromRange(dt03, 3, ChronoUnit.DAYS, CLOSED);
+        List<Instant> instants03 = dt01.datesFromRange(dt02, 3, ChronoUnit.DAYS, CLOSED_OPEN);
+        List<Instant> instants04 = dt01.datesFromRange(dt03, 3, ChronoUnit.DAYS, CLOSED_OPEN);
+        List<Instant> instants05 = dt01.datesFromRange(dt02, 3, ChronoUnit.DAYS, OPEN);
+        List<Instant> instants06 = dt01.datesFromRange(dt03, 3, ChronoUnit.DAYS, OPEN);
+        List<Instant> instants07 = dt01.datesFromRange(dt02, 3, ChronoUnit.DAYS, OPEN_CLOSED);
+        List<Instant> instants08 = dt01.datesFromRange(dt03, 3, ChronoUnit.DAYS, OPEN_CLOSED);
+        List<OffsetDateTime> offsetDateTimes01 = dt02.datesFromRange(dt01, 3, ChronoUnit.DAYS, CLOSED);
+        List<Calendar> calendars01 = dt03.datesFromRange(dt01, 3, ChronoUnit.DAYS, CLOSED);
+        List<OffsetDateTime> offsetDateTimes02 = dt02.datesFromRange(dt01, 3, ChronoUnit.DAYS, CLOSED_OPEN);
+        List<Calendar> calendars02 = dt03.datesFromRange(dt01, 3, ChronoUnit.DAYS, CLOSED_OPEN);
+        List<OffsetDateTime> offsetDateTimes03 = dt02.datesFromRange(dt01, 3, ChronoUnit.DAYS, OPEN);
+        List<Calendar> calendars03 = dt03.datesFromRange(dt01, 3, ChronoUnit.DAYS, OPEN);
+        List<OffsetDateTime> offsetDateTimes04 = dt02.datesFromRange(dt01, 3, ChronoUnit.DAYS, OPEN_CLOSED);
+        List<Calendar> calendars04 = dt03.datesFromRange(dt01, 3, ChronoUnit.DAYS, OPEN_CLOSED);
 
         System.out.println(G.toString(instants01));
         System.out.println(G.toString(instants02));
@@ -945,22 +946,22 @@ public class DateTimeTest {
         System.out.println(G.toString(offsetDateTimes04));
         System.out.println(G.toString(calendars04));
 
-        List<Instant> instants11 = dt11.datesFromRange(dt12, -90, ChronoUnit.SECONDS, IntervalType.CLOSED);
-        List<Instant> instants12 = dt11.datesFromRange(dt13, -90, ChronoUnit.SECONDS, IntervalType.CLOSED);
-        List<Instant> instants13 = dt11.datesFromRange(dt12, -90, ChronoUnit.SECONDS, IntervalType.CLOSED_OPEN);
-        List<Instant> instants14 = dt11.datesFromRange(dt13, -90, ChronoUnit.SECONDS, IntervalType.CLOSED_OPEN);
-        List<Instant> instants15 = dt11.datesFromRange(dt12, -90, ChronoUnit.SECONDS, IntervalType.OPEN);
-        List<Instant> instants16 = dt11.datesFromRange(dt13, -90, ChronoUnit.SECONDS, IntervalType.OPEN);
-        List<Instant> instants17 = dt11.datesFromRange(dt12, -90, ChronoUnit.SECONDS, IntervalType.OPEN_CLOSED);
-        List<Instant> instants18 = dt11.datesFromRange(dt13, -90, ChronoUnit.SECONDS, IntervalType.OPEN_CLOSED);
-        List<OffsetDateTime> offsetDateTimes11 = dt12.datesFromRange(dt11, -90, ChronoUnit.SECONDS, IntervalType.CLOSED);
-        List<Calendar> calendars11 = dt13.datesFromRange(dt11, -90, ChronoUnit.SECONDS, IntervalType.CLOSED);
-        List<OffsetDateTime> offsetDateTimes12 = dt12.datesFromRange(dt11, -90, ChronoUnit.SECONDS, IntervalType.CLOSED_OPEN);
-        List<Calendar> calendars12 = dt13.datesFromRange(dt11, -90, ChronoUnit.SECONDS, IntervalType.CLOSED_OPEN);
-        List<OffsetDateTime> offsetDateTimes13 = dt12.datesFromRange(dt11, -90, ChronoUnit.SECONDS, IntervalType.OPEN);
-        List<Calendar> calendars13 = dt13.datesFromRange(dt11, -90, ChronoUnit.SECONDS, IntervalType.OPEN);
-        List<OffsetDateTime> offsetDateTimes14 = dt12.datesFromRange(dt11, -90, ChronoUnit.SECONDS, IntervalType.OPEN_CLOSED);
-        List<Calendar> calendars14 = dt13.datesFromRange(dt11, -90, ChronoUnit.SECONDS, IntervalType.OPEN_CLOSED);
+        List<Instant> instants11 = dt11.datesFromRange(dt12, -90, ChronoUnit.SECONDS, CLOSED);
+        List<Instant> instants12 = dt11.datesFromRange(dt13, -90, ChronoUnit.SECONDS, CLOSED);
+        List<Instant> instants13 = dt11.datesFromRange(dt12, -90, ChronoUnit.SECONDS, CLOSED_OPEN);
+        List<Instant> instants14 = dt11.datesFromRange(dt13, -90, ChronoUnit.SECONDS, CLOSED_OPEN);
+        List<Instant> instants15 = dt11.datesFromRange(dt12, -90, ChronoUnit.SECONDS, OPEN);
+        List<Instant> instants16 = dt11.datesFromRange(dt13, -90, ChronoUnit.SECONDS, OPEN);
+        List<Instant> instants17 = dt11.datesFromRange(dt12, -90, ChronoUnit.SECONDS, OPEN_CLOSED);
+        List<Instant> instants18 = dt11.datesFromRange(dt13, -90, ChronoUnit.SECONDS, OPEN_CLOSED);
+        List<OffsetDateTime> offsetDateTimes11 = dt12.datesFromRange(dt11, -90, ChronoUnit.SECONDS, CLOSED);
+        List<Calendar> calendars11 = dt13.datesFromRange(dt11, -90, ChronoUnit.SECONDS, CLOSED);
+        List<OffsetDateTime> offsetDateTimes12 = dt12.datesFromRange(dt11, -90, ChronoUnit.SECONDS, CLOSED_OPEN);
+        List<Calendar> calendars12 = dt13.datesFromRange(dt11, -90, ChronoUnit.SECONDS, CLOSED_OPEN);
+        List<OffsetDateTime> offsetDateTimes13 = dt12.datesFromRange(dt11, -90, ChronoUnit.SECONDS, OPEN);
+        List<Calendar> calendars13 = dt13.datesFromRange(dt11, -90, ChronoUnit.SECONDS, OPEN);
+        List<OffsetDateTime> offsetDateTimes14 = dt12.datesFromRange(dt11, -90, ChronoUnit.SECONDS, OPEN_CLOSED);
+        List<Calendar> calendars14 = dt13.datesFromRange(dt11, -90, ChronoUnit.SECONDS, OPEN_CLOSED);
 
         System.out.println("============================================");
         System.out.println(G.toString(instants11));
@@ -1196,5 +1197,45 @@ public class DateTimeTest {
         assertEquals(zdt09.dtDetail(), "2022-02-10 10:59:59.999999999 [Asia/Dubai +04:00 GMT+4 周四]");
         assertEquals(zdt10.dtDetail(), "2022-02-10 10:05:59.999999999 [Asia/Dubai +04:00 GMT+4 周四]");
 
+    }
+
+    @Test
+    public void testIn() {
+        DateTime<LocalDateTime> ldt1 = DateTime.parse("2022-8-06 9:10:21.689");
+        DateTime<LocalDateTime> ldt2 = DateTime.parse("2022-8-06 11:10:21.689");
+        DateTime<LocalDateTime> ldt3 = DateTime.parse("2022-8-06 10:10:21.689");
+        DateTime<Date> date1 = DateTime.parseDate("2022-8-06 9:10:21.689");
+        DateTime<Date> date2 = DateTime.parseDate("2022-8-06 11:10:21.689");
+        DateTime<Date> date3 = DateTime.parseDate("2022-8-06 10:10:21.689");
+
+        boolean in01 = ldt1.in(date1, ldt2, CLOSED);            // true
+        boolean in02 = ldt1.in(date1, ldt2, CLOSED_OPEN);       // true
+        boolean in03 = ldt1.in(date1, ldt2, OPEN);              // false
+        boolean in04 = ldt1.in(date1, ldt2, OPEN_CLOSED);       // false
+        boolean in05 = date2.in(ldt3, ldt2, CLOSED);            // true
+        boolean in06 = date2.in(ldt3, ldt2, CLOSED_OPEN);       // false
+        boolean in07 = date2.in(ldt3, ldt2, OPEN);              // false
+        boolean in08 = date2.in(ldt3, ldt2, OPEN_CLOSED);       // true
+        boolean in09 = date3.in(ldt1, ldt2, CLOSED);            // true
+        boolean in10 = date3.in(ldt1, ldt2, CLOSED_OPEN);       // true
+        boolean in11 = date3.in(ldt1, ldt2, OPEN);              // true
+        boolean in12 = date3.in(ldt1, ldt2, OPEN_CLOSED);       // true
+
+        assertTrue(in01);
+        assertTrue(in02);
+        assertFalse(in03);
+        assertFalse(in04);
+        assertTrue(in05);
+        assertFalse(in06);
+        assertFalse(in07);
+        assertTrue(in08);
+        assertTrue(in09);
+        assertTrue(in10);
+        assertTrue(in11);
+        assertTrue(in12);
+
+        assertThrows(UnexpectedParameterException.class, () -> ldt1.in(date2, ldt2, CLOSED_OPEN));
+        assertThrows(UnexpectedParameterException.class, () -> ldt1.in(date2, ldt3, CLOSED_OPEN));
+        assertThrows(UnexpectedParameterException.class, () -> ldt1.in(date1, ldt1, CLOSED_OPEN));
     }
 }

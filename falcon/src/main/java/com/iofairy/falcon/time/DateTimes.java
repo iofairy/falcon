@@ -210,9 +210,9 @@ public final class DateTimes {
     public static Calendar toCalendar(Calendar calendar, ZoneId zoneId) {
         if (calendar == null) return null;
         if (zoneId == null) {
-            return cloneCalendar(calendar);
+            return clone(calendar);
         } else {
-            Calendar newCalendar = cloneCalendar(calendar);
+            Calendar newCalendar = clone(calendar);
             newCalendar.setTimeZone(TimeZone.getTimeZone(zoneId));
             return newCalendar;
         }
@@ -265,9 +265,21 @@ public final class DateTimes {
      * @return Calendar
      * @since 0.3.0
      */
-    public static Calendar cloneCalendar(Calendar calendar) {
+    public static Calendar clone(Calendar calendar) {
         if (calendar == null) return null;
         return (Calendar) calendar.clone();
+    }
+
+    /**
+     * 克隆一个 Date
+     *
+     * @param date date
+     * @return Date
+     * @since 0.3.3
+     */
+    public static Date clone(Date date) {
+        if (date == null) return null;
+        return (Date) date.clone();
     }
 
     /**
@@ -364,17 +376,45 @@ public final class DateTimes {
      * @since 0.3.0
      */
     public static List<String> hoursOfDay(int withMode, String separator) {
-        if (withMode == 0) return DTConst.HHs;
+        return hoursOfDay("", withMode, separator);
+    }
+
+    /**
+     * 使用指定格式返回一天中的24小时
+     *
+     * @param day      指定的天
+     * @param withMode 0: 只返回小时；1：返回小时并在末尾拼接上00分钟；2：返回小时并在末尾拼接00分钟和00秒
+     * @return 一天中的小时
+     * @since 0.3.3
+     */
+    public static List<String> hoursOfDay(String day, int withMode) {
+        return hoursOfDay(day, withMode, "");
+    }
+
+    /**
+     * 使用指定格式返回一天中的24小时
+     *
+     * @param day       指定的天
+     * @param withMode  0: 只返回小时；1：返回小时并在末尾拼接上00分钟；2：返回小时并在末尾拼接00分钟和00秒
+     * @param separator 当 withMode 为 1，2时，需要指定分隔符。如果为 {@code null}，则默认采用 {@code ""}
+     * @return 一天中的小时
+     * @since 0.3.3
+     */
+    public static List<String> hoursOfDay(String day, int withMode, String separator) {
+        if (day == null) day = "";
         if (separator == null) separator = "";
         List<String> hhs = new ArrayList<>();
-        if (withMode == 1) {
-            for (String hh : DTConst.HHs) {
-                hhs.add(hh + separator + "00");
-            }
-        } else {
-            for (String hh : DTConst.HHs) {
-                hhs.add(hh + separator + "00" + separator + "00");
-            }
+
+        switch (withMode) {
+            case 0:
+                if (S.isEmpty(day)) return DTConst.HHs;
+                for (String hh : DTConst.HHs) hhs.add(day + hh);
+                break;
+            case 1:
+                for (String hh : DTConst.HHs) hhs.add(day + hh + separator + "00");
+                break;
+            default:
+                for (String hh : DTConst.HHs) hhs.add(day + hh + separator + "00" + separator + "00");
         }
         return hhs;
     }

@@ -15,6 +15,7 @@
  */
 package com.iofairy.falcon.time;
 
+import com.iofairy.except.UnexpectedParameterException;
 import com.iofairy.falcon.range.IntervalType;
 import com.iofairy.top.G;
 import com.iofairy.top.S;
@@ -29,11 +30,14 @@ import java.time.temporal.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.iofairy.falcon.range.IntervalType.CLOSED;
 
 /**
  * The {@code DateTime} class wraps a value of the {@link Date} or {@link Calendar} or {@link Instant}
  * or {@link LocalDateTime} or {@link OffsetDateTime} or {@link ZonedDateTime} type. <br>
+ *
+ * <p>
+ * This class is <b>immutable</b> and <b>thread-safe.</b>
+ * </p>
  *
  * @param <T> The type of DateTime's value
  * @since 0.3.0
@@ -41,7 +45,7 @@ import static com.iofairy.falcon.range.IntervalType.CLOSED;
 public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializable {
     private static final long serialVersionUID = 6206615563566L;
 
-    public final T dateTime;
+    private final T dateTime;
     /**
      * The local date-time.
      */
@@ -89,7 +93,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
             }
         }
 
-        this.dateTime = dateTime;
+        this.dateTime = getDateTime(dateTime);
 
         Tuple2<Instant, ZonedDateTime> zdtAndInstant = toZDTAndInstant(dateTime);
         this.instant = zdtAndInstant._1;
@@ -108,13 +112,24 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         return new DateTime<>(dateTime, false);
     }
 
+    @SuppressWarnings("unchecked")
+    private T getDateTime(T dt) {
+        if (dt instanceof Date) {
+            return (T) DateTimes.clone((Date) dt);
+        } else if (dt instanceof Calendar) {
+            return (T) DateTimes.clone((Calendar) dt);
+        } else {
+            return dt;
+        }
+    }
+
     /**
-     * Get value
+     * Get the <b>copied</b> {@link DateTime#dateTime} value.
      *
      * @return dateTime
      */
     public T get() {
-        return dateTime;
+        return getDateTime(dateTime);
     }
 
     public LocalDateTime getLocalDateTime() {
@@ -271,12 +286,12 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      */
     public Calendar toCalendar(ZoneId zoneId) {
         if (zoneId == null) {
-            if (dateTime instanceof Calendar) return DateTimes.cloneCalendar((Calendar) dateTime);
+            if (dateTime instanceof Calendar) return DateTimes.clone((Calendar) dateTime);
             return DateTimes.toCalendar(zonedDateTime);
         }
 
         if (dateTime instanceof Calendar) {
-            Calendar calendar = DateTimes.cloneCalendar((Calendar) dateTime);
+            Calendar calendar = DateTimes.clone((Calendar) dateTime);
             calendar.setTimeZone(TimeZone.getTimeZone(zoneId));
             return calendar;
         }
@@ -731,7 +746,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @return 每次偏移后的所有时间列表
      */
     public List<T> datesFromRange(DateTime<?> toDateTime, ChronoUnit chronoUnit) {
-        return datesFromRange(toDateTime, 1, chronoUnit, CLOSED);
+        return datesFromRange(toDateTime, 1, chronoUnit, IntervalType.CLOSED);
     }
 
     /**
@@ -891,6 +906,31 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         return this.compareTo(otherDT) >= 0;
     }
 
+    /**
+     * 判断当前 DateTime 是否在提供的两个 DateTime 之间
+     *
+     * @param startDT      开始 DateTime
+     * @param endDT        结束 DateTime
+     * @param intervalType 区间类型。
+     * @return 当前 DateTime 在提供的两个 DateTime 之间，则返回 {@code true}，否则返回 {@code false}
+     * @since 0.3.3
+     */
+    public boolean in(DateTime<?> startDT, DateTime<?> endDT, IntervalType intervalType) {
+        if (G.hasNull(startDT, endDT, intervalType)) throw new NullPointerException("Parameters `startDT`, `endDT`, `intervalType` must be non-null!");
+        if (startDT.isAfterOrEquals(endDT)) throw new UnexpectedParameterException("Parameter `startDT` must be before `endDT`! ");
+
+        switch (intervalType) {
+            case OPEN:
+                return this.isAfter(startDT) && this.isBefore(endDT);
+            case CLOSED:
+                return this.isAfterOrEquals(startDT) && this.isBeforeOrEquals(endDT);
+            case OPEN_CLOSED:
+                return this.isAfter(startDT) && this.isBeforeOrEquals(endDT);
+            default:  // CLOSED_OPEN
+                return this.isAfterOrEquals(startDT) && this.isBefore(endDT);
+        }
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
@@ -918,15 +958,13 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @return 时间格式化输出
      */
     public String dtDetail() {
-        if (dateTime instanceof Date) return G.dtDetail((Date) dateTime);
-        if (dateTime instanceof Calendar) return G.dtDetail((Calendar) dateTime);
+        if (dateTime instanceof Date || dateTime instanceof Calendar) return G.dtDetail(zonedDateTime);
         return G.dtDetail((Temporal) dateTime);
     }
 
     @Override
     public String toString() {
-        if (dateTime instanceof Date) return G.dtSimple((Date) dateTime);
-        if (dateTime instanceof Calendar) return G.dtSimple((Calendar) dateTime);
+        if (dateTime instanceof Date || dateTime instanceof Calendar) return G.dtSimple(zonedDateTime);
         return G.dtSimple((Temporal) dateTime);
     }
 

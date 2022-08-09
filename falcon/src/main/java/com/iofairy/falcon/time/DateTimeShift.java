@@ -58,6 +58,7 @@ class DateTimeShift {
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS.stream().map(ChronoUnit::toString).collect(Collectors.joining(", ")) + "] is supported for `chronoUnit` parameter!");
         }
 
+        fromDate = DateTimes.clone(fromDate);
         List<Date> dates = new ArrayList<>();
         if (includeCurrentTime) dates.add(fromDate);
 
@@ -120,7 +121,7 @@ class DateTimeShift {
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS.stream().map(ChronoUnit::toString).collect(Collectors.joining(", ")) + "] is supported for `chronoUnit` parameter!");
         }
 
-        Calendar calendar = DateTimes.cloneCalendar(fromCalendar);
+        Calendar calendar = DateTimes.clone(fromCalendar);
         List<Calendar> dates = new ArrayList<>();
         if (includeCurrentTime) dates.add(calendar);
 
@@ -129,7 +130,7 @@ class DateTimeShift {
         amountUnit = shiftTimes < 0 ? -Math.abs(amountUnit) : Math.abs(amountUnit);
         long abs = Math.abs(shiftTimes);
         for (long i = 0; i < abs; i++) {
-            calendar = DateTimes.cloneCalendar(calendar);
+            calendar = DateTimes.clone(calendar);
             addAmountToCalendar(calendar, amountUnit, chronoUnit);
             dates.add(calendar);
         }
@@ -257,6 +258,8 @@ class DateTimeShift {
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS.stream().map(ChronoUnit::toString).collect(Collectors.joining(", ")) + "] is supported for `chronoUnit` parameter!");
         }
 
+        fromDate = DateTimes.clone(fromDate);
+        toDate = DateTimes.clone(toDate);
         if (intervalType == null) intervalType = CLOSED;
         List<Date> dates = new ArrayList<>();
         if (intervalType.isLeftClose()) dates.add(fromDate);
@@ -339,7 +342,7 @@ class DateTimeShift {
         }
 
         if (intervalType == null) intervalType = CLOSED;
-        Calendar calendar = DateTimes.cloneCalendar(fromCalendar);
+        Calendar calendar = DateTimes.clone(fromCalendar);
         List<Calendar> dates = new ArrayList<>();
         if (intervalType.isLeftClose()) dates.add(fromCalendar);
         if (amountUnit == 0) return dates;
@@ -355,7 +358,7 @@ class DateTimeShift {
 
         long maxIndex = Math.abs(shiftTimes) - 1;
         for (long i = 0; ; i++) {
-            calendar = DateTimes.cloneCalendar(calendar);
+            calendar = DateTimes.clone(calendar);
             addAmountToCalendar(calendar, amountUnit, chronoUnit);
             if (i == maxIndex) {
                 if (isExactDivision) {
