@@ -18,6 +18,8 @@ package com.iofairy.falcon.time;
 import com.iofairy.tcf.Try;
 import com.iofairy.top.G;
 import com.iofairy.top.S;
+import com.iofairy.tuple.Tuple;
+import com.iofairy.tuple.Tuple2;
 
 import java.math.BigInteger;
 import java.time.*;
@@ -365,6 +367,42 @@ public final class DateTimes {
         if (temporal instanceof YearMonth) return ((YearMonth) temporal).lengthOfMonth();
 
         return DateTime.of(temporal).daysOfMonth();
+    }
+
+    /**
+     * 获取两个星期几之间相差的天数。
+     *
+     * @param startDayOfWeek 开始的星期几
+     * @param endDayOfWeek   结束的星期几
+     * @return 返回 {@code Tuple2(previousDays, nextDays)} 值。<br>
+     * Tuple2 第一个值为：startDayOfWeek 与其<b>前面一个</b> endDayOfWeek 相差的天数；<br>
+     * Tuple2 第二个值为：startDayOfWeek 与其<b>后面一个</b> endDayOfWeek 相差的天数。
+     * @since 0.3.4
+     */
+    public static Tuple2<Integer, Integer> daysBetween(DayOfWeek startDayOfWeek, DayOfWeek endDayOfWeek) {
+        if (G.hasNull(startDayOfWeek, endDayOfWeek))
+            throw new NullPointerException("Parameters `startDayOfWeek`, `endDayOfWeek` must be non-null!");
+
+        int startDayOfWeekValue = startDayOfWeek.getValue();
+        int endDayOfWeekValue = endDayOfWeek.getValue();
+        if (startDayOfWeekValue < endDayOfWeekValue) {
+            return Tuple.of(startDayOfWeekValue - (endDayOfWeekValue - 7), endDayOfWeekValue - startDayOfWeekValue);
+        } else if (startDayOfWeekValue > endDayOfWeekValue) {
+            return Tuple.of(startDayOfWeekValue - endDayOfWeekValue, (endDayOfWeekValue + 7) - startDayOfWeekValue);
+        } else {
+            return Tuple.of(0, 0);
+        }
+    }
+
+    /**
+     * 通过每周的第一天，计算每周的最后一天
+     *
+     * @param firstDayOfWeek 每周第一天
+     * @return 每周最后一天
+     * @since 0.3.4
+     */
+    public static DayOfWeek getLastDayOfWeek(DayOfWeek firstDayOfWeek) {
+        return DayOfWeek.of(((firstDayOfWeek.getValue() + 5) % DayOfWeek.values().length) + 1);
     }
 
     /**

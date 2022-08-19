@@ -1238,4 +1238,138 @@ public class DateTimeTest {
         assertThrows(UnexpectedParameterException.class, () -> ldt1.in(date2, ldt3, CLOSED_OPEN));
         assertThrows(UnexpectedParameterException.class, () -> ldt1.in(date1, ldt1, CLOSED_OPEN));
     }
+
+    @Test
+    public void testInThisWeek() {
+        DateTime<Date> dt1 = DateTime.parseDate("2021-12-27 06:01:50", "yyyy-MM-dd HH:mm:ss");  // 星期一
+        DateTime<Date> dt2 = DateTime.parseDate("2021-12-29 06:01:50", "yyyy-MM-dd HH:mm:ss");  // 星期三
+        DateTime<Date> dt3 = DateTime.parseDate("2022-01-01 06:01:50", "yyyy-MM-dd HH:mm:ss");  // 星期六
+        DateTime<Date> dt4 = DateTime.parseDate("2022-01-02 06:01:50", "yyyy-MM-dd HH:mm:ss");  // 星期日
+
+        DateTime<Date> dt01 = dt1.dtInThisWeek(DayOfWeek.TUESDAY);              // 2021-12-28 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]
+        DateTime<Date> dt02 = dt1.dtInThisWeek(DayOfWeek.THURSDAY);             // 2021-12-30 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]
+        DateTime<Date> dt03 = dt1.dtInThisWeek(DayOfWeek.MONDAY);               // 2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt04 = dt1.dtInThisWeek(DayOfWeek.SUNDAY);               // 2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt05 = dt1.firstInThisWeek();                // 2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt06 = dt1.lastInThisWeek();             // 2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt11 = dt2.dtInThisWeek(DayOfWeek.TUESDAY);              // 2021-12-28 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]
+        DateTime<Date> dt12 = dt2.dtInThisWeek(DayOfWeek.THURSDAY);             // 2021-12-30 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]
+        DateTime<Date> dt13 = dt2.dtInThisWeek(DayOfWeek.MONDAY);               // 2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt14 = dt2.dtInThisWeek(DayOfWeek.SUNDAY);               // 2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt15 = dt2.firstInThisWeek();                // 2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt16 = dt2.lastInThisWeek();             // 2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt21 = dt3.dtInThisWeek(DayOfWeek.TUESDAY);              // 2021-12-28 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]
+        DateTime<Date> dt22 = dt3.dtInThisWeek(DayOfWeek.THURSDAY);             // 2021-12-30 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]
+        DateTime<Date> dt23 = dt3.dtInThisWeek(DayOfWeek.MONDAY);               // 2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt24 = dt3.dtInThisWeek(DayOfWeek.SUNDAY);               // 2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt25 = dt3.firstInThisWeek();                // 2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt26 = dt3.lastInThisWeek();             // 2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt31 = dt4.dtInThisWeek(DayOfWeek.TUESDAY);              // 2021-12-28 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]
+        DateTime<Date> dt32 = dt4.dtInThisWeek(DayOfWeek.THURSDAY);             // 2021-12-30 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]
+        DateTime<Date> dt33 = dt4.dtInThisWeek(DayOfWeek.MONDAY);               // 2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt34 = dt4.dtInThisWeek(DayOfWeek.SUNDAY);               // 2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt35 = dt4.firstInThisWeek();                // 2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt36 = dt4.lastInThisWeek();             // 2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt001 = dt1.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.TUESDAY);               // 2021-12-28 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]
+        DateTime<Date> dt002 = dt1.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.THURSDAY);              // 2021-12-30 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]
+        DateTime<Date> dt003 = dt1.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.MONDAY);                // 2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt004 = dt1.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.SUNDAY);                // 2021-12-26 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt005 = dt1.firstInThisWeek(DayOfWeek.SUNDAY);               // 2021-12-26 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt006 = dt1.lastInThisWeek(DayOfWeek.SUNDAY);                // 2022-01-01 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周六]
+        DateTime<Date> dt011 = dt2.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.TUESDAY);               // 2021-12-28 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]
+        DateTime<Date> dt012 = dt2.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.THURSDAY);              // 2021-12-30 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]
+        DateTime<Date> dt013 = dt2.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.MONDAY);                // 2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt014 = dt2.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.SUNDAY);                // 2021-12-26 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt015 = dt2.firstInThisWeek(DayOfWeek.SUNDAY);               // 2021-12-26 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt016 = dt2.lastInThisWeek(DayOfWeek.SUNDAY);                // 2022-01-01 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周六]
+        DateTime<Date> dt021 = dt3.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.TUESDAY);               // 2021-12-28 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]
+        DateTime<Date> dt022 = dt3.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.THURSDAY);              // 2021-12-30 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]
+        DateTime<Date> dt023 = dt3.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.MONDAY);                // 2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt024 = dt3.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.SUNDAY);                // 2021-12-26 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt025 = dt3.firstInThisWeek(DayOfWeek.SUNDAY);               // 2021-12-26 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt026 = dt3.lastInThisWeek(DayOfWeek.SUNDAY);                // 2022-01-01 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周六]
+        DateTime<Date> dt031 = dt4.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.TUESDAY);               // 2022-01-04 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]
+        DateTime<Date> dt032 = dt4.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.THURSDAY);              // 2022-01-06 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]
+        DateTime<Date> dt033 = dt4.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.MONDAY);                // 2022-01-03 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt034 = dt4.dtInThisWeek(DayOfWeek.SUNDAY, DayOfWeek.SUNDAY);                // 2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt035 = dt4.firstInThisWeek(DayOfWeek.SUNDAY);               // 2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt036 = dt4.lastInThisWeek(DayOfWeek.SUNDAY);                // 2022-01-08 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周六]
+
+        assertEquals("2021-12-28 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]", dt01.dtDetail());
+        assertEquals("2021-12-30 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]", dt02.dtDetail());
+        assertEquals("2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]", dt03.dtDetail());
+        assertEquals("2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt04.dtDetail());
+        assertEquals("2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]", dt05.dtDetail());
+        assertEquals("2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt06.dtDetail());
+        assertEquals("2021-12-28 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]", dt11.dtDetail());
+        assertEquals("2021-12-30 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]", dt12.dtDetail());
+        assertEquals("2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]", dt13.dtDetail());
+        assertEquals("2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt14.dtDetail());
+        assertEquals("2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]", dt15.dtDetail());
+        assertEquals("2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt16.dtDetail());
+        assertEquals("2021-12-28 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]", dt21.dtDetail());
+        assertEquals("2021-12-30 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]", dt22.dtDetail());
+        assertEquals("2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]", dt23.dtDetail());
+        assertEquals("2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt24.dtDetail());
+        assertEquals("2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]", dt25.dtDetail());
+        assertEquals("2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt26.dtDetail());
+        assertEquals("2021-12-28 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]", dt31.dtDetail());
+        assertEquals("2021-12-30 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]", dt32.dtDetail());
+        assertEquals("2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]", dt33.dtDetail());
+        assertEquals("2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt34.dtDetail());
+        assertEquals("2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]", dt35.dtDetail());
+        assertEquals("2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt36.dtDetail());
+        assertEquals("2021-12-28 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]", dt001.dtDetail());
+        assertEquals("2021-12-30 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]", dt002.dtDetail());
+        assertEquals("2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]", dt003.dtDetail());
+        assertEquals("2021-12-26 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt004.dtDetail());
+        assertEquals("2021-12-26 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt005.dtDetail());
+        assertEquals("2022-01-01 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周六]", dt006.dtDetail());
+        assertEquals("2021-12-28 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]", dt011.dtDetail());
+        assertEquals("2021-12-30 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]", dt012.dtDetail());
+        assertEquals("2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]", dt013.dtDetail());
+        assertEquals("2021-12-26 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt014.dtDetail());
+        assertEquals("2021-12-26 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt015.dtDetail());
+        assertEquals("2022-01-01 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周六]", dt016.dtDetail());
+        assertEquals("2021-12-28 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]", dt021.dtDetail());
+        assertEquals("2021-12-30 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]", dt022.dtDetail());
+        assertEquals("2021-12-27 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]", dt023.dtDetail());
+        assertEquals("2021-12-26 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt024.dtDetail());
+        assertEquals("2021-12-26 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt025.dtDetail());
+        assertEquals("2022-01-01 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周六]", dt026.dtDetail());
+        assertEquals("2022-01-04 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周二]", dt031.dtDetail());
+        assertEquals("2022-01-06 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周四]", dt032.dtDetail());
+        assertEquals("2022-01-03 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周一]", dt033.dtDetail());
+        assertEquals("2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt034.dtDetail());
+        assertEquals("2022-01-02 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周日]", dt035.dtDetail());
+        assertEquals("2022-01-08 06:01:50.000000000 [Asia/Shanghai +08:00 GMT+8 周六]", dt036.dtDetail());
+
+        List<DateTime<Date>> dateTimes1 = dt1.allDaysInThisWeek();
+        List<DateTime<Date>> dateTimes2 = dt2.allDaysInThisWeek();
+        List<DateTime<Date>> dateTimes3 = dt3.allDaysInThisWeek();
+        List<DateTime<Date>> dateTimes4 = dt4.allDaysInThisWeek();
+        List<DateTime<Date>> dateTimes5 = dt1.allDaysInThisWeek(DayOfWeek.SUNDAY);
+        List<DateTime<Date>> dateTimes6 = dt2.allDaysInThisWeek(DayOfWeek.SUNDAY);
+        List<DateTime<Date>> dateTimes7 = dt3.allDaysInThisWeek(DayOfWeek.SUNDAY);
+        List<DateTime<Date>> dateTimes8 = dt4.allDaysInThisWeek(DayOfWeek.SUNDAY);
+
+        assertEquals("[2021-12-27 06:01:50.000, 2021-12-28 06:01:50.000, 2021-12-29 06:01:50.000, 2021-12-30 06:01:50.000, " +
+                "2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000, 2022-01-02 06:01:50.000]", dateTimes1.toString());
+        assertEquals("[2021-12-27 06:01:50.000, 2021-12-28 06:01:50.000, 2021-12-29 06:01:50.000, 2021-12-30 06:01:50.000, " +
+         "2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000, 2022-01-02 06:01:50.000]", dateTimes2.toString());
+        assertEquals("[2021-12-27 06:01:50.000, 2021-12-28 06:01:50.000, 2021-12-29 06:01:50.000, 2021-12-30 06:01:50.000, " +
+         "2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000, 2022-01-02 06:01:50.000]", dateTimes3.toString());
+        assertEquals("[2021-12-27 06:01:50.000, 2021-12-28 06:01:50.000, 2021-12-29 06:01:50.000, 2021-12-30 06:01:50.000, " +
+         "2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000, 2022-01-02 06:01:50.000]", dateTimes4.toString());
+        assertEquals("[2021-12-26 06:01:50.000, 2021-12-27 06:01:50.000, 2021-12-28 06:01:50.000, 2021-12-29 06:01:50.000, " +
+         "2021-12-30 06:01:50.000, 2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000]", dateTimes5.toString());
+        assertEquals("[2021-12-26 06:01:50.000, 2021-12-27 06:01:50.000, 2021-12-28 06:01:50.000, 2021-12-29 06:01:50.000, " +
+                "2021-12-30 06:01:50.000, 2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000]", dateTimes6.toString());
+        assertEquals("[2021-12-26 06:01:50.000, 2021-12-27 06:01:50.000, 2021-12-28 06:01:50.000, 2021-12-29 06:01:50.000, " +
+         "2021-12-30 06:01:50.000, 2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000]", dateTimes7.toString());
+        assertEquals("[2022-01-02 06:01:50.000, 2022-01-03 06:01:50.000, 2022-01-04 06:01:50.000, 2022-01-05 06:01:50.000, " +
+         "2022-01-06 06:01:50.000, 2022-01-07 06:01:50.000, 2022-01-08 06:01:50.000]", dateTimes8.toString());
+
+
+    }
 }

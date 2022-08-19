@@ -35,11 +35,8 @@ import java.util.stream.Collectors;
  * The {@code DateTime} class wraps a value of the {@link Date} or {@link Calendar} or {@link Instant}
  * or {@link LocalDateTime} or {@link OffsetDateTime} or {@link ZonedDateTime} type. <br>
  *
- * <p>
- * This class is <b>immutable</b> and <b>thread-safe.</b>
- * </p>
- *
  * @param <T> The type of DateTime's value
+ * @implSpec This class is <b>immutable</b> and <b>thread-safe</b>.
  * @since 0.3.0
  */
 public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializable {
@@ -548,6 +545,23 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
     @Override
     @SuppressWarnings("unchecked")
+    public DateTime<T> with(TemporalAdjuster adjuster) {
+        if (dateTime instanceof LocalDateTime || dateTime instanceof OffsetDateTime || dateTime instanceof ZonedDateTime) {
+            return DateTime.from((T) ((Temporal) dateTime).with(adjuster));
+        }
+
+        ZonedDateTime zdt = zonedDateTime.with(adjuster);
+        if (dateTime instanceof Date) {
+            return DateTime.from((T) Date.from(zdt.toInstant()));
+        }
+        if (dateTime instanceof Calendar) {
+            return DateTime.from((T) toCalendar((Calendar) dateTime, zdt));
+        }
+        return DateTime.from((T) zdt.toInstant());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
     public DateTime<T> with(TemporalField field, long newValue) {
         if (dateTime instanceof LocalDateTime || dateTime instanceof OffsetDateTime || dateTime instanceof ZonedDateTime) {
             return DateTime.from((T) ((Temporal) dateTime).with(field, newValue));
@@ -888,6 +902,110 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
             return zonedDateTime.getLong(field);
         }
         return ((Temporal) dateTime).getLong(field);
+    }
+
+    /**
+     * 获取当前日期所在周的任意星期几的日期<b>（默认每周的第一天为 星期一）</b>
+     *
+     * @param dayOfWeek 取星期几的日期
+     * @return 当前日期所在周的任意星期几的日期
+     * @since 0.3.4
+     */
+    public DateTime<T> dtInThisWeek(DayOfWeek dayOfWeek) {
+        Objects.requireNonNull(dayOfWeek, "Parameter `dayOfWeek` must be non-null!");
+
+        return dtInThisWeek(DayOfWeek.MONDAY, dayOfWeek);
+    }
+
+    /**
+     * 获取当前日期所在周的任意星期几的日期
+     *
+     * @param firstDayOfWeek 指定每周的第一天是星期几
+     * @param dayOfWeek      取星期几的日期
+     * @return 当前日期所在周的任意星期几的日期
+     * @since 0.3.4
+     */
+    public DateTime<T> dtInThisWeek(DayOfWeek firstDayOfWeek, DayOfWeek dayOfWeek) {
+        if (G.hasNull(firstDayOfWeek, dayOfWeek))
+            throw new NullPointerException("Parameters `firstDayOfWeek`, `dayOfWeek` must be non-null!");
+
+        Tuple2<Integer, Integer> days1 = DateTimes.daysBetween(firstDayOfWeek, localDateTime.getDayOfWeek());
+        Tuple2<Integer, Integer> days2 = DateTimes.daysBetween(firstDayOfWeek, dayOfWeek);
+        return this.plusDays(days2._2 - days1._2);
+    }
+
+    /**
+     * 获取当前日期所在周的第一天<b>（默认每周的第一天为 星期一）</b>
+     *
+     * @return 当前日期所在周的第一天
+     * @since 0.3.4
+     */
+    public DateTime<T> firstInThisWeek() {
+        return firstInThisWeek(DayOfWeek.MONDAY);
+    }
+
+    /**
+     * 获取当前日期所在周的第一天
+     *
+     * @param firstDayOfWeek 指定每周的第一天是星期几
+     * @return 当前日期所在周的第一天
+     * @since 0.3.4
+     */
+    public DateTime<T> firstInThisWeek(DayOfWeek firstDayOfWeek) {
+        Objects.requireNonNull(firstDayOfWeek, "Parameter `firstDayOfWeek` must be non-null!");
+
+        TemporalAdjuster temporalAdjuster = TemporalAdjusters.previousOrSame(firstDayOfWeek);
+        return this.with(temporalAdjuster);
+    }
+
+    /**
+     * 获取当前日期所在周的最后一天<b>（默认每周的第一天为 星期一）</b>
+     *
+     * @return 当前日期所在周的最后一天
+     * @since 0.3.4
+     */
+    public DateTime<T> lastInThisWeek() {
+        return lastInThisWeek(DayOfWeek.MONDAY);
+    }
+
+    /**
+     * 获取当前日期所在周的最后一天
+     *
+     * @param firstDayOfWeek 指定每周的第一天是星期几
+     * @return 当前日期所在周的最后一天
+     * @since 0.3.4
+     */
+    public DateTime<T> lastInThisWeek(DayOfWeek firstDayOfWeek) {
+        Objects.requireNonNull(firstDayOfWeek, "Parameter `firstDayOfWeek` must be non-null!");
+
+        DayOfWeek lastDayOfWeek = DateTimes.getLastDayOfWeek(firstDayOfWeek);
+        TemporalAdjuster temporalAdjuster = TemporalAdjusters.nextOrSame(lastDayOfWeek);
+        return this.with(temporalAdjuster);
+    }
+
+    /**
+     * 获取当前日期所在周的所有7天的日期<b>（默认每周的第一天为 星期一）</b>
+     *
+     * @return 当前日期所在周的所有7天的日期
+     * @since 0.3.4
+     */
+    public List<DateTime<T>> allDaysInThisWeek() {
+        return allDaysInThisWeek(DayOfWeek.MONDAY);
+    }
+
+    /**
+     * 获取当前日期所在周的所有7天的日期
+     *
+     * @param firstDayOfWeek 指定每周的第一天是星期几
+     * @return 当前日期所在周的所有7天的日期
+     * @since 0.3.4
+     */
+    public List<DateTime<T>> allDaysInThisWeek(DayOfWeek firstDayOfWeek) {
+        Objects.requireNonNull(firstDayOfWeek, "Parameter `firstDayOfWeek` must be non-null!");
+
+        DateTime<T> firstDateTime = firstInThisWeek(firstDayOfWeek);
+        List<T> ts = firstDateTime.datesByShift(6, ChronoUnit.DAYS);
+        return ts.stream().map(DateTime::from).collect(Collectors.toList());
     }
 
     public boolean isBefore(DateTime<?> otherDT) {

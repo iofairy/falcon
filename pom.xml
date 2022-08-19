@@ -6,7 +6,7 @@
 
     <groupId>com.iofairy</groupId>
     <artifactId>falcon-parent</artifactId>
-    <version>0.3.3</version>
+    <version>0.3.4</version>
     <modules>
         <module>falcon</module>
         <module>falcon-tests</module>
@@ -144,6 +144,23 @@
                     <charset>${project.build.sourceEncoding}</charset>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <docencoding>${project.build.sourceEncoding}</docencoding>
+                    <tags>
+                        <tag>
+                            <name>apiNote</name>
+                            <placement>a</placement>
+                            <head>API Note:</head>
+                        </tag>
+                        <tag>
+                            <name>implSpec</name>
+                            <placement>a</placement>
+                            <head>Implementation Requirements:</head>
+                        </tag>
+                        <tag>
+                            <name>implNote</name>
+                            <placement>a</placement>
+                            <head>Implementation Note:</head>
+                        </tag>
+                    </tags>
                 </configuration>
                 <executions>
                     <execution>
@@ -174,7 +191,6 @@
             </plugin>
         </plugins>
     </build>
-
 
 
 </project>

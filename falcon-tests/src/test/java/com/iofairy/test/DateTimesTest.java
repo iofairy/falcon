@@ -5,6 +5,7 @@ import com.iofairy.falcon.time.DateTimes;
 import com.iofairy.falcon.time.TZ;
 import com.iofairy.falcon.util.DateTimeUtils;
 import com.iofairy.top.G;
+import com.iofairy.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
@@ -353,4 +354,42 @@ public class DateTimesTest {
         assertEquals("2020-01-01 01:01:50", sdf.format(calendar.getTime()));
     }
 
+    @Test
+    public void testBetweenDayOfWeeks() {
+        Tuple2<Integer, Integer> between1 = DateTimes.daysBetween(DayOfWeek.MONDAY, DayOfWeek.FRIDAY);
+        Tuple2<Integer, Integer> between2 = DateTimes.daysBetween(DayOfWeek.FRIDAY, DayOfWeek.MONDAY);
+        Tuple2<Integer, Integer> between3 = DateTimes.daysBetween(DayOfWeek.WEDNESDAY, DayOfWeek.WEDNESDAY);
+        Tuple2<Integer, Integer> between4 = DateTimes.daysBetween(DayOfWeek.TUESDAY, DayOfWeek.SUNDAY);
+        Tuple2<Integer, Integer> between5 = DateTimes.daysBetween(DayOfWeek.SUNDAY, DayOfWeek.TUESDAY);
+        Tuple2<Integer, Integer> between6 = DateTimes.daysBetween(DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY);
+        Tuple2<Integer, Integer> between7 = DateTimes.daysBetween(DayOfWeek.THURSDAY, DayOfWeek.WEDNESDAY);
+
+        // System.out.println(between1);
+        // System.out.println(between2);
+        // System.out.println(between3);
+        // System.out.println(between4);
+        // System.out.println(between5);
+        // System.out.println(between6);
+        // System.out.println(between7);
+
+        assertEquals("(3, 4)", between1.toString());
+        assertEquals("(4, 3)", between2.toString());
+        assertEquals("(0, 0)", between3.toString());
+        assertEquals("(2, 5)", between4.toString());
+        assertEquals("(5, 2)", between5.toString());
+        assertEquals("(6, 1)", between6.toString());
+        assertEquals("(1, 6)", between7.toString());
+
+    }
+
+    @Test
+    public void testGetLastDayOfWeek() {
+        DayOfWeek[] dayOfWeeks = DayOfWeek.values();
+        for (DayOfWeek firstDayOfWeek : dayOfWeeks) {
+            DayOfWeek lastDayOfWeek = DateTimes.getLastDayOfWeek(firstDayOfWeek);
+            System.out.println(firstDayOfWeek + "---" + lastDayOfWeek);
+        }
+        assertEquals(DayOfWeek.SUNDAY, DateTimes.getLastDayOfWeek(DayOfWeek.MONDAY));
+        assertEquals(DayOfWeek.SATURDAY, DateTimes.getLastDayOfWeek(DayOfWeek.SUNDAY));
+    }
 }
