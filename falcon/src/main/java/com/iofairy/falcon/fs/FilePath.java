@@ -16,10 +16,9 @@
 package com.iofairy.falcon.fs;
 
 import com.iofairy.falcon.os.OS;
+import com.iofairy.string.Ascii;
 import com.iofairy.top.G;
 import com.iofairy.top.S;
-import com.iofairy.tuple.Tuple;
-import com.iofairy.tuple.Tuple3;
 
 import java.util.Arrays;
 import java.util.regex.Pattern;
@@ -35,19 +34,20 @@ public class FilePath {
     public final static String EMPTY         =  "";             // 空字符串
     public final static String DOT           =  ".";            // 当前目录
     public final static String PARENT_DIR    =  "..";           // 上级目录
-    public final static String DOTSLASH      =  "./";           // UNIX当前目录
+    public final static String DOTSLASH      =  "./";           // Unix-like当前目录
     public final static String DOTBACKSLASH  =  ".\\";          // Win当前目录
     public final static String TWOBACKSLASH  =  "\\\\";         // 双反斜杠（用于正则匹配）
     public final static String SLASHDOT      =  "/.";
     public final static String BACKSLASHDOT  =  "\\.";
 
     public final static Pattern SLASH_PATTERN = Pattern.compile("[/\\\\]");
+    public final static Pattern ONLY_DOT_PATTERN = Pattern.compile("\\.+");
 
 
     /**
-     * Path for UNIX systems. it will use {@code '/'} as files separator. <br>
-     * 用于UNIX下拼接路径。会使用 {@code '/'} 作为文件之间的分隔符。
-     * 且 {@code '\'} 在UNIX系统路径中作为转义字符使用，所以不能转成 {@code '/'}。 <br>
+     * Path for Unix-like systems. it will use {@code '/'} as files separator. <br>
+     * 用于Unix-like下拼接路径。会使用 {@code '/'} 作为文件之间的分隔符。
+     * 且 {@code '\'} 在Unix-like系统路径中作为转义字符使用，所以不能转成 {@code '/'}。 <br>
      * <b>Examples:</b>
      * <pre>
      * FilePath.path("./a", "b", "./c/", "/d")  returns "./a/b/c/d"
@@ -55,7 +55,7 @@ public class FilePath {
      * </pre>
      *
      * @param firstPath firstPath
-     * @param subPaths subPaths
+     * @param subPaths  subPaths
      * @return a full path
      */
     public static String path(String firstPath, String... subPaths) {
@@ -73,7 +73,7 @@ public class FilePath {
      * </pre>
      *
      * @param firstPath firstPath
-     * @param subPaths subPaths
+     * @param subPaths  subPaths
      * @return a full path
      */
     public static String pathWin(String firstPath, String... subPaths) {
@@ -92,7 +92,7 @@ public class FilePath {
      * </pre>
      *
      * @param firstPath firstPath
-     * @param subPaths subPaths
+     * @param subPaths  subPaths
      * @return a full path
      */
     public static String pathSlash(String firstPath, String... subPaths) {
@@ -111,7 +111,7 @@ public class FilePath {
     private static String concatPath(boolean isWin, String firstPath, String... subPaths) {
         if (null == firstPath) return null;
         boolean isFirstPathEmpty = EMPTY.equals(firstPath);
-        StringBuffer pathBuffer = new StringBuffer(firstPath);
+        StringBuilder pathBuffer = new StringBuilder(firstPath);
         if (!G.isEmpty(subPaths)) {
             // subPaths 中的元素不能有 null 值
             if (G.hasNull(subPaths)) return null;
@@ -144,14 +144,14 @@ public class FilePath {
 
     /**
      * The system-dependent for concat paths. <br>
-     * On UNIX systems, it will call {@link #path(String, String...)}; <br>
+     * On Unix-like systems, it will call {@link #path(String, String...)}; <br>
      * On Windows systems, it will call {@link #pathSlash(String, String...)}. <br><br>
      * 根据系统自动选择拼接paths的方法。<br>
-     * 在Unix系统，会调用 {@link #path(String, String...)}；<br>
+     * 在Unix-like系统，会调用 {@link #path(String, String...)}；<br>
      * 在Windows系统，则会调用 {@link #pathSlash(String, String...)}。
      *
      * @param firstPath firstPath
-     * @param subPaths subPaths
+     * @param subPaths  subPaths
      * @return a full path
      */
     public static String pathAuto(String firstPath, String... subPaths) {
@@ -160,14 +160,14 @@ public class FilePath {
 
     /**
      * The system-dependent for concat paths. <br>
-     * On UNIX systems, it will call {@link #path(String, String...)}; <br>
+     * On Unix-like systems, it will call {@link #path(String, String...)}; <br>
      * On Windows systems, it will call {@link #pathWin(String, String...)}. <br><br>
      * 根据系统自动选择拼接paths的方法。<br>
-     * 在Unix系统，会调用 {@link #path(String, String...)}；<br>
+     * 在Unix-like系统，会调用 {@link #path(String, String...)}；<br>
      * 在Windows系统，则会调用 {@link #pathWin(String, String...)}。
      *
      * @param firstPath firstPath
-     * @param subPaths subPaths
+     * @param subPaths  subPaths
      * @return a full path
      */
     public static String pathAutoWin(String firstPath, String... subPaths) {
@@ -175,7 +175,7 @@ public class FilePath {
     }
 
     /**
-     * PathInfo for UNIX systems. Using {@link SeparatorType#SLASH}.<br>
+     * PathInfo for Unix-like systems. Using {@link SeparatorType#SLASH}.<br>
      *
      * @param filePath 文件路径
      * @return PathInfo
@@ -230,7 +230,12 @@ public class FilePath {
     }
 
     /**
-     * Get PathInfo
+     * 获取PathInfo<br>
+     * <b>注：</b><br>
+     * Win和Unix-like系统 {@code .} 与 {@code ..} 都代表文件夹，无法创建重名的文件；<br>
+     * Win下无法创建只包含 {@code .} 的文件或文件夹；<br>
+     * Win下无法创建包含 {@code /} 或 {@code \} 的文件或文件夹；<br>
+     * Unix-like下无法创建包含 {@code /} 的文件或文件夹，可以创建只包含 {@code \} 的文件或文件夹（{@code mkdir \\} 或 {@code touch \\}）
      *
      * @param filePath      filePath
      * @param separatorType separatorType
@@ -256,39 +261,36 @@ public class FilePath {
                 separator = BACKSLASH;
         }
 
-        if (path.equals(rootStr))
-            return new PathInfo(true, rootStr, null, rootStr, new String[]{rootStr}, EMPTY, EMPTY, separator, separatorType);
-
         String[] paths = path.split(separator.equals(SLASH) ? SLASH : TWOBACKSLASH);
 
-        if (path.startsWith(rootStr)) {
-            paths[0] = rootStr;     // paths[0] 原始值为 空字符串("")
-            String parentPath = rootStr + String.join(separator, Arrays.copyOfRange(paths, 1, paths.length - 1));
-            Tuple3<String, String, String> infoTuple = getPathInfo(paths);
-            return new PathInfo(true, parentPath, infoTuple._1, path, paths, infoTuple._2, infoTuple._3, separator, separatorType);
-        } else {
-            if (paths.length == 1) {
-                Tuple3<String, String, String> infoTuple = getPathInfo(paths);
-                return new PathInfo(false, null, infoTuple._1, paths[0], paths, infoTuple._2, infoTuple._3, separator, separatorType);
-            } else {
-                String parentPath = String.join(separator, Arrays.copyOfRange(paths, 0, paths.length - 1));
-                Tuple3<String, String, String> infoTuple = getPathInfo(paths);
-                return new PathInfo(false, parentPath, infoTuple._1, path, paths, infoTuple._2, infoTuple._3, separator, separatorType);
+        if (path.equals(rootStr)) return new PathInfo(true, rootStr, null, path, paths, null, separator, separatorType);
+
+        String fileName = paths[paths.length - 1];
+        String parentPath = String.join(separator, Arrays.copyOfRange(paths, 0, paths.length - 1));
+
+        if (SeparatorType.SLASH != separatorType) {
+            // windows下的路径
+            char[] chars = path.toCharArray();
+            if (chars.length >= 2) {
+                char c0 = chars[0];
+                char c1 = chars[1];
+                if (Ascii.isLetter(c0) && c1 == ':') {
+                    if (chars.length == 2) {
+                        return new PathInfo(true, path + separator, null, path, paths, null, separator, separatorType);
+                    } else {
+                        if (chars[2] == separator.charAt(0)) {
+                            return new PathInfo(true, "" + c0 + c1 + separator, parentPath, path, paths, fileName, separator, separatorType);
+                        }
+                    }
+                }
             }
         }
-    }
 
-    /**
-     * Get fileName, ext, extNoDot
-     *
-     * @param paths path array
-     * @return fileName, ext, extNoDot
-     */
-    private static Tuple3<String, String, String> getPathInfo(String[] paths) {
-        String fileName = paths[paths.length - 1];
-        String ext = ext(fileName);
-        String extNoDot = ext == null ? null : ext.replace(DOT, EMPTY);
-        return Tuple.of(fileName, ext, extNoDot);
+        if (path.startsWith(rootStr)) {
+            return new PathInfo(true, rootStr, "".equals(parentPath) ? rootStr : parentPath, path, paths, fileName, separator, separatorType);
+        } else {
+            return new PathInfo(false, null, paths.length == 1 ? null : parentPath, path, paths, fileName, separator, separatorType);
+        }
     }
 
     /**
@@ -306,7 +308,7 @@ public class FilePath {
      * Add {@code "./"} to head. <br>
      * 添加头部的 {@code "./"}
      *
-     * @param originPath originPath
+     * @param originPath  originPath
      * @param isNeedMerge is need merge {@code "/"} and {@code "./"} first
      * @return path
      */
@@ -332,7 +334,7 @@ public class FilePath {
      * Remove {@code "./"} at the head. <br>
      * 删除头部的 {@code "./"}
      *
-     * @param originPath originPath
+     * @param originPath  originPath
      * @param isNeedMerge is need merge {@code "/"} and {@code "./"} first
      * @return path
      */
@@ -358,7 +360,7 @@ public class FilePath {
      * Remove tail {@code "/."}. <br>
      * 删除尾部的 {@code "/."}
      *
-     * @param originPath originPath
+     * @param originPath  originPath
      * @param isNeedMerge is need merge {@code "/"} and {@code "./"} first
      * @return path
      */
@@ -384,7 +386,7 @@ public class FilePath {
      * Remove tail {@code "/"}. <br>
      * 去除路径尾部 {@code '/'}
      *
-     * @param originPath originPath
+     * @param originPath  originPath
      * @param isNeedMerge is need merge {@code "/"} and {@code "./"} first
      * @return path
      */
@@ -411,7 +413,7 @@ public class FilePath {
      * Remove {@code "/"} at the head. <br>
      * 去除路径头部 {@code '/'}
      *
-     * @param originPath originPath
+     * @param originPath  originPath
      * @param isNeedMerge is need merge {@code "/"} and {@code "./"} first
      * @return path
      */
@@ -438,7 +440,7 @@ public class FilePath {
      * Add {@code "/"} to head. <br>
      * 添加头部 {@code '/'}
      *
-     * @param originPath originPath
+     * @param originPath  originPath
      * @param isNeedMerge is need merge {@code "/"} and {@code "./"} first
      * @return path
      */
@@ -465,7 +467,7 @@ public class FilePath {
      * Add tail {@code "/"}. <br>
      * 添加尾部 {@code '/'}
      *
-     * @param originPath originPath
+     * @param originPath  originPath
      * @param isNeedMerge is need merge {@code "/"} and {@code "./"} first
      * @return path
      */
@@ -516,7 +518,7 @@ public class FilePath {
      * Merge multi {@code '/'} or {@code '\'} to one. <br>
      * 合并多个 {@code '/'} 或 {@code '\'} 成一个。
      *
-     * @param originPath originPath
+     * @param originPath        originPath
      * @param whetherMergeSlash if {@code true}, merge {@code '/'}; otherwise, merge {@code '\'}
      * @return merged path
      */
@@ -551,37 +553,49 @@ public class FilePath {
     }
 
     /**
-     * Get file extension from path or filename. <br>
-     * 从路径或文件名中获取文件扩展名。 <br>
-     * 注：Windows不能创建以 . 为后缀的文件或文件夹（会自动去除），Linux则可以。
+     * 获取文件名的后缀名数组，用于拼接后缀名
      *
-     * @param path path
-     * @return file extension, <b>eg</b>: {@code .txt}, {@code .csv}
+     * @param fileName 文件名
+     * @return 后缀名数组
+     * @since 0.3.5
      */
-    public static String ext(String path) {
-        if (path == null) return null;
-        if (S.isBlank(path) || DOT.equals(path) || PARENT_DIR.equals(path)) return EMPTY;
-        int dotIndex = path.lastIndexOf(DOT);
-        if (dotIndex == -1) {
-            return EMPTY;
-        } else {
-            String subStr = path.substring(dotIndex);
-            return SLASH_PATTERN.matcher(subStr).find() ? EMPTY : subStr;
-        }
+    public static String[] exts(String fileName) {
+        if (fileName == null) return null;
+        if (S.isEmpty(fileName)
+                || ONLY_DOT_PATTERN.matcher(fileName).matches()
+                || fileName.endsWith("/")
+                || fileName.endsWith("\\"))
+            return new String[0];
+
+        return fileName.split("\\.", -1);
     }
 
     /**
-     * Get file extension without dot from path or filename. <br>
-     * 从路径或文件名中获取文件扩展名，不带点。 <br>
+     * Get file extension from filename. <br>
+     * 从文件名中获取文件扩展名。 <br>
      * 注：Windows不能创建以 . 为后缀的文件或文件夹（会自动去除），Linux则可以。
      *
-     * @param path path
+     * @param fileName 文件名
+     * @return file extension, <b>eg</b>: {@code .txt}, {@code .csv}
+     */
+    public static String ext(String fileName) {
+        String extNoDot = extNoDot(fileName);
+        return extNoDot == null ? extNoDot : "." + extNoDot;
+    }
+
+    /**
+     * Get file extension without dot from filename. <br>
+     * 从文件名中获取文件扩展名，不带点。 <br>
+     * 注：Windows不能创建以 . 为后缀的文件或文件夹（会自动去除），Linux则可以。
+     *
+     * @param fileName 文件名
      * @return file extension without dot, <b>eg</b>: {@code txt}, {@code csv}
      */
-    public static String extNoDot(String path) {
-        String ext = ext(path);
-        if (ext == null) return null;
-        return ext.replace(DOT, EMPTY);
+    public static String extNoDot(String fileName) {
+        String[] exts = exts(fileName);
+        if (exts == null || exts.length <= 1) return null;
+        String tempExt = exts[exts.length - 1];
+        return SLASH_PATTERN.matcher(tempExt).find() ? null : tempExt;
     }
 
     /**
@@ -589,7 +603,7 @@ public class FilePath {
      * 校验参数的有效性
      *
      * @param firstPath firstPath
-     * @param subPaths subPaths
+     * @param subPaths  subPaths
      */
     private static void verifyParams(String firstPath, String... subPaths) {
         if (S.isEmpty(firstPath) || S.hasEmpty(subPaths))

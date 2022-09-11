@@ -24,9 +24,8 @@ import java.util.List;
  * 数组工具类
  *
  * @since 0.2.0
- * @deprecated Since falcon version 0.3.5, replaced by {@link com.iofairy.falcon.iterable.ArrayKit}
  */
-public class ArrayUtils {
+public class ArrayKit {
 
     /**
      * char[] to Character List.

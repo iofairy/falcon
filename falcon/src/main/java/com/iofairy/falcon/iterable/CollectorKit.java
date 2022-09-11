@@ -28,9 +28,8 @@ import java.util.stream.Collectors;
  * Collection Utils
  *
  * @since 0.0.1
- * @deprecated Since falcon version 0.3.5, replaced by {@link com.iofairy.falcon.iterable.CollectorKit}
  */
-public class CollectorUtils {
+public class CollectorKit {
 
     /**
      * Divide array to multi arrays by per batch size. <br>

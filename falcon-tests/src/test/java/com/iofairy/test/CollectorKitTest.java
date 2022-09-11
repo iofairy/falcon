@@ -1,13 +1,11 @@
 package com.iofairy.test;
 
-import com.iofairy.falcon.iterable.CollectorUtils;
-import com.iofairy.top.G;
+import com.iofairy.falcon.iterable.CollectorKit;
 import com.iofairy.tuple.Tuple;
 import com.iofairy.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author GG
  * @version 1.0
  */
-public class CollectorUtilsTest {
+public class CollectorKitTest {
     @Test
     public void testDivideArr() {
         System.out.println("\n>>> testDivideArr");
 
         Integer[] intArr = {0, 1, 2, 3, 4, 5, 6, 7};
-        List<Integer[]> divide = CollectorUtils.divide(intArr, 1);
+        List<Integer[]> divide = CollectorKit.divide(intArr, 1);
         for (Integer[] integers : divide) {
             System.out.println(Arrays.asList(integers));
         }
@@ -29,7 +27,7 @@ public class CollectorUtilsTest {
         assertEquals(8, divide.size());
         assertEquals(5, divide.get(5)[0]);
 
-        List<Integer[]> divide1 = CollectorUtils.divide(intArr, 2);
+        List<Integer[]> divide1 = CollectorKit.divide(intArr, 2);
         for (Integer[] integers : divide1) {
             System.out.println(Arrays.asList(integers));
         }
@@ -37,7 +35,7 @@ public class CollectorUtilsTest {
         assertEquals(4, divide1.size());
         assertEquals(2, divide1.get(1)[0]);
 
-        List<Integer[]> divide2 = CollectorUtils.divide(intArr, 3);
+        List<Integer[]> divide2 = CollectorKit.divide(intArr, 3);
         for (Integer[] integers : divide2) {
             System.out.println(Arrays.asList(integers));
         }
@@ -52,7 +50,7 @@ public class CollectorUtilsTest {
 
         Integer[] intArr = {0, 1, 2, 3, 4, 5, 6};
         List<Integer> intList = Arrays.asList(intArr);
-        List<List<Integer>> divideList = CollectorUtils.divide(intList, 2);
+        List<List<Integer>> divideList = CollectorKit.divide(intList, 2);
         assertEquals("[[0, 1], [2, 3], [4, 5], [6]]", divideList.toString());
 
         List<String> strList = new ArrayList<>();
@@ -60,23 +58,23 @@ public class CollectorUtilsTest {
         strList.add("b");
         strList.add("c");
 
-        List<List<String>> divide0 = CollectorUtils.divide(strList, 0);
+        List<List<String>> divide0 = CollectorKit.divide(strList, 0);
         assertEquals("[[a, b, c]]", divide0.toString());
-        List<List<String>> divide1 = CollectorUtils.divide(strList, 1);
+        List<List<String>> divide1 = CollectorKit.divide(strList, 1);
         assertEquals("[[a], [b], [c]]", divide1.toString());
-        List<List<String>> divide2 = CollectorUtils.divide(strList, 2);
+        List<List<String>> divide2 = CollectorKit.divide(strList, 2);
         assertEquals("[[a, b], [c]]", divide2.toString());
-        List<List<String>> divide3 = CollectorUtils.divide(strList, 3);
+        List<List<String>> divide3 = CollectorKit.divide(strList, 3);
         assertEquals("[[a, b, c]]", divide3.toString());
-        List<List<String>> divide4 = CollectorUtils.divide(strList, 4);
+        List<List<String>> divide4 = CollectorKit.divide(strList, 4);
         assertEquals("[[a, b, c]]", divide4.toString());
 
         List<String> nullList = null;
-        List<List<String>> nullDivide = CollectorUtils.divide(nullList, 3);
+        List<List<String>> nullDivide = CollectorKit.divide(nullList, 3);
         assertEquals("[]", nullDivide.toString());
 
         List<String> strList1 = Arrays.asList("a", "b", "c", "d", "e");
-        List<List<String>> divide5 = CollectorUtils.divide(strList1, 2);
+        List<List<String>> divide5 = CollectorKit.divide(strList1, 2);
         assertEquals("[[a, b], [c, d], [e]]", divide5.toString());
 
     }
@@ -90,15 +88,15 @@ public class CollectorUtilsTest {
         intSet.add(2);
         intSet.add(3);
 
-        List<Set<Integer>> divide0 = CollectorUtils.divide(intSet, 0);
+        List<Set<Integer>> divide0 = CollectorKit.divide(intSet, 0);
         assertEquals("[[1, 2, 3]]", divide0.toString());
-        List<Set<Integer>> divide1 = CollectorUtils.divide(intSet, 1);
+        List<Set<Integer>> divide1 = CollectorKit.divide(intSet, 1);
         assertEquals("[[1], [2], [3]]", divide1.toString());
-        List<Set<Integer>> divide2 = CollectorUtils.divide(intSet, 2);
+        List<Set<Integer>> divide2 = CollectorKit.divide(intSet, 2);
         assertEquals("[[1, 2], [3]]", divide2.toString());
-        List<Set<Integer>> divide3 = CollectorUtils.divide(intSet, 3);
+        List<Set<Integer>> divide3 = CollectorKit.divide(intSet, 3);
         assertEquals("[[1, 2, 3]]", divide3.toString());
-        List<Set<Integer>> divide4 = CollectorUtils.divide(intSet, 4);
+        List<Set<Integer>> divide4 = CollectorKit.divide(intSet, 4);
         assertEquals("[[1, 2, 3]]", divide4.toString());
 
     }
@@ -112,15 +110,15 @@ public class CollectorUtilsTest {
         map.put("b", 2);
         map.put("c", 3);
 
-        List<Map<String, Integer>> divide0 = CollectorUtils.divide(map, 0);
+        List<Map<String, Integer>> divide0 = CollectorKit.divide(map, 0);
         assertEquals("[{a=1, b=2, c=3}]", divide0.toString());
-        List<Map<String, Integer>> divide1 = CollectorUtils.divide(map, 1);
+        List<Map<String, Integer>> divide1 = CollectorKit.divide(map, 1);
         assertEquals("[{a=1}, {b=2}, {c=3}]", divide1.toString());
-        List<Map<String, Integer>> divide2 = CollectorUtils.divide(map, 2);
+        List<Map<String, Integer>> divide2 = CollectorKit.divide(map, 2);
         assertEquals("[{a=1, b=2}, {c=3}]", divide2.toString());
-        List<Map<String, Integer>> divide3 = CollectorUtils.divide(map, 3);
+        List<Map<String, Integer>> divide3 = CollectorKit.divide(map, 3);
         assertEquals("[{a=1, b=2, c=3}]", divide3.toString());
-        List<Map<String, Integer>> divide4 = CollectorUtils.divide(map, 4);
+        List<Map<String, Integer>> divide4 = CollectorKit.divide(map, 4);
         assertEquals("[{a=1, b=2, c=3}]", divide4.toString());
     }
 
@@ -137,11 +135,11 @@ public class CollectorUtilsTest {
 
         List<Collection<Integer>> collections = Arrays.asList(list0, list1, list2, list3, list4, list5);
 
-        List<List<Integer>> balance1 = CollectorUtils.balance(2, collections);
+        List<List<Integer>> balance1 = CollectorKit.balance(2, collections);
         System.out.println(balance1);
-        List<List<Integer>> balance2 = CollectorUtils.balance(3, collections);
+        List<List<Integer>> balance2 = CollectorKit.balance(3, collections);
         System.out.println(balance2);
-        List<List<Integer>> balance3 = CollectorUtils.balance(4, collections);
+        List<List<Integer>> balance3 = CollectorKit.balance(4, collections);
         System.out.println(balance3);
         assertEquals(balance1.toString(), "[[11, 12, 13, 14, 15, 30, 31, 26], [57, 58, 59, 83, 84, 85, 71, 72]]");
         assertEquals(balance2.toString(), "[[57, 58, 59, 30, 31], [11, 12, 13, 14, 15], [83, 84, 85, 71, 72, 26]]");
@@ -165,15 +163,15 @@ public class CollectorUtilsTest {
         List<Integer> list9 = null;
 
 
-        List<List<Integer>> balance = CollectorUtils.balance(0, list0, list1, list2, list3, list4, list5, list6, list7, list8, list9);
+        List<List<Integer>> balance = CollectorKit.balance(0, list0, list1, list2, list3, list4, list5, list6, list7, list8, list9);
         assertNull(balance);
-        List<List<Integer>> balance1 = CollectorUtils.balance(3, list0, list1, list2, list3, list4, list5, list6, list7, list8, list9);
+        List<List<Integer>> balance1 = CollectorKit.balance(3, list0, list1, list2, list3, list4, list5, list6, list7, list8, list9);
         assertEquals("[[57, 58, 59, 83, 84, 85, 62], [91, 92, 93, 94, 30, 31, 26], [11, 12, 13, 14, 15, 71, 72]]", balance1.toString());
-        List<List<Integer>> balance2 = CollectorUtils.balance(4, list0, list1, list2, list3, list4, list5, list6, list7, list8, list9);
+        List<List<Integer>> balance2 = CollectorKit.balance(4, list0, list1, list2, list3, list4, list5, list6, list7, list8, list9);
         assertEquals("[[83, 84, 85, 71, 72], [57, 58, 59, 30, 31], [11, 12, 13, 14, 15], [91, 92, 93, 94, 26, 62]]", balance2.toString());
-        List<List<Integer>> balance3 = CollectorUtils.balance(10, list0, list1, list2, list3, list4, list5, list6, list7, list8, list9);
+        List<List<Integer>> balance3 = CollectorKit.balance(10, list0, list1, list2, list3, list4, list5, list6, list7, list8, list9);
         assertEquals("[[26], [62], [30, 31], [71, 72], [57, 58, 59], [83, 84, 85], [91, 92, 93, 94], [11, 12, 13, 14, 15]]", balance3.toString());
-        List<List<Integer>> balance4 = CollectorUtils.balance(1, list0, list1, list2, list3, list4, list5, list6, list7, list8, list9);
+        List<List<Integer>> balance4 = CollectorKit.balance(1, list0, list1, list2, list3, list4, list5, list6, list7, list8, list9);
         assertEquals("[[11, 12, 13, 14, 15, 91, 92, 93, 94, 57, 58, 59, 83, 84, 85, 30, 31, 71, 72, 26, 62]]", balance4.toString());
 
     }
@@ -195,24 +193,24 @@ public class CollectorUtilsTest {
         Tuple2<String, Integer>[] list8 = null;
 
 
-        List<List<Tuple2<String, Integer>>> balance = CollectorUtils.balance(0, list0, list1, list2, list3, list4, list5, list6, list7, list8);
+        List<List<Tuple2<String, Integer>>> balance = CollectorKit.balance(0, list0, list1, list2, list3, list4, list5, list6, list7, list8);
         assertNull(balance);
 
-        List<List<Tuple2<String, Integer>>> balance1 = CollectorUtils.balance(3, list0, list1, list2, list3, list4, list5, list6, list7, list8);
+        List<List<Tuple2<String, Integer>>> balance1 = CollectorKit.balance(3, list0, list1, list2, list3, list4, list5, list6, list7, list8);
         assertEquals("[[(\"a\", 11), (\"a\", 12), (\"a\", 13), (\"a\", 14), (\"a\", 15)], " +
                 "[(\"c\", 57), (\"c\", 58), (\"c\", 59), (\"d\", 30), (\"d\", 31), (\"e\", 62)], " +
                 "[(\"f\", 83), (\"f\", 84), (\"f\", 85), (\"g\", 71), (\"g\", 72), (\"b\", 26)]]", balance1.toString());
 
-        List<List<Tuple2<String, Integer>>> balance2 = CollectorUtils.balance(4, list0, list1, list2, list3, list4, list5, list6, list7, list8);
+        List<List<Tuple2<String, Integer>>> balance2 = CollectorKit.balance(4, list0, list1, list2, list3, list4, list5, list6, list7, list8);
         assertEquals("[[(\"f\", 83), (\"f\", 84), (\"f\", 85), (\"e\", 62)], [(\"c\", 57), (\"c\", 58), (\"c\", 59), (\"b\", 26)], " +
                 "[(\"d\", 30), (\"d\", 31), (\"g\", 71), (\"g\", 72)], [(\"a\", 11), (\"a\", 12), (\"a\", 13), (\"a\", 14), (\"a\", 15)]]", balance2.toString());
 
-        List<List<Tuple2<String, Integer>>> balance3 = CollectorUtils.balance(10, list0, list1, list2, list3, list4, list5, list6, list7, list8);
+        List<List<Tuple2<String, Integer>>> balance3 = CollectorKit.balance(10, list0, list1, list2, list3, list4, list5, list6, list7, list8);
         assertEquals("[[(\"b\", 26)], [(\"e\", 62)], [(\"d\", 30), (\"d\", 31)], [(\"g\", 71), (\"g\", 72)], " +
                 "[(\"c\", 57), (\"c\", 58), (\"c\", 59)], [(\"f\", 83), (\"f\", 84), (\"f\", 85)], " +
                 "[(\"a\", 11), (\"a\", 12), (\"a\", 13), (\"a\", 14), (\"a\", 15)]]", balance3.toString());
 
-        List<List<Tuple2<String, Integer>>> balance4 = CollectorUtils.balance(1, list0, list1, list2, list3, list4, list5, list6, list7, list8);
+        List<List<Tuple2<String, Integer>>> balance4 = CollectorKit.balance(1, list0, list1, list2, list3, list4, list5, list6, list7, list8);
         assertEquals("[[(\"a\", 11), (\"a\", 12), (\"a\", 13), (\"a\", 14), (\"a\", 15), (\"c\", 57), (\"c\", 58), (\"c\", 59), (\"f\", 83), " +
                 "(\"f\", 84), (\"f\", 85), (\"d\", 30), (\"d\", 31), (\"g\", 71), (\"g\", 72), (\"b\", 26), (\"e\", 62)]]", balance4.toString());
 
@@ -239,7 +237,7 @@ public class CollectorUtilsTest {
         }
 
         long start = System.currentTimeMillis();
-        List<List<Integer>> balance = CollectorUtils.balance(10000, allLists);
+        List<List<Integer>> balance = CollectorKit.balance(10000, allLists);
         System.out.println("balance数量：" + balance.size() + " >>> 耗时：" + (System.currentTimeMillis() - start));
 
     }
@@ -324,50 +322,50 @@ public class CollectorUtilsTest {
         // ss  --->  e.startsWith("a")  --->  [a, ae, ab, ae, af, af]
         // sSet  --->  e.startsWith("a")  --->  [a, ab, ae, af]
 
-        Tuple2<String, Integer> nth0 = CollectorUtils.findNth(ss, null, 2);         // ("c", 2)
-        Tuple2<String, Integer> nth1 = CollectorUtils.findNth(sList, null, 2);         // ("c", 2)
-        String nth2 = CollectorUtils.findNth(sSet, null, 2);         // c
+        Tuple2<String, Integer> nth0 = CollectorKit.findNth(ss, null, 2);         // ("c", 2)
+        Tuple2<String, Integer> nth1 = CollectorKit.findNth(sList, null, 2);         // ("c", 2)
+        String nth2 = CollectorKit.findNth(sSet, null, 2);         // c
 
-        Tuple2<String, Integer> nth3 = CollectorUtils.findNth(ss, e -> e.startsWith("a"), 2);         // ("ab", 3)
-        Tuple2<String, Integer> nth4 = CollectorUtils.findNth(sList, e -> e.startsWith("a"), 2);         // ("ab", 3)
-        String nth5 = CollectorUtils.findNth(sSet, e -> e.startsWith("a"), 2);         // ae
+        Tuple2<String, Integer> nth3 = CollectorKit.findNth(ss, e -> e.startsWith("a"), 2);         // ("ab", 3)
+        Tuple2<String, Integer> nth4 = CollectorKit.findNth(sList, e -> e.startsWith("a"), 2);         // ("ab", 3)
+        String nth5 = CollectorKit.findNth(sSet, e -> e.startsWith("a"), 2);         // ae
 
-        Tuple2<String, Integer> nth6 = CollectorUtils.findNth(ss, e -> e.startsWith("a"), 20);         // null
-        Tuple2<String, Integer> nth7 = CollectorUtils.findNth(sList, e -> e.startsWith("a"), 20);         // null
-        String nth8 = CollectorUtils.findNth(sSet, e -> e.startsWith("a"), 20);         // null
+        Tuple2<String, Integer> nth6 = CollectorKit.findNth(ss, e -> e.startsWith("a"), 20);         // null
+        Tuple2<String, Integer> nth7 = CollectorKit.findNth(sList, e -> e.startsWith("a"), 20);         // null
+        String nth8 = CollectorKit.findNth(sSet, e -> e.startsWith("a"), 20);         // null
 
-        Tuple2<String, Integer> nth9 = CollectorUtils.findNth(ss, null, 20);         // null
-        Tuple2<String, Integer> nth10 = CollectorUtils.findNth(sList, null, 20);         // null
-        String nth11 = CollectorUtils.findNth(sSet, null, 20);         // null
+        Tuple2<String, Integer> nth9 = CollectorKit.findNth(ss, null, 20);         // null
+        Tuple2<String, Integer> nth10 = CollectorKit.findNth(sList, null, 20);         // null
+        String nth11 = CollectorKit.findNth(sSet, null, 20);         // null
 
-        Tuple2<String, Integer> nth12 = CollectorUtils.findNth(ss, null, 0);         // ("a", 0)
-        Tuple2<String, Integer> nth13 = CollectorUtils.findNth(sList, null, 0);         // ("a", 0)
-        String nth14 = CollectorUtils.findNth(sSet, null, 0);         // a
+        Tuple2<String, Integer> nth12 = CollectorKit.findNth(ss, null, 0);         // ("a", 0)
+        Tuple2<String, Integer> nth13 = CollectorKit.findNth(sList, null, 0);         // ("a", 0)
+        String nth14 = CollectorKit.findNth(sSet, null, 0);         // a
 
-        Tuple2<String, Integer> nth15 = CollectorUtils.findNth(ss, e -> e.startsWith("a"), 0);         // ("a", 0)
-        Tuple2<String, Integer> nth16 = CollectorUtils.findNth(sList, e -> e.startsWith("a"), 0);         // ("a", 0)
-        String nth17 = CollectorUtils.findNth(sSet, e -> e.startsWith("a"), 0);         // a
+        Tuple2<String, Integer> nth15 = CollectorKit.findNth(ss, e -> e.startsWith("a"), 0);         // ("a", 0)
+        Tuple2<String, Integer> nth16 = CollectorKit.findNth(sList, e -> e.startsWith("a"), 0);         // ("a", 0)
+        String nth17 = CollectorKit.findNth(sSet, e -> e.startsWith("a"), 0);         // a
 
-        Tuple2<String, Integer> nth18 = CollectorUtils.findNth(ss, null, -1);         // ("g", 9)
-        Tuple2<String, Integer> nth19 = CollectorUtils.findNth(sList, null, -1);         // ("g", 9)
-        String nth20 = CollectorUtils.findNth(sSet, null, -1);         // g
+        Tuple2<String, Integer> nth18 = CollectorKit.findNth(ss, null, -1);         // ("g", 9)
+        Tuple2<String, Integer> nth19 = CollectorKit.findNth(sList, null, -1);         // ("g", 9)
+        String nth20 = CollectorKit.findNth(sSet, null, -1);         // g
 
-        Tuple2<String, Integer> nth21 = CollectorUtils.findNth(ss, e -> e.startsWith("a"), -1);         // ("af", 7)
-        Tuple2<String, Integer> nth22 = CollectorUtils.findNth(sList, e -> e.startsWith("a"), -1);         // ("af", 7)
-        String nth23 = CollectorUtils.findNth(sSet, e -> e.startsWith("a"), -1);         // af
+        Tuple2<String, Integer> nth21 = CollectorKit.findNth(ss, e -> e.startsWith("a"), -1);         // ("af", 7)
+        Tuple2<String, Integer> nth22 = CollectorKit.findNth(sList, e -> e.startsWith("a"), -1);         // ("af", 7)
+        String nth23 = CollectorKit.findNth(sSet, e -> e.startsWith("a"), -1);         // af
 
-        Tuple2<String, Integer> nth24 = CollectorUtils.findNth(ss, null, -11);         // null
-        Tuple2<String, Integer> nth25 = CollectorUtils.findNth(sList, null, -10);         // ("a", 0)
-        String nth26 = CollectorUtils.findNth(sSet, null, -7);         // a
+        Tuple2<String, Integer> nth24 = CollectorKit.findNth(ss, null, -11);         // null
+        Tuple2<String, Integer> nth25 = CollectorKit.findNth(sList, null, -10);         // ("a", 0)
+        String nth26 = CollectorKit.findNth(sSet, null, -7);         // a
 
-        Tuple2<String, Integer> nth27 = CollectorUtils.findNth(ss, e -> e.startsWith("a"), -2);         // ("af", 6)
-        Tuple2<String, Integer> nth28 = CollectorUtils.findNth(sList, e -> e.startsWith("a"), -2);         // ("af", 6)
-        String nth29 = CollectorUtils.findNth(sSet, e -> e.startsWith("a"), -2);         // ae
+        Tuple2<String, Integer> nth27 = CollectorKit.findNth(ss, e -> e.startsWith("a"), -2);         // ("af", 6)
+        Tuple2<String, Integer> nth28 = CollectorKit.findNth(sList, e -> e.startsWith("a"), -2);         // ("af", 6)
+        String nth29 = CollectorKit.findNth(sSet, e -> e.startsWith("a"), -2);         // ae
 
-        Tuple2<String, Integer> nth30 = CollectorUtils.findNth(ss, e -> e.startsWith("a"), -6);         // ("a", 0)
-        Tuple2<String, Integer> nth31 = CollectorUtils.findNth(sList, e -> e.startsWith("a"), -7);         // null
-        String nth32 = CollectorUtils.findNth(sSet, e -> e.startsWith("a"), -4);         // a
-        String nth33 = CollectorUtils.findNth(sSet, e -> e.startsWith("a"), -5);         // null
+        Tuple2<String, Integer> nth30 = CollectorKit.findNth(ss, e -> e.startsWith("a"), -6);         // ("a", 0)
+        Tuple2<String, Integer> nth31 = CollectorKit.findNth(sList, e -> e.startsWith("a"), -7);         // null
+        String nth32 = CollectorKit.findNth(sSet, e -> e.startsWith("a"), -4);         // a
+        String nth33 = CollectorKit.findNth(sSet, e -> e.startsWith("a"), -5);         // null
 
         assertEquals(nth0.toString(), "(\"c\", 2)");
         assertEquals(nth1.toString(), "(\"c\", 2)");
@@ -448,13 +446,13 @@ public class CollectorUtilsTest {
         // ss  --->  e.startsWith("a")  --->  [a, ae, ab, ae, af, af]
         // sSet  --->  e.startsWith("a")  --->  [a, ab, ae, af]
 
-        Tuple2<String, Integer> random0 = CollectorUtils.findRandom(ss, null);
-        Tuple2<String, Integer> random1 = CollectorUtils.findRandom(sList, null);
-        String random2 = CollectorUtils.findRandom(sSet, null);
+        Tuple2<String, Integer> random0 = CollectorKit.findRandom(ss, null);
+        Tuple2<String, Integer> random1 = CollectorKit.findRandom(sList, null);
+        String random2 = CollectorKit.findRandom(sSet, null);
 
-        Tuple2<String, Integer> random3 = CollectorUtils.findRandom(ss, e -> e.startsWith("a"));
-        Tuple2<String, Integer> random4 = CollectorUtils.findRandom(sList, e -> e.startsWith("a"));
-        String random5 = CollectorUtils.findRandom(sSet, e -> e.startsWith("a"));
+        Tuple2<String, Integer> random3 = CollectorKit.findRandom(ss, e -> e.startsWith("a"));
+        Tuple2<String, Integer> random4 = CollectorKit.findRandom(sList, e -> e.startsWith("a"));
+        String random5 = CollectorKit.findRandom(sSet, e -> e.startsWith("a"));
 
         System.out.println("random0: " + random0);
         System.out.println("random1: " + random1);

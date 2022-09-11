@@ -29,13 +29,13 @@ public class PathInfo {
      */
     private boolean hasRoot;
     /**
-     * 路径最后一部分的父目录名称
+     * 根目录（如果是路径是相对路径，则为{@code null}）
+     */
+    private String root;
+    /**
+     * 路径最后一部分的父目录名称（如果路径只有根目录，则为 {@code null}）
      */
     private String parentPath;
-    /**
-     * 路径最后的部分：文件/文件夹名称
-     */
-    private String fileName;
     /**
      * 完整路径
      */
@@ -45,13 +45,9 @@ public class PathInfo {
      */
     private String[] paths;
     /**
-     * 获取文件后缀名（如：.txt, .csv）
+     * 文件名对象
      */
-    private String ext;
-    /**
-     * 获取文件后缀名，不带点（如：txt, csv）
-     */
-    private String extNoDot;
+    private FileName fileName;
     /**
      * 路径分隔符
      */
@@ -64,14 +60,13 @@ public class PathInfo {
     public PathInfo() {
     }
 
-    public PathInfo(boolean hasRoot, String parentPath, String fileName, String fullPath, String[] paths, String ext, String extNoDot, String separator, SeparatorType separatorType) {
+    public PathInfo(boolean hasRoot, String root, String parentPath, String fullPath, String[] paths, String fileName, String separator, SeparatorType separatorType) {
         this.hasRoot = hasRoot;
+        this.root = root;
         this.parentPath = parentPath;
-        this.fileName = fileName;
         this.fullPath = fullPath;
         this.paths = paths;
-        this.ext = ext;
-        this.extNoDot = extNoDot;
+        this.fileName = FileName.of(fileName);
         this.separator = separator;
         this.separatorType = separatorType;
     }
@@ -84,20 +79,20 @@ public class PathInfo {
         this.hasRoot = hasRoot;
     }
 
+    public String getRoot() {
+        return root;
+    }
+
+    public void setRoot(String root) {
+        this.root = root;
+    }
+
     public String getParentPath() {
         return parentPath;
     }
 
     public void setParentPath(String parentPath) {
         this.parentPath = parentPath;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
     }
 
     public String getFullPath() {
@@ -116,20 +111,12 @@ public class PathInfo {
         this.paths = paths;
     }
 
-    public String getExt() {
-        return ext;
+    public FileName getFileName() {
+        return fileName;
     }
 
-    public void setExt(String ext) {
-        this.ext = ext;
-    }
-
-    public String getExtNoDot() {
-        return extNoDot;
-    }
-
-    public void setExtNoDot(String extNoDot) {
-        this.extNoDot = extNoDot;
+    public void setFileName(FileName fileName) {
+        this.fileName = fileName;
     }
 
     public String getSeparator() {
@@ -150,19 +137,16 @@ public class PathInfo {
 
     @Override
     public String toString() {
+        String tmpRoot = root == null ? null : '\'' + root + '\'';
         String tmpParentPath = parentPath == null ? null : '\'' + parentPath + '\'';
-        String tmpFileName = fileName == null ? null : '\'' + fileName + '\'';
         String tmpFullPath = fullPath == null ? null : '\'' + fullPath + '\'';
-        String tmpExt = ext == null ? null : '\'' + ext + '\'';
-        String tmpExtNoDot = extNoDot == null ? null : '\'' + extNoDot + '\'';
         return "PathInfo{" +
                 "hasRoot=" + hasRoot +
-                ", parentPath=" + tmpParentPath +
-                ", fileName=" + tmpFileName +
+                ", root=" + tmpRoot +
                 ", fullPath=" + tmpFullPath +
+                ", parentPath=" + tmpParentPath +
+                ", fileName=" + fileName +
                 ", paths=" + G.toString(paths) +
-                ", ext=" + tmpExt +
-                ", extNoDot=" + tmpExtNoDot +
                 ", separator='" + separator + '\'' +
                 ", separatorType=" + separatorType +
                 '}';

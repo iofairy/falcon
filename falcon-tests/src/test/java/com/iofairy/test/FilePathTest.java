@@ -1,7 +1,6 @@
 package com.iofairy.test;
 
 import com.iofairy.falcon.fs.FilePath;
-import com.iofairy.falcon.fs.PathInfo;
 import com.iofairy.tcf.Try;
 import org.junit.jupiter.api.Test;
 
@@ -14,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @date 2021/8/31 19:47
  */
 public class FilePathTest {
+
     @Test
     public void testPath() {
         System.out.println("\n>>> testPath");
@@ -40,11 +40,17 @@ public class FilePathTest {
         String path20 = FilePath.path("/", "", "\\a", "", "/b/c///d", ".", "e/.");
         String path21 = FilePath.path(".", "", "/a", "", "/b/c///d", ".", "e/.");
         String path22 = FilePath.path("/", null);
-        String path23 = FilePath.path("./", (String[])null);
+        String path23 = FilePath.path("./", (String[]) null);
         String path24 = FilePath.path("/", new String[]{});
         String path25 = FilePath.path("../..", "/.\\", "../", "/././a./.a/..");
         String path26 = FilePath.path("../..", "/.\\", "../", "/././a./.a/.");
         String path27 = FilePath.path("../..", "/.\\\\\\", "../", "/././a./.a/.\\\\");
+        String path28 = FilePath.path("d:");
+        String path29 = FilePath.path("/d:");
+        String path30 = FilePath.path("/d:\\\\");
+        String path31 = FilePath.path("/d:///");
+        String path32 = FilePath.path("/d:///a");
+        String path33 = FilePath.path("/d:\\\\a");
 
         assertEquals("./a/b/c/d", path01);
         assertEquals("/", path02);
@@ -73,6 +79,12 @@ public class FilePathTest {
         assertEquals("../../.\\/../a./.a/..", path25);
         assertEquals("../../.\\/../a./.a", path26);
         assertEquals("../../.\\\\\\/../a./.a/.\\\\", path27);
+        assertEquals("d:", path28);
+        assertEquals("/d:", path29);
+        assertEquals("/d:\\\\", path30);
+        assertEquals("/d:", path31);
+        assertEquals("/d:/a", path32);
+        assertEquals("/d:\\\\a", path33);
 
     }
 
@@ -102,11 +114,17 @@ public class FilePathTest {
         String path20 = FilePath.pathWin("/", "", "\\a", "", "/b/c///d", ".", "e/.");
         String path21 = FilePath.pathWin(".", "", "/a", "", "/b/c///d", ".", "e/.");
         String path22 = FilePath.pathWin("/", null);
-        String path23 = FilePath.pathWin("./", (String[])null);
+        String path23 = FilePath.pathWin("./", (String[]) null);
         String path24 = FilePath.pathWin("/", new String[]{});
         String path25 = FilePath.pathWin("../..", "/.\\", "../", "/././a./.a/..");
         String path26 = FilePath.pathWin("../..", "/.\\", "../", "/././a./.a/.");
         String path27 = FilePath.pathWin("../..", "/.\\\\\\", "../", "/././a./.a/.\\\\");
+        String path28 = FilePath.pathWin("d:");
+        String path29 = FilePath.pathWin("/d:");
+        String path30 = FilePath.pathWin("/d:\\\\");
+        String path31 = FilePath.pathWin("/d:///");
+        String path32 = FilePath.pathWin("/d:///a");
+        String path33 = FilePath.pathWin("/d:\\\\a");
 
         assertEquals(".\\a\\b\\c\\d", path01);
         assertEquals("\\", path02);
@@ -135,6 +153,12 @@ public class FilePathTest {
         assertEquals("..\\..\\..\\a.\\.a\\..", path25);
         assertEquals("..\\..\\..\\a.\\.a", path26);
         assertEquals("..\\..\\..\\a.\\.a", path27);
+        assertEquals("d:", path28);
+        assertEquals("\\d:", path29);
+        assertEquals("\\d:", path30);
+        assertEquals("\\d:", path31);
+        assertEquals("\\d:\\a", path32);
+        assertEquals("\\d:\\a", path33);
 
     }
 
@@ -164,11 +188,17 @@ public class FilePathTest {
         String path20 = FilePath.pathSlash("/", "", "\\a", "", "/b/c///d", ".", "e/.");
         String path21 = FilePath.pathSlash(".", "", "/a", "", "/b/c///d", ".", "e/.");
         String path22 = FilePath.pathSlash("/", null);
-        String path23 = FilePath.pathSlash("./", (String[])null);
+        String path23 = FilePath.pathSlash("./", (String[]) null);
         String path24 = FilePath.pathSlash("/", new String[]{});
         String path25 = FilePath.pathSlash("../..", "/.\\", "../", "/././a./.a/..");
         String path26 = FilePath.pathSlash("../..", "/.\\", "../", "/././a./.a/.");
         String path27 = FilePath.pathSlash("../..", "/.\\\\\\", "../", "/././a./.a/.\\\\");
+        String path28 = FilePath.pathSlash("d:");
+        String path29 = FilePath.pathSlash("/d:");
+        String path30 = FilePath.pathSlash("/d:\\\\");
+        String path31 = FilePath.pathSlash("/d:///");
+        String path32 = FilePath.pathSlash("/d:///a");
+        String path33 = FilePath.pathSlash("/d:\\\\a");
 
         assertEquals("./a/b/c/d", path01);
         assertEquals("/", path02);
@@ -197,209 +227,13 @@ public class FilePathTest {
         assertEquals("../../../a./.a/..", path25);
         assertEquals("../../../a./.a", path26);
         assertEquals("../../../a./.a", path27);
+        assertEquals("d:", path28);
+        assertEquals("/d:", path29);
+        assertEquals("/d:", path30);
+        assertEquals("/d:", path31);
+        assertEquals("/d:/a", path32);
+        assertEquals("/d:/a", path33);
 
-    }
-
-    @Test
-    public void testPathInfo() {
-        PathInfo info01 = FilePath.info("");
-        PathInfo info02 = FilePath.info("/");
-        PathInfo info03 = FilePath.info("\\");
-        PathInfo info04 = FilePath.info(".");
-        PathInfo info05 = FilePath.info("/\\");
-        PathInfo info06 = FilePath.info("///a");
-        PathInfo info07 = FilePath.info("///a/b/");
-        PathInfo info08 = FilePath.info("./a/b\\c\\");
-        PathInfo info09 = FilePath.info(".///a\\b//\\c");
-        PathInfo info10 = FilePath.info(".///a\\b//\\c/");
-        PathInfo info11 = FilePath.info(".///a/111.abc.txt");
-        PathInfo info12 = FilePath.info(".///a/111.abc.tx\\t");
-        PathInfo info13 = FilePath.info(".///a/111.abc.tx/t");
-        PathInfo info14 = FilePath.info(".///a/111.abc.txt/");
-        PathInfo info15 = FilePath.info(".///a\\b//\\c/.");
-        PathInfo info16 = FilePath.info(".///a\\b//\\c/..");
-        PathInfo info17 = FilePath.info(".///a\\b//\\c/..\\");
-        PathInfo info18 = FilePath.info(".///a\\b//\\c/../");
-        PathInfo info19 = FilePath.info("..");
-        PathInfo info20 = FilePath.info("..\\");
-        PathInfo info21 = FilePath.info("../");
-        assertNull(info01);
-        assertEquals("PathInfo{hasRoot=true, parentPath='/', fileName=null, fullPath='/', paths=[\"/\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info02.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath=null, fileName='\\', fullPath='\\', paths=[\"\\\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info03.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath=null, fileName='.', fullPath='.', paths=[\".\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info04.toString());
-        assertEquals("PathInfo{hasRoot=true, parentPath='/', fileName='\\', fullPath='/\\', paths=[\"/\", \"\\\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info05.toString());
-        assertEquals("PathInfo{hasRoot=true, parentPath='/', fileName='a', fullPath='/a', paths=[\"/\", \"a\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info06.toString());
-        assertEquals("PathInfo{hasRoot=true, parentPath='/a', fileName='b', fullPath='/a/b', paths=[\"/\", \"a\", \"b\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info07.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a', fileName='b\\c\\', fullPath='./a/b\\c\\', paths=[\".\", \"a\", \"b\\c\\\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info08.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a\\b', fileName='\\c', fullPath='./a\\b/\\c', paths=[\".\", \"a\\b\", \"\\c\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info09.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a\\b', fileName='\\c', fullPath='./a\\b/\\c', paths=[\".\", \"a\\b\", \"\\c\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info10.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a', fileName='111.abc.txt', fullPath='./a/111.abc.txt', paths=[\".\", \"a\", \"111.abc.txt\"], ext='.txt', extNoDot='txt', separator='/', separatorType=SLASH}", info11.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a', fileName='111.abc.tx\\t', fullPath='./a/111.abc.tx\\t', paths=[\".\", \"a\", \"111.abc.tx\\t\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info12.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a/111.abc.tx', fileName='t', fullPath='./a/111.abc.tx/t', paths=[\".\", \"a\", \"111.abc.tx\", \"t\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info13.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a', fileName='111.abc.txt', fullPath='./a/111.abc.txt', paths=[\".\", \"a\", \"111.abc.txt\"], ext='.txt', extNoDot='txt', separator='/', separatorType=SLASH}", info14.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a\\b', fileName='\\c', fullPath='./a\\b/\\c', paths=[\".\", \"a\\b\", \"\\c\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info15.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a\\b/\\c', fileName='..', fullPath='./a\\b/\\c/..', paths=[\".\", \"a\\b\", \"\\c\", \"..\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info16.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a\\b/\\c', fileName='..\\', fullPath='./a\\b/\\c/..\\', paths=[\".\", \"a\\b\", \"\\c\", \"..\\\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info17.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a\\b/\\c', fileName='..', fullPath='./a\\b/\\c/..', paths=[\".\", \"a\\b\", \"\\c\", \"..\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info18.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath=null, fileName='..', fullPath='..', paths=[\"..\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info19.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath=null, fileName='..\\', fullPath='..\\', paths=[\"..\\\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info20.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath=null, fileName='..', fullPath='..', paths=[\"..\"], ext='', extNoDot='', separator='/', separatorType=SLASH}", info21.toString());
-        // System.out.println(info01);
-        // System.out.println(info02);
-        // System.out.println(info03);
-        // System.out.println(info04);
-        // System.out.println(info05);
-        // System.out.println(info06);
-        // System.out.println(info07);
-        // System.out.println(info08);
-        // System.out.println(info09);
-        // System.out.println(info10);
-        // System.out.println(info11);
-        // System.out.println(info12);
-        // System.out.println(info13);
-        // System.out.println(info14);
-        // System.out.println(info15);
-        // System.out.println(info16);
-        // System.out.println(info17);
-        // System.out.println(info18);
-        // System.out.println(info19);
-        // System.out.println(info20);
-        // System.out.println(info21);
-    }
-
-    @Test
-    public void testPathInfoWin() {
-        PathInfo info01 = FilePath.infoWin("");
-        PathInfo info02 = FilePath.infoWin("/");
-        PathInfo info03 = FilePath.infoWin("\\");
-        PathInfo info04 = FilePath.infoWin(".");
-        PathInfo info05 = FilePath.infoWin("/\\");
-        PathInfo info06 = FilePath.infoWin("///a");
-        PathInfo info07 = FilePath.infoWin("///a/b/");
-        PathInfo info08 = FilePath.infoWin("./a/b\\c\\");
-        PathInfo info09 = FilePath.infoWin(".///a\\b//\\c");
-        PathInfo info10 = FilePath.infoWin(".///a\\b//\\c/");
-        PathInfo info11 = FilePath.infoWin(".///a/111.abc.txt");
-        PathInfo info12 = FilePath.infoWin(".///a/111.abc.tx\\t");
-        PathInfo info13 = FilePath.infoWin(".///a/111.abc.tx/t");
-        PathInfo info14 = FilePath.infoWin(".///a/111.abc.txt/");
-        PathInfo info15 = FilePath.infoWin(".///a\\b//\\c/.");
-        PathInfo info16 = FilePath.infoWin(".///a\\b//\\c/..");
-        PathInfo info17 = FilePath.infoWin(".///a\\b//\\c/..\\");
-        PathInfo info18 = FilePath.infoWin(".///a\\b//\\c/../");
-        PathInfo info19 = FilePath.infoWin("..");
-        PathInfo info20 = FilePath.infoWin("..\\");
-        PathInfo info21 = FilePath.infoWin("../");
-        assertNull(info01);
-        assertEquals("PathInfo{hasRoot=true, parentPath='\\', fileName=null, fullPath='\\', paths=[\"\\\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info02.toString());
-        assertEquals("PathInfo{hasRoot=true, parentPath='\\', fileName=null, fullPath='\\', paths=[\"\\\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info03.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath=null, fileName='.', fullPath='.', paths=[\".\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info04.toString());
-        assertEquals("PathInfo{hasRoot=true, parentPath='\\', fileName=null, fullPath='\\', paths=[\"\\\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info05.toString());
-        assertEquals("PathInfo{hasRoot=true, parentPath='\\', fileName='a', fullPath='\\a', paths=[\"\\\", \"a\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info06.toString());
-        assertEquals("PathInfo{hasRoot=true, parentPath='\\a', fileName='b', fullPath='\\a\\b', paths=[\"\\\", \"a\", \"b\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info07.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='.\\a\\b', fileName='c', fullPath='.\\a\\b\\c', paths=[\".\", \"a\", \"b\", \"c\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info08.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='.\\a\\b', fileName='c', fullPath='.\\a\\b\\c', paths=[\".\", \"a\", \"b\", \"c\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info09.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='.\\a\\b', fileName='c', fullPath='.\\a\\b\\c', paths=[\".\", \"a\", \"b\", \"c\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info10.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='.\\a', fileName='111.abc.txt', fullPath='.\\a\\111.abc.txt', paths=[\".\", \"a\", \"111.abc.txt\"], ext='.txt', extNoDot='txt', separator='\\', separatorType=BACKSLASH}", info11.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='.\\a\\111.abc.tx', fileName='t', fullPath='.\\a\\111.abc.tx\\t', paths=[\".\", \"a\", \"111.abc.tx\", \"t\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info12.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='.\\a\\111.abc.tx', fileName='t', fullPath='.\\a\\111.abc.tx\\t', paths=[\".\", \"a\", \"111.abc.tx\", \"t\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info13.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='.\\a', fileName='111.abc.txt', fullPath='.\\a\\111.abc.txt', paths=[\".\", \"a\", \"111.abc.txt\"], ext='.txt', extNoDot='txt', separator='\\', separatorType=BACKSLASH}", info14.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='.\\a\\b', fileName='c', fullPath='.\\a\\b\\c', paths=[\".\", \"a\", \"b\", \"c\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info15.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='.\\a\\b\\c', fileName='..', fullPath='.\\a\\b\\c\\..', paths=[\".\", \"a\", \"b\", \"c\", \"..\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info16.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='.\\a\\b\\c', fileName='..', fullPath='.\\a\\b\\c\\..', paths=[\".\", \"a\", \"b\", \"c\", \"..\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info17.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='.\\a\\b\\c', fileName='..', fullPath='.\\a\\b\\c\\..', paths=[\".\", \"a\", \"b\", \"c\", \"..\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info18.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath=null, fileName='..', fullPath='..', paths=[\"..\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info19.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath=null, fileName='..', fullPath='..', paths=[\"..\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info20.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath=null, fileName='..', fullPath='..', paths=[\"..\"], ext='', extNoDot='', separator='\\', separatorType=BACKSLASH}", info21.toString());
-        // System.out.println(info01);
-        // System.out.println(info02);
-        // System.out.println(info03);
-        // System.out.println(info04);
-        // System.out.println(info05);
-        // System.out.println(info06);
-        // System.out.println(info07);
-        // System.out.println(info08);
-        // System.out.println(info09);
-        // System.out.println(info10);
-        // System.out.println(info11);
-        // System.out.println(info12);
-        // System.out.println(info13);
-        // System.out.println(info14);
-        // System.out.println(info15);
-        // System.out.println(info16);
-        // System.out.println(info17);
-        // System.out.println(info18);
-        // System.out.println(info19);
-        // System.out.println(info20);
-        // System.out.println(info21);
-    }
-
-    @Test
-    public void testPathInfoSlash() {
-        PathInfo info01 = FilePath.infoSlash("");
-        PathInfo info02 = FilePath.infoSlash("/");
-        PathInfo info03 = FilePath.infoSlash("\\");
-        PathInfo info04 = FilePath.infoSlash(".");
-        PathInfo info05 = FilePath.infoSlash("/\\");
-        PathInfo info06 = FilePath.infoSlash("///a");
-        PathInfo info07 = FilePath.infoSlash("///a/b/");
-        PathInfo info08 = FilePath.infoSlash("./a/b\\c\\");
-        PathInfo info09 = FilePath.infoSlash(".///a\\b//\\c");
-        PathInfo info10 = FilePath.infoSlash(".///a\\b//\\c/");
-        PathInfo info11 = FilePath.infoSlash(".///a/111.abc.txt");
-        PathInfo info12 = FilePath.infoSlash(".///a/111.abc.tx\\t");
-        PathInfo info13 = FilePath.infoSlash(".///a/111.abc.tx/t");
-        PathInfo info14 = FilePath.infoSlash(".///a/111.abc.txt/");
-        PathInfo info15 = FilePath.infoSlash(".///a\\b//\\c/.");
-        PathInfo info16 = FilePath.infoSlash(".///a\\b//\\c/..");
-        PathInfo info17 = FilePath.infoSlash(".///a\\b//\\c/..\\");
-        PathInfo info18 = FilePath.infoSlash(".///a\\b//\\c/../");
-        PathInfo info19 = FilePath.infoSlash("..");
-        PathInfo info20 = FilePath.infoSlash("..\\");
-        PathInfo info21 = FilePath.infoSlash("../");
-        assertNull(info01);
-        assertEquals("PathInfo{hasRoot=true, parentPath='/', fileName=null, fullPath='/', paths=[\"/\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info02.toString());
-        assertEquals("PathInfo{hasRoot=true, parentPath='/', fileName=null, fullPath='/', paths=[\"/\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info03.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath=null, fileName='.', fullPath='.', paths=[\".\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info04.toString());
-        assertEquals("PathInfo{hasRoot=true, parentPath='/', fileName=null, fullPath='/', paths=[\"/\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info05.toString());
-        assertEquals("PathInfo{hasRoot=true, parentPath='/', fileName='a', fullPath='/a', paths=[\"/\", \"a\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info06.toString());
-        assertEquals("PathInfo{hasRoot=true, parentPath='/a', fileName='b', fullPath='/a/b', paths=[\"/\", \"a\", \"b\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info07.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a/b', fileName='c', fullPath='./a/b/c', paths=[\".\", \"a\", \"b\", \"c\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info08.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a/b', fileName='c', fullPath='./a/b/c', paths=[\".\", \"a\", \"b\", \"c\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info09.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a/b', fileName='c', fullPath='./a/b/c', paths=[\".\", \"a\", \"b\", \"c\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info10.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a', fileName='111.abc.txt', fullPath='./a/111.abc.txt', paths=[\".\", \"a\", \"111.abc.txt\"], ext='.txt', extNoDot='txt', separator='/', separatorType=WIN_SLASH}", info11.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a/111.abc.tx', fileName='t', fullPath='./a/111.abc.tx/t', paths=[\".\", \"a\", \"111.abc.tx\", \"t\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info12.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a/111.abc.tx', fileName='t', fullPath='./a/111.abc.tx/t', paths=[\".\", \"a\", \"111.abc.tx\", \"t\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info13.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a', fileName='111.abc.txt', fullPath='./a/111.abc.txt', paths=[\".\", \"a\", \"111.abc.txt\"], ext='.txt', extNoDot='txt', separator='/', separatorType=WIN_SLASH}", info14.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a/b', fileName='c', fullPath='./a/b/c', paths=[\".\", \"a\", \"b\", \"c\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info15.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a/b/c', fileName='..', fullPath='./a/b/c/..', paths=[\".\", \"a\", \"b\", \"c\", \"..\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info16.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a/b/c', fileName='..', fullPath='./a/b/c/..', paths=[\".\", \"a\", \"b\", \"c\", \"..\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info17.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath='./a/b/c', fileName='..', fullPath='./a/b/c/..', paths=[\".\", \"a\", \"b\", \"c\", \"..\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info18.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath=null, fileName='..', fullPath='..', paths=[\"..\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info19.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath=null, fileName='..', fullPath='..', paths=[\"..\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info20.toString());
-        assertEquals("PathInfo{hasRoot=false, parentPath=null, fileName='..', fullPath='..', paths=[\"..\"], ext='', extNoDot='', separator='/', separatorType=WIN_SLASH}", info21.toString());
-
-        // System.out.println(info01);
-        // System.out.println(info02);
-        // System.out.println(info03);
-        // System.out.println(info04);
-        // System.out.println(info05);
-        // System.out.println(info06);
-        // System.out.println(info07);
-        // System.out.println(info08);
-        // System.out.println(info09);
-        // System.out.println(info10);
-        // System.out.println(info11);
-        // System.out.println(info12);
-        // System.out.println(info13);
-        // System.out.println(info14);
-        // System.out.println(info15);
-        // System.out.println(info16);
-        // System.out.println(info17);
-        // System.out.println(info18);
-        // System.out.println(info19);
-        // System.out.println(info20);
-        // System.out.println(info21);
     }
 
     @Test
@@ -415,18 +249,24 @@ public class FilePathTest {
         String ext9 = FilePath.ext("..txt");
         String ext10 = FilePath.ext("abc. txt");
         String ext11 = FilePath.ext("..");
+        String ext12 = FilePath.ext(".....");
+        String ext13 = FilePath.ext("... ..");
+        String ext14 = FilePath.ext("... ../");
 
         assertNull(ext1);
-        assertEquals("", ext2);
-        assertEquals("", ext3);
-        assertEquals("", ext4);
+        assertNull(ext2);
+        assertNull(ext3);
+        assertNull(ext4);
         assertEquals(".", ext5);
-        assertEquals("", ext6);
-        assertEquals("", ext7);
-        assertEquals("", ext8);
+        assertNull(ext6);
+        assertNull(ext7);
+        assertNull(ext8);
         assertEquals(".txt", ext9);
         assertEquals(". txt", ext10);
-        assertEquals("", ext11);
+        assertNull(ext11);
+        assertNull(ext12);
+        assertEquals(".", ext13);
+        assertNull(ext14);
 
         // System.out.println(ext1);
         // System.out.println(ext2);
@@ -454,18 +294,24 @@ public class FilePathTest {
         String ext9 = FilePath.extNoDot("..txt");
         String ext10 = FilePath.extNoDot("abc. txt");
         String ext11 = FilePath.extNoDot("..");
+        String ext12 = FilePath.extNoDot(".....");
+        String ext13 = FilePath.extNoDot("... ..");
+        String ext14 = FilePath.extNoDot("... ../");
 
         assertNull(ext1);
-        assertEquals("", ext2);
-        assertEquals("", ext3);
-        assertEquals("", ext4);
+        assertNull(ext2);
+        assertNull(ext3);
+        assertNull(ext4);
         assertEquals("", ext5);
-        assertEquals("", ext6);
-        assertEquals("", ext7);
-        assertEquals("", ext8);
+        assertNull(ext6);
+        assertNull(ext7);
+        assertNull(ext8);
         assertEquals("txt", ext9);
         assertEquals(" txt", ext10);
-        assertEquals("", ext11);
+        assertNull(ext11);
+        assertNull(ext12);
+        assertEquals("", ext13);
+        assertNull(ext14);
 
         // System.out.println(ext1);
         // System.out.println(ext2);

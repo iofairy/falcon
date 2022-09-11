@@ -1,6 +1,6 @@
 package com.iofairy.test;
 
-import com.iofairy.falcon.iterable.ArrayUtils;
+import com.iofairy.falcon.iterable.ArrayKit;
 import com.iofairy.falcon.iterable.PrimitiveArrays;
 import com.iofairy.falcon.iterable.ToArrayMode;
 import com.iofairy.top.G;
@@ -473,11 +473,11 @@ public class PrimitiveArraysTest {
         assertNull(cs14);
         assertEquals(G.toString(cs17), "[]");
         assertNull(cs18);
-        assertThrows(NullPointerException.class, () -> ArrayUtils.charsToString(ToArrayMode.THROW_WHEN_NULL, chars1));
-        assertThrows(NullPointerException.class, () -> ArrayUtils.charsToString(ToArrayMode.THROW_WHEN_NULL, chars2));
-        assertThrows(NullPointerException.class, () -> ArrayUtils.charsToString(ToArrayMode.THROW_WHEN_NULL, c));
-        assertThrows(NullPointerException.class, () -> ArrayUtils.charsToString(ToArrayMode.THROW_WHEN_NULL, null, null, null));
-        assertThrows(NullPointerException.class, () -> ArrayUtils.charsToString(ToArrayMode.THROW_WHEN_NULL, c, 'a', null, 'b'));
+        assertThrows(NullPointerException.class, () -> ArrayKit.charsToString(ToArrayMode.THROW_WHEN_NULL, chars1));
+        assertThrows(NullPointerException.class, () -> ArrayKit.charsToString(ToArrayMode.THROW_WHEN_NULL, chars2));
+        assertThrows(NullPointerException.class, () -> ArrayKit.charsToString(ToArrayMode.THROW_WHEN_NULL, c));
+        assertThrows(NullPointerException.class, () -> ArrayKit.charsToString(ToArrayMode.THROW_WHEN_NULL, null, null, null));
+        assertThrows(NullPointerException.class, () -> ArrayKit.charsToString(ToArrayMode.THROW_WHEN_NULL, c, 'a', null, 'b'));
 
 
         char[] cs21 = PrimitiveArrays.toChars(ToArrayMode.DEFAULT_VALUE, chars1);
