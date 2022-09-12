@@ -734,7 +734,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      */
     @SuppressWarnings("unchecked")
     public List<T> datesFromRange(DateTime<?> toDateTime, int amountUnit, ChronoUnit chronoUnit, IntervalType intervalType) {
-        Objects.requireNonNull(toDateTime, "Parameters `toDate`, `toDateTime` must be non-null!");
+        Objects.requireNonNull(toDateTime, "Parameter `toDateTime` must be non-null!");
         if (dateTime instanceof Date) return (List<T>) DateTimeShift.datesFromRange((Date) dateTime, toDateTime.toDate(), amountUnit, chronoUnit, intervalType);
         if (dateTime instanceof Calendar) return (List<T>) DateTimeShift.datesFromRange((Calendar) dateTime, toDateTime.toCalendar(null), amountUnit, chronoUnit, intervalType);
         return (List<T>) DateTimeShift.datesFromRange((Temporal) dateTime, toDateTime.toDefaultOffsetDT(), amountUnit, chronoUnit, intervalType);

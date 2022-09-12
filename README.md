@@ -12,11 +12,11 @@ Common libraries for Java
 <dependency>
   <groupId>com.iofairy</groupId>
   <artifactId>falcon</artifactId>
-  <version>0.3.5</version>
+  <version>0.3.6</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-implementation 'com.iofairy:falcon:0.3.5'
+implementation 'com.iofairy:falcon:0.3.6'
 ```

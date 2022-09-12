@@ -252,8 +252,7 @@ class DateTimeShift {
      * @since 0.3.0
      */
     public static List<Date> datesFromRange(Date fromDate, Date toDate, int amountUnit, ChronoUnit chronoUnit, IntervalType intervalType) {
-        if (G.hasNull(toDate, chronoUnit))
-            throw new NullPointerException("Parameters `toDate`, `chronoUnit` must be non-null!");
+        if (G.hasNull(toDate, chronoUnit)) throw new NullPointerException("Parameters `toDate`, `chronoUnit` must be non-null!");
         if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit)) {
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS.stream().map(ChronoUnit::toString).collect(Collectors.joining(", ")) + "] is supported for `chronoUnit` parameter!");
         }
@@ -335,8 +334,7 @@ class DateTimeShift {
      * @since 0.3.0
      */
     public static List<Calendar> datesFromRange(Calendar fromCalendar, Calendar toCalendar, int amountUnit, ChronoUnit chronoUnit, IntervalType intervalType) {
-        if (G.hasNull(toCalendar, chronoUnit))
-            throw new NullPointerException("Parameters `toCalendar`, `chronoUnit` must be non-null!");
+        if (G.hasNull(toCalendar, chronoUnit)) throw new NullPointerException("Parameters `toCalendar`, `chronoUnit` must be non-null!");
         if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit)) {
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS.stream().map(ChronoUnit::toString).collect(Collectors.joining(", ")) + "] is supported for `chronoUnit` parameter!");
         }
@@ -418,8 +416,7 @@ class DateTimeShift {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Temporal> List<T> datesFromRange(T fromTemporal, Temporal toTemporal, int amountUnit, ChronoUnit chronoUnit, IntervalType intervalType) {
-        if (G.hasNull(toTemporal, chronoUnit))
-            throw new NullPointerException("Parameters `toTemporal`, `chronoUnit` must be non-null!");
+        if (G.hasNull(toTemporal, chronoUnit)) throw new NullPointerException("Parameters `toTemporal`, `chronoUnit` must be non-null!");
         if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit)) {
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS_STRING + "] is supported for `chronoUnit` parameter!");
         }
