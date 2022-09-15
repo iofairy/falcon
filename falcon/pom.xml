@@ -5,15 +5,15 @@
     <parent>
         <artifactId>falcon-parent</artifactId>
         <groupId>com.iofairy</groupId>
-        <version>0.3.6</version>
+        <version>0.3.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>falcon</artifactId>
 
     <packaging>jar</packaging>
-    <name>Common libraries for Java</name>
-    <description>Common libraries for Java</description>
+    <name>Falcon: A common library for Java</name>
+    <description>Falcon is a common library for Java 8+ and compatible modular system with Java 9+.</description>
     <url>https://github.com/iofairy/falcon/</url>
 
     <licenses>
