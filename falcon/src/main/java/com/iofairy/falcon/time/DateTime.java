@@ -92,7 +92,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
         this.dateTime = getDateTime(dateTime);
 
-        Tuple2<Instant, ZonedDateTime> zdtAndInstant = toZDTAndInstant(dateTime);
+        Tuple2<Instant, ZonedDateTime> zdtAndInstant = toZDTAndInstant();
         this.instant = zdtAndInstant._1;
         this.zonedDateTime = zdtAndInstant._2;
         this.localDateTime = zonedDateTime.toLocalDateTime();
@@ -149,36 +149,36 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         return zonedDateTime;
     }
 
-    private Tuple2<Instant, ZonedDateTime> toZDTAndInstant(Object dateTimeObj) {
+    private Tuple2<Instant, ZonedDateTime> toZDTAndInstant() {
         ZonedDateTime zdt = null;
         Instant ins = null;
-        if (dateTimeObj instanceof Calendar) {
+        if (dateTime instanceof Calendar) {
             Calendar calendar = (Calendar) dateTime;
             ins = calendar.toInstant();
             zdt = ins.atZone(calendar.getTimeZone().toZoneId());
             return Tuple.of(ins, zdt);
         }
-        if (dateTimeObj instanceof Date) {
+        if (dateTime instanceof Date) {
             ins = ((Date) dateTime).toInstant();
             zdt = ins.atZone(TZ.DEFAULT_ZONE);
             return Tuple.of(ins, zdt);
         }
-        if (dateTimeObj instanceof Instant) {
+        if (dateTime instanceof Instant) {
             ins = (Instant) dateTime;
             zdt = ZonedDateTime.ofInstant(ins, TZ.DEFAULT_ZONE);
             return Tuple.of(ins, zdt);
         }
-        if (dateTimeObj instanceof LocalDateTime) {
-            zdt = ((LocalDateTime) dateTimeObj).atZone(TZ.DEFAULT_ZONE);
+        if (dateTime instanceof LocalDateTime) {
+            zdt = ((LocalDateTime) dateTime).atZone(TZ.DEFAULT_ZONE);
             ins = zdt.toInstant();
             return Tuple.of(ins, zdt);
         }
-        if (dateTimeObj instanceof OffsetDateTime) {
-            ins = ((OffsetDateTime) dateTimeObj).toInstant();
-            zdt = ((OffsetDateTime) dateTimeObj).toZonedDateTime();
+        if (dateTime instanceof OffsetDateTime) {
+            ins = ((OffsetDateTime) dateTime).toInstant();
+            zdt = ((OffsetDateTime) dateTime).toZonedDateTime();
             return Tuple.of(ins, zdt);
         }
-        zdt = (ZonedDateTime) dateTimeObj;
+        zdt = (ZonedDateTime) dateTime;
         ins = zdt.toInstant();
         return Tuple.of(ins, zdt);
     }
@@ -249,9 +249,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
             return odt.getOffset().equals(zoneOffset) ? odt : odt.withOffsetSameInstant(zoneOffset);
         }
         if (dateTime instanceof ZonedDateTime) return zonedDateTime.toOffsetDateTime().withOffsetSameInstant(zoneOffset);
-        if (dateTime instanceof Calendar) return instant.atOffset(zoneOffset);
-        if (dateTime instanceof LocalDateTime) return ((LocalDateTime) dateTime).atOffset(zoneOffset);
-        if (dateTime instanceof Instant) return OffsetDateTime.ofInstant(instant, zoneOffset);
+        if (dateTime instanceof LocalDateTime) return localDateTime.atOffset(zoneOffset);
 
         return instant.atOffset(zoneOffset);
     }
@@ -283,19 +281,18 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      */
     public Calendar toCalendar(ZoneId zoneId) {
         if (zoneId == null) {
-            if (dateTime instanceof Calendar) return DateTimes.clone((Calendar) dateTime);
-            return DateTimes.toCalendar(zonedDateTime);
+            return dateTime instanceof Calendar ? (Calendar) this.get() : DateTimes.toCalendar(zonedDateTime);
         }
 
         if (dateTime instanceof Calendar) {
-            Calendar calendar = DateTimes.clone((Calendar) dateTime);
+            Calendar calendar = (Calendar) this.get();
             calendar.setTimeZone(TimeZone.getTimeZone(zoneId));
             return calendar;
         }
 
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(zoneId));
         if (dateTime instanceof Date) {
-            Date date = (Date) dateTime;
+            Date date = (Date) this.get();
             calendar.setTime(date);
             return calendar;
         }
@@ -316,10 +313,9 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @return 返回与参数 calendar 相同类型的 Calendar
      */
     Calendar toCalendar(Calendar calendar, ZonedDateTime zonedDateTime) {
-        Calendar newCalendar = (Calendar) calendar.clone();
-        newCalendar.setTimeZone(TimeZone.getTimeZone(zonedDateTime.getZone()));
-        newCalendar.setTimeInMillis(zonedDateTime.toInstant().toEpochMilli());
-        return newCalendar;
+        calendar.setTimeZone(TimeZone.getTimeZone(zonedDateTime.getZone()));
+        calendar.setTimeInMillis(zonedDateTime.toInstant().toEpochMilli());
+        return calendar;
     }
 
     /**
@@ -339,8 +335,8 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @return Date
      */
     public Date toDate() {
-        if (dateTime instanceof Date) return (Date) dateTime;
-        if (dateTime instanceof Calendar) return ((Calendar) dateTime).getTime();
+        if (dateTime instanceof Date) return (Date) this.get();
+        if (dateTime instanceof Calendar) return ((Calendar) this.get()).getTime();
         return Date.from(instant);
     }
 
@@ -373,7 +369,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         }
         if (dateTime instanceof Calendar) {
             ZonedDateTime zdt = zonedDateTime.plus(amount, unit);
-            return DateTime.from((T) toCalendar((Calendar) dateTime, zdt));
+            return DateTime.from((T) toCalendar((Calendar) this.get(), zdt));
         }
         if (dateTime instanceof Date) {
             ZonedDateTime zdt = zonedDateTime.plus(amount, unit);
@@ -406,7 +402,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
             if (dateTime instanceof Calendar) {
                 ZonedDateTime zdt = (ZonedDateTime) amountToAdd.addTo(zonedDateTime);
-                return DateTime.from((T) toCalendar((Calendar) dateTime, zdt));
+                return DateTime.from((T) toCalendar((Calendar) this.get(), zdt));
             }
 
             return DateTime.from((T) amountToAdd.addTo((Temporal) dateTime));
@@ -468,7 +464,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         }
         if (dateTime instanceof Calendar) {
             ZonedDateTime zdt = zonedDateTime.minus(amount, unit);
-            return DateTime.from((T) toCalendar((Calendar) dateTime, zdt));
+            return DateTime.from((T) toCalendar((Calendar) this.get(), zdt));
         }
         if (dateTime instanceof Date) {
             ZonedDateTime zdt = zonedDateTime.minus(amount, unit);
@@ -500,7 +496,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
             if (dateTime instanceof Calendar) {
                 ZonedDateTime zdt = (ZonedDateTime) amountToSubtract.subtractFrom(zonedDateTime);
-                return DateTime.from((T) toCalendar((Calendar) dateTime, zdt));
+                return DateTime.from((T) toCalendar((Calendar) this.get(), zdt));
             }
 
             return DateTime.from((T) amountToSubtract.subtractFrom((Temporal) dateTime));
@@ -555,7 +551,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
             return DateTime.from((T) Date.from(zdt.toInstant()));
         }
         if (dateTime instanceof Calendar) {
-            return DateTime.from((T) toCalendar((Calendar) dateTime, zdt));
+            return DateTime.from((T) toCalendar((Calendar) this.get(), zdt));
         }
         return DateTime.from((T) zdt.toInstant());
     }
@@ -572,7 +568,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
             return DateTime.from((T) Date.from(zdt.toInstant()));
         }
         if (dateTime instanceof Calendar) {
-            return DateTime.from((T) toCalendar((Calendar) dateTime, zdt));
+            return DateTime.from((T) toCalendar((Calendar) this.get(), zdt));
         }
         return DateTime.from((T) zdt.toInstant());
     }
@@ -662,8 +658,8 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      */
     @SuppressWarnings("unchecked")
     public DateTime<T> round(ChronoUnit chronoUnit, RoundingDT roundingDT) {
-        if (dateTime instanceof Calendar) return DateTime.from((T) DateTimeRound.round((Calendar) dateTime, chronoUnit, roundingDT));
-        if (dateTime instanceof Date) return DateTime.from((T) DateTimeRound.round((Date) dateTime, chronoUnit, roundingDT));
+        if (dateTime instanceof Calendar) return DateTime.from((T) DateTimeRound.round((Calendar) this.get(), chronoUnit, roundingDT));
+        if (dateTime instanceof Date) return DateTime.from((T) DateTimeRound.round((Date) this.get(), chronoUnit, roundingDT));
         if (dateTime instanceof LocalDateTime) return DateTime.from((T) DateTimeRound.round(localDateTime, chronoUnit, roundingDT));
         return DateTime.from((T) DateTimeRound.round((Temporal) dateTime, chronoUnit, roundingDT));
     }
@@ -678,8 +674,8 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      */
     @SuppressWarnings("unchecked")
     public DateTime<T> roundTime(ChronoUnit chronoUnit, int amountUnit, RoundingDT roundingDT) {
-        if (dateTime instanceof Calendar) return DateTime.from((T) DateTimeRound.roundTime((Calendar) dateTime, chronoUnit, amountUnit, roundingDT));
-        if (dateTime instanceof Date) return DateTime.from((T) DateTimeRound.roundTime((Date) dateTime, chronoUnit, amountUnit, roundingDT));
+        if (dateTime instanceof Calendar) return DateTime.from((T) DateTimeRound.roundTime((Calendar) this.get(), chronoUnit, amountUnit, roundingDT));
+        if (dateTime instanceof Date) return DateTime.from((T) DateTimeRound.roundTime((Date) this.get(), chronoUnit, amountUnit, roundingDT));
         if (dateTime instanceof LocalDateTime) return DateTime.from((T) DateTimeRound.roundTime(localDateTime, chronoUnit, amountUnit, roundingDT));
         return DateTime.from((T) DateTimeRound.roundTime((Temporal) dateTime, chronoUnit, amountUnit, roundingDT));
     }
@@ -695,8 +691,8 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      */
     @SuppressWarnings("unchecked")
     public List<T> datesByShift(int shiftTimes, int amountUnit, ChronoUnit chronoUnit, boolean includeCurrentTime) {
-        if (dateTime instanceof Date) return (List<T>) DateTimeShift.datesByShift((Date) dateTime, shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
-        if (dateTime instanceof Calendar) return (List<T>) DateTimeShift.datesByShift((Calendar) dateTime, shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
+        if (dateTime instanceof Date) return (List<T>) DateTimeShift.datesByShift((Date) this.get(), shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
+        if (dateTime instanceof Calendar) return (List<T>) DateTimeShift.datesByShift((Calendar) this.get(), shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
         return (List<T>) DateTimeShift.datesByShift((Temporal) dateTime, shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
     }
 
@@ -735,8 +731,8 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     @SuppressWarnings("unchecked")
     public List<T> datesFromRange(DateTime<?> toDateTime, int amountUnit, ChronoUnit chronoUnit, IntervalType intervalType) {
         Objects.requireNonNull(toDateTime, "Parameter `toDateTime` must be non-null!");
-        if (dateTime instanceof Date) return (List<T>) DateTimeShift.datesFromRange((Date) dateTime, toDateTime.toDate(), amountUnit, chronoUnit, intervalType);
-        if (dateTime instanceof Calendar) return (List<T>) DateTimeShift.datesFromRange((Calendar) dateTime, toDateTime.toCalendar(null), amountUnit, chronoUnit, intervalType);
+        if (dateTime instanceof Date) return (List<T>) DateTimeShift.datesFromRange((Date) this.get(), toDateTime.toDate(), amountUnit, chronoUnit, intervalType);
+        if (dateTime instanceof Calendar) return (List<T>) DateTimeShift.datesFromRange((Calendar) this.get(), toDateTime.toCalendar(null), amountUnit, chronoUnit, intervalType);
         return (List<T>) DateTimeShift.datesFromRange((Temporal) dateTime, toDateTime.toDefaultOffsetDT(), amountUnit, chronoUnit, intervalType);
     }
 

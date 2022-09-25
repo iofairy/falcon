@@ -58,7 +58,6 @@ class DateTimeShift {
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS.stream().map(ChronoUnit::toString).collect(Collectors.joining(", ")) + "] is supported for `chronoUnit` parameter!");
         }
 
-        fromDate = DateTimes.clone(fromDate);
         List<Date> dates = new ArrayList<>();
         if (includeCurrentTime) dates.add(fromDate);
 
@@ -74,33 +73,6 @@ class DateTimeShift {
         }
         if (amountUnit < 0) Collections.reverse(dates);
         return dates;
-    }
-
-    /**
-     * 从给定的时间，按指定的时间单位，指定的步长偏移时间，返回每次偏移后的所有时间列表
-     *
-     * @param fromDate           开始的时间
-     * @param shiftTimes         偏移的次数，负数：则时间往前偏移；正数：则时间往后偏移
-     * @param chronoUnit         时间单位
-     * @param includeCurrentTime 最后列表是否包含 fromDate
-     * @return 每次偏移后的所有时间列表
-     * @since 0.3.0
-     */
-    public static List<Date> datesByShift(Date fromDate, int shiftTimes, ChronoUnit chronoUnit, boolean includeCurrentTime) {
-        return datesByShift(fromDate, shiftTimes, 1, chronoUnit, includeCurrentTime);
-    }
-
-    /**
-     * 从给定的时间，按指定的时间单位，指定的步长偏移时间，返回每次偏移后的所有时间列表
-     *
-     * @param fromDate   开始的时间
-     * @param shiftTimes 偏移的次数，负数：则时间往前偏移；正数：则时间往后偏移
-     * @param chronoUnit 时间单位
-     * @return 每次偏移后的所有时间列表
-     * @since 0.3.0
-     */
-    public static List<Date> datesByShift(Date fromDate, int shiftTimes, ChronoUnit chronoUnit) {
-        return datesByShift(fromDate, shiftTimes, 1, chronoUnit, true);
     }
 
     /**
@@ -136,33 +108,6 @@ class DateTimeShift {
         }
         if (amountUnit < 0) Collections.reverse(dates);
         return dates;
-    }
-
-    /**
-     * 从给定的时间，按指定的时间单位，指定的步长偏移时间，返回每次偏移后的所有时间列表
-     *
-     * @param fromCalendar       开始的时间
-     * @param shiftTimes         偏移的次数，负数：则时间往前偏移；正数：则时间往后偏移
-     * @param chronoUnit         时间单位
-     * @param includeCurrentTime 最后列表是否包含 fromCalendar
-     * @return 每次偏移后的所有时间列表
-     * @since 0.3.0
-     */
-    public static List<Calendar> datesByShift(Calendar fromCalendar, int shiftTimes, ChronoUnit chronoUnit, boolean includeCurrentTime) {
-        return datesByShift(fromCalendar, shiftTimes, 1, chronoUnit, includeCurrentTime);
-    }
-
-    /**
-     * 从给定的时间，按指定的时间单位，指定的步长偏移时间，返回每次偏移后的所有时间列表
-     *
-     * @param fromCalendar 开始的时间
-     * @param shiftTimes   偏移的次数，负数：则时间往前偏移；正数：则时间往后偏移
-     * @param chronoUnit   时间单位
-     * @return 每次偏移后的所有时间列表
-     * @since 0.3.0
-     */
-    public static List<Calendar> datesByShift(Calendar fromCalendar, int shiftTimes, ChronoUnit chronoUnit) {
-        return datesByShift(fromCalendar, shiftTimes, 1, chronoUnit, true);
     }
 
     /**
@@ -212,35 +157,6 @@ class DateTimeShift {
     }
 
     /**
-     * 从给定的时间，按指定的时间单位，指定的步长偏移时间，返回每次偏移后的所有时间列表
-     *
-     * @param fromTemporal       开始的时间
-     * @param shiftTimes         偏移的次数，负数：则时间往前偏移；正数：则时间往后偏移
-     * @param chronoUnit         时间单位
-     * @param includeCurrentTime 最后列表是否包含 fromTemporal
-     * @param <T>                fromTemporal的类型
-     * @return 每次偏移后的所有时间列表
-     * @since 0.3.0
-     */
-    public static <T extends Temporal> List<T> datesByShift(T fromTemporal, int shiftTimes, ChronoUnit chronoUnit, boolean includeCurrentTime) {
-        return datesByShift(fromTemporal, shiftTimes, 1, chronoUnit, includeCurrentTime);
-    }
-
-    /**
-     * 从给定的时间，按指定的时间单位，指定的步长偏移时间，返回每次偏移后的所有时间列表
-     *
-     * @param fromTemporal 开始的时间
-     * @param shiftTimes   偏移的次数，负数：则时间往前偏移；正数：则时间往后偏移
-     * @param chronoUnit   时间单位
-     * @param <T>          fromTemporal的类型
-     * @return 每次偏移后的所有时间列表
-     * @since 0.3.0
-     */
-    public static <T extends Temporal> List<T> datesByShift(T fromTemporal, int shiftTimes, ChronoUnit chronoUnit) {
-        return datesByShift(fromTemporal, shiftTimes, 1, chronoUnit, true);
-    }
-
-    /**
      * 从给定的时间范围（开始时间，结束时间），按指定的时间单位，指定的步长偏移时间，返回每次偏移后的所有时间列表
      *
      * @param fromDate     开始的时间
@@ -257,8 +173,6 @@ class DateTimeShift {
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS.stream().map(ChronoUnit::toString).collect(Collectors.joining(", ")) + "] is supported for `chronoUnit` parameter!");
         }
 
-        fromDate = DateTimes.clone(fromDate);
-        toDate = DateTimes.clone(toDate);
         if (intervalType == null) intervalType = CLOSED;
         List<Date> dates = new ArrayList<>();
         if (intervalType.isLeftClose()) dates.add(fromDate);
@@ -293,33 +207,6 @@ class DateTimeShift {
         }
         if (amountUnit < 0) Collections.reverse(dates);
         return dates;
-    }
-
-    /**
-     * 从给定的时间范围（开始时间，结束时间），按指定的时间单位，指定的步长偏移时间，返回每次偏移后的所有时间列表
-     *
-     * @param fromDate     开始的时间
-     * @param toDate       结束的时间
-     * @param chronoUnit   时间单位
-     * @param intervalType 区间类型
-     * @return 每次偏移后的所有时间列表
-     * @since 0.3.0
-     */
-    public static List<Date> datesFromRange(Date fromDate, Date toDate, ChronoUnit chronoUnit, IntervalType intervalType) {
-        return datesFromRange(fromDate, toDate, 1, chronoUnit, intervalType);
-    }
-
-    /**
-     * 从给定的时间范围（开始时间，结束时间），按指定的时间单位，指定的步长偏移时间，返回每次偏移后的所有时间列表
-     *
-     * @param fromDate   开始的时间
-     * @param toDate     结束的时间
-     * @param chronoUnit 时间单位
-     * @return 每次偏移后的所有时间列表
-     * @since 0.3.0
-     */
-    public static List<Date> datesFromRange(Date fromDate, Date toDate, ChronoUnit chronoUnit) {
-        return datesFromRange(fromDate, toDate, 1, chronoUnit, CLOSED);
     }
 
     /**
@@ -373,33 +260,6 @@ class DateTimeShift {
         }
         if (amountUnit < 0) Collections.reverse(dates);
         return dates;
-    }
-
-    /**
-     * 从给定的时间范围（开始时间，结束时间），按指定的时间单位，指定的步长偏移时间，返回每次偏移后的所有时间列表
-     *
-     * @param fromCalendar 开始的时间
-     * @param toCalendar   结束的时间
-     * @param chronoUnit   时间单位
-     * @param intervalType 区间类型
-     * @return 每次偏移后的所有时间列表
-     * @since 0.3.0
-     */
-    public static List<Calendar> datesFromRange(Calendar fromCalendar, Calendar toCalendar, ChronoUnit chronoUnit, IntervalType intervalType) {
-        return datesFromRange(fromCalendar, toCalendar, 1, chronoUnit, intervalType);
-    }
-
-    /**
-     * 从给定的时间范围（开始时间，结束时间），按指定的时间单位，指定的步长偏移时间，返回每次偏移后的所有时间列表
-     *
-     * @param fromCalendar 开始的时间
-     * @param toCalendar   结束的时间
-     * @param chronoUnit   时间单位
-     * @return 每次偏移后的所有时间列表
-     * @since 0.3.0
-     */
-    public static List<Calendar> datesFromRange(Calendar fromCalendar, Calendar toCalendar, ChronoUnit chronoUnit) {
-        return datesFromRange(fromCalendar, toCalendar, 1, chronoUnit, CLOSED);
     }
 
     /**
@@ -475,35 +335,6 @@ class DateTimeShift {
 
         if (amountUnit < 0) Collections.reverse(dates);
         return dates;
-    }
-
-    /**
-     * 从给定的时间范围（开始时间，结束时间），按指定的时间单位，指定的步长偏移时间，返回每次偏移后的所有时间列表
-     *
-     * @param fromTemporal 开始的时间
-     * @param toTemporal   结束的时间
-     * @param chronoUnit   时间单位
-     * @param intervalType 区间类型
-     * @param <T>          fromTemporal的类型
-     * @return 每次偏移后的所有时间列表
-     * @since 0.3.0
-     */
-    public static <T extends Temporal> List<T> datesFromRange(T fromTemporal, Temporal toTemporal, ChronoUnit chronoUnit, IntervalType intervalType) {
-        return datesFromRange(fromTemporal, toTemporal, 1, chronoUnit, intervalType);
-    }
-
-    /**
-     * 从给定的时间范围（开始时间，结束时间），按指定的时间单位，指定的步长偏移时间，返回每次偏移后的所有时间列表
-     *
-     * @param fromTemporal 开始的时间
-     * @param toTemporal   结束的时间
-     * @param chronoUnit   时间单位
-     * @param <T>          fromTemporal的类型
-     * @return 每次偏移后的所有时间列表
-     * @since 0.3.0
-     */
-    public static <T extends Temporal> List<T> datesFromRange(T fromTemporal, Temporal toTemporal, ChronoUnit chronoUnit) {
-        return datesFromRange(fromTemporal, toTemporal, 1, chronoUnit, CLOSED);
     }
 
     /**

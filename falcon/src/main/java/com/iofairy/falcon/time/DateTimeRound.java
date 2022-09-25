@@ -220,115 +220,114 @@ class DateTimeRound {
         }
         roundingDT = roundingDT == null ? RoundingDT.FLOOR : roundingDT;
 
-        Calendar newCalendar = DateTimes.clone(calendar);
         switch (chronoUnit) {
             case YEARS:
                 switch (roundingDT) {
                     case CEILING:
-                        if (!(newCalendar.get(Calendar.MONTH) == Calendar.JANUARY && newCalendar.get(Calendar.DAY_OF_MONTH) == 1
-                                && newCalendar.get(Calendar.HOUR_OF_DAY) == 0 && newCalendar.get(Calendar.MINUTE) == 0
-                                && newCalendar.get(Calendar.SECOND) == 0 && newCalendar.get(Calendar.MILLISECOND) == 0)) {
-                            newCalendar.add(Calendar.YEAR, 1);
+                        if (!(calendar.get(Calendar.MONTH) == Calendar.JANUARY && calendar.get(Calendar.DAY_OF_MONTH) == 1
+                                && calendar.get(Calendar.HOUR_OF_DAY) == 0 && calendar.get(Calendar.MINUTE) == 0
+                                && calendar.get(Calendar.SECOND) == 0 && calendar.get(Calendar.MILLISECOND) == 0)) {
+                            calendar.add(Calendar.YEAR, 1);
                         }
 
                         break;
                     case HALF_UP:
-                        if (newCalendar.get(Calendar.MONTH) >= 6) {     // 6 代表 7月
-                            newCalendar.add(Calendar.YEAR, 1);
+                        if (calendar.get(Calendar.MONTH) >= 6) {     // 6 代表 7月
+                            calendar.add(Calendar.YEAR, 1);
                         }
                         break;
                 }
-                newCalendar.set(newCalendar.get(Calendar.YEAR), Calendar.JANUARY, 1, 0, 0, 0);
+                calendar.set(calendar.get(Calendar.YEAR), Calendar.JANUARY, 1, 0, 0, 0);
 
                 break;
             case MONTHS:
                 switch (roundingDT) {
                     case CEILING:
-                        if (!(newCalendar.get(Calendar.DAY_OF_MONTH) == 1 && newCalendar.get(Calendar.HOUR_OF_DAY) == 0
-                                && newCalendar.get(Calendar.MINUTE) == 0 && newCalendar.get(Calendar.SECOND) == 0
-                                && newCalendar.get(Calendar.MILLISECOND) == 0)) {
-                            newCalendar.add(Calendar.MONTH, 1);
+                        if (!(calendar.get(Calendar.DAY_OF_MONTH) == 1 && calendar.get(Calendar.HOUR_OF_DAY) == 0
+                                && calendar.get(Calendar.MINUTE) == 0 && calendar.get(Calendar.SECOND) == 0
+                                && calendar.get(Calendar.MILLISECOND) == 0)) {
+                            calendar.add(Calendar.MONTH, 1);
                         }
                         break;
                     case HALF_UP:
-                        int dayOfMonth = newCalendar.get(Calendar.DAY_OF_MONTH);    // 当前是几号
-                        int halfUpDay = halfUpDay(DateTime.from(newCalendar).daysOfMonth());
+                        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);    // 当前是几号
+                        int halfUpDay = halfUpDay(DateTime.from(calendar).daysOfMonth());
                         if (dayOfMonth >= halfUpDay) {
-                            newCalendar.add(Calendar.MONTH, 1);
+                            calendar.add(Calendar.MONTH, 1);
                         }
                         break;
                 }
-                newCalendar.set(newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), 1, 0, 0, 0);
+                calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), 1, 0, 0, 0);
 
                 break;
             case DAYS:
                 switch (roundingDT) {
                     case CEILING:
-                        if (!(newCalendar.get(Calendar.HOUR_OF_DAY) == 0 && newCalendar.get(Calendar.MINUTE) == 0
-                                && newCalendar.get(Calendar.SECOND) == 0 && newCalendar.get(Calendar.MILLISECOND) == 0)) {
-                            newCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                        if (!(calendar.get(Calendar.HOUR_OF_DAY) == 0 && calendar.get(Calendar.MINUTE) == 0
+                                && calendar.get(Calendar.SECOND) == 0 && calendar.get(Calendar.MILLISECOND) == 0)) {
+                            calendar.add(Calendar.DAY_OF_MONTH, 1);
                         }
                         break;
                     case HALF_UP:
-                        if (newCalendar.get(Calendar.HOUR_OF_DAY) >= 12) {
-                            newCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                        if (calendar.get(Calendar.HOUR_OF_DAY) >= 12) {
+                            calendar.add(Calendar.DAY_OF_MONTH, 1);
                         }
                         break;
                 }
-                newCalendar.set(newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+                calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
 
                 break;
             case HOURS:
                 switch (roundingDT) {
                     case CEILING:
-                        if (!(newCalendar.get(Calendar.MINUTE) == 0 && newCalendar.get(Calendar.SECOND) == 0 && newCalendar.get(Calendar.MILLISECOND) == 0)) {
-                            newCalendar.add(Calendar.HOUR_OF_DAY, 1);
+                        if (!(calendar.get(Calendar.MINUTE) == 0 && calendar.get(Calendar.SECOND) == 0 && calendar.get(Calendar.MILLISECOND) == 0)) {
+                            calendar.add(Calendar.HOUR_OF_DAY, 1);
                         }
                         break;
                     case HALF_UP:
-                        if (newCalendar.get(Calendar.MINUTE) >= 30) {
-                            newCalendar.add(Calendar.HOUR_OF_DAY, 1);
+                        if (calendar.get(Calendar.MINUTE) >= 30) {
+                            calendar.add(Calendar.HOUR_OF_DAY, 1);
                         }
                         break;
                 }
-                newCalendar.set(newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH),
-                        newCalendar.get(Calendar.HOUR_OF_DAY), 0, 0);
+                calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                        calendar.get(Calendar.HOUR_OF_DAY), 0, 0);
 
                 break;
             case MINUTES:
                 switch (roundingDT) {
                     case CEILING:
-                        if (!(newCalendar.get(Calendar.SECOND) == 0 && newCalendar.get(Calendar.MILLISECOND) == 0)) {
-                            newCalendar.add(Calendar.MINUTE, 1);
+                        if (!(calendar.get(Calendar.SECOND) == 0 && calendar.get(Calendar.MILLISECOND) == 0)) {
+                            calendar.add(Calendar.MINUTE, 1);
                         }
                         break;
                     case HALF_UP:
-                        if (newCalendar.get(Calendar.SECOND) >= 30) {
-                            newCalendar.add(Calendar.MINUTE, 1);
+                        if (calendar.get(Calendar.SECOND) >= 30) {
+                            calendar.add(Calendar.MINUTE, 1);
                         }
                         break;
                 }
-                newCalendar.set(newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH),
-                        newCalendar.get(Calendar.HOUR_OF_DAY), newCalendar.get(Calendar.MINUTE), 0);
+                calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                        calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), 0);
                 break;
             default:
                 switch (roundingDT) {
                     case CEILING:
-                        if (!(newCalendar.get(Calendar.MILLISECOND) == 0)) {
-                            newCalendar.add(Calendar.SECOND, 1);
+                        if (!(calendar.get(Calendar.MILLISECOND) == 0)) {
+                            calendar.add(Calendar.SECOND, 1);
                         }
                         break;
                     case HALF_UP:
-                        if (newCalendar.get(Calendar.MILLISECOND) >= 500) {
-                            newCalendar.add(Calendar.SECOND, 1);
+                        if (calendar.get(Calendar.MILLISECOND) >= 500) {
+                            calendar.add(Calendar.SECOND, 1);
                         }
                         break;
                 }
-                newCalendar.set(newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH),
-                        newCalendar.get(Calendar.HOUR_OF_DAY), newCalendar.get(Calendar.MINUTE), newCalendar.get(Calendar.SECOND));
+                calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                        calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
         }
-        newCalendar.set(Calendar.MILLISECOND, 0);
-        return newCalendar;
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar;
     }
 
     /**
@@ -353,19 +352,18 @@ class DateTimeRound {
         checkValidAmountUnit(chronoUnit, amountUnit);
         final int newAmountUnit = Math.abs(amountUnit);
 
-        Calendar newCalendar = DateTimes.clone(calendar);
         if (newAmountUnit == 0) {
             switch (chronoUnit) {
                 case HOURS:
-                    newCalendar.set(Calendar.MINUTE, 0);
-                    newCalendar.set(Calendar.SECOND, 0);
+                    calendar.set(Calendar.MINUTE, 0);
+                    calendar.set(Calendar.SECOND, 0);
                     break;
                 case MINUTES:
-                    newCalendar.set(Calendar.SECOND, 0);
+                    calendar.set(Calendar.SECOND, 0);
                     break;
             }
-            newCalendar.set(Calendar.MILLISECOND, 0);
-            return newCalendar;
+            calendar.set(Calendar.MILLISECOND, 0);
+            return calendar;
         }
 
 
@@ -374,7 +372,7 @@ class DateTimeRound {
         int amountToAdd = 0;
         switch (chronoUnit) {
             case HOURS:
-                int hourOfDay = newCalendar.get(Calendar.HOUR_OF_DAY);
+                int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
                 remainder = hourOfDay % newAmountUnit;
                 amountToAdd = newAmountUnit - remainder;
                 if (hourOfDay + amountToAdd > 24) {
@@ -382,32 +380,32 @@ class DateTimeRound {
                 }
                 switch (roundingDT) {
                     case FLOOR:
-                        newCalendar.add(Calendar.HOUR_OF_DAY, -remainder);
+                        calendar.add(Calendar.HOUR_OF_DAY, -remainder);
                         break;
                     case HALF_UP:
                         if (halfUpValue == -1) {
-                            newCalendar.add(Calendar.HOUR_OF_DAY, -remainder);
+                            calendar.add(Calendar.HOUR_OF_DAY, -remainder);
                         } else {
                             if (remainder >= halfUpValue) {
-                                newCalendar.add(Calendar.HOUR_OF_DAY, amountToAdd);
+                                calendar.add(Calendar.HOUR_OF_DAY, amountToAdd);
                             } else {
-                                newCalendar.add(Calendar.HOUR_OF_DAY, -remainder);
+                                calendar.add(Calendar.HOUR_OF_DAY, -remainder);
                             }
                         }
 
                         break;
                     default:
-                        if (!(remainder == 0 && newCalendar.get(Calendar.MINUTE) == 0 && newCalendar.get(Calendar.SECOND) == 0
-                                && newCalendar.get(Calendar.MILLISECOND) == 0)) {
-                            newCalendar.add(Calendar.HOUR_OF_DAY, amountToAdd);
+                        if (!(remainder == 0 && calendar.get(Calendar.MINUTE) == 0 && calendar.get(Calendar.SECOND) == 0
+                                && calendar.get(Calendar.MILLISECOND) == 0)) {
+                            calendar.add(Calendar.HOUR_OF_DAY, amountToAdd);
                         }
                 }
-                newCalendar.set(Calendar.MINUTE, 0);
-                newCalendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
 
                 break;
             case MINUTES:
-                int minute = newCalendar.get(Calendar.MINUTE);
+                int minute = calendar.get(Calendar.MINUTE);
                 remainder = minute % newAmountUnit;
                 amountToAdd = newAmountUnit - remainder;
                 if (minute + amountToAdd > 60) {
@@ -415,29 +413,29 @@ class DateTimeRound {
                 }
                 switch (roundingDT) {
                     case FLOOR:
-                        newCalendar.add(Calendar.MINUTE, -remainder);
+                        calendar.add(Calendar.MINUTE, -remainder);
                         break;
                     case HALF_UP:
                         if (halfUpValue == -1) {
-                            newCalendar.add(Calendar.MINUTE, -remainder);
+                            calendar.add(Calendar.MINUTE, -remainder);
                         } else {
                             if (remainder >= halfUpValue) {
-                                newCalendar.add(Calendar.MINUTE, amountToAdd);
+                                calendar.add(Calendar.MINUTE, amountToAdd);
                             } else {
-                                newCalendar.add(Calendar.MINUTE, -remainder);
+                                calendar.add(Calendar.MINUTE, -remainder);
                             }
                         }
 
                         break;
                     default:
-                        if (!(remainder == 0 && newCalendar.get(Calendar.SECOND) == 0 && newCalendar.get(Calendar.MILLISECOND) == 0)) {
-                            newCalendar.add(Calendar.MINUTE, amountToAdd);
+                        if (!(remainder == 0 && calendar.get(Calendar.SECOND) == 0 && calendar.get(Calendar.MILLISECOND) == 0)) {
+                            calendar.add(Calendar.MINUTE, amountToAdd);
                         }
                 }
-                newCalendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.SECOND, 0);
                 break;
             default:
-                int second = newCalendar.get(Calendar.SECOND);
+                int second = calendar.get(Calendar.SECOND);
                 remainder = second % newAmountUnit;
                 amountToAdd = newAmountUnit - remainder;
                 if (second + amountToAdd > 60) {
@@ -445,29 +443,29 @@ class DateTimeRound {
                 }
                 switch (roundingDT) {
                     case FLOOR:
-                        newCalendar.add(Calendar.SECOND, -remainder);
+                        calendar.add(Calendar.SECOND, -remainder);
                         break;
                     case HALF_UP:
                         if (halfUpValue == -1) {
-                            newCalendar.add(Calendar.SECOND, -remainder);
+                            calendar.add(Calendar.SECOND, -remainder);
                         } else {
                             if (remainder >= halfUpValue) {
-                                newCalendar.add(Calendar.SECOND, amountToAdd);
+                                calendar.add(Calendar.SECOND, amountToAdd);
                             } else {
-                                newCalendar.add(Calendar.SECOND, -remainder);
+                                calendar.add(Calendar.SECOND, -remainder);
                             }
                         }
 
                         break;
                     default:
-                        if (!(remainder == 0 && newCalendar.get(Calendar.MILLISECOND) == 0)) {
-                            newCalendar.add(Calendar.SECOND, amountToAdd);
+                        if (!(remainder == 0 && calendar.get(Calendar.MILLISECOND) == 0)) {
+                            calendar.add(Calendar.SECOND, amountToAdd);
                         }
                 }
         }
 
-        newCalendar.set(Calendar.MILLISECOND, 0);
-        return newCalendar;
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar;
     }
 
     /**
