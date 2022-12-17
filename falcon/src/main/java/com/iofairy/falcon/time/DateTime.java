@@ -17,6 +17,7 @@ package com.iofairy.falcon.time;
 
 import com.iofairy.except.UnexpectedParameterException;
 import com.iofairy.falcon.range.IntervalType;
+import com.iofairy.si.SI;
 import com.iofairy.top.G;
 import com.iofairy.top.S;
 import com.iofairy.tuple.Tuple;
@@ -78,6 +79,11 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      */
     private static final String SUPPORTED_DATETIME_STRING = SUPPORTED_DATETIME.stream().map(Class::getSimpleName).collect(Collectors.joining(", "));
 
+    /**
+     * Date time parse error massage template
+     */
+    private static final String DT_PARSE_ERROR_MSG_TPL = "Text '${text}' could not be parsed, you can specify the DateTime `formatter` manually by calling `${method}`. ";
+
     public DateTime(T dateTime) {
         this(dateTime, true);
     }
@@ -127,6 +133,36 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      */
     public T get() {
         return getDateTime(dateTime);
+    }
+
+    /**
+     * Get current {@link LocalDateTime}
+     *
+     * @return {@code DateTime<LocalDateTime>}
+     * @since 0.3.10
+     */
+    public static DateTime<LocalDateTime> now() {
+        return DateTime.from(LocalDateTime.now());
+    }
+
+    /**
+     * Get current {@link Date}
+     *
+     * @return {@code DateTime<Date>}
+     * @since 0.3.10
+     */
+    public static DateTime<Date> nowDate() {
+        return DateTime.from(new Date());
+    }
+
+    /**
+     * Get current {@link Instant}
+     *
+     * @return {@code DateTime<Instant>}
+     * @since 0.3.10
+     */
+    public static DateTime<Instant> nowInstant() {
+        return DateTime.from(Instant.now());
     }
 
     public LocalDateTime getLocalDateTime() {
@@ -834,6 +870,20 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         return DateTime.from(LocalDateTime.parse(text, formatter));
     }
 
+    /**
+     * Obtains an instance of {@code DateTime<LocalDateTime>} from a text string using a formatter that <b>is intelligently selected through the system</b>.
+     *
+     * @param text the text to parse, not null
+     * @return {@code DateTime<LocalDateTime>}
+     * @throws DateTimeParseException if the text cannot be parsed
+     * @since 0.3.10
+     */
+    public static DateTime<LocalDateTime> parseAuto(CharSequence text) {
+        String dateFormat = DateTimePattern.forDTF(text.toString());
+        if (S.isEmpty(dateFormat)) throw new DateTimeParseException(SI.$(DT_PARSE_ERROR_MSG_TPL, text, "DateTime.parse(CharSequence, String)"), text, 0);
+        return parse(text, dateFormat);
+    }
+
     public static DateTime<Date> parseDate(CharSequence text) {
         return parseDate(text, DateTimePattern.getDTF("y-M-d H:m:s[.SSS][.SS][.S]"), TZ.DEFAULT_ZONE);
     }
@@ -867,6 +917,37 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         LocalDateTime ldt = LocalDateTime.parse(text, formatter);
         ZonedDateTime zdt = ldt.atZone(zoneId == null ? TZ.DEFAULT_ZONE : zoneId);
         return DateTime.from(Date.from(zdt.toInstant()));
+    }
+
+    /**
+     * Obtains an instance of {@code DateTime<Date>} from a text <b>intelligently</b>.
+     *
+     * @param text the text to parse, not null
+     * @return {@code DateTime<Date>}
+     * @throws DateTimeParseException if the text cannot be parsed
+     * @since 0.3.10
+     */
+    public static DateTime<Date> parseDateAuto(CharSequence text) {
+        String dateFormat = DateTimePattern.forDTF(text.toString());
+        if (S.isEmpty(dateFormat)) throw new DateTimeParseException(SI.$(DT_PARSE_ERROR_MSG_TPL, text, "DateTime.parseDate(CharSequence, String)"), text, 0);
+
+        return parseDate(text, DateTimePattern.getDTF(dateFormat), TZ.DEFAULT_ZONE);
+    }
+
+    /**
+     * Obtains an instance of {@code DateTime<Date>} from a text string using a formatter that <b>is intelligently selected through the system</b>.
+     *
+     * @param text   the text to parse, not null
+     * @param zoneId zoneId
+     * @return {@code DateTime<Date>}
+     * @throws DateTimeParseException if the text cannot be parsed
+     * @since 0.3.10
+     */
+    public static DateTime<Date> parseDateAuto(CharSequence text, ZoneId zoneId) {
+        String dateFormat = DateTimePattern.forDTF(text.toString());
+        if (S.isEmpty(dateFormat)) throw new DateTimeParseException(SI.$(DT_PARSE_ERROR_MSG_TPL, text, "DateTime.parseDate(CharSequence, String, ZoneId)"), text, 0);
+
+        return parseDate(text, DateTimePattern.getDTF(dateFormat), zoneId);
     }
 
     @Override

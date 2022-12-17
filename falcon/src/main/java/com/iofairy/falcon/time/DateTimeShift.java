@@ -55,7 +55,7 @@ class DateTimeShift {
         Objects.requireNonNull(chronoUnit, "Parameter `chronoUnit` must be non-null!");
 
         if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit)) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS.stream().map(ChronoUnit::toString).collect(Collectors.joining(", ")) + "] is supported for `chronoUnit` parameter!");
+            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS_STRING + "] is supported for `chronoUnit` parameter!");
         }
 
         List<Date> dates = new ArrayList<>();
@@ -90,7 +90,7 @@ class DateTimeShift {
         Objects.requireNonNull(chronoUnit, "Parameter `chronoUnit` must be non-null!");
 
         if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit)) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS.stream().map(ChronoUnit::toString).collect(Collectors.joining(", ")) + "] is supported for `chronoUnit` parameter!");
+            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS_STRING + "] is supported for `chronoUnit` parameter!");
         }
 
         Calendar calendar = DateTimes.clone(fromCalendar);
@@ -170,7 +170,7 @@ class DateTimeShift {
     public static List<Date> datesFromRange(Date fromDate, Date toDate, int amountUnit, ChronoUnit chronoUnit, IntervalType intervalType) {
         if (G.hasNull(toDate, chronoUnit)) throw new NullPointerException("Parameters `toDate`, `chronoUnit` must be non-null!");
         if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit)) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS.stream().map(ChronoUnit::toString).collect(Collectors.joining(", ")) + "] is supported for `chronoUnit` parameter!");
+            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS_STRING + "] is supported for `chronoUnit` parameter!");
         }
 
         if (intervalType == null) intervalType = CLOSED;
@@ -223,7 +223,7 @@ class DateTimeShift {
     public static List<Calendar> datesFromRange(Calendar fromCalendar, Calendar toCalendar, int amountUnit, ChronoUnit chronoUnit, IntervalType intervalType) {
         if (G.hasNull(toCalendar, chronoUnit)) throw new NullPointerException("Parameters `toCalendar`, `chronoUnit` must be non-null!");
         if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit)) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS.stream().map(ChronoUnit::toString).collect(Collectors.joining(", ")) + "] is supported for `chronoUnit` parameter!");
+            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS_STRING + "] is supported for `chronoUnit` parameter!");
         }
 
         if (intervalType == null) intervalType = CLOSED;
