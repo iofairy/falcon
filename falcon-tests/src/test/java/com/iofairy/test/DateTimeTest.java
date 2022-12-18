@@ -1076,6 +1076,7 @@ public class DateTimeTest {
         DateTime<Date> dt04 = DateTime.parseDateAuto("999");    // 0999-01-01 00:00:00.000000000 [Asia/Shanghai +08:05 GMT+8:05:43 周二]
         DateTime<Date> dt05 = DateTime.parseDateAuto("2点5分", TZ.NEW_YORK);  // 1970-01-01 15:05:00.000000000 [Asia/Shanghai +08:00 GMT+8 周四]
         DateTime<Date> dt06 = DateTime.parseDateAuto("2022-8-01T10:5:15.98");   // 2022-08-01 10:05:15.980000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        DateTime<Date> dt07 = DateTime.parseDateAuto("20220810T170650666");     // 2022-08-10 17:06:50.666000000 [Asia/Shanghai +08:00 GMT+8 周三]
 
         System.out.println(dt0.dtDetail());         // 2022-08-01 10:05:15.000000000 [周一]
         System.out.println(dt1.dtDetail());         // 2022-08-01 10:05:15.000000000 [周一]
@@ -1097,6 +1098,7 @@ public class DateTimeTest {
         System.out.println(dt04.dtDetail());        // 0999-01-01 00:00:00.000000000 [Asia/Shanghai +08:05 GMT+8:05:43 周二]
         System.out.println(dt05.dtDetail());        // 1970-01-01 15:05:00.000000000 [Asia/Shanghai +08:00 GMT+8 周四]
         System.out.println(dt06.dtDetail());        // 2022-08-01 10:05:15.980000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        System.out.println(dt07.dtDetail());        // 2022-08-10 17:06:50.666000000 [Asia/Shanghai +08:00 GMT+8 周三]
 
         assertEquals(dt0.dtDetail(), "2022-08-01 10:05:15.000000000 [周一]");
         assertEquals(dt1.dtDetail(), "2022-08-01 10:05:15.000000000 [周一]");
@@ -1118,6 +1120,7 @@ public class DateTimeTest {
         assertEquals(dt04.dtDetail(), "0999-01-01 00:00:00.000000000 [Asia/Shanghai +08:05 GMT+8:05:43 周二]");
         assertEquals(dt05.dtDetail(), "1970-01-01 15:05:00.000000000 [Asia/Shanghai +08:00 GMT+8 周四]");
         assertEquals(dt06.dtDetail(), "2022-08-01 10:05:15.980000000 [Asia/Shanghai +08:00 GMT+8 周一]");
+        assertEquals(dt07.dtDetail(), "2022-08-10 17:06:50.666000000 [Asia/Shanghai +08:00 GMT+8 周三]");
 
         assertThrows(DateTimeParseException.class, () -> DateTime.parseAuto("2022081017065066"));
         assertThrows(DateTimeParseException.class, () -> DateTime.parseDateAuto("20228"));
