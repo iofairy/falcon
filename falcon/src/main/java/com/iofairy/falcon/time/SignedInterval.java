@@ -744,6 +744,39 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         return intervalStr;
     }
 
+    public String toSimpleString() {
+        String centuriesStr = OS.IS_ZH_LANG ? "世纪" : " centuries ";
+        String yearsStr     = OS.IS_ZH_LANG ? "年" : " years ";
+        String monthsStr    = OS.IS_ZH_LANG ? "月" : " months ";
+        String daysStr      = OS.IS_ZH_LANG ? "天" : " days ";
+        String hoursStr     = OS.IS_ZH_LANG ? "时" : " hours ";
+        String minutesStr   = OS.IS_ZH_LANG ? "分" : " minutes ";
+        String secondsStr   = OS.IS_ZH_LANG ? "秒" : " seconds ";
+        String millisStr    = OS.IS_ZH_LANG ? "毫秒" : " millis";
+        String microsStr    = OS.IS_ZH_LANG ? "微秒" : " micros";
+        String nanosStr     = OS.IS_ZH_LANG ? "纳秒" : " nanos";
+
+        if (centuries == 0 && years == 0 && months == 0 && days == 0 && hours == 0
+                && minutes == 0 && seconds == 0 && millis == 0 && micros == 0 && nanos == 0) {
+            return nanos + nanosStr;
+        }
+
+        String intervalStr = "";
+
+        if (centuries != 0) intervalStr += centuries + centuriesStr;
+        if (years != 0)     intervalStr += years + yearsStr;
+        if (months != 0)    intervalStr += months + monthsStr;
+        if (days != 0)      intervalStr += days + daysStr;
+        if (hours != 0)     intervalStr += hours + hoursStr;
+        if (minutes != 0)   intervalStr += minutes + minutesStr;
+        if (seconds != 0)   intervalStr += seconds + secondsStr;
+        if (millis != 0)    intervalStr += millis + millisStr;
+        if (micros != 0)    intervalStr += micros + microsStr;
+        if (nanos != 0)     intervalStr += nanos + nanosStr;
+
+        return intervalStr;
+    }
+
     /**
      * 将总纳秒数转化成标准的 <b>时-分-秒-毫秒-微秒-纳秒</b>
      *

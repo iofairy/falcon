@@ -672,6 +672,23 @@ public class IntervalTest {
         assertEquals("2年-5月0天0时0分0秒0毫秒", signedInterval13.toString());
         assertEquals("1月0天0时0分0秒0毫秒", signedInterval14.toString());
         assertEquals("-3月0天0时0分0秒0毫秒", signedInterval15.toString());
+
+        assertEquals("3天", signedInterval01.toSimpleString());
+        assertEquals("-2天", signedInterval02.toSimpleString());
+        assertEquals("2月", signedInterval03.toSimpleString());
+        assertEquals("-5月", signedInterval04.toSimpleString());
+        assertEquals("2月3天", signedInterval05.toSimpleString());
+        assertEquals("-5月3天", signedInterval06.toSimpleString());
+        assertEquals("3天", signedInterval07.toSimpleString());
+        assertEquals("-3月", signedInterval08.toSimpleString());
+        assertEquals("2年-5月", signedInterval09.toSimpleString());
+        assertEquals("1月", signedInterval10.toSimpleString());
+        assertEquals("-3月", signedInterval11.toSimpleString());
+        assertEquals("-3月", signedInterval12.toSimpleString());
+        assertEquals("2年-5月", signedInterval13.toSimpleString());
+        assertEquals("1月", signedInterval14.toSimpleString());
+        assertEquals("-3月", signedInterval15.toSimpleString());
+
         System.out.println("signedInterval01: " + signedInterval01);
         System.out.println("signedInterval02: " + signedInterval02);
         System.out.println("signedInterval03: " + signedInterval03);
@@ -717,6 +734,17 @@ public class IntervalTest {
         assertEquals("3月0天0时0分0秒0毫秒", interval11.toString());
         assertEquals("7月0天0时0分0秒0毫秒", interval12.toString());
         assertEquals("3月0天0时0分0秒0毫秒", interval15.toString());
+
+        assertEquals("3天", interval01.toSimpleString());
+        assertEquals("2月", interval03.toSimpleString());
+        assertEquals("5月", interval04.toSimpleString());
+        assertEquals("2月3天", interval05.toSimpleString());
+        assertEquals("5月3天", interval06.toSimpleString());
+        assertEquals("2年5月", interval09.toSimpleString());
+        assertEquals("11月", interval10.toSimpleString());
+        assertEquals("3月", interval11.toSimpleString());
+        assertEquals("7月", interval12.toSimpleString());
+        assertEquals("3月", interval15.toSimpleString());
 
         System.out.println("interval01: " + interval01);
         // System.out.println("interval02: " + interval02);
@@ -798,5 +826,19 @@ public class IntervalTest {
         assertEquals("1天5时1分57秒0毫秒", minusSI.toString());
         assertEquals("1天6时48分59秒0毫秒", interval.toString());
         assertEquals("1天5时1分57秒0毫秒", minusInterval.toString());
+    }
+
+
+    @Test
+    public void testToSimpleString() {
+        SignedInterval signedInterval = SignedInterval.of(1, 0, 0, 1, -2, 530, 0);
+        Interval interval = Interval.of(1, 0, 3, 1, -2, 0, 900);
+
+        System.out.println(signedInterval.toSimpleString());
+        System.out.println(interval.toSimpleString());
+
+        assertEquals("1年1时6分50秒", signedInterval.toSimpleString());
+        assertEquals("1年3天58分900毫秒", interval.toSimpleString());
+
     }
 }

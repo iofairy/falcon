@@ -6,7 +6,7 @@
 
     <groupId>com.iofairy</groupId>
     <artifactId>falcon-parent</artifactId>
-    <version>0.3.10</version>
+    <version>0.3.11</version>
     <modules>
         <module>falcon</module>
         <module>falcon-tests</module>

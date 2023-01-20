@@ -85,7 +85,11 @@ public enum ArchiveFormat {
     MSI(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".msi", "Windows Installer (also MSI)"),
     JAR(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".jar", "Java Archive (JAR)"),
     WAR(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".war", "Web Application archive (Java-based web app)"),
+    IPA(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".ipa", "iOS and iPadOS application package"),
     APK(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".apk", "Android application package"),
+    XAPK(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".xapk", "Android application package"),
+    APKS(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".apks", "Android application package"),
+    APKM(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".apkm", "Android application package"),
     CRX(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".crx", "Google Chrome extension package"),
     /*
      * DISK_IMAGE
@@ -103,9 +107,9 @@ public enum ArchiveFormat {
      */
     public final String extName;
     /**
-     * 归档器或压缩器的官方名称
+     * 归档器或压缩器的官方名称或描述
      */
-    public final String officialName;
+    public final String description;
 
     static final Map<String, ArchiveFormat> SA_MAP = new HashMap<>();
 
@@ -120,10 +124,10 @@ public enum ArchiveFormat {
         }
     }
 
-    ArchiveFormat(EnumSet<ArchiveType> archiveTypes, String extName, String officialName) {
+    ArchiveFormat(EnumSet<ArchiveType> archiveTypes, String extName, String description) {
         this.archiveTypes = archiveTypes;
         this.extName = extName;
-        this.officialName = officialName;
+        this.description = description;
     }
 
     public static ArchiveFormat of(String extName) {
