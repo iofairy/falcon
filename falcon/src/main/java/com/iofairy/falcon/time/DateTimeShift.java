@@ -51,7 +51,7 @@ class DateTimeShift {
      * @return 每次偏移后的所有时间列表
      * @since 0.3.0
      */
-    public static List<Date> datesByShift(Date fromDate, int shiftTimes, int amountUnit, ChronoUnit chronoUnit, boolean includeCurrentTime) {
+    public static List<Date> datesByShift(Date fromDate, ZonedDateTime zdt, int shiftTimes, int amountUnit, ChronoUnit chronoUnit, boolean includeCurrentTime) {
         Objects.requireNonNull(chronoUnit, "Parameter `chronoUnit` must be non-null!");
 
         if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit)) {
@@ -65,11 +65,9 @@ class DateTimeShift {
 
         amountUnit = shiftTimes < 0 ? -Math.abs(amountUnit) : Math.abs(amountUnit);
         long abs = Math.abs(shiftTimes);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(fromDate);
         for (long i = 0; i < abs; i++) {
-            addAmountToCalendar(calendar, amountUnit, chronoUnit);
-            dates.add(calendar.getTime());
+            zdt = zdt.plus(amountUnit, chronoUnit);
+            dates.add(Date.from(zdt.toInstant()));
         }
         if (amountUnit < 0) Collections.reverse(dates);
         return dates;
@@ -123,7 +121,7 @@ class DateTimeShift {
      * @since 0.3.0
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Temporal> List<T> datesByShift(T fromTemporal, long shiftTimes, int amountUnit, ChronoUnit chronoUnit, boolean includeCurrentTime) {
+    public static <T extends Temporal> List<T> datesByShift(T fromTemporal, int shiftTimes, int amountUnit, ChronoUnit chronoUnit, boolean includeCurrentTime) {
         Objects.requireNonNull(chronoUnit, "Parameter `chronoUnit` must be non-null!");
 
         if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit))
@@ -167,7 +165,7 @@ class DateTimeShift {
      * @return 每次偏移后的所有时间列表
      * @since 0.3.0
      */
-    public static List<Date> datesFromRange(Date fromDate, Date toDate, int amountUnit, ChronoUnit chronoUnit, IntervalType intervalType) {
+    public static List<Date> datesFromRange(Date fromDate, Date toDate, ZonedDateTime fromZdt, ZonedDateTime toZdt, int amountUnit, ChronoUnit chronoUnit, IntervalType intervalType) {
         if (G.hasNull(toDate, chronoUnit)) throw new NullPointerException("Parameters `toDate`, `chronoUnit` must be non-null!");
         if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit)) {
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS_STRING + "] is supported for `chronoUnit` parameter!");
@@ -178,32 +176,31 @@ class DateTimeShift {
         if (intervalType.isLeftClose()) dates.add(fromDate);
         if (amountUnit == 0) return dates;
 
-        SignedInterval signedInterval = SignedInterval.between(fromDate, toDate);
+        SignedInterval signedInterval = SignedInterval.between(fromZdt, toZdt);
 
         long totalShift = getShiftTimes(chronoUnit, signedInterval);
+
         amountUnit = totalShift < 0 ? -Math.abs(amountUnit) : Math.abs(amountUnit);
         long shiftTimes = totalShift / amountUnit;                  // 偏移的次数，负数：则时间往前偏移；正数：则时间往后偏移
         boolean isExactDivision = totalShift % amountUnit == 0;     // 是否整除
 
         if (shiftTimes == 0) return dates;
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(fromDate);
         long maxIndex = Math.abs(shiftTimes) - 1;
         for (long i = 0; ; i++) {
-            addAmountToCalendar(calendar, amountUnit, chronoUnit);
+            fromZdt = fromZdt.plus(amountUnit, chronoUnit);
             if (i == maxIndex) {
                 if (isExactDivision) {
                     if (intervalType.isRightClose()) {
-                        dates.add(calendar.getTime());
+                        dates.add(Date.from(fromZdt.toInstant()));
                     }
                 } else {
-                    dates.add(calendar.getTime());
+                    dates.add(Date.from(fromZdt.toInstant()));
                 }
 
                 break;
             }
-            dates.add(calendar.getTime());
+            dates.add(Date.from(fromZdt.toInstant()));
         }
         if (amountUnit < 0) Collections.reverse(dates);
         return dates;

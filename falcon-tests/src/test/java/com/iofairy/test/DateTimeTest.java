@@ -5,9 +5,12 @@ import com.iofairy.falcon.time.*;
 import com.iofairy.top.G;
 import org.junit.jupiter.api.Test;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -1460,4 +1463,18 @@ public class DateTimeTest {
     }
 
 
+    @Test
+    public void testExcludeClass() {
+        long timeMillis = DateTime.parse("2023-03-05 12:53:10.098").toInstant().toEpochMilli();
+        java.sql.Date date = new java.sql.Date(timeMillis);
+        Time time = new Time(timeMillis);
+        Timestamp timestamp = new Timestamp(timeMillis);
+
+        DateTime<Timestamp> timestampDT = DateTime.of(timestamp);
+
+        assertEquals("2023-03-05 12:53:10.098", timestampDT.toString());
+        assertThrows(UnsupportedTemporalTypeException.class, () -> DateTime.of(date));
+        assertThrows(UnsupportedTemporalTypeException.class, () -> DateTime.of(time));
+
+    }
 }

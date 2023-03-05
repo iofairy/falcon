@@ -16,6 +16,7 @@
 
 module falcon.test {
     requires iofairy.falcon;
+    requires java.sql;
     requires org.junit.jupiter.api;
 
     exports com.iofairy.test to org.junit.platform.commons;

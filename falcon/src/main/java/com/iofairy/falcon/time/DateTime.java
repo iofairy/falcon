@@ -68,6 +68,10 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * The date-time with a time-zone
      */
     private final ZonedDateTime zonedDateTime;
+    /**
+     * The date-time with an offset
+     */
+    private final OffsetDateTime offsetDateTime;
 
     /**
      * Supported date time
@@ -78,6 +82,11 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * Supported date time string
      */
     private static final String SUPPORTED_DATETIME_STRING = SUPPORTED_DATETIME.stream().map(Class::getSimpleName).collect(Collectors.joining(", "));
+
+    /**
+     * excluded classes
+     */
+    private static final List<String> EXCLUDED_CLASS_NAMES = Arrays.asList("java.sql.Date", "java.sql.Time");
 
     /**
      * Date time parse error massage template
@@ -94,6 +103,10 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
             if (SUPPORTED_DATETIME.stream().noneMatch(c -> c.isAssignableFrom(dateTime.getClass()))) {
                 throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_DATETIME_STRING + "] is supported for `dateTime` parameter!");
             }
+
+            if (EXCLUDED_CLASS_NAMES.contains(dateTime.getClass().getName())){
+                throw new UnsupportedTemporalTypeException(EXCLUDED_CLASS_NAMES + " are unsupported here, you can convert it to the `java.util.Date` first!");
+            }
         }
 
         this.dateTime = getDateTime(dateTime);
@@ -102,6 +115,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         this.instant = zdtAndInstant._1;
         this.zonedDateTime = zdtAndInstant._2;
         this.localDateTime = zonedDateTime.toLocalDateTime();
+        this.offsetDateTime = zonedDateTime.toOffsetDateTime();
         this.offset = zonedDateTime.getOffset();
         this.zone = zonedDateTime.getZone();
 
@@ -183,6 +197,10 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
     public ZonedDateTime getZonedDateTime() {
         return zonedDateTime;
+    }
+
+    public OffsetDateTime getOffsetDateTime(){
+        return offsetDateTime;
     }
 
     private Tuple2<Instant, ZonedDateTime> toZDTAndInstant() {
@@ -681,6 +699,14 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         return localDateTime.getSecond();
     }
 
+    public int getMillis() {
+        return localDateTime.get(ChronoField.MILLI_OF_SECOND);
+    }
+
+    public int getMicros() {
+        return localDateTime.get(ChronoField.MICRO_OF_SECOND);
+    }
+
     public int getNano() {
         return localDateTime.getNano();
     }
@@ -727,7 +753,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      */
     @SuppressWarnings("unchecked")
     public List<T> datesByShift(int shiftTimes, int amountUnit, ChronoUnit chronoUnit, boolean includeCurrentTime) {
-        if (dateTime instanceof Date) return (List<T>) DateTimeShift.datesByShift((Date) this.get(), shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
+        if (dateTime instanceof Date) return (List<T>) DateTimeShift.datesByShift((Date) this.get(), zonedDateTime, shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
         if (dateTime instanceof Calendar) return (List<T>) DateTimeShift.datesByShift((Calendar) this.get(), shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
         return (List<T>) DateTimeShift.datesByShift((Temporal) dateTime, shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
     }
@@ -767,7 +793,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     @SuppressWarnings("unchecked")
     public List<T> datesFromRange(DateTime<?> toDateTime, int amountUnit, ChronoUnit chronoUnit, IntervalType intervalType) {
         Objects.requireNonNull(toDateTime, "Parameter `toDateTime` must be non-null!");
-        if (dateTime instanceof Date) return (List<T>) DateTimeShift.datesFromRange((Date) this.get(), toDateTime.toDate(), amountUnit, chronoUnit, intervalType);
+        if (dateTime instanceof Date) return (List<T>) DateTimeShift.datesFromRange((Date) this.get(), toDateTime.toDate(), zonedDateTime, toDateTime.zonedDateTime, amountUnit, chronoUnit, intervalType);
         if (dateTime instanceof Calendar) return (List<T>) DateTimeShift.datesFromRange((Calendar) this.get(), toDateTime.toCalendar(null), amountUnit, chronoUnit, intervalType);
         return (List<T>) DateTimeShift.datesFromRange((Temporal) dateTime, toDateTime.toDefaultOffsetDT(), amountUnit, chronoUnit, intervalType);
     }
@@ -1124,6 +1150,14 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
             default:  // CLOSED_OPEN
                 return this.isAfterOrEquals(startDT) && this.isBefore(endDT);
         }
+    }
+
+    public long toEpochSecond(){
+        return instant.getEpochSecond();
+    }
+
+    public long toEpochMilli(){
+        return instant.toEpochMilli();
     }
 
     @Override
