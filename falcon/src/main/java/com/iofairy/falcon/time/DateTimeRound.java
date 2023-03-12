@@ -156,7 +156,7 @@ class DateTimeRound {
     /**
      * 对时间进行取整
      *
-     * @param temporal   时间，若时间类型为 {@code Instant}，则以 {@code UTC} 时区为准，进行取整运算。
+     * @param temporal   时间
      * @param chronoUnit 按此时间单位作为取整后的精度
      * @param roundingDT 取整类型，值为{@code null}默认为：{@link RoundingDT#FLOOR}
      * @param <T>        时间类型，若类型为 {@link Instant}，则以 {@link TZ#DEFAULT_ZONE} 时区为准，进行取整运算。
@@ -164,30 +164,20 @@ class DateTimeRound {
      * @since 0.3.0
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Temporal> T round(T temporal, ChronoUnit chronoUnit, RoundingDT roundingDT) {
-        // if (temporal == null) return temporal;
-        // if (!DTConst.SUPPORTED_TEMPORAL_COMMON.contains(temporal.getClass())) {
-        //     throw new UnsupportedTemporalTypeException("Only [" + DTConst.SUPPORTED_TEMPORAL_COMMON_STRING + "] is supported for `temporal` parameter!");
-        // }
+    public static <T extends Temporal> T round(T temporal, LocalDateTime localDateTime, ZoneId zoneId, ChronoUnit chronoUnit, RoundingDT roundingDT) {
 
+        LocalDateTime ldt = round(localDateTime, chronoUnit, roundingDT);
         if (temporal instanceof ZonedDateTime) {
-            ZonedDateTime zdt = (ZonedDateTime) temporal;
-            LocalDateTime ldt = round(zdt.toLocalDateTime(), chronoUnit, roundingDT);
-            return (T) ldt.atZone(zdt.getZone());
+            return (T) ldt.atZone(zoneId);
         }
         if (temporal instanceof OffsetDateTime) {
-            OffsetDateTime odt = (OffsetDateTime) temporal;
-            LocalDateTime ldt = round(odt.toLocalDateTime(), chronoUnit, roundingDT);
-            return (T) ldt.atZone(odt.getOffset());
+            return (T) ldt.atOffset((ZoneOffset) zoneId);
         }
         if (temporal instanceof Instant) {
-            Instant instant = (Instant) temporal;
-            LocalDateTime ldt = LocalDateTime.ofInstant(instant, TZ.DEFAULT_ZONE);
-            ldt = round(ldt, chronoUnit, roundingDT);
-            return (T) ldt.atZone(TZ.DEFAULT_ZONE).toInstant();
+            return (T) ldt.atZone(zoneId).toInstant();
         }
 
-        return (T) round((LocalDateTime) temporal, chronoUnit, roundingDT);
+        return (T) ldt;
     }
 
     /**
@@ -611,7 +601,7 @@ class DateTimeRound {
     /**
      * 对时间进行取整
      *
-     * @param temporal   时间，若时间类型为 {@code Instant}，则以 {@code UTC} 时区为准，进行取整运算。
+     * @param temporal   时间
      * @param chronoUnit 按此时间单位作为取整后的精度
      * @param amountUnit 时间步长
      * @param roundingDT 取整类型，值为{@code null}默认为：{@link RoundingDT#FLOOR}
@@ -620,26 +610,20 @@ class DateTimeRound {
      * @since 0.3.0
      */
     @SuppressWarnings("unchecked")
-    public static <T extends Temporal> T roundTime(T temporal, ChronoUnit chronoUnit, int amountUnit, RoundingDT roundingDT) {
+    public static <T extends Temporal> T roundTime(T temporal, LocalDateTime localDateTime, ZoneId zoneId, ChronoUnit chronoUnit, int amountUnit, RoundingDT roundingDT) {
 
+        LocalDateTime ldt = roundTime(localDateTime, chronoUnit, amountUnit, roundingDT);
         if (temporal instanceof ZonedDateTime) {
-            ZonedDateTime zdt = (ZonedDateTime) temporal;
-            LocalDateTime ldt = roundTime(zdt.toLocalDateTime(), chronoUnit, amountUnit, roundingDT);
-            return (T) ldt.atZone(zdt.getZone());
+            return (T) ldt.atZone(zoneId);
         }
         if (temporal instanceof OffsetDateTime) {
-            OffsetDateTime odt = (OffsetDateTime) temporal;
-            LocalDateTime ldt = roundTime(odt.toLocalDateTime(), chronoUnit, amountUnit, roundingDT);
-            return (T) ldt.atZone(odt.getOffset());
+            return (T) ldt.atOffset((ZoneOffset) zoneId);
         }
         if (temporal instanceof Instant) {
-            Instant instant = (Instant) temporal;
-            LocalDateTime ldt = LocalDateTime.ofInstant(instant, TZ.DEFAULT_ZONE);
-            ldt = roundTime(ldt, chronoUnit, amountUnit, roundingDT);
-            return (T) ldt.atZone(TZ.DEFAULT_ZONE).toInstant();
+            return (T) ldt.atZone(zoneId).toInstant();
         }
 
-        return (T) roundTime((LocalDateTime) temporal, chronoUnit, amountUnit, roundingDT);
+        return (T) ldt;
     }
 
     /**

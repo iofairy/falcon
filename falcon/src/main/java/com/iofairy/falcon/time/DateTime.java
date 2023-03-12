@@ -45,7 +45,8 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
     private final T dateTime;
     /**
-     * The local date-time.
+     * The local date-time. <br>
+     * 当 dateTime 是 {@link Instant} 类型时，采用当前默认时区获取 {@code LocalDateTime}
      */
     private final LocalDateTime localDateTime;
     /**
@@ -114,10 +115,18 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         Tuple2<Instant, ZonedDateTime> zdtAndInstant = toZDTAndInstant();
         this.instant = zdtAndInstant._1;
         this.zonedDateTime = zdtAndInstant._2;
-        this.localDateTime = zonedDateTime.toLocalDateTime();
-        this.offsetDateTime = zonedDateTime.toOffsetDateTime();
         this.offset = zonedDateTime.getOffset();
         this.zone = zonedDateTime.getZone();
+        if (this.dateTime instanceof OffsetDateTime) {
+            this.offsetDateTime = (OffsetDateTime) this.dateTime;
+            this.localDateTime = offsetDateTime.toLocalDateTime();
+        } else {
+            this.offsetDateTime = zonedDateTime.toOffsetDateTime();
+            /*
+             * LocalDateTime 转成 ZonedDateTime 时，可能 ZonedDateTime 中的 LocalDateTime 并不是原来传入的 LocalDateTime
+             */
+            this.localDateTime = this.dateTime instanceof LocalDateTime ? (LocalDateTime) this.dateTime : zonedDateTime.toLocalDateTime();
+        }
 
     }
 
@@ -722,8 +731,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     public DateTime<T> round(ChronoUnit chronoUnit, RoundingDT roundingDT) {
         if (dateTime instanceof Calendar) return DateTime.from((T) DateTimeRound.round((Calendar) this.get(), chronoUnit, roundingDT));
         if (dateTime instanceof Date) return DateTime.from((T) DateTimeRound.round((Date) this.get(), chronoUnit, roundingDT));
-        if (dateTime instanceof LocalDateTime) return DateTime.from((T) DateTimeRound.round(localDateTime, chronoUnit, roundingDT));
-        return DateTime.from((T) DateTimeRound.round((Temporal) dateTime, chronoUnit, roundingDT));
+        return DateTime.from((T) DateTimeRound.round((Temporal) dateTime, localDateTime, zone, chronoUnit, roundingDT));
     }
 
     /**
@@ -738,8 +746,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     public DateTime<T> roundTime(ChronoUnit chronoUnit, int amountUnit, RoundingDT roundingDT) {
         if (dateTime instanceof Calendar) return DateTime.from((T) DateTimeRound.roundTime((Calendar) this.get(), chronoUnit, amountUnit, roundingDT));
         if (dateTime instanceof Date) return DateTime.from((T) DateTimeRound.roundTime((Date) this.get(), chronoUnit, amountUnit, roundingDT));
-        if (dateTime instanceof LocalDateTime) return DateTime.from((T) DateTimeRound.roundTime(localDateTime, chronoUnit, amountUnit, roundingDT));
-        return DateTime.from((T) DateTimeRound.roundTime((Temporal) dateTime, chronoUnit, amountUnit, roundingDT));
+        return DateTime.from((T) DateTimeRound.roundTime((Temporal) dateTime, localDateTime, zone, chronoUnit, amountUnit, roundingDT));
     }
 
     /**
