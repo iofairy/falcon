@@ -183,9 +183,17 @@ public final class OS {
      */
     private static final boolean IS_PRE_MACOSX = os.startsWith("mac os x");
 
+    public static final boolean IS_MACOS_VENTURA_2          = macOSCompare("13.2");
+    public static final boolean IS_MACOS_VENTURA_1          = macOSCompare("13.1");
+    public static final boolean IS_MACOS_VENTURA_0          = macOSCompare("13.0");
+    public static final boolean IS_MACOS_MONTEREY_6         = macOSCompare("12.6");
+    public static final boolean IS_MACOS_MONTEREY_5         = macOSCompare("12.5");
+    public static final boolean IS_MACOS_MONTEREY_4         = macOSCompare("12.4");
+    public static final boolean IS_MACOS_MONTEREY_3         = macOSCompare("12.3");
     public static final boolean IS_MACOS_MONTEREY_2         = macOSCompare("12.2");
     public static final boolean IS_MACOS_MONTEREY_1         = macOSCompare("12.1");
     public static final boolean IS_MACOS_MONTEREY_0         = macOSCompare("12.0");
+    public static final boolean IS_MACOS_BIG_SUR_7          = macOSCompare("11.7");
     public static final boolean IS_MACOS_BIG_SUR_6          = macOSCompare("11.6");
     public static final boolean IS_MACOS_BIG_SUR_5          = macOSCompare("11.5");
     public static final boolean IS_MACOS_BIG_SUR_4          = macOSCompare("11.4");
@@ -210,9 +218,17 @@ public final class OS {
     public static final boolean IS_MAC_OS_X_PUMA            = macOSCompare("10.1");
     public static final boolean IS_MAC_OS_X_CHEETAH         = macOSCompare("10.0");
 
+    public static final boolean IS_MAC_13_2     = IS_MACOS_VENTURA_2;
+    public static final boolean IS_MAC_13_1     = IS_MACOS_VENTURA_1;
+    public static final boolean IS_MAC_13_0     = IS_MACOS_VENTURA_0;
+    public static final boolean IS_MAC_12_6     = IS_MACOS_MONTEREY_6;
+    public static final boolean IS_MAC_12_5     = IS_MACOS_MONTEREY_5;
+    public static final boolean IS_MAC_12_4     = IS_MACOS_MONTEREY_4;
+    public static final boolean IS_MAC_12_3     = IS_MACOS_MONTEREY_3;
     public static final boolean IS_MAC_12_2     = IS_MACOS_MONTEREY_2;
     public static final boolean IS_MAC_12_1     = IS_MACOS_MONTEREY_1;
     public static final boolean IS_MAC_12_0     = IS_MACOS_MONTEREY_0;
+    public static final boolean IS_MAC_11_7     = IS_MACOS_BIG_SUR_7;
     public static final boolean IS_MAC_11_6     = IS_MACOS_BIG_SUR_6;
     public static final boolean IS_MAC_11_5     = IS_MACOS_BIG_SUR_5;
     public static final boolean IS_MAC_11_4     = IS_MACOS_BIG_SUR_4;
@@ -319,19 +335,32 @@ public final class OS {
     }
 
     private static boolean macOSVerCompare(String version) {
-        int firstIndex = osVersion.indexOf(".");
-        if (firstIndex == -1) {
-            return osVersion.equals(version);
+        if (osVersion.equals(version)) {
+            return true;
         } else {
-            int secondIndex = osVersion.indexOf(".", firstIndex + 1);
-            return secondIndex == -1 ? osVersion.equals(version) : osVersion.substring(0, secondIndex).equals(version);
+            int firstIndex = osVersion.indexOf(".");
+            if (firstIndex != -1) {
+                int secondIndex = osVersion.indexOf(".", firstIndex + 1);
+                if (secondIndex != -1) {
+                    return osVersion.substring(0, secondIndex).equals(version);
+                }
+            }
+            return false;
         }
     }
 
     private static boolean isMacOS() {
-        return IS_MACOS_MONTEREY_2
+        return IS_MACOS_VENTURA_2
+                || IS_MACOS_VENTURA_1
+                || IS_MACOS_VENTURA_0
+                || IS_MACOS_MONTEREY_6
+                || IS_MACOS_MONTEREY_5
+                || IS_MACOS_MONTEREY_4
+                || IS_MACOS_MONTEREY_3
+                || IS_MACOS_MONTEREY_2
                 || IS_MACOS_MONTEREY_1
                 || IS_MACOS_MONTEREY_0
+                || IS_MACOS_BIG_SUR_7
                 || IS_MACOS_BIG_SUR_6
                 || IS_MACOS_BIG_SUR_5
                 || IS_MACOS_BIG_SUR_4
