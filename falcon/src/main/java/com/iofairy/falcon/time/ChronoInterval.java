@@ -51,7 +51,7 @@ public interface ChronoInterval extends TemporalAmount, Serializable {
      */
     default Calendar addTo(Calendar calendar) {
         Objects.requireNonNull(calendar, "Parameter `calendar` must be non-null!");
-        return DateTime.from(this.addTo(DateTime.from(calendar).toOffsetDT(null))).toCalendar(calendar.getTimeZone().toZoneId());
+        return DateTime.from(this.addTo(DateTime.from(calendar).getZonedDateTime())).toCalendar(calendar.getTimeZone().toZoneId());
     }
 
     /**
@@ -105,7 +105,7 @@ public interface ChronoInterval extends TemporalAmount, Serializable {
      */
     default Calendar subtractFrom(Calendar calendar) {
         Objects.requireNonNull(calendar, "Parameter `calendar` must be non-null!");
-        return DateTime.from(this.subtractFrom(DateTime.from(calendar).toOffsetDT(null))).toCalendar(calendar.getTimeZone().toZoneId());
+        return DateTime.from(this.subtractFrom(DateTime.from(calendar).getZonedDateTime())).toCalendar(calendar.getTimeZone().toZoneId());
     }
 
     /**

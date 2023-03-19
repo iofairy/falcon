@@ -339,7 +339,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @return Calendar
      */
     public Calendar toCalendar(ZoneId zoneId) {
-        if (zoneId == null) {
+        if (zoneId == null || this.zone.equals(zoneId)) {
             return dateTime instanceof Calendar ? (Calendar) this.get() : DateTimes.toCalendar(zonedDateTime);
         }
 

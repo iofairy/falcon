@@ -281,10 +281,10 @@ public class Interval extends SignedInterval {
         if (!isSupported(startTemporal) || !isSupported(endTemporal))
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `startTemporal` and `endTemporal` parameters!");
 
-        startTemporal = DateTime.from(startTemporal).toOffsetDT(null);
-        endTemporal = DateTime.from(endTemporal).toOffsetDT(null);
+        DateTime<Temporal> startDT = DateTime.from(startTemporal);
+        DateTime<Temporal> endDT = DateTime.from(endTemporal);
 
-        boolean isBefore = ((OffsetDateTime) startTemporal).isBefore((OffsetDateTime) endTemporal);
+        boolean isBefore = startDT.isBefore(endDT);
         Temporal tmpStartTemporal = isBefore ? startTemporal : endTemporal;
         Temporal tmpEndTemporal = isBefore ? endTemporal : startTemporal;
 
@@ -316,8 +316,7 @@ public class Interval extends SignedInterval {
      */
     public static Interval between(Date startDate, Date endDate) {
         if (G.hasNull(startDate, endDate)) throw new NullPointerException("Parameters `startDate` and `endDate` must be non-null!");
-        ZoneOffset defaultOffset = DateTimes.defaultOffset();
-        return between(DateTime.from(startDate).toOffsetDT(defaultOffset), DateTime.from(endDate).toOffsetDT(defaultOffset));
+        return between(DateTime.from(startDate).getZonedDateTime(), DateTime.from(endDate).getZonedDateTime());
     }
 
     /**
@@ -330,7 +329,7 @@ public class Interval extends SignedInterval {
      */
     public static Interval between(Calendar startCalendar, Calendar endCalendar) {
         if (G.hasNull(startCalendar, endCalendar)) throw new NullPointerException("Parameters `startCalendar` and `endCalendar` must be non-null!");
-        return between(DateTime.from(startCalendar).toOffsetDT(null), DateTime.from(endCalendar).toDefaultOffsetDT());
+        return between(DateTime.from(startCalendar).getZonedDateTime(), DateTime.from(endCalendar).getZonedDateTime());
     }
 
     /**
@@ -344,7 +343,15 @@ public class Interval extends SignedInterval {
      */
     public static Interval between(DateTime<?> startDateTime, DateTime<?> endDateTime) {
         if (G.hasNull(startDateTime, endDateTime)) throw new NullPointerException("Parameters `startDateTime` and `endDateTime` must be non-null!");
-        return between(startDateTime.toOffsetDT(null), endDateTime.toDefaultOffsetDT());
+        Object start = startDateTime.get();
+        Object end = endDateTime.get();
+        if ((start instanceof ZonedDateTime && end instanceof ZonedDateTime)
+                || (start instanceof OffsetDateTime && end instanceof OffsetDateTime)
+                || (start instanceof LocalDateTime && end instanceof LocalDateTime)) {
+            return between((Temporal) start, (Temporal) end);
+        }
+
+        return between(startDateTime.getZonedDateTime(), endDateTime.getZonedDateTime());
     }
 
     @Override
@@ -354,7 +361,7 @@ public class Interval extends SignedInterval {
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `temporal` parameter!");
 
         boolean isInstant = temporal instanceof Instant;
-        temporal = isInstant ? DateTime.from(temporal).toDefaultOffsetDT() : temporal;
+        temporal = isInstant ? ZonedDateTime.ofInstant((Instant) temporal, TZ.DEFAULT_ZONE) : temporal;
 
         temporal = minus(temporal, nanos, NANOS);
         temporal = minus(temporal, micros, MICROS);
@@ -365,7 +372,7 @@ public class Interval extends SignedInterval {
         temporal = minus(temporal, days, DAYS);
         temporal = minus(temporal, months, MONTHS);
         temporal = minus(temporal, centuries * 100 + years, YEARS);
-        return isInstant ? ((OffsetDateTime) temporal).toInstant() : temporal;
+        return isInstant ? ((ZonedDateTime) temporal).toInstant() : temporal;
     }
 
 }

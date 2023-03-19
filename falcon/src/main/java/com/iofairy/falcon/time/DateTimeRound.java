@@ -156,10 +156,12 @@ class DateTimeRound {
     /**
      * 对时间进行取整
      *
-     * @param temporal   时间
-     * @param chronoUnit 按此时间单位作为取整后的精度
-     * @param roundingDT 取整类型，值为{@code null}默认为：{@link RoundingDT#FLOOR}
-     * @param <T>        时间类型，若类型为 {@link Instant}，则以 {@link TZ#DEFAULT_ZONE} 时区为准，进行取整运算。
+     * @param temporal      时间
+     * @param localDateTime localDateTime
+     * @param zoneId        时区
+     * @param chronoUnit    按此时间单位作为取整后的精度
+     * @param roundingDT    取整类型，值为{@code null}默认为：{@link RoundingDT#FLOOR}
+     * @param <T>           时间类型，若类型为 {@link Instant}，则以 {@link TZ#DEFAULT_ZONE} 时区为准，进行取整运算。
      * @return 取整后的时间
      * @since 0.3.0
      */
@@ -601,11 +603,13 @@ class DateTimeRound {
     /**
      * 对时间进行取整
      *
-     * @param temporal   时间
-     * @param chronoUnit 按此时间单位作为取整后的精度
-     * @param amountUnit 时间步长
-     * @param roundingDT 取整类型，值为{@code null}默认为：{@link RoundingDT#FLOOR}
-     * @param <T>        时间类型，若类型为 {@link Instant}，则以 {@link TZ#DEFAULT_ZONE} 时区为准，进行取整运算。
+     * @param temporal      时间
+     * @param localDateTime localDateTime
+     * @param zoneId        时区
+     * @param chronoUnit    按此时间单位作为取整后的精度
+     * @param amountUnit    时间步长
+     * @param roundingDT    取整类型，值为{@code null}默认为：{@link RoundingDT#FLOOR}
+     * @param <T>           时间类型，若类型为 {@link Instant}，则以 {@link TZ#DEFAULT_ZONE} 时区为准，进行取整运算。
      * @return 取整后的时间
      * @since 0.3.0
      */

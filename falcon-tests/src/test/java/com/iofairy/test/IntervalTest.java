@@ -1,5 +1,6 @@
 package com.iofairy.test;
 
+import com.iofairy.except.UnexpectedParameterException;
 import com.iofairy.falcon.time.*;
 import com.iofairy.tcf.Try;
 import com.iofairy.top.G;
@@ -40,6 +41,15 @@ public class IntervalTest {
         // System.out.println(G.dtSimple(toDate));
         // System.out.println(G.dtSimple(toCalendar));
         // -----------------------------------------------------------------------------
+        ZonedDateTime fromZDT = LocalDateTime.of(2022, 2, 10, 3, 0).atZone(TZ.NEW_YORK);
+        ZonedDateTime toZDT = LocalDateTime.of(2022, 6, 10, 3, 0).atZone(TZ.NEW_YORK);
+        ZonedDateTime fromZDT1 = LocalDateTime.of(1900, 1, 1, 0, 0).atZone(TZ.DEFAULT_ZONE);
+        ZonedDateTime toZDT1 = LocalDateTime.of(2009, 7, 6, 0, 0).atZone(TZ.DEFAULT_ZONE);
+        System.out.println("fromZDT: " + G.dtDetail(fromZDT));  // fromZDT: 2022-02-10 03:00:00.000000000 [America/New_York -05:00 GMT-5 周四]
+        System.out.println("toZDT: " + G.dtDetail(toZDT));  // toZDT: 2022-06-10 03:00:00.000000000 [America/New_York -04:00 GMT-4 周五]
+        System.out.println("fromZDT1: " + G.dtDetail(fromZDT1));    // fromZDT1: 1900-01-01 00:00:00.000000000 [Asia/Shanghai +08:05 GMT+8:05:43 周一]
+        System.out.println("toZDT1: " + G.dtDetail(toZDT1));    // toZDT1: 2009-07-06 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        // -----------------------------------------------------------------------------
         SignedInterval signedInterval1 = SignedInterval.between(fromLocalDateTime, toLocalDateTime);
         SignedInterval signedInterval2 = SignedInterval.between(fromLocalDateTime, toInstant);
         SignedInterval signedInterval3 = SignedInterval.between(fromLocalDateTime, toOffsetDateTime);
@@ -52,6 +62,11 @@ public class IntervalTest {
         SignedInterval signedInterval10 = SignedInterval.between(fromCalendar, toCalendar);
         SignedInterval signedInterval11 = SignedInterval.between(toDate, fromDate);
         SignedInterval signedInterval12 = SignedInterval.between(toCalendar, fromCalendar);
+        SignedInterval signedInterval13 = SignedInterval.between(fromZDT, toZDT);
+        SignedInterval signedInterval14 = SignedInterval.between(toZDT, fromZDT);
+        SignedInterval signedInterval15 = SignedInterval.between(fromZDT1, toZDT1);
+        SignedInterval signedInterval16 = SignedInterval.between(toZDT1, fromZDT1);
+
         System.out.println(signedInterval1);
         System.out.println(signedInterval2);
         System.out.println(signedInterval3);
@@ -64,6 +79,11 @@ public class IntervalTest {
         System.out.println(signedInterval10);
         System.out.println(signedInterval11);
         System.out.println(signedInterval12);
+        System.out.println("fromZDT - toZDT: " + signedInterval13); // fromZDT - toZDT: 4月0天0时0分0秒0毫秒
+        System.out.println("toZDT - fromZDT: " + signedInterval14); // toZDT - fromZDT: -4月0天0时0分0秒0毫秒
+        System.out.println("fromZDT1 - toZDT1: " + signedInterval15);   // fromZDT1 - toZDT1: 1世纪9年6月5天0时0分0秒0毫秒
+        System.out.println("toZDT1 - fromZDT1: " + signedInterval16);   // toZDT1 - fromZDT1: -1世纪-9年-6月-5天0时0分0秒0毫秒
+
         assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", signedInterval1.toString());
         assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", signedInterval2.toString());
         assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", signedInterval3.toString());
@@ -76,6 +96,10 @@ public class IntervalTest {
         assertEquals("1世纪17年1月25天16时36分27秒0毫秒", signedInterval10.toString());
         assertEquals("-1世纪-17年-1月-24天-16时-36分-27秒0毫秒", signedInterval11.toString());
         assertEquals("-1世纪-17年-1月-24天-16时-36分-27秒0毫秒", signedInterval12.toString());
+        assertEquals("4月0天0时0分0秒0毫秒", signedInterval13.toString());
+        assertEquals("-4月0天0时0分0秒0毫秒", signedInterval14.toString());
+        assertEquals("1世纪9年6月5天0时0分0秒0毫秒", signedInterval15.toString());
+        assertEquals("-1世纪-9年-6月-5天0时0分0秒0毫秒", signedInterval16.toString());
         System.out.println("======================================");
         System.out.println(signedInterval1.equals(signedInterval2));
         System.out.println(signedInterval3.equals(signedInterval4));
@@ -111,6 +135,19 @@ public class IntervalTest {
         System.out.println(signedInterval5.toFullString());
         System.out.println(signedInterval9.toFullString());
         System.out.println(signedInterval11.toFullString());
+
+        Temporal t1 = signedInterval13.subtractFrom(toZDT);
+        Temporal t2 = signedInterval14.addTo(toZDT);
+        Temporal t3 = signedInterval15.addTo(fromZDT1);
+        Temporal t4 = signedInterval16.addTo(toZDT1);
+        System.out.println(G.dtDetail(t1));
+        System.out.println(G.dtDetail(t2));
+        System.out.println(G.dtDetail(t3));
+        System.out.println(G.dtDetail(t4));
+        assertEquals("2022-02-10 03:00:00.000000000 [America/New_York -05:00 GMT-5 周四]", G.dtDetail(t1));
+        assertEquals("2022-02-10 03:00:00.000000000 [America/New_York -05:00 GMT-5 周四]", G.dtDetail(t2));
+        assertEquals("2009-07-06 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周一]", G.dtDetail(t3));
+        assertEquals("1900-01-01 00:00:00.000000000 [Asia/Shanghai +08:05 GMT+8:05:43 周一]", G.dtDetail(t4));
     }
 
     @Test
@@ -259,7 +296,7 @@ public class IntervalTest {
         assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval5.toString());
         assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval6.toString());
         assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval7.toString());
-        assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval8.toString());
+        assertEquals("1世纪17年1月25天17时36分26秒999毫秒999微秒911纳秒", interval8.toString());
         assertEquals("1世纪17年1月25天16时36分27秒0毫秒", interval9.toString());
         assertEquals("1世纪17年1月25天16时36分27秒0毫秒", interval10.toString());
         assertEquals("1世纪17年1月25天16时36分27秒0毫秒", interval11.toString());
@@ -345,7 +382,7 @@ public class IntervalTest {
         assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval5.toString());
         assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval6.toString());
         assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval7.toString());
-        assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval8.toString());
+        assertEquals("1世纪17年1月25天17时36分26秒999毫秒999微秒911纳秒", interval8.toString());
         assertEquals("1世纪17年1月25天16时36分27秒0毫秒", interval9.toString());
         assertEquals("1世纪17年1月25天16时36分27秒0毫秒", interval10.toString());
         assertEquals("1世纪17年1月25天16时36分27秒0毫秒", interval11.toString());
@@ -519,7 +556,7 @@ public class IntervalTest {
         assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval5.toString());
         assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval6.toString());
         assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval7.toString());
-        assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval8.toString());
+        assertEquals("1世纪17年1月25天17时36分26秒999毫秒999微秒911纳秒", interval8.toString());
         System.out.println("======================================");
         Instant temporal1 = interval1.minusFrom(toInstant);
         LocalDateTime temporal2 = interval1.plusTo(fromLocalDateTime);
@@ -531,7 +568,7 @@ public class IntervalTest {
         System.out.println(G.dtSimple(temporal4));
         assertEquals("1903-06-15 10:56:43.987", G.dtSimple(temporal1));
         assertEquals("2020-08-10 03:33:10.987", G.dtSimple(temporal2));
-        assertEquals("1786-04-20 18:25:59.987", G.dtSimple(temporal3));
+        assertEquals("1786-04-20 18:20:16.987", G.dtSimple(temporal3));
         assertEquals("2137-10-05 20:09:37.987", G.dtSimple(temporal4));
     }
 
@@ -571,7 +608,7 @@ public class IntervalTest {
         assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval5.toString());
         assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval6.toString());
         assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval7.toString());
-        assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval8.toString());
+        assertEquals("1世纪17年1月25天17时36分26秒999毫秒999微秒911纳秒", interval8.toString());
         System.out.println("======================================");
         Instant temporal1 = interval1.minusFrom(toInstant);
         LocalDateTime temporal2 = interval1.plusTo(fromLocalDateTime);
@@ -583,7 +620,7 @@ public class IntervalTest {
         System.out.println(G.dtSimple(temporal4));
         assertEquals("1903-02-15 10:56:43.987", G.dtSimple(temporal1));
         assertEquals("2020-04-10 03:33:10.987", G.dtSimple(temporal2));
-        assertEquals("1785-12-20 18:25:59.987", G.dtSimple(temporal3));
+        assertEquals("1785-12-20 18:20:16.987", G.dtSimple(temporal3));
         assertEquals("2137-06-04 20:09:37.987", G.dtSimple(temporal4));
     }
 
@@ -826,6 +863,9 @@ public class IntervalTest {
         assertEquals("1天5时1分57秒0毫秒", minusSI.toString());
         assertEquals("1天6时48分59秒0毫秒", interval.toString());
         assertEquals("1天5时1分57秒0毫秒", minusInterval.toString());
+        assertThrows(UnexpectedParameterException.class, () -> Interval.ofHours(-8));
+        assertThrows(UnexpectedParameterException.class, () -> Interval.of(-1, 10, 1));
+
     }
 
 

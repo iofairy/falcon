@@ -16,6 +16,7 @@
 package com.iofairy.falcon.os;
 
 import com.iofairy.tcf.Try;
+import com.iofairy.top.S;
 
 import java.io.File;
 import java.util.Locale;
@@ -338,12 +339,9 @@ public final class OS {
         if (osVersion.equals(version)) {
             return true;
         } else {
-            int firstIndex = osVersion.indexOf(".");
-            if (firstIndex != -1) {
-                int secondIndex = osVersion.indexOf(".", firstIndex + 1);
-                if (secondIndex != -1) {
-                    return osVersion.substring(0, secondIndex).equals(version);
-                }
+            int secondIndex = S.indexOf(osVersion, ".", 2);
+            if (secondIndex != -1) {
+                return osVersion.substring(0, secondIndex).equals(version);
             }
             return false;
         }

@@ -370,26 +370,42 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      * to check if the specified temporal is supported first.<br>
      * 获取两个{@link Temporal}的时间间隔。建议在调用此方法之前先确认是否支持该时间类型 {@link #isSupported(Temporal)}。
      *
-     * @param startTemporal start Temporal
-     * @param endTemporal   end Temporal
+     * @param startTemporal start Temporal. If {@code startTemporal} is instance of Instant, it will convert to {@code ZonedDateTime} with {@link TZ#DEFAULT_ZONE}
+     * @param endTemporal   end Temporal. If {@code endTemporal} is instance of Instant, it will convert to {@code ZonedDateTime} with {@link TZ#DEFAULT_ZONE}
      * @return SignedInterval
      */
     public static SignedInterval between(Temporal startTemporal, Temporal endTemporal) {
-        if (G.hasNull(startTemporal, endTemporal)) throw new NullPointerException("Parameters `startTemporal` and `endTemporal` must be non-null!");
+        if (startTemporal == null || endTemporal == null) throw new NullPointerException("Parameters `startTemporal` and `endTemporal` must be non-null!");
 
         if (!isSupported(startTemporal) || !isSupported(endTemporal))
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `startTemporal` and `endTemporal` parameters!");
 
-
+        /*
+         * 保存最初始的时间
+         */
         Temporal originalStartTemporal = startTemporal;
         Temporal originalEndTemporal = endTemporal;
 
         /*
-         * 将 startTemporal 转成 OffsetDateTime 比 ZonedDateTime 效率更高。因为 ZonedDateTime.until 方法底层也要转成 OffsetDateTime 计算。
-         * 尽可能采用 startTemporal 自己的时区进行计算，因为不同时区计算结果是不一样的，所以采用 toOffsetDT(null) 方法。
+         * 时间类型处理
          */
-        startTemporal = startTemporal instanceof OffsetDateTime ? startTemporal : DateTime.from(startTemporal).toOffsetDT(null);
-        endTemporal = DateTime.from(endTemporal).toOffsetDT(((OffsetDateTime) startTemporal).getOffset());
+        startTemporal = startTemporal instanceof Instant ? ZonedDateTime.ofInstant((Instant) startTemporal, TZ.DEFAULT_ZONE) : startTemporal;
+        endTemporal = endTemporal instanceof Instant ? ZonedDateTime.ofInstant((Instant) endTemporal, TZ.DEFAULT_ZONE) : endTemporal;
+
+        /*
+         * 两个时间不是相同类型
+         */
+        if (!((startTemporal instanceof ZonedDateTime && endTemporal instanceof ZonedDateTime)
+                || (startTemporal instanceof OffsetDateTime && endTemporal instanceof OffsetDateTime)
+                || (startTemporal instanceof LocalDateTime && endTemporal instanceof LocalDateTime))) {
+            startTemporal = DateTime.of(startTemporal).getZonedDateTime();
+            /*
+             * 如果是 LocalDateTime，则转为 默认的，否则无法比较，会报错
+             */
+            if (endTemporal instanceof LocalDateTime) {
+                endTemporal = ((LocalDateTime) endTemporal).atZone(TZ.DEFAULT_ZONE);
+            }
+        }
 
         long totalYears = startTemporal.until(endTemporal, YEARS);
         long totalMonths = startTemporal.until(endTemporal, MONTHS);
@@ -457,8 +473,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      */
     public static SignedInterval between(Date startDate, Date endDate) {
         if (G.hasNull(startDate, endDate)) throw new NullPointerException("Parameters `startDate` and `endDate` must be non-null!");
-        ZoneOffset defaultOffset = DateTimes.defaultOffset();
-        return between(DateTime.from(startDate).toOffsetDT(defaultOffset), DateTime.from(endDate).toOffsetDT(defaultOffset));
+        return between(DateTime.from(startDate).getZonedDateTime(), DateTime.from(endDate).getZonedDateTime());
     }
 
     /**
@@ -471,7 +486,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      */
     public static SignedInterval between(Calendar startCalendar, Calendar endCalendar) {
         if (G.hasNull(startCalendar, endCalendar)) throw new NullPointerException("Parameters `startCalendar` and `endCalendar` must be non-null!");
-        return between(DateTime.from(startCalendar).toOffsetDT(null), DateTime.from(endCalendar).toDefaultOffsetDT());
+        return between(DateTime.from(startCalendar).getZonedDateTime(), DateTime.from(endCalendar).getZonedDateTime());
     }
 
     /**
@@ -485,7 +500,15 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      */
     public static SignedInterval between(DateTime<?> startDateTime, DateTime<?> endDateTime) {
         if (G.hasNull(startDateTime, endDateTime)) throw new NullPointerException("Parameters `startDateTime` and `endDateTime` must be non-null!");
-        return between(startDateTime.toOffsetDT(null), endDateTime.toDefaultOffsetDT());
+        Object start = startDateTime.get();
+        Object end = endDateTime.get();
+        if ((start instanceof ZonedDateTime && end instanceof ZonedDateTime)
+                || (start instanceof OffsetDateTime && end instanceof OffsetDateTime)
+                || (start instanceof LocalDateTime && end instanceof LocalDateTime)) {
+            return between((Temporal) start, (Temporal) end);
+        }
+
+        return between(startDateTime.getZonedDateTime(), endDateTime.getZonedDateTime());
     }
 
     /**
@@ -540,7 +563,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `temporal` parameter!");
 
         boolean isInstant = temporal instanceof Instant;
-        temporal = isInstant ? DateTime.from(temporal).toDefaultOffsetDT() : temporal;
+        temporal = isInstant ? ZonedDateTime.ofInstant((Instant) temporal, TZ.DEFAULT_ZONE) : temporal;
 
         temporal = plus(temporal, centuries * 100 + years, YEARS);
         temporal = plus(temporal, months, MONTHS);
@@ -551,7 +574,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         temporal = plus(temporal, millis, MILLIS);
         temporal = plus(temporal, micros, MICROS);
         temporal = plus(temporal, nanos, NANOS);
-        return isInstant ? ((OffsetDateTime) temporal).toInstant() : temporal;
+        return isInstant ? ((ZonedDateTime) temporal).toInstant() : temporal;
     }
 
     protected Temporal plus(Temporal temporal, long amountToAdd, TemporalUnit unit) {
@@ -565,7 +588,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `temporal` parameter!!");
 
         boolean isInstant = temporal instanceof Instant;
-        temporal = isInstant ? DateTime.from(temporal).toDefaultOffsetDT() : temporal;
+        temporal = isInstant ? ZonedDateTime.ofInstant((Instant) temporal, TZ.DEFAULT_ZONE) : temporal;
 
         temporal = minus(temporal, centuries * 100 + years, YEARS);
         temporal = minus(temporal, months, MONTHS);
@@ -576,7 +599,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         temporal = minus(temporal, millis, MILLIS);
         temporal = minus(temporal, micros, MICROS);
         temporal = minus(temporal, nanos, NANOS);
-        return isInstant ? ((OffsetDateTime) temporal).toInstant() : temporal;
+        return isInstant ? ((ZonedDateTime) temporal).toInstant() : temporal;
     }
 
     protected Temporal minus(Temporal temporal, long amountToSubtract, TemporalUnit unit) {

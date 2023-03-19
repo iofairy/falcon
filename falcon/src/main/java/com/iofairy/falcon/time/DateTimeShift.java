@@ -44,6 +44,7 @@ class DateTimeShift {
      * 从给定的时间，按指定的时间单位，指定的步长偏移时间，返回每次偏移后的所有时间列表
      *
      * @param fromDate           开始的时间
+     * @param zdt                时间对应的 ZonedDateTime
      * @param shiftTimes         偏移的次数，负数：则时间往前偏移；正数：则时间往后偏移
      * @param amountUnit         偏移的步长
      * @param chronoUnit         时间单位
@@ -159,6 +160,8 @@ class DateTimeShift {
      *
      * @param fromDate     开始的时间
      * @param toDate       结束的时间
+     * @param fromZdt      开始时间对应的 ZonedDateTime
+     * @param toZdt        结束时间对应的 ZonedDateTime
      * @param amountUnit   偏移的步长
      * @param chronoUnit   时间单位
      * @param intervalType 区间类型
