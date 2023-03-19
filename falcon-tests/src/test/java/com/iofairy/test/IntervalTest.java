@@ -677,6 +677,86 @@ public class IntervalTest {
     }
 
     @Test
+    public void testInterval4() {
+        ZonedDateTime fromZDT = LocalDateTime.of(2022, 2, 10, 3, 0).atZone(TZ.NEW_YORK);
+        ZonedDateTime toZDT = LocalDateTime.of(2022, 6, 10, 3, 0).atZone(TZ.NEW_YORK);
+        /*
+         * dateDT
+         * datetime: 1900-01-01 00:00:00.000+0800 （这里的+0800是当前默认时区的偏移量，不是 当时默认时区的偏移量，当时偏移量应为：+08:05:43），这应该是 date 的bug。
+         * localDateTime: 1900-01-01 00:05:43.000
+         */
+        DateTime<Date> dateDT = DateTime.of(Try.tcf(() -> new SimpleDateFormat("yyyy-MM-dd").parse("1900-1-1"), false));
+        /*
+         * fromDT1
+         * datetime: 1899-12-31 23:54:17.000+0800 （这里的+0800是当前默认时区的偏移量，不是 当时默认时区的偏移量，当时偏移量应为：+08:05:43），这应该是 date 的bug。
+         * localDateTime: 1900-01-01 00:00:00.000
+         */
+        DateTime<Date> fromDT1 = DateTime.parseDate("1900-1-1");
+        DateTime<ZonedDateTime> toDT1 = DateTime.of(LocalDateTime.of(2009, 7, 6, 0, 0).atZone(TZ.DEFAULT_ZONE));
+        OffsetDateTime fromODT2 = LocalDateTime.of(1900, 1, 1, 0, 0).atOffset(ZoneOffset.of("+08:05"));
+        ZonedDateTime toZDT2 = LocalDateTime.of(2009, 7, 6, 0, 0).atZone(TZ.DEFAULT_ZONE);
+
+        LocalDateTime fromLocalDateTime = LocalDateTime.of(1903, 2, 15, 10, 56, 43, 987656789);
+        Instant fromInstant = fromLocalDateTime.toInstant(ZoneOffset.ofHours(8));
+        ZonedDateTime fromZonedDateTime = ZonedDateTime.ofInstant(fromInstant, TZ.NEW_YORK);
+        LocalDateTime toLocalDateTime = LocalDateTime.of(2020, 4, 10, 3, 33, 10, 987656700);
+
+        System.out.println("fromZDT: " + fromZDT);              // fromZDT: 2022-02-10T03:00-05:00[America/New_York]
+        System.out.println("toZDT: " + toZDT);                  // toZDT: 2022-06-10T03:00-04:00[America/New_York]
+        System.out.println("fromDT1: " + fromDT1.dtDetail());   // fromDT1: 1900-01-01T00:00+08:05:43[Asia/Shanghai]
+        System.out.println("toDT1: " + toDT1);                  // toDT1: 2009-07-06T00:00+08:00[Asia/Shanghai]
+        System.out.println("fromODT2: " + fromODT2);            // fromODT2: 1900-01-01T00:00+08:05
+        System.out.println("toZDT2: " + toZDT2);                // toZDT2: 2009-07-06T00:00+08:00[Asia/Shanghai]
+        System.out.println("fromZonedDateTime: " + fromZonedDateTime);      // fromZonedDateTime: 1903-02-14T21:56:43.987656789-05:00[America/New_York]
+        System.out.println("toLocalDateTime: " + toLocalDateTime);          // toLocalDateTime: 2020-04-10T03:33:10.987656700
+        System.out.println("===================================================");
+        Interval interval1 = Interval.between(fromZDT, toZDT);
+        Interval interval2 = Interval.between(fromDT1, toDT1);
+        Interval interval3 = Interval.between(toZDT2, fromODT2);
+        Interval interval4 = Interval.between(toLocalDateTime, fromZonedDateTime);
+
+        System.out.println("fromZDT - toZDT: " + interval1);        // fromZDT - toZDT: 4月0天0时0分0秒0毫秒
+        System.out.println("fromDT1 - toDT1: " + interval2);        // fromDT1 - toDT1: 1世纪9年6月5天0时0分0秒0毫秒
+        System.out.println("toZDT2 - fromODT2: " + interval3);      // toZDT2 - fromODT2: 1世纪9年6月5天0时5分0秒0毫秒
+        System.out.println("toLocalDateTime - fromZonedDateTime: " + interval4);    // toLocalDateTime - fromZonedDateTime: 1世纪17年1月25天17时36分26秒999毫秒999微秒911纳秒
+
+        assertEquals("4月0天0时0分0秒0毫秒", interval1.toString());
+        assertEquals("1世纪9年6月5天0时0分0秒0毫秒", interval2.toString());
+        assertEquals("1世纪9年6月5天0时5分0秒0毫秒", interval3.toString());
+        assertEquals("1世纪17年1月25天17时36分26秒999毫秒999微秒911纳秒", interval4.toString());
+        System.out.println("===================================================");
+
+        Temporal toDate1 = interval1.addTo(fromZDT);
+        DateTime<Date> toDate2 = interval2.addTo(fromDT1);
+        Temporal toDate3 = interval3.addTo(fromODT2);
+        Temporal toDate4 = interval4.addTo(fromZonedDateTime);
+        Temporal fromDate1 = interval1.subtractFrom(toZDT);
+        DateTime<ZonedDateTime> fromDate2 = interval2.subtractFrom(toDT1);
+        Temporal fromDate3 = interval3.subtractFrom(toZDT2);
+        Temporal fromDate4 = interval4.subtractFrom(toLocalDateTime);
+
+        System.out.println("toDate1: " + toDate1);  // toDate1: 2022-06-10T03:00-04:00[America/New_York]
+        System.out.println("toDate2: " + toDate2);  // toDate2: 2009-07-06 00:00:00.000
+        System.out.println("toDate3: " + toDate3);  // toDate3: 2009-07-06T00:05+08:05
+        System.out.println("toDate4: " + toDate4);  // toDate4: 2020-04-09T15:33:10.987656700-04:00[America/New_York]
+        System.out.println("fromDate1: " + fromDate1);  // fromDate1: 2022-02-10T03:00-05:00[America/New_York]
+        System.out.println("fromDate2: " + fromDate2);  // fromDate2: 1900-01-01 00:00:00.000
+        System.out.println("fromDate3: " + fromDate3);  // fromDate3: 1899-12-30T23:55+08:05:43[Asia/Shanghai]
+        System.out.println("fromDate4: " + fromDate4);  // fromDate4: 1903-02-15T09:56:43.987656789
+
+        assertEquals("2022-06-10T03:00-04:00[America/New_York]", toDate1.toString());
+        assertEquals("2009-07-06 00:00:00.000", toDate2.toString());
+        assertEquals("2009-07-06T00:05+08:05", toDate3.toString());
+        assertEquals("2020-04-09T15:33:10.987656700-04:00[America/New_York]", toDate4.toString());
+        assertEquals("2022-02-10T03:00-05:00[America/New_York]", fromDate1.toString());
+        assertEquals("1900-01-01 00:00:00.000", fromDate2.toString());
+        assertEquals("1899-12-30T23:55+08:05:43[Asia/Shanghai]", fromDate3.toString());
+        assertEquals("1903-02-15T09:56:43.987656789", fromDate4.toString());
+
+
+    }
+
+    @Test
     public void testSignedIntervalPlusMinus() {
         SignedInterval signedInterval01 = SignedInterval.of(3, ChronoUnit.DAYS);
         SignedInterval signedInterval02 = SignedInterval.of(-2, ChronoUnit.DAYS);
