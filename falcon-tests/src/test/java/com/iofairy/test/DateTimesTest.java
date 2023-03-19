@@ -77,6 +77,35 @@ public class DateTimesTest {
 
     }
 
+    @Test
+    public void testToZonedDT() {
+        LocalDateTime ldt = LocalDateTime.of(2022, 1, 27, 6, 0, 10, 65891000);
+        DateTime<LocalDateTime> dateTime = DateTime.of(ldt);
+        Calendar calendar = dateTime.toUTCCalendar();
+        ZonedDateTime zdt = dateTime.toZonedDT(TZ.UTC);
+
+        ZonedDateTime zdt1 = DateTimes.toZonedDT(calendar, null);
+        ZonedDateTime zdt2 = DateTimes.toZonedDT(calendar, TZ.DEFAULT_ZONE);
+
+        ZonedDateTime zonedDateTime = dateTime.getZonedDateTime();
+        System.out.println(G.toString(zdt));                // 2022-01-26 22:00:10.065 [UTC +00:00]
+        System.out.println(G.toString(zonedDateTime));      // 2022-01-27 06:00:10.065
+        System.out.println(G.toString(calendar));           // 2022-01-26 22:00:10.065 [UTC +00:00]
+        System.out.println(G.toString(zdt1));               // 2022-01-26 22:00:10.065 [UTC +00:00]
+        System.out.println(G.toString(zdt2));               // 2022-01-27 06:00:10.065
+        System.out.println(zdt.toInstant());                // 2022-01-26T22:00:10.065891Z
+        System.out.println(zonedDateTime.toInstant());      // 2022-01-26T22:00:10.065891Z
+        System.out.println(calendar.toInstant());           // 2022-01-26T22:00:10.065Z
+
+        assertEquals(G.toString(zdt), "2022-01-26 22:00:10.065 [UTC +00:00]");
+        assertEquals(G.toString(zonedDateTime), "2022-01-27 06:00:10.065");
+        assertEquals(G.toString(calendar), "2022-01-26 22:00:10.065 [UTC +00:00]");
+        assertEquals(G.toString(zdt1), "2022-01-26 22:00:10.065 [UTC +00:00]");
+        assertEquals(G.toString(zdt2), "2022-01-27 06:00:10.065");
+        assertEquals(zdt.toInstant().toString(), "2022-01-26T22:00:10.065891Z");
+        assertEquals(zonedDateTime.toInstant().toString(), "2022-01-26T22:00:10.065891Z");
+        assertEquals(calendar.toInstant().toString(), "2022-01-26T22:00:10.065Z");
+    }
 
     @Test
     public void testHoursAndMinutes() {

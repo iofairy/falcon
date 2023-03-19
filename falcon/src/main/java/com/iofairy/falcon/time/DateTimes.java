@@ -188,6 +188,21 @@ public final class DateTimes {
     }
 
     /**
+     * 将 calendar 转成与之相同时区的 ZonedDateTime，或指定时区的 {@code toZoneId} ZonedDateTime。
+     *
+     * @param calendar calendar
+     * @param toZoneId 指定转换的目标时区
+     * @return ZonedDateTime
+     * @since 0.4.0
+     */
+    public static ZonedDateTime toZonedDT(Calendar calendar, ZoneId toZoneId) {
+        if (calendar == null) return null;
+        ZoneId calendarTZ = calendar.getTimeZone().toZoneId();
+        toZoneId = toZoneId == null ? calendarTZ : toZoneId;
+        return calendar.toInstant().atZone(calendarTZ).withZoneSameInstant(toZoneId);
+    }
+
+    /**
      * Date 转 Calendar
      *
      * @param date   date
