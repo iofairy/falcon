@@ -181,6 +181,10 @@ public class TZ {
      */
     public static final ZoneId UTC = getZoneId("UTC");
     /**
+     * <b>Etc/UTC(+00:00)</b> Time Zone
+     */
+    public static final ZoneId ETC_UTC = getZoneId("Etc/UTC");
+    /**
      * <b>UCT(+00:00)</b> Time Zone
      */
     public static final ZoneId UCT = getZoneId("UCT");
@@ -189,69 +193,53 @@ public class TZ {
      */
     public static final ZoneId GMT0 = getZoneId("GMT0");
     /**
-     * <b>WET（西欧时间）(+00:00)</b> Time Zone
+     * <b>WET（西欧时间）(+00:00，夏令时：+01:00)</b> Time Zone
      */
     public static final ZoneId WET = getZoneId("WET");
     /**
-     * <b>EET（东欧时间）(+02:00)</b> Time Zone
+     * <b>EET（东欧时间）(+02:00，夏令时：+03:00)</b> Time Zone
      */
     public static final ZoneId EET = getZoneId("EET");
     /**
-     * <b>GB(+00:00)</b> Time Zone
-     */
-    public static final ZoneId GB = getZoneId("GB");
-    /**
-     * <b>CET（欧洲中部时间）(+01:00，夏令时：+02:00)</b> Time Zone<br><br>
-     * &gt;&gt;&gt; 使用此时区的国家：<br>
-     * <ul>
-     *     <li>安道尔 (Andorra)
-     *     <li>阿尔及利亚 (Algeria)
-     *     <li>奥地利 (Austria)
-     *     <li>比利时 (Belgium)
-     *     <li>波斯尼亚和黑塞哥维那 (Bosnia and Herzegovina)
-     *     <li>捷克共和国 (Czech Republic)
-     *     <li>丹麦 (Denmark)
-     *     <li>克罗地亚 (Croatia)
-     *     <li>德国 (Germany)
-     *     <li>直布罗陀 (Gibraltar)
-     *     <li>法国 (France)
-     *     <li>匈牙利 (Hungary)
-     *     <li>意大利 (Italy)
-     *     <li>利比亚 (Libya)
-     *     <li>列支敦士登 (Liechtenstein)
-     *     <li>卢森堡 (Luxembourg)
-     *     <li>黑山 (Montenegro)
-     *     <li>摩洛哥 (Morocco)
-     *     <li>荷兰 (Netherlands)
-     *     <li>波兰 (Poland)
-     *     <li>马其顿共和国 (Republic of Macedonia)
-     *     <li>圣马力诺 (San Marino)
-     *     <li>塞尔维亚 (Serbia)
-     *     <li>斯洛伐克 (Slovakia)
-     *     <li>斯洛文尼亚 (Slovenia)
-     *     <li>西班牙 (Spain)
-     *     <li>斯瓦尔巴 (Svalbard)
-     *     <li>瑞典 (Sweden)
-     *     <li>突尼斯 (Tunisia)
-     * </ul>
+     * <b>CET（欧洲中部时间）(+01:00，夏令时：+02:00)</b> Time Zone
      */
     public static final ZoneId CET = getZoneId("CET");
     /**
-     * <b>NZ(+13:00)</b> Time Zone
+     * <b>GB（英国时间，等同于：Europe/London）(+00:00)</b> Time Zone
+     */
+    public static final ZoneId GB = getZoneId("GB");
+    /**
+     * <b>GB-Eire（爱尔兰时间，等同于：Europe/London）(+00:00)</b> Time Zone
+     */
+    public static final ZoneId GB_EIRE = getZoneId("GB-Eire");
+    /**
+     * <b>NZ（新西兰时间，等同于：Pacific/Auckland）(+13:00)</b> Time Zone
      */
     public static final ZoneId NZ = getZoneId("NZ");
     /**
-     * <b>MET(+01:00)</b> Time Zone
+     * <b>NZ-CHAT（查塔姆群岛时间，等同于：Pacific/Chatham）(+13:00)</b> Time Zone
+     */
+    public static final ZoneId NZ_CHAT = getZoneId("NZ-CHAT");
+    /**
+     * <b>MET（中欧时间: Middle European Time）(+01:00)</b> Time Zone
      */
     public static final ZoneId MET = getZoneId("MET");
     /**
-     * <b>ROK(+09:00)</b> Time Zone
+     * <b>ROK（韩国时间，等同于：Asia/Seoul）(+09:00)</b> Time Zone
      */
     public static final ZoneId ROK = getZoneId("ROK");
     /**
-     * <b>Universal(+00:00)</b> Time Zone
+     * <b>W-SU（俄罗斯莫斯科，等同于：Europe/Moscow）(+03:00)</b> Time Zone
+     */
+    public static final ZoneId W_SU = getZoneId("W-SU");
+    /**
+     * <b>Universal（等同于：Etc/UTC）(+00:00)</b> Time Zone
      */
     public static final ZoneId UNIVERSAL = getZoneId("Universal");
+    /**
+     * <b>Zulu（等同于：Etc/UTC）(+00:00)</b> Time Zone
+     */
+    public static final ZoneId ZULU = getZoneId("Zulu");
 
 
     private static ZoneId getZoneId(final String zoneIdName) {
