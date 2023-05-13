@@ -20,18 +20,23 @@ import com.iofairy.top.O;
 import com.iofairy.tuple.Tuple;
 import com.iofairy.tuple.Tuple2;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.*;
+import java.util.function.Function;
+import java.util.function.ToDoubleFunction;
+import java.util.function.ToIntFunction;
+import java.util.function.ToLongFunction;
 import java.util.stream.Collectors;
 
 /**
  * Map Utils
  *
- * @since 0.0.2
- * @deprecated Since falcon version 0.4.1, replaced by {@link com.iofairy.falcon.map.MapKit}
+ * @since 0.4.1
  */
-public class MapUtils {
+public class MapKit {
 
     /**
      * A map to two List for Key and Value<br>

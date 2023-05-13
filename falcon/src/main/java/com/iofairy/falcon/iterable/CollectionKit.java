@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  *
  * @since 0.0.1
  */
-public class CollectorKit {
+public class CollectionKit {
 
     /**
      * Divide array to multi arrays by per batch size. <br>
