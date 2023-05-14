@@ -1,6 +1,6 @@
 package com.iofairy.test;
 
-import com.iofairy.falcon.map.MapUtils;
+import com.iofairy.falcon.map.MapKit;
 import com.iofairy.top.G;
 import com.iofairy.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version 1.0
  * @date 2021/9/11 14:18
  */
-public class MapUtilsTest {
+public class MapKitTest {
     @Test
     public void testSortedMap() {
         Map<String, Double> doubleMap = new HashMap<>();
@@ -23,13 +23,13 @@ public class MapUtilsTest {
         doubleMap.put("dd", 89.8);
         doubleMap.put("eeeee", 96.3);
 
-        List<Map.Entry<String, Double>> entries = MapUtils.sortBy(doubleMap, Map.Entry::getValue);
+        List<Map.Entry<String, Double>> entries = MapKit.sortBy(doubleMap, Map.Entry::getValue);
         assertEquals("[ccc=70.5, b=85.2, dd=89.8, aa=90.1, eeeee=96.3]", entries.toString());
 
-        List<Map.Entry<String, Double>> entriesDouble = MapUtils.sortByDouble(doubleMap, Map.Entry::getValue);
+        List<Map.Entry<String, Double>> entriesDouble = MapKit.sortByDouble(doubleMap, Map.Entry::getValue);
         assertEquals("[ccc=70.5, b=85.2, dd=89.8, aa=90.1, eeeee=96.3]", entriesDouble.toString());
 
-        List<Map.Entry<String, Double>> entriesStrLength = MapUtils.sortBy(entriesDouble, kv -> kv.getKey().length());
+        List<Map.Entry<String, Double>> entriesStrLength = MapKit.sortBy(entriesDouble, kv -> kv.getKey().length());
         assertEquals("[b=85.2, dd=89.8, aa=90.1, ccc=70.5, eeeee=96.3]", entriesStrLength.toString());
 
     }
@@ -49,10 +49,10 @@ public class MapUtilsTest {
         listMap.put("d", list4);
         listMap.put("e", list5);
 
-        List<Map.Entry<String, List<Integer>>> entries = MapUtils.sortBy(listMap, kv -> kv.getValue().size());
+        List<Map.Entry<String, List<Integer>>> entries = MapKit.sortBy(listMap, kv -> kv.getValue().size());
         assertEquals("[e=[], b=[1, 2], d=[1, 2, 3], c=[1, 2, 3, 4], a=[1, 2, 3, 4, 5]]", entries.toString());
 
-        List<Map.Entry<String, List<Integer>>> entriesInt = MapUtils.sortByInt(listMap, kv -> -kv.getValue().size());
+        List<Map.Entry<String, List<Integer>>> entriesInt = MapKit.sortByInt(listMap, kv -> -kv.getValue().size());
         assertEquals("[a=[1, 2, 3, 4, 5], c=[1, 2, 3, 4], d=[1, 2, 3], b=[1, 2], e=[]]", entriesInt.toString());
     }
 
@@ -67,7 +67,7 @@ public class MapUtilsTest {
         map.put(null, "null_value");
         map.put("other", 'a');
 
-        Tuple2<String[], Object[]> tuple = MapUtils.mapToArray(map, String.class, Object.class);
+        Tuple2<String[], Object[]> tuple = MapKit.mapToArray(map, String.class, Object.class);
         assertEquals("([\"id\", \"name\", \"age\", \"nickname\", \"hobby\", null, \"other\"], " +
                 "[123456, \"zs\", 20, \"nickname\", \"swim\", \"null_value\", 'a'])", tuple.toString());
         assertEquals("java.lang.Character", tuple._2[6].getClass().getName());
@@ -76,12 +76,12 @@ public class MapUtilsTest {
         System.out.println("tuple._2[6] class name: " + tuple._2[6].getClass().getName());
         System.out.println("((String) tuple._2[3]).length(): " + ((String) tuple._2[3]).length());
 
-        Tuple2<String[], Object[]> tuple1 = MapUtils.mapToArray(map, String.class, Object.class, null);
+        Tuple2<String[], Object[]> tuple1 = MapKit.mapToArray(map, String.class, Object.class, null);
         assertEquals("([\"id\", \"name\", \"age\", \"nickname\", \"hobby\", null, \"other\"], " +
                 "[123456, \"zs\", 20, \"nickname\", \"swim\", \"null_value\", 'a'])", G.toString(tuple1));
         System.out.println(tuple1);
 
-        Tuple2<String[], Object[]> tuple2 = MapUtils.mapToArray(map, String.class, Object.class, "other", null, "age");
+        Tuple2<String[], Object[]> tuple2 = MapKit.mapToArray(map, String.class, Object.class, "other", null, "age");
         assertEquals("([\"id\", \"name\", \"nickname\", \"hobby\"], [123456, \"zs\", \"nickname\", \"swim\"])", tuple2.toString());
         System.out.println(tuple2);
 
@@ -98,8 +98,8 @@ public class MapUtilsTest {
         map.put(null, "null_value");
         map.put("other", 'a');
 
-        String[] keys = MapUtils.keyToArray(map, String.class, "other", null);
-        Object[] values = MapUtils.valueToArray(map, Object.class, "other", null);
+        String[] keys = MapKit.keyToArray(map, String.class, "other", null);
+        Object[] values = MapKit.valueToArray(map, Object.class, "other", null);
         assertEquals("[\"id\", \"name\", \"age\", \"nickname\", \"hobby\"]", G.toString(keys));
         assertEquals("[123456, \"zs\", 20, \"nickname\", \"swim\"]", G.toString(values));
         System.out.println(G.toString(keys));
