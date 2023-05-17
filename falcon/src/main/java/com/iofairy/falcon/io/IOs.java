@@ -48,6 +48,22 @@ public class IOs {
     }
 
     /**
+     * 将 {@code InputStream} 转为 {@code MultiByteArrayOutputStream}
+     *
+     * @param inputStream 输入流
+     * @return MultiByteArrayOutputStream
+     * @throws IOException 如果发生 I/O 异常，则抛出 {@code IOException}
+     * @since 0.4.2
+     */
+    public static MultiByteArrayOutputStream toMultiBAOS(InputStream inputStream) throws IOException {
+        Objects.requireNonNull(inputStream, "Parameter `inputStream` must be non-null!");
+
+        MultiByteArrayOutputStream multiBaos = new MultiByteArrayOutputStream();
+        copy(inputStream, multiBaos);
+        return multiBaos;
+    }
+
+    /**
      * 复制一个 {@code InputStream} 到 {@code OutputStream} 中
      *
      * @param inputStream  输入流

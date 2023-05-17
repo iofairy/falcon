@@ -27,6 +27,7 @@ module iofairy.falcon {
     exports com.iofairy.falcon.util;
     exports com.iofairy.falcon.iterable;
     exports com.iofairy.falcon.map;
+    exports com.iofairy.falcon.nio;
     exports com.iofairy.falcon.string;
     exports com.iofairy.falcon.zip;
     exports com.iofairy.falcon.stream;

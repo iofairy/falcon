@@ -15,9 +15,38 @@
  */
 package com.iofairy.falcon.string;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
 /**
  * String utils
  */
 public class Strings {
+    /**
+     * 将二维字节数组转成字符串
+     *
+     * @param byteArrays 二维字节数组
+     * @param charset    字符编码
+     * @return 字符串
+     * @since 0.4.2
+     */
+    public static String toString(byte[][] byteArrays, Charset charset) {
+        StringBuilder sb = new StringBuilder();
+        for (byte[] bytes : byteArrays) {
+            sb.append(new String(bytes, charset));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 将二维字节数组转成字符串
+     *
+     * @param byteArrays 二维字节数组
+     * @return 字符串
+     * @since 0.4.2
+     */
+    public static String toString(byte[][] byteArrays) {
+        return toString(byteArrays, StandardCharsets.UTF_8);
+    }
 
 }
