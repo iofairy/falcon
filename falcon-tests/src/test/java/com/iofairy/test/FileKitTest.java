@@ -1,5 +1,6 @@
 package com.iofairy.test;
 
+import com.iofairy.falcon.fs.FileInFolder;
 import com.iofairy.falcon.fs.FileKit;
 import com.iofairy.falcon.fs.FilePath;
 import com.iofairy.falcon.os.OS;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,5 +54,25 @@ public class FileKitTest {
         // Arrays.asList(files3).forEach(System.out::println);
         // System.out.println("============================================================");
         // Arrays.asList(files4).forEach(System.out::println);
+    }
+
+    @Test
+    public void testListFileInFolders() {
+        String path = FilePath.pathAuto(resourcePath, "fileListTest");
+        List<FileInFolder> fileInFolders = FileKit.listFileInFolders(path);
+        fileInFolders.forEach(System.out::println);
+        assertEquals(fileInFolders.size(), 12);
+
+        FileInFolder fileInFolder = fileInFolders.get(9);
+        assertEquals(fileInFolder.getRelativePath(), "新建文件夹 (2)/新建文件夹-第3层/文本文档 - 副本-第4层.txt.gz");
+        assertEquals(fileInFolder.getRelativePathWithBaseName(), "fileListTest/新建文件夹 (2)/新建文件夹-第3层/文本文档 - 副本-第4层.txt.gz");
+
+        fileInFolders = FileKit.listFileInFolders((String) null);
+        assertEquals(fileInFolders.size(), 0);
+
+        fileInFolders = FileKit.listFileInFolders(FilePath.pathAuto(resourcePath, "fileListTest/文本文档 - 副本.txt"));
+        assertEquals(fileInFolders.size(), 1);
+        System.out.println(fileInFolders);
+        assertEquals(fileInFolders.get(0).getRelativePathWithBaseName(), "文本文档 - 副本.txt");
     }
 }

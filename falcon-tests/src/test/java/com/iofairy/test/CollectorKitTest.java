@@ -35,10 +35,13 @@ public class CollectorKitTest {
 
         Map<String, User> hashMap1 = users.stream().parallel().collect(CollectorKit.toMap(HashMap::new, e -> e.name, e -> e, true));
         Map<String, User> linkedHashMap1 = users.stream().parallel().collect(CollectorKit.toMap(LinkedHashMap::new, e -> e.name, e -> e, true));
+        Map<String, String> linkedHashMapNullValue = users.stream().parallel().collect(CollectorKit.toMap(LinkedHashMap::new, e -> e.name, e -> e.hobby, true));
         System.out.println(hashMap1);
         System.out.println(linkedHashMap1);
+        System.out.println(linkedHashMapNullValue);
         assertEquals(hashMap1.toString(), "{null=User{name='null', hobby='null'}, Kate=User{name='Kate', hobby='reading'}, Grace=User{name='Grace', hobby='null'}, Ben=User{name='Ben', hobby='singing'}, Jack=User{name='Jack', hobby='singing'}, Emma=User{name='Emma', hobby='swimming'}}");
         assertEquals(linkedHashMap1.toString(), "{Jack=User{name='Jack', hobby='singing'}, Ben=User{name='Ben', hobby='singing'}, Emma=User{name='Emma', hobby='swimming'}, null=User{name='null', hobby='null'}, Grace=User{name='Grace', hobby='null'}, Kate=User{name='Kate', hobby='reading'}}");
+        assertEquals(linkedHashMapNullValue.toString(), "{Jack=singing, Ben=singing, Emma=swimming, null=null, Grace=null, Kate=reading}");
         System.out.println("============================================================");
 
         List<User> users1 = Arrays.asList(
@@ -71,6 +74,9 @@ public class CollectorKitTest {
         Map<String, User> concurrentSkipListMap1 = users2.stream().parallel().collect(CollectorKit.toMap(ConcurrentSkipListMap::new, e -> e.name, e -> e, true));
         System.out.println(concurrentHashMap1);
         System.out.println(concurrentSkipListMap1);
+        /*
+         * concurrentHashMap1 与 concurrentSkipListMap1 打印的字符串不固定，所以没有使用 assertEquals
+         */
 
     }
 

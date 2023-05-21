@@ -92,4 +92,99 @@ public class FileKit {
         }
     }
 
+    /**
+     * 获取FileInFolder列表。如果文件不存在，则返回空列表
+     *
+     * @param filePath 文件路径
+     * @return FileInFolder列表
+     * @throws SecurityException the file does not have permission to access
+     * @since 0.4.3
+     */
+    public static List<FileInFolder> listFileInFolders(String filePath) {
+        if (filePath == null) return new ArrayList<>();
+        return listFileInFolders(new File(filePath), false);
+    }
+
+    /**
+     * 获取FileInFolder列表。如果文件不存在，则返回空列表
+     *
+     * @param file 文件
+     * @return FileInFolder列表
+     * @throws SecurityException the file does not have permission to access
+     * @since 0.4.3
+     */
+    public static List<FileInFolder> listFileInFolders(File file) {
+        return listFileInFolders(file, false);
+    }
+
+    /**
+     * 获取FileInFolder列表。如果文件不存在，则返回空列表
+     *
+     * @param filePath                    文件路径
+     * @param isExcludeFilesNoPermissions 是否排除掉没有权限访问的文件或目录（如果不排除，当没有权限访问时，直接抛出异常）
+     * @return FileInFolder列表
+     * @throws SecurityException the file does not have permission to access
+     * @since 0.4.3
+     */
+    public static List<FileInFolder> listFileInFolders(String filePath, boolean isExcludeFilesNoPermissions) {
+        if (filePath == null) return new ArrayList<>();
+        return listFileInFolders(new File(filePath), isExcludeFilesNoPermissions);
+    }
+
+    /**
+     * 获取FileInFolder列表。如果文件不存在，则返回空列表
+     *
+     * @param file                        文件
+     * @param isExcludeFilesNoPermissions 是否排除掉没有权限访问的文件或目录（如果不排除，当没有权限访问时，直接抛出异常）
+     * @return FileInFolder列表
+     * @throws SecurityException the file does not have permission to access
+     * @since 0.4.3
+     */
+    public static List<FileInFolder> listFileInFolders(File file, boolean isExcludeFilesNoPermissions) {
+        List<FileInFolder> fileInFolders = new ArrayList<>();
+        if (file != null && file.exists()) {
+            String absolutePath = file.getAbsolutePath();
+            String fileName = file.getName();
+            if (file.isFile()) {
+                FileInFolder fileInFolder = new FileInFolder(file, absolutePath, "", fileName, true, false);
+                fileInFolders.add(fileInFolder);
+            } else {
+                boolean isBasePathRoot = file.getParent() == null;
+                FileInFolder fileInFolder = new FileInFolder(file, absolutePath, "", fileName, true, isBasePathRoot);
+                fileInFolders.add(fileInFolder);
+                File[] files = file.listFiles();
+                if (files == null) {
+                    if (!isExcludeFilesNoPermissions)
+                        throw new SecurityException("\"" + absolutePath + "\" the file does not exist, or has no permission to access!");
+                } else {
+                    for (File listFile : files) {
+                        listFileInFolders(fileInFolders, listFile, absolutePath, isBasePathRoot, "", isBasePathRoot ? "" : fileName + "/", isExcludeFilesNoPermissions);
+                    }
+                }
+            }
+        }
+        return fileInFolders;
+    }
+
+    private static void listFileInFolders(List<FileInFolder> fileInFolders, File file, String basePath, boolean isBasePathRoot, String prefix, String prefixWithBaseName, boolean isExcludeFilesNoPermissions) {
+        String fileName = file.getName();
+        FileInFolder fileInFolder = new FileInFolder(file, basePath, prefix + fileName, prefixWithBaseName + fileName, false, isBasePathRoot);
+        fileInFolders.add(fileInFolder);
+
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            String absolutePath = file.getAbsolutePath();
+
+            if (files == null) {
+                if (!isExcludeFilesNoPermissions) {
+                    throw new SecurityException("\"" + absolutePath + "\" the file does not exist, or has no permission to access!");
+                }
+            } else {
+                for (File listFile : files) {
+                    listFileInFolders(fileInFolders, listFile, basePath, isBasePathRoot, prefix + fileName + "/", prefixWithBaseName + fileName + "/", isExcludeFilesNoPermissions);
+                }
+            }
+        }
+    }
+
 }
