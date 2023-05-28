@@ -15,9 +15,7 @@
  */
 package com.iofairy.falcon.zip;
 
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.iofairy.falcon.zip.ArchiveType.*;
 
@@ -64,6 +62,7 @@ public enum ArchiveFormat {
     ARJ(EnumSet.of(MULTI_FUNCTION), ".arj", "ARJ"),
     RAR(EnumSet.of(MULTI_FUNCTION), ".rar", "RAR"),
     TAR_GZ(EnumSet.of(MULTI_FUNCTION), ".tar.gz", "tar with gzip"),
+    TGZ(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".tgz", "tar with gzip or Slackware Package(based on tar with gzip)"),
     TAR_Z(EnumSet.of(MULTI_FUNCTION), ".tar.Z", "tar with compress"),
     TAR_BZ2(EnumSet.of(MULTI_FUNCTION), ".tar.bz2", "tar with bzip2"),
     TBZ2(EnumSet.of(MULTI_FUNCTION), ".tbz2", "tar with bzip2"),
@@ -71,7 +70,9 @@ public enum ArchiveFormat {
     TLZ(EnumSet.of(MULTI_FUNCTION), ".tlz", "tar with lzip"),
     TAR_XZ(EnumSet.of(MULTI_FUNCTION), ".tar.xz", "tar with xz"),
     TXZ(EnumSet.of(MULTI_FUNCTION), ".txz", "tar with xz"),
-    TAR_ZST(EnumSet.of(MULTI_FUNCTION), ".tar.zst", "tar with zstd"),
+    TAR_ZST(EnumSet.of(MULTI_FUNCTION), ".tar.zst", "tar with Zstandard"),
+    TZST(EnumSet.of(MULTI_FUNCTION), ".tzst", "tar with Zstandard"),
+    TAR_SNAPPY(EnumSet.of(MULTI_FUNCTION), ".tar.snappy", "tar with Snappy"),
     ZIP(EnumSet.of(MULTI_FUNCTION), ".zip", "ZIP"),
     ZZIP(EnumSet.of(MULTI_FUNCTION), ".zz", "Zzip"),
     /*
@@ -81,7 +82,6 @@ public enum ArchiveFormat {
     PKG(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".pkg", "Macintosh Installer"),
     MPKG(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".mpkg", "Macintosh Installer"),
     RPM(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".rpm", "RPM Package Manager (RPM)"),
-    TGZ(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".tgz", "Slackware Package"),
     MSI(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".msi", "Windows Installer (also MSI)"),
     JAR(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".jar", "Java Archive (JAR)"),
     WAR(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".war", "Web Application archive (Java-based web app)"),
@@ -112,6 +112,19 @@ public enum ArchiveFormat {
     public final String description;
 
     static final Map<String, ArchiveFormat> SA_MAP = new HashMap<>();
+    /**
+     * 混合压缩格式
+     */
+    public static final ArchiveFormat[] MIXED_FORMATS = {TAR_GZ, TGZ, TAR_Z, TAR_BZ2, TBZ2, TAR_LZ, TLZ, TAR_XZ, TXZ, TAR_ZST, TZST, TAR_SNAPPY};
+    /**
+     * 有多个扩展名的压缩格式
+     */
+    public static final ArchiveFormat[] MULTI_EXTS_FORMATS = {TAR_GZ, TAR_Z, TAR_BZ2, TAR_LZ, TAR_XZ, TAR_ZST, TAR_SNAPPY};
+    /**
+     * 相同的格式
+     */
+    static final Map<ArchiveFormat, ArchiveFormat> CONSISTENT_FORMAT1 = new HashMap<>();
+    static final Map<ArchiveFormat, ArchiveFormat> CONSISTENT_FORMAT2 = new HashMap<>();
 
     static {
         for (ArchiveFormat value : values()) {
@@ -122,6 +135,18 @@ public enum ArchiveFormat {
                 SA_MAP.put(ext.toLowerCase(), value);
             }
         }
+
+        CONSISTENT_FORMAT1.put(TAR_GZ, TGZ);
+        CONSISTENT_FORMAT1.put(TAR_BZ2, TBZ2);
+        CONSISTENT_FORMAT1.put(TAR_LZ, TLZ);
+        CONSISTENT_FORMAT1.put(TAR_XZ, TXZ);
+        CONSISTENT_FORMAT1.put(TAR_ZST, TZST);
+
+        CONSISTENT_FORMAT2.put(TGZ, TAR_GZ);
+        CONSISTENT_FORMAT2.put(TBZ2, TAR_BZ2);
+        CONSISTENT_FORMAT2.put(TLZ, TAR_LZ);
+        CONSISTENT_FORMAT2.put(TXZ, TAR_XZ);
+        CONSISTENT_FORMAT2.put(TZST, TAR_ZST);
     }
 
     ArchiveFormat(EnumSet<ArchiveType> archiveTypes, String extName, String description) {
@@ -131,10 +156,56 @@ public enum ArchiveFormat {
     }
 
     public static ArchiveFormat of(String extName) {
+        return of(extName, false);
+    }
+
+    /**
+     * 获取 ArchiveFormat 实例
+     *
+     * @param extName     文件扩展名
+     * @param isUnionType 如果为true，则 .tgz 返回 {@link #TAR_GZ}，.tbz2 返回 {@link #TAR_BZ2} 依此类推……
+     * @return ArchiveFormat
+     */
+    public static ArchiveFormat of(String extName, boolean isUnionType) {
         if (extName == null) return null;
 
         if (!extName.startsWith(".")) extName = "." + extName;
-        return SA_MAP.get(extName.equals(".z") || extName.equals(".Z") ? extName : extName.toLowerCase());
+
+        String lowerExtName = extName.toLowerCase();
+        if (isUnionType) {
+            ArchiveFormat consistentFormat = CONSISTENT_FORMAT2.get(SA_MAP.get(lowerExtName));
+            if (consistentFormat != null) return consistentFormat;
+        }
+
+        return SA_MAP.get(extName.equals(".z") || extName.equals(".Z") ? extName : lowerExtName);
+    }
+
+    public boolean isMixedFormat() {
+        return isMixedFormat(this);
+    }
+
+    public boolean isMultiExtsFormat() {
+        return isMultiExtsFormat(this);
+    }
+
+    /**
+     * 是否是混合归档格式
+     *
+     * @param archiveFormat 归档格式
+     * @return true，是混合类型，反之，不是混合类型
+     */
+    public static boolean isMixedFormat(ArchiveFormat archiveFormat) {
+        return Arrays.asList(MIXED_FORMATS).contains(archiveFormat);
+    }
+
+    /**
+     * 是否是具有多个扩展名的归档格式，如：{@code .tar.gz, .tar.bz2} 等等
+     *
+     * @param archiveFormat 归档格式
+     * @return true，具有多个扩展名的归档格式
+     */
+    public static boolean isMultiExtsFormat(ArchiveFormat archiveFormat) {
+        return Arrays.asList(MULTI_EXTS_FORMATS).contains(archiveFormat);
     }
 
 }

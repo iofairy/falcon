@@ -15,7 +15,7 @@
  */
 package com.iofairy.falcon.iterable;
 
-import com.iofairy.falcon.map.MapUtils;
+import com.iofairy.falcon.map.MapKit;
 import com.iofairy.top.G;
 import com.iofairy.tuple.Tuple;
 import com.iofairy.tuple.Tuple2;
@@ -216,10 +216,10 @@ public class CollectionKit {
             map.put(i, sortedLists.remove(0));
         }
         // sort map by value.size. 按 map 中的value的size 从小到大排序
-        List<Map.Entry<Integer, List<E>>> entries = MapUtils.sortBy(map, kv -> kv.getValue().size());
+        List<Map.Entry<Integer, List<E>>> entries = MapKit.sortBy(map, kv -> kv.getValue().size());
         for (List<E> list : sortedLists) {
             entries.get(0).getValue().addAll(list);
-//            entries = MapUtils.sortBy(entries, kv -> kv.getValue().size());   // 排序效率太低
+//            entries = MapKit.sortBy(entries, kv -> kv.getValue().size());   // 排序效率太低
             fastSortForBalance(entries);    // 针对 balance 的排序算法，效率非常高
         }
 

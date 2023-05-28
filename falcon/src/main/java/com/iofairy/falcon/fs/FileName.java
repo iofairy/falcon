@@ -20,7 +20,9 @@ import com.iofairy.top.G;
 import java.util.Arrays;
 
 /**
- * 文件名信息
+ * 文件名信息<br>
+ * 注：<br>
+ * 这里不校验是文件还是文件夹（目录），仅按 {@code .} 来分隔扩展名，请在外部判断是文件还是文件夹
  *
  * @since 0.3.5
  */
@@ -70,6 +72,12 @@ public class FileName {
      */
     public final String extNoDot2;
 
+    /**
+     * 获取FileName实例<br>
+     * 注：确保这里的参数是<b>文件名</b>，而不是路径，这里不做路径的解析处理，如果是路径，请使用{@link FilePath#info(String)} 系列函数
+     *
+     * @param fileName 文件名
+     */
     public FileName(String fileName) {
         this.name = fileName;
         this.exts = FilePath.exts(fileName);
@@ -115,6 +123,13 @@ public class FileName {
         this.extNoDot2 = extNoDot2;
     }
 
+    /**
+     * 获取FileName实例<br>
+     * 注：确保这里的参数是<b>文件名</b>，而不是路径，这里不做路径的解析处理，如果是路径，请使用{@link FilePath#info(String)} 系列函数
+     *
+     * @param fileName 文件名
+     * @return FileName对象
+     */
     public static FileName of(String fileName) {
         return new FileName(fileName);
     }

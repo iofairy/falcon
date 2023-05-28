@@ -553,7 +553,10 @@ public class FilePath {
     }
 
     /**
-     * 获取文件名的后缀名数组，用于拼接后缀名
+     * 获取文件名的后缀名数组，用于拼接后缀名<br>
+     * 注：<br>
+     * 1、确保这里的参数是<b>文件名</b>，而不是路径，这里不做路径的解析处理<br>
+     * 2、文件名为空、文件名只包含 <b>点(.)</b> 、文件名末尾是 <b>斜杠(/)</b> 或 <b>反斜杠(\)</b> （这种情况可被当作文件夹），均返回空字符串数组
      *
      * @param fileName 文件名
      * @return 后缀名数组
@@ -573,7 +576,9 @@ public class FilePath {
     /**
      * Get file extension from filename. <br>
      * 从文件名中获取文件扩展名。 <br>
-     * 注：Windows不能创建以 . 为后缀的文件或文件夹（会自动去除），Linux则可以。
+     * 注：<br>
+     * 1、Windows不能创建以 . 为后缀的文件或文件夹（会自动去除），Linux则可以。<br>
+     * 2、后缀名不能包含 <b>斜杠(/)</b> 或 <b>反斜杠(\)</b>，否则返回 {@code null}
      *
      * @param fileName 文件名
      * @return file extension, <b>eg</b>: {@code .txt}, {@code .csv}
@@ -586,7 +591,9 @@ public class FilePath {
     /**
      * Get file extension without dot from filename. <br>
      * 从文件名中获取文件扩展名，不带点。 <br>
-     * 注：Windows不能创建以 . 为后缀的文件或文件夹（会自动去除），Linux则可以。
+     * 注：<br>
+     * 1、Windows不能创建以 . 为后缀的文件或文件夹（会自动去除），Linux则可以。<br>
+     * 2、后缀名不能包含 <b>斜杠(/)</b> 或 <b>反斜杠(\)</b>，否则返回 {@code null}
      *
      * @param fileName 文件名
      * @return file extension without dot, <b>eg</b>: {@code txt}, {@code csv}
