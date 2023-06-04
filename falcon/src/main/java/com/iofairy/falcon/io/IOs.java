@@ -15,6 +15,7 @@
  */
 package com.iofairy.falcon.io;
 
+import com.iofairy.tcf.Close;
 import com.iofairy.top.G;
 
 import java.io.IOException;
@@ -76,16 +77,32 @@ public class IOs {
     }
 
     /**
-     * 复制一个 {@code InputStream} 到 {@code OutputStream} 中
+     * 从 {@code InputStream} 中读取指定长度的字节数到 {@code OutputStream} 中
      *
      * @param inputStream  输入流
      * @param outputStream 输出流
-     * @param bufferSize   用于复制的缓冲区大小
+     * @param copyLength   复制的字节长度
      * @return 复制的字节数量
      * @throws IOException 如果发生 I/O 异常，则抛出 {@code IOException}
+     * @since 0.4.6
      */
-    public static long copy(final InputStream inputStream, final OutputStream outputStream, final int bufferSize) throws IOException {
-        return copy(inputStream, outputStream, new byte[bufferSize]);
+    public static long copy(final InputStream inputStream, final OutputStream outputStream, long copyLength) throws IOException {
+        if (G.hasNull(inputStream, outputStream)) throw new NullPointerException("Parameters `inputStream`, `outputStream` must be non-null!");
+        if (copyLength <= 0) return 0;
+
+        byte[] buffer = new byte[(int) Math.min(DEFAULT_BUFFER_SIZE, copyLength)];
+
+        long count = 0;
+        int n;
+        while ((n = inputStream.read(buffer)) != EOF && copyLength > 0) {
+            outputStream.write(buffer, 0, n);
+
+            count += n;
+            copyLength -= n;
+            if (copyLength < 0) copyLength = 0;
+            buffer = new byte[(int) Math.min(DEFAULT_BUFFER_SIZE, copyLength)];
+        }
+        return count;
     }
 
     /**
@@ -98,7 +115,8 @@ public class IOs {
      * @throws IOException 如果发生 I/O 异常，则抛出 {@code IOException}
      */
     public static long copy(final InputStream inputStream, final OutputStream outputStream, final byte[] buffer) throws IOException {
-        if (G.hasNull(inputStream, outputStream)) throw new RuntimeException("Parameters `inputStream`, `outputStream` must be non-null!");
+        if (G.hasNull(inputStream, outputStream, buffer))
+            throw new NullPointerException("Parameters `inputStream`, `outputStream`, `buffer` must be non-null!");
 
         int n;
         long count = 0;
@@ -107,6 +125,77 @@ public class IOs {
         }
 
         return count;
+    }
+
+    /**
+     * 从输入流中读取字节数组<br>
+     * <b>注：内部会自动关闭 InputStream 输入流</b>
+     *
+     * @param is 输入流
+     * @return 二维字节数组
+     * @throws IOException 如果发生 I/O 异常，则抛出 {@code IOException}
+     * @see #readBytes(InputStream, Long, boolean)
+     * @since 0.4.6
+     */
+    public static byte[][] readBytes(InputStream is) throws IOException {
+        return readBytes(is, null, true);
+    }
+
+    /**
+     * 从输入流中读取字节数组<br>
+     * <b>注：内部会自动关闭 InputStream 输入流</b>
+     *
+     * @param is         输入流
+     * @param readLength 读取字节长度
+     * @return 二维字节数组
+     * @throws IOException 如果发生 I/O 异常，则抛出 {@code IOException}
+     * @see #readBytes(InputStream, Long, boolean)
+     * @since 0.4.6
+     */
+    public static byte[][] readBytes(InputStream is, Long readLength) throws IOException {
+        return readBytes(is, readLength, true);
+    }
+
+    /**
+     * 从输入流中读取字节数组
+     *
+     * @param is      输入流
+     * @param isClose 是否关闭输入流
+     * @return 二维字节数组
+     * @throws IOException 如果发生 I/O 异常，则抛出 {@code IOException}
+     * @see #readBytes(InputStream, Long, boolean)
+     * @since 0.4.6
+     */
+    public static byte[][] readBytes(InputStream is, boolean isClose) throws IOException {
+        return readBytes(is, null, isClose);
+    }
+
+    /**
+     * 从输入流中读取字节数组
+     *
+     * @param is         输入流
+     * @param readLength 读取字节长度
+     * @param isClose    是否关闭输入流
+     * @return 二维字节数组
+     * @throws IOException 如果发生 I/O 异常，则抛出 {@code IOException}
+     * @since 0.4.6
+     */
+    public static byte[][] readBytes(InputStream is, Long readLength, boolean isClose) throws IOException {
+        Objects.requireNonNull(is, "Parameter `inputStream` must be non-null!");
+
+        MultiByteArrayOutputStream baos = new MultiByteArrayOutputStream();
+        try {
+            if (readLength == null) {
+                copy(is, baos, new byte[DEFAULT_BUFFER_SIZE]);
+            } else {
+                copy(is, baos, readLength);
+            }
+        } finally {
+            if (isClose) {
+                Close.close(is);
+            }
+        }
+        return baos.toByteArrays();
     }
 
 }
