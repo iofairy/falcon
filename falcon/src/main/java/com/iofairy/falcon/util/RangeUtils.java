@@ -31,6 +31,7 @@ import java.util.stream.IntStream;
  * @since 0.1.0
  * @deprecated Since falcon version 0.3.0, replaced by {@link Ranges}
  */
+@Deprecated
 public class RangeUtils {
     /**
      * 将一个Range（范围）分成多个小的Range（范围）

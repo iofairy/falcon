@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  * @since 0.0.2
  * @deprecated Since falcon version 0.4.1, replaced by {@link com.iofairy.falcon.map.MapKit}
  */
+@Deprecated
 public class MapUtils {
 
     /**

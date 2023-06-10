@@ -49,4 +49,21 @@ public class Strings {
         return toString(byteArrays, StandardCharsets.UTF_8);
     }
 
+    /**
+     * 重复字符串指定的次数
+     *
+     * @param str         字符串
+     * @param repeatTimes 次数
+     * @return 字符串
+     */
+    public static String repeat(String str, int repeatTimes) {
+        if (str == null) return null;
+        if (str.length() == 0 || repeatTimes <= 0) return "";
+        if (repeatTimes == 1) return str;
+        if (repeatTimes > Integer.MAX_VALUE - 8)
+            throw new IllegalArgumentException("Parameter `repeatTimes` must be <= (Integer.MAX_VALUE - 8), otherwise, the memory will overflow! ");
+
+        return new String(new char[repeatTimes]).replace("\0", str);
+    }
+
 }
