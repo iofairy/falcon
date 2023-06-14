@@ -43,9 +43,10 @@ public class IOs {
     public static MultiByteArrayInputStream toMultiBAIS(InputStream inputStream) throws IOException {
         Objects.requireNonNull(inputStream, "Parameter `inputStream` must be non-null!");
 
-        MultiByteArrayOutputStream multiBaos = new MultiByteArrayOutputStream();
-        copy(inputStream, multiBaos);
-        return new MultiByteArrayInputStream(multiBaos.toByteArrays());
+        try (MultiByteArrayOutputStream multiBaos = new MultiByteArrayOutputStream()) {
+            copy(inputStream, multiBaos);
+            return new MultiByteArrayInputStream(multiBaos.toByteArrays());
+        }
     }
 
     /**
@@ -59,9 +60,15 @@ public class IOs {
     public static MultiByteArrayOutputStream toMultiBAOS(InputStream inputStream) throws IOException {
         Objects.requireNonNull(inputStream, "Parameter `inputStream` must be non-null!");
 
-        MultiByteArrayOutputStream multiBaos = new MultiByteArrayOutputStream();
-        copy(inputStream, multiBaos);
-        return multiBaos;
+        MultiByteArrayOutputStream multiBaos = null;
+        try {
+            multiBaos = new MultiByteArrayOutputStream();
+            copy(inputStream, multiBaos);
+            return multiBaos;
+        } catch (Exception e) {
+            Close.close(multiBaos);
+            throw new IOException(e);
+        }
     }
 
     /**
@@ -183,19 +190,23 @@ public class IOs {
     public static byte[][] readBytes(InputStream is, Long readLength, boolean isClose) throws IOException {
         Objects.requireNonNull(is, "Parameter `inputStream` must be non-null!");
 
-        MultiByteArrayOutputStream baos = new MultiByteArrayOutputStream();
+        MultiByteArrayOutputStream baos = null;
         try {
+            baos = new MultiByteArrayOutputStream();
+
             if (readLength == null) {
                 copy(is, baos, new byte[DEFAULT_BUFFER_SIZE]);
             } else {
                 copy(is, baos, readLength);
             }
+
+            return baos.toByteArrays();
         } finally {
             if (isClose) {
                 Close.close(is);
             }
+            Close.close(baos);
         }
-        return baos.toByteArrays();
     }
 
 }

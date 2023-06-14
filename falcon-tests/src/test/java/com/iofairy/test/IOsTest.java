@@ -7,6 +7,7 @@ import com.iofairy.falcon.string.Strings;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -242,4 +243,14 @@ public class IOsTest {
             throw new RuntimeException(e);
         }
     }
+
+    @Test
+    public void testToMultiBAOS() throws IOException {
+        MultiByteArrayInputStream bais = new MultiByteArrayInputStream("这是InputStream".getBytes(), "转为MultiByteArrayOutputStream".getBytes(),
+                "的测试！".getBytes());
+        MultiByteArrayOutputStream baos = IOs.toMultiBAOS(bais);
+        System.out.println(Strings.toString(baos.toByteArrays()));
+        assertEquals(Strings.toString(baos.toByteArrays()), "这是InputStream转为MultiByteArrayOutputStream的测试！");
+    }
+
 }
