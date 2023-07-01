@@ -62,6 +62,7 @@ public interface ChronoInterval extends TemporalAmount, Serializable {
      * @return DateTime
      * @since 0.3.0
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     default <T> DateTime<T> addTo(DateTime<T> dateTime) {
         Objects.requireNonNull(dateTime, "Parameter `dateTime` must be non-null!");
@@ -116,6 +117,7 @@ public interface ChronoInterval extends TemporalAmount, Serializable {
      * @return DateTime
      * @since 0.3.0
      */
+    @Deprecated
     @SuppressWarnings("unchecked")
     default <T> DateTime<T> subtractFrom(DateTime<T> dateTime) {
         Objects.requireNonNull(dateTime, "Parameter `dateTime` must be non-null!");

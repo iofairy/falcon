@@ -105,6 +105,10 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     private DateTime(T dateTime, boolean checkValue) {
         if (checkValue) {
             Objects.requireNonNull(dateTime, "Parameter `dateTime` must be non-null!");
+            if (dateTime instanceof LocalDate) {
+                throw new UnsupportedTemporalTypeException("The `dateTime` is of type `LocalDate`, please call the `DateTime.of(LocalDate)` function!");
+            }
+
             if (SUPPORTED_DATETIME.stream().noneMatch(c -> c.isAssignableFrom(dateTime.getClass()))) {
                 throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_DATETIME_STRING + "] is supported for `dateTime` parameter!");
             }
@@ -136,6 +140,11 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
     public static <T> DateTime<T> of(T dateTime) {
         return new DateTime<>(dateTime, true);
+    }
+
+    public static DateTime<LocalDateTime> of(LocalDate localDate) {
+        Objects.requireNonNull(localDate, "Parameter `localDate` must be non-null!");
+        return new DateTime<>(localDate.atStartOfDay(), false);
     }
 
     static <T> DateTime<T> from(T dateTime) {
@@ -1042,9 +1051,29 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
     @Override
     public long until(Temporal endExclusive, TemporalUnit unit) {
-        OffsetDateTime offsetDateTime = toOffsetDT(null);
-        OffsetDateTime endOffsetDateTime = DateTime.of(endExclusive).toOffsetDT(offsetDateTime.getOffset());
-        return offsetDateTime.until(endOffsetDateTime, unit);
+        Objects.requireNonNull(endExclusive, "Parameter `endExclusive` must be non-null!");
+
+        boolean isDateTime = endExclusive instanceof DateTime;
+
+        Object start = dateTime;
+        Object end = isDateTime ? ((DateTime<?>) endExclusive).get() : endExclusive;
+
+        if ((start instanceof ZonedDateTime && end instanceof ZonedDateTime)
+                || (start instanceof OffsetDateTime && end instanceof OffsetDateTime)
+                || (start instanceof LocalDateTime && end instanceof LocalDateTime)
+                || (start instanceof ZonedDateTime && end instanceof OffsetDateTime)) {
+            return ((Temporal) start).until((Temporal) end, unit);
+        }
+
+        if (isDateTime) {
+            endExclusive = ((DateTime<?>) endExclusive).getZonedDateTime();
+        } else if (endExclusive instanceof Instant) {
+            endExclusive = ZonedDateTime.ofInstant((Instant) endExclusive, TZ.DEFAULT_ZONE);
+        } else if (endExclusive instanceof LocalDateTime) {
+            endExclusive = ((LocalDateTime) endExclusive).atZone(TZ.DEFAULT_ZONE);
+        }
+
+        return zonedDateTime.until(endExclusive, unit);
     }
 
     @Override
@@ -1224,6 +1253,12 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
     public long toEpochMilli(){
         return instant.toEpochMilli();
+    }
+
+    public Class<? extends T> getDTClass() {
+        @SuppressWarnings("unchecked")
+        Class<? extends T> dtClass = (Class<? extends T>) dateTime.getClass();
+        return dtClass;
     }
 
     @Override

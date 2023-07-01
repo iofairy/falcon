@@ -17,6 +17,7 @@ package com.iofairy.falcon.time;
 
 import java.time.*;
 import java.time.temporal.Temporal;
+import java.time.temporal.WeekFields;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -27,6 +28,49 @@ import java.util.stream.IntStream;
  * @since 0.3.0
  */
 public class DTConst {
+    /*###################################################################################
+     ************************************************************************************
+     ------------------------------------------------------------------------------------
+     ***********************               星期字段设置              **********************
+     ------------------------------------------------------------------------------------
+     ************************************************************************************
+     ###################################################################################*/
+    /**
+     * A week starts on <b>Monday</b> and the first week has a minimum of <b>4 days</b>.
+     */
+    public static final WeekFields WEEK_ISO = WeekFields.ISO;
+    /**
+     * A week starts on <b>Monday</b> and the first week has a minimum of <b>1 day</b>.
+     */
+    public static final WeekFields MONDAY_MIN1 = WeekFields.of(DayOfWeek.MONDAY, 1);
+    /**
+     * A week starts on <b>Monday</b> and the first week has a minimum of <b>4 days</b>.
+     */
+    public static final WeekFields MONDAY_MIN4 = WeekFields.of(DayOfWeek.MONDAY, 4);
+    /**
+     * A week starts on <b>SUNDAY</b> and the first week has a minimum of <b>1 day</b>.
+     */
+    public static final WeekFields SUNDAY_MIN1 = WeekFields.of(DayOfWeek.SUNDAY, 1);
+    /**
+     * A week starts on <b>SUNDAY</b> and the first week has a minimum of <b>4 days</b>.
+     */
+    public static final WeekFields SUNDAY_MIN4 = WeekFields.of(DayOfWeek.SUNDAY, 4);
+    /**
+     * A week starts on <b>SATURDAY</b> and the first week has a minimum of <b>1 day</b>.
+     */
+    public static final WeekFields SATURDAY_MIN1 = WeekFields.of(DayOfWeek.SATURDAY, 1);
+    /**
+     * A week starts on <b>SATURDAY</b> and the first week has a minimum of <b>4 days</b>.
+     */
+    public static final WeekFields SATURDAY_MIN4 = WeekFields.of(DayOfWeek.SATURDAY, 4);
+
+    /*###################################################################################
+     ************************************************************************************
+     ------------------------------------------------------------------------------------
+     ***********************                  其他                  **********************
+     ------------------------------------------------------------------------------------
+     ************************************************************************************
+     ###################################################################################*/
     /**
      * Universal supported temporal
      */

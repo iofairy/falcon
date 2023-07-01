@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.*;
 
@@ -102,6 +103,8 @@ public class DateTimeTest {
         DateTime<Calendar> dt6 = DateTime.of(calendar1);
         DateTime<Date> dt7 = DateTime.of(date1);
 
+        DateTime<LocalDateTime> dt8 = DateTime.of(ldt.toLocalDate());
+
         System.out.println(dt1.dtDetail());     // 2022-02-27 08:00:10.000000100 [周日]
         System.out.println(dt2.dtDetail());     // 2022-02-27 08:00:10.000000100 [Asia/Shanghai +08:00 GMT+8 周日]
         System.out.println(dt3.dtDetail());     // 2022-02-27 03:00:10.000000100 [Europe/Moscow +03:00 GMT+3 周日]
@@ -109,6 +112,7 @@ public class DateTimeTest {
         System.out.println(dt5.dtDetail());     // 2022-02-27 00:00:10.000000100 [+00:00 GMT 周日]
         System.out.println(dt6.dtDetail());     // 2022-02-27 03:00:10.000000000 [Europe/Moscow +03:00 GMT+3 周日]
         System.out.println(dt7.dtDetail());     // 2022-02-27 08:00:10.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        System.out.println(dt8.dtDetail());     // 2022-02-27 00:00:00.000000000 [周日]
 
         Calendar calendar01 = dt1.toDefaultCalendar();      // 2022-02-27 08:00:10.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
         Calendar calendar02 = dt2.toDefaultCalendar();      // 2022-02-27 08:00:10.000000000 [Asia/Shanghai +08:00 GMT+8 周日]
@@ -1447,19 +1451,19 @@ public class DateTimeTest {
         assertEquals("[2021-12-27 06:01:50.000, 2021-12-28 06:01:50.000, 2021-12-29 06:01:50.000, 2021-12-30 06:01:50.000, " +
                 "2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000, 2022-01-02 06:01:50.000]", dateTimes1.toString());
         assertEquals("[2021-12-27 06:01:50.000, 2021-12-28 06:01:50.000, 2021-12-29 06:01:50.000, 2021-12-30 06:01:50.000, " +
-         "2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000, 2022-01-02 06:01:50.000]", dateTimes2.toString());
+                "2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000, 2022-01-02 06:01:50.000]", dateTimes2.toString());
         assertEquals("[2021-12-27 06:01:50.000, 2021-12-28 06:01:50.000, 2021-12-29 06:01:50.000, 2021-12-30 06:01:50.000, " +
-         "2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000, 2022-01-02 06:01:50.000]", dateTimes3.toString());
+                "2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000, 2022-01-02 06:01:50.000]", dateTimes3.toString());
         assertEquals("[2021-12-27 06:01:50.000, 2021-12-28 06:01:50.000, 2021-12-29 06:01:50.000, 2021-12-30 06:01:50.000, " +
-         "2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000, 2022-01-02 06:01:50.000]", dateTimes4.toString());
+                "2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000, 2022-01-02 06:01:50.000]", dateTimes4.toString());
         assertEquals("[2021-12-26 06:01:50.000, 2021-12-27 06:01:50.000, 2021-12-28 06:01:50.000, 2021-12-29 06:01:50.000, " +
-         "2021-12-30 06:01:50.000, 2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000]", dateTimes5.toString());
+                "2021-12-30 06:01:50.000, 2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000]", dateTimes5.toString());
         assertEquals("[2021-12-26 06:01:50.000, 2021-12-27 06:01:50.000, 2021-12-28 06:01:50.000, 2021-12-29 06:01:50.000, " +
                 "2021-12-30 06:01:50.000, 2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000]", dateTimes6.toString());
         assertEquals("[2021-12-26 06:01:50.000, 2021-12-27 06:01:50.000, 2021-12-28 06:01:50.000, 2021-12-29 06:01:50.000, " +
-         "2021-12-30 06:01:50.000, 2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000]", dateTimes7.toString());
+                "2021-12-30 06:01:50.000, 2021-12-31 06:01:50.000, 2022-01-01 06:01:50.000]", dateTimes7.toString());
         assertEquals("[2022-01-02 06:01:50.000, 2022-01-03 06:01:50.000, 2022-01-04 06:01:50.000, 2022-01-05 06:01:50.000, " +
-         "2022-01-06 06:01:50.000, 2022-01-07 06:01:50.000, 2022-01-08 06:01:50.000]", dateTimes8.toString());
+                "2022-01-06 06:01:50.000, 2022-01-07 06:01:50.000, 2022-01-08 06:01:50.000]", dateTimes8.toString());
 
 
     }
@@ -1489,4 +1493,52 @@ public class DateTimeTest {
         assertThrows(UnsupportedTemporalTypeException.class, () -> DateTime.of(time));
 
     }
+
+    @Test
+    public void testUntil() {
+        DateTime<Date> fromDT = DateTime.parseDate("2023-06-30");
+        DateTime<LocalDateTime> toDT = DateTime.of(LocalDate.of(2023, 6, 1));
+        Instant toInstant = toDT.getInstant();
+        ZonedDateTime toZDT = toDT.toUTCZonedDT();
+
+        System.out.println(fromDT.dtDetail());
+        System.out.println(toDT.dtDetail());
+        System.out.println(toInstant);
+        System.out.println(toZDT);
+
+        try {
+            DateTime.of((Temporal) LocalDate.of(2023, 6, 1));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertEquals(e.getMessage(), "The `dateTime` is of type `LocalDate`, please call the `DateTime.of(LocalDate)` function!");
+        }
+
+        assertEquals(-4, fromDT.until(toDT, ChronoUnit.WEEKS));
+        assertEquals(-4, fromDT.until(toInstant, ChronoUnit.WEEKS));
+        assertEquals(-4, fromDT.until(toZDT, ChronoUnit.WEEKS));
+        assertEquals(-29, fromDT.until(toDT, ChronoUnit.DAYS));
+        assertEquals(-29, fromDT.until(toInstant, ChronoUnit.DAYS));
+        assertEquals(-29, fromDT.until(toZDT, ChronoUnit.DAYS));
+    }
+
+    @Test
+    public void testGetDTClass() {
+        DateTime<Date> dt1 = DateTime.parseDate("2023-06-30");
+        DateTime<LocalDateTime> dt2 = DateTime.of(LocalDate.of(2023, 6, 1));
+        DateTime<Calendar> dt3 = DateTime.of(Calendar.getInstance());
+        Class<? extends Date> dtClass1 = dt1.getDTClass();
+        Class<? extends LocalDateTime> dtClass2 = dt2.getDTClass();
+        Class<? extends Calendar> dtClass3 = dt3.getDTClass();
+        System.out.println(dtClass1);
+        System.out.println(dtClass2);
+        System.out.println(dtClass3);
+
+        assertTrue(Date.class.isAssignableFrom(dtClass1));
+        assertTrue(LocalDateTime.class.isAssignableFrom(dtClass2));
+        assertTrue(Calendar.class.isAssignableFrom(dtClass3));
+        assertSame(Date.class, dtClass1);
+        assertSame(LocalDateTime.class, dtClass2);
+        assertNotSame(Calendar.class, dtClass3);
+    }
+
 }

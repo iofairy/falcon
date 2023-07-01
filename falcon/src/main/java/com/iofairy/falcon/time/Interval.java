@@ -281,8 +281,8 @@ public class Interval extends SignedInterval {
         if (!isSupported(startTemporal) || !isSupported(endTemporal))
             throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `startTemporal` and `endTemporal` parameters!");
 
-        DateTime<Temporal> startDT = DateTime.from(startTemporal);
-        DateTime<Temporal> endDT = DateTime.from(endTemporal);
+        DateTime<?> startDT = startTemporal instanceof DateTime ? (DateTime<?>) startTemporal : DateTime.from(startTemporal);
+        DateTime<?> endDT = endTemporal instanceof DateTime ? (DateTime<?>) endTemporal : DateTime.from(endTemporal);
 
         boolean isBefore = startDT.isBefore(endDT);
         Temporal tmpStartTemporal = isBefore ? startTemporal : endTemporal;
@@ -332,27 +332,6 @@ public class Interval extends SignedInterval {
         return between(DateTime.from(startCalendar).getZonedDateTime(), DateTime.from(endCalendar).getZonedDateTime());
     }
 
-    /**
-     * Obtain two {@link DateTime} interval. <br>
-     * 获取两个{@link DateTime}的时间间隔。
-     *
-     * @param startDateTime start DateTime
-     * @param endDateTime   end DateTime
-     * @return Interval
-     * @since 0.3.0
-     */
-    public static Interval between(DateTime<?> startDateTime, DateTime<?> endDateTime) {
-        if (G.hasNull(startDateTime, endDateTime)) throw new NullPointerException("Parameters `startDateTime` and `endDateTime` must be non-null!");
-        Object start = startDateTime.get();
-        Object end = endDateTime.get();
-        if ((start instanceof ZonedDateTime && end instanceof ZonedDateTime)
-                || (start instanceof OffsetDateTime && end instanceof OffsetDateTime)
-                || (start instanceof LocalDateTime && end instanceof LocalDateTime)) {
-            return between((Temporal) start, (Temporal) end);
-        }
-
-        return between(startDateTime.getZonedDateTime(), endDateTime.getZonedDateTime());
-    }
 
     @Override
     public Temporal subtractFrom(Temporal temporal) {

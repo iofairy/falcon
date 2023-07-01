@@ -521,6 +521,153 @@ public class IntervalTest {
     }
 
     @Test
+    public void testSignedIntervalDateTime() {
+        ZoneOffset zoneOffset = ZoneOffset.ofHours(8);
+        LocalDateTime fromLocalDateTime = LocalDateTime.of(1903, 6, 15, 10, 56, 43, 987656789);
+        Instant fromInstant = fromLocalDateTime.toInstant(zoneOffset);
+        OffsetDateTime fromOffsetDateTime = OffsetDateTime.ofInstant(fromInstant, TZ.NEW_YORK);
+        ZonedDateTime fromZonedDateTime = ZonedDateTime.ofInstant(fromInstant, TZ.NEW_YORK);
+        DateTime<Date> fromDate = DateTime.of(Date.from(fromInstant));
+        DateTime<Calendar> fromCalendar = DateTime.of(DateTime.of(fromInstant).toDefaultCalendar());
+        // System.out.println(G.dtSimple(fromDate));
+        // System.out.println(G.dtSimple(fromCalendar));
+        // -----------------------------------------------------------------------------
+        LocalDateTime toLocalDateTime = LocalDateTime.of(2020, 8, 10, 3, 33, 10, 987656700);
+        Instant toInstant = toLocalDateTime.toInstant(zoneOffset);
+        OffsetDateTime toOffsetDateTime = OffsetDateTime.ofInstant(toInstant, TZ.NEW_YORK);
+        ZonedDateTime toZonedDateTime = ZonedDateTime.ofInstant(toInstant, TZ.NEW_YORK);
+        DateTime<Date> toDate = DateTime.of(Date.from(toInstant));
+        DateTime<Calendar> toCalendar = DateTime.of(DateTime.of(toInstant).toDefaultCalendar());
+        // System.out.println(G.dtSimple(toDate));
+        // System.out.println(G.dtSimple(toCalendar));
+        // -----------------------------------------------------------------------------
+        ZonedDateTime fromZDT = LocalDateTime.of(2022, 2, 10, 3, 0).atZone(TZ.NEW_YORK);
+        ZonedDateTime toZDT = LocalDateTime.of(2022, 6, 10, 3, 0).atZone(TZ.NEW_YORK);
+        ZonedDateTime fromZDT1 = LocalDateTime.of(1900, 1, 1, 0, 0).atZone(TZ.DEFAULT_ZONE);
+        ZonedDateTime toZDT1 = LocalDateTime.of(2009, 7, 6, 0, 0).atZone(TZ.DEFAULT_ZONE);
+        System.out.println("fromZDT: " + G.dtDetail(fromZDT));  // fromZDT: 2022-02-10 03:00:00.000000000 [America/New_York -05:00 GMT-5 周四]
+        System.out.println("toZDT: " + G.dtDetail(toZDT));  // toZDT: 2022-06-10 03:00:00.000000000 [America/New_York -04:00 GMT-4 周五]
+        System.out.println("fromZDT1: " + G.dtDetail(fromZDT1));    // fromZDT1: 1900-01-01 00:00:00.000000000 [Asia/Shanghai +08:05 GMT+8:05:43 周一]
+        System.out.println("toZDT1: " + G.dtDetail(toZDT1));    // toZDT1: 2009-07-06 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
+        // -----------------------------------------------------------------------------
+        SignedInterval signedInterval1 = SignedInterval.between(DateTime.of(fromLocalDateTime), toLocalDateTime);
+        SignedInterval signedInterval2 = SignedInterval.between(fromLocalDateTime, DateTime.of(toInstant));
+        SignedInterval signedInterval3 = SignedInterval.between(fromLocalDateTime, toOffsetDateTime);
+        SignedInterval signedInterval4 = SignedInterval.between(DateTime.of(fromLocalDateTime), DateTime.of(toZonedDateTime));
+        SignedInterval signedInterval5 = SignedInterval.between(toLocalDateTime, DateTime.of(fromLocalDateTime));
+        SignedInterval signedInterval6 = SignedInterval.between(DateTime.of(toLocalDateTime), fromInstant);
+        SignedInterval signedInterval7 = SignedInterval.between(toLocalDateTime, DateTime.of(fromOffsetDateTime));
+        SignedInterval signedInterval8 = SignedInterval.between(DateTime.of(toLocalDateTime), DateTime.of(fromZonedDateTime));
+        SignedInterval signedInterval9 = SignedInterval.between(fromDate, toDate);
+        SignedInterval signedInterval10 = SignedInterval.between(fromCalendar, toCalendar);
+        SignedInterval signedInterval11 = SignedInterval.between(toDate, fromDate);
+        SignedInterval signedInterval12 = SignedInterval.between(toCalendar, fromCalendar);
+        SignedInterval signedInterval13 = SignedInterval.between(DateTime.of(fromZDT), toZDT);
+        SignedInterval signedInterval14 = SignedInterval.between(toZDT, DateTime.of(fromZDT));
+        SignedInterval signedInterval15 = SignedInterval.between(fromZDT1, toZDT1);
+        SignedInterval signedInterval16 = SignedInterval.between(DateTime.of(toZDT1), DateTime.of(fromZDT1));
+
+        System.out.println(signedInterval1);
+        System.out.println(signedInterval2);
+        System.out.println(signedInterval3);
+        System.out.println(signedInterval4);
+        System.out.println(signedInterval5);
+        System.out.println(signedInterval6);
+        System.out.println(signedInterval7);
+        System.out.println(signedInterval8);
+        System.out.println(signedInterval9);
+        System.out.println(signedInterval10);
+        System.out.println(signedInterval11);
+        System.out.println(signedInterval12);
+        System.out.println("fromZDT - toZDT: " + signedInterval13); // fromZDT - toZDT: 4月0天0时0分0秒0毫秒
+        System.out.println("toZDT - fromZDT: " + signedInterval14); // toZDT - fromZDT: -4月0天0时0分0秒0毫秒
+        System.out.println("fromZDT1 - toZDT1: " + signedInterval15);   // fromZDT1 - toZDT1: 1世纪9年6月5天0时0分0秒0毫秒
+        System.out.println("toZDT1 - fromZDT1: " + signedInterval16);   // toZDT1 - fromZDT1: -1世纪-9年-6月-5天0时0分0秒0毫秒
+
+        assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", signedInterval1.toString());
+        assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", signedInterval2.toString());
+        assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", signedInterval3.toString());
+        assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", signedInterval4.toString());
+        assertEquals("-1世纪-17年-1月-24天-16时-36分-26秒-999毫秒-999微秒-911纳秒", signedInterval5.toString());
+        assertEquals("-1世纪-17年-1月-24天-16时-36分-26秒-999毫秒-999微秒-911纳秒", signedInterval6.toString());
+        assertEquals("-1世纪-17年-1月-24天-16时-36分-26秒-999毫秒-999微秒-911纳秒", signedInterval7.toString());
+        assertEquals("-1世纪-17年-1月-24天-16时-36分-26秒-999毫秒-999微秒-911纳秒", signedInterval8.toString());
+        assertEquals("1世纪17年1月25天16时36分27秒0毫秒", signedInterval9.toString());
+        assertEquals("1世纪17年1月25天16时36分27秒0毫秒", signedInterval10.toString());
+        assertEquals("-1世纪-17年-1月-24天-16时-36分-27秒0毫秒", signedInterval11.toString());
+        assertEquals("-1世纪-17年-1月-24天-16时-36分-27秒0毫秒", signedInterval12.toString());
+        assertEquals("4月0天0时0分0秒0毫秒", signedInterval13.toString());
+        assertEquals("-4月0天0时0分0秒0毫秒", signedInterval14.toString());
+        assertEquals("1世纪9年6月5天0时0分0秒0毫秒", signedInterval15.toString());
+        assertEquals("-1世纪-9年-6月-5天0时0分0秒0毫秒", signedInterval16.toString());
+
+
+    }
+
+
+    @Test
+    public void testIntervalDateTime() {
+        ZoneOffset zoneOffset = ZoneOffset.ofHours(8);
+        LocalDateTime fromLocalDateTime = LocalDateTime.of(1903, 6, 15, 10, 56, 43, 987656789);
+        Instant fromInstant = fromLocalDateTime.toInstant(zoneOffset);
+        OffsetDateTime fromOffsetDateTime = OffsetDateTime.ofInstant(fromInstant, TZ.NEW_YORK);
+        ZonedDateTime fromZonedDateTime = ZonedDateTime.ofInstant(fromInstant, TZ.NEW_YORK);
+        DateTime<Date> fromDate = DateTime.of(Date.from(fromInstant));
+        DateTime<Calendar> fromCalendar = DateTime.of(DateTime.of(fromInstant).toDefaultCalendar());
+        // System.out.println(G.dtSimple(fromDate));
+        // System.out.println(G.dtSimple(fromCalendar));
+        // -----------------------------------------------------------------------------
+        LocalDateTime toLocalDateTime = LocalDateTime.of(2020, 8, 10, 3, 33, 10, 987656700);
+        Instant toInstant = toLocalDateTime.toInstant(zoneOffset);
+        OffsetDateTime toOffsetDateTime = OffsetDateTime.ofInstant(toInstant, TZ.NEW_YORK);
+        ZonedDateTime toZonedDateTime = ZonedDateTime.ofInstant(toInstant, TZ.NEW_YORK);
+        DateTime<Date> toDate = DateTime.of(Date.from(toInstant));
+        DateTime<Calendar> toCalendar = DateTime.of(DateTime.of(toInstant).toDefaultCalendar());
+        // System.out.println(G.dtSimple(toDate));
+        // System.out.println(G.dtSimple(toCalendar));
+        // -----------------------------------------------------------------------------
+        Interval interval1 = Interval.between(DateTime.of(fromLocalDateTime), toLocalDateTime);
+        Interval interval2 = Interval.between(fromLocalDateTime, DateTime.of(toInstant));
+        Interval interval3 = Interval.between(fromLocalDateTime, toOffsetDateTime);
+        Interval interval4 = Interval.between(DateTime.of(fromLocalDateTime), DateTime.of(toZonedDateTime));
+        Interval interval5 = Interval.between(DateTime.of(toLocalDateTime), DateTime.of(fromLocalDateTime));
+        Interval interval6 = Interval.between(toLocalDateTime, DateTime.of(fromInstant));
+        Interval interval7 = Interval.between(DateTime.of(toLocalDateTime), fromOffsetDateTime);
+        Interval interval8 = Interval.between(toLocalDateTime, fromZonedDateTime);
+        Interval interval9 = Interval.between(fromDate, toDate);
+        Interval interval10 = Interval.between(fromCalendar, toCalendar);
+        Interval interval11 = Interval.between(toDate, fromDate);
+        Interval interval12 = Interval.between(toCalendar, fromCalendar);
+        System.out.println(interval1);
+        System.out.println(interval2);
+        System.out.println(interval3);
+        System.out.println(interval4);
+        System.out.println(interval5);
+        System.out.println(interval6);
+        System.out.println(interval7);
+        System.out.println(interval8);
+        System.out.println(interval9);
+        System.out.println(interval10);
+        System.out.println(interval11);
+        System.out.println(interval12);
+        assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval1.toString());
+        assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval2.toString());
+        assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval3.toString());
+        assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval4.toString());
+        assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval5.toString());
+        assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval6.toString());
+        assertEquals("1世纪17年1月25天16时36分26秒999毫秒999微秒911纳秒", interval7.toString());
+        assertEquals("1世纪17年1月25天17时36分26秒999毫秒999微秒911纳秒", interval8.toString());
+        assertEquals("1世纪17年1月25天16时36分27秒0毫秒", interval9.toString());
+        assertEquals("1世纪17年1月25天16时36分27秒0毫秒", interval10.toString());
+        assertEquals("1世纪17年1月25天16时36分27秒0毫秒", interval11.toString());
+        assertEquals("1世纪17年1月25天16时36分27秒0毫秒", interval12.toString());
+
+
+    }
+
+
+    @Test
     public void testInterval2() {
         ZoneOffset zoneOffset = ZoneOffset.ofHours(8);
         LocalDateTime fromLocalDateTime = LocalDateTime.of(1903, 6, 15, 10, 56, 43, 987656789);
@@ -652,15 +799,15 @@ public class IntervalTest {
         Interval between3 = Interval.between(DateTime.of(date1), DateTime.of(calendar2));
         Interval between4 = Interval.between(DateTime.of(instant2), DateTime.of(calendar1));
 
-        System.out.println(between1.toString());    // 1年9月30天23时59分59秒13毫秒239微秒800纳秒
-        System.out.println(between2.toString());    // -1年-9月-30天-23时-59分-59秒-13毫秒-896微秒-500纳秒
-        System.out.println(between3.toString());    // 1年9月30天23时59分59秒13毫秒
-        System.out.println(between4.toString());    // 1年9月30天23时59分59秒13毫秒896微秒500纳秒
+        System.out.println(between1);    // 1年9月30天23时59分59秒13毫秒239微秒800纳秒
+        System.out.println(between2);    // -1年-9月-30天-23时-59分-59秒-13毫秒-896微秒-500纳秒
+        System.out.println(between3);    // 1年9月30天23时59分59秒13毫秒
+        System.out.println(between4);    // 1年9月30天23时59分59秒13毫秒896微秒500纳秒
 
-        DateTime<LocalDateTime> dt1 = between1.addTo(DateTime.of(ldt1));
-        DateTime<Calendar> dt2 = between2.subtractFrom(DateTime.of(calendar1));
-        DateTime<Date> dt3 = between3.addTo(DateTime.of(date1));
-        DateTime<Instant> dt4 = between4.subtractFrom(DateTime.of(instant2));
+        DateTime<LocalDateTime> dt1 = between1.plusTo(DateTime.of(ldt1));
+        DateTime<Calendar> dt2 = between2.minusFrom(DateTime.of(calendar1));
+        DateTime<Date> dt3 = between3.plusTo(DateTime.of(date1));
+        DateTime<Instant> dt4 = between4.minusFrom(DateTime.of(instant2));
         System.out.println(dt1.dtDetail());     // 2022-06-10 03:33:10.000896500 [周五]
         System.out.println(dt2.dtDetail());     // 2022-06-09 22:33:10.000000000 [Europe/Moscow +03:00 GMT+3 周四]
         System.out.println(dt3.dtDetail());     // 2022-06-10 03:33:10.000000000 [Asia/Shanghai +08:00 GMT+8 周五]
@@ -727,11 +874,11 @@ public class IntervalTest {
         System.out.println("===================================================");
 
         Temporal toDate1 = interval1.addTo(fromZDT);
-        DateTime<Date> toDate2 = interval2.addTo(fromDT1);
+        DateTime<Date> toDate2 = interval2.plusTo(fromDT1);
         Temporal toDate3 = interval3.addTo(fromODT2);
         Temporal toDate4 = interval4.addTo(fromZonedDateTime);
         Temporal fromDate1 = interval1.subtractFrom(toZDT);
-        DateTime<ZonedDateTime> fromDate2 = interval2.subtractFrom(toDT1);
+        DateTime<ZonedDateTime> fromDate2 = interval2.minusFrom(toDT1);
         Temporal fromDate3 = interval3.subtractFrom(toZDT2);
         Temporal fromDate4 = interval4.subtractFrom(toLocalDateTime);
 

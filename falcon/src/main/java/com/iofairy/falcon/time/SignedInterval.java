@@ -122,7 +122,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      * {@link #between(Temporal, Temporal)}支持的temporal类型
      */
     public static final List<Class<? extends Temporal>> SUPPORTED_TEMPORAL =
-            Collections.unmodifiableList(Arrays.asList(ZonedDateTime.class, OffsetDateTime.class, LocalDateTime.class, Instant.class));
+            Collections.unmodifiableList(Arrays.asList(ZonedDateTime.class, OffsetDateTime.class, LocalDateTime.class, Instant.class, DateTime.class));
     protected static final String SUPPORTED_TEMPORAL_STRING = SUPPORTED_TEMPORAL.stream().map(Class::getSimpleName).collect(Collectors.joining(", "));
 
     public SignedInterval(long centuries, long years, long months, long days, long hours, long minutes, long seconds, long millis, long micros, long nanos) {
@@ -386,6 +386,19 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         Temporal originalStartTemporal = startTemporal;
         Temporal originalEndTemporal = endTemporal;
 
+
+        if (startTemporal instanceof DateTime) {
+            DateTime<?> dateTime = (DateTime<?>) startTemporal;
+            Object dt = dateTime.get();
+            startTemporal = (dt instanceof Date || dt instanceof Calendar) ? dateTime.getZonedDateTime() : (Temporal) dt;
+        }
+        if (endTemporal instanceof DateTime) {
+            DateTime<?> dateTime = (DateTime<?>) endTemporal;
+            Object dt = dateTime.get();
+            endTemporal = (dt instanceof Date || dt instanceof Calendar) ? dateTime.getZonedDateTime() : (Temporal) dt;
+        }
+
+
         /*
          * 时间类型处理
          */
@@ -398,6 +411,9 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         if (!((startTemporal instanceof ZonedDateTime && endTemporal instanceof ZonedDateTime)
                 || (startTemporal instanceof OffsetDateTime && endTemporal instanceof OffsetDateTime)
                 || (startTemporal instanceof LocalDateTime && endTemporal instanceof LocalDateTime))) {
+            /*
+             * 只要 startTemporal 与 endTemporal 不同类型，则将 startTemporal 转为 ZonedDateTime
+             */
             startTemporal = DateTime.of(startTemporal).getZonedDateTime();
             /*
              * 如果是 LocalDateTime，则转为 默认的，否则无法比较，会报错
@@ -487,28 +503,6 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
     public static SignedInterval between(Calendar startCalendar, Calendar endCalendar) {
         if (G.hasNull(startCalendar, endCalendar)) throw new NullPointerException("Parameters `startCalendar` and `endCalendar` must be non-null!");
         return between(DateTime.from(startCalendar).getZonedDateTime(), DateTime.from(endCalendar).getZonedDateTime());
-    }
-
-    /**
-     * Obtain two {@link DateTime} interval. <br>
-     * 获取两个{@link DateTime}的时间间隔。
-     *
-     * @param startDateTime start DateTime
-     * @param endDateTime   end DateTime
-     * @return SignedInterval
-     * @since 0.3.0
-     */
-    public static SignedInterval between(DateTime<?> startDateTime, DateTime<?> endDateTime) {
-        if (G.hasNull(startDateTime, endDateTime)) throw new NullPointerException("Parameters `startDateTime` and `endDateTime` must be non-null!");
-        Object start = startDateTime.get();
-        Object end = endDateTime.get();
-        if ((start instanceof ZonedDateTime && end instanceof ZonedDateTime)
-                || (start instanceof OffsetDateTime && end instanceof OffsetDateTime)
-                || (start instanceof LocalDateTime && end instanceof LocalDateTime)) {
-            return between((Temporal) start, (Temporal) end);
-        }
-
-        return between(startDateTime.getZonedDateTime(), endDateTime.getZonedDateTime());
     }
 
     /**
