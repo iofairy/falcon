@@ -80,9 +80,10 @@ public interface ChronoInterval extends TemporalAmount, Serializable {
      * @return temporal
      * @since 0.3.0
      */
-    @SuppressWarnings("unchecked")
     default <T extends Temporal> T plusTo(T temporal) {
-        return (T) this.addTo(temporal);
+        @SuppressWarnings("unchecked")
+        T t = (T) this.addTo(temporal);
+        return t;
     }
 
     /**
@@ -135,8 +136,10 @@ public interface ChronoInterval extends TemporalAmount, Serializable {
      * @return temporal
      * @since 0.3.0
      */
-    @SuppressWarnings("unchecked")
     default <T extends Temporal> T minusFrom(T temporal) {
-        return (T) this.subtractFrom(temporal);
+        @SuppressWarnings("unchecked")
+        T t = (T) this.subtractFrom(temporal);
+        return t;
     }
+
 }

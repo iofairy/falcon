@@ -456,7 +456,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     @SuppressWarnings("unchecked")
     public DateTime<T> plus(TemporalAmount amountToAdd) {
         if (amountToAdd instanceof ChronoInterval) {
-            return ((ChronoInterval) amountToAdd).addTo(this);
+            return ((ChronoInterval) amountToAdd).plusTo(this);
         } else {
             if (dateTime instanceof Instant) {
                 ZonedDateTime zdt = (ZonedDateTime) amountToAdd.addTo(zonedDateTime);
@@ -550,7 +550,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     @SuppressWarnings("unchecked")
     public DateTime<T> minus(TemporalAmount amountToSubtract) {
         if (amountToSubtract instanceof ChronoInterval) {
-            return ((ChronoInterval) amountToSubtract).subtractFrom(this);
+            return ((ChronoInterval) amountToSubtract).minusFrom(this);
         } else {
             if (dateTime instanceof Instant) {
                 ZonedDateTime zdt = (ZonedDateTime) amountToSubtract.subtractFrom(zonedDateTime);
@@ -1178,6 +1178,28 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         TemporalAdjuster temporalAdjuster = TemporalAdjusters.nextOrSame(lastDayOfWeek);
         return this.with(temporalAdjuster);
     }
+
+    /**
+     * 获取当前日期所在的周信息
+     *
+     * @return 周信息
+     * @since 0.4.8
+     */
+    public WeekInfo getWeekInfo() {
+        return WeekInfo.of(localDateTime.toLocalDate()).baseYearMonth();
+    }
+
+    /**
+     * 获取当前日期所在的周信息
+     *
+     * @param weekFields 周规则
+     * @return 周信息
+     * @since 0.4.8
+     */
+    public WeekInfo getWeekInfo(WeekFields weekFields) {
+        return WeekInfo.of(weekFields, localDateTime.toLocalDate()).baseYearMonth();
+    }
+
 
     /**
      * 获取当前日期所在周的所有7天的日期<b>（默认每周的第一天为 星期一）</b>

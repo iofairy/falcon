@@ -13,6 +13,7 @@ import java.time.temporal.Temporal;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author GG
@@ -458,14 +459,26 @@ public class IntervalTest {
         LocalDateTime temporal2 = signedInterval1.plusTo(fromLocalDateTime);
         Instant temporal3 = signedInterval6.minusFrom(fromInstant);
         LocalDateTime temporal4 = signedInterval6.plusTo(toLocalDateTime);
+        DateTime<Instant> dt1 = signedInterval1.minusFrom(DateTime.of(toInstant));
+        DateTime<LocalDateTime> dt2 = signedInterval1.plusTo(DateTime.of(fromLocalDateTime));
+        DateTime<Instant> dt3 = signedInterval6.minusFrom(DateTime.of(fromInstant));
+        DateTime<LocalDateTime> dt4 = signedInterval6.plusTo(DateTime.of(toLocalDateTime));
         System.out.println(G.dtSimple(temporal1));
         System.out.println(G.dtSimple(temporal2));
         System.out.println(G.dtSimple(temporal3));
         System.out.println(G.dtSimple(temporal4));
+        System.out.println(dt1.toString());
+        System.out.println(dt2.toString());
+        System.out.println(dt3.toString());
+        System.out.println(dt4.toString());
         assertEquals("1903-06-14 10:56:43.987", G.dtSimple(temporal1));
         assertEquals("2020-08-10 03:33:10.987", G.dtSimple(temporal2));
         assertEquals("2020-08-09 03:33:10.987", G.dtSimple(temporal3));
         assertEquals("1903-06-15 10:56:43.987", G.dtSimple(temporal4));
+        assertEquals("1903-06-14 10:56:43.987", dt1.toString());
+        assertEquals("2020-08-10 03:33:10.987", dt2.toString());
+        assertEquals("2020-08-09 03:33:10.987", dt3.toString());
+        assertEquals("1903-06-15 10:56:43.987", dt4.toString());
     }
 
     @Test

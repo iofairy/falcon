@@ -436,7 +436,12 @@ public final class DateTimes {
      * 使用指定格式返回一天中的24小时
      *
      * @param day      指定的天
-     * @param withMode 0: 只返回小时；1：返回小时并在末尾拼接上00分钟；2：返回小时并在末尾拼接00分钟和00秒
+     * @param withMode 格式样式：<br>
+     *                 <ul>
+     *                     <li> 0: 只返回小时；
+     *                     <li> 1：返回小时并在末尾拼接上 <b>00分钟</b>；
+     *                     <li> 2：返回小时并在末尾拼接上 <b>00分钟和00秒</b>
+     *                 </ul>
      * @return 一天中的小时
      * @since 0.3.3
      */
@@ -448,7 +453,12 @@ public final class DateTimes {
      * 使用指定格式返回一天中的24小时
      *
      * @param day       指定的天
-     * @param withMode  0: 只返回小时；1：返回小时并在末尾拼接上00分钟；2：返回小时并在末尾拼接00分钟和00秒
+     * @param withMode  格式样式：<br>
+     *                  <ul>
+     *                      <li> 0: 只返回小时；
+     *                      <li> 1：返回小时并在末尾拼接上 <b>00分钟</b>；
+     *                      <li> 2：返回小时并在末尾拼接上 <b>00分钟和00秒</b>
+     *                  </ul>
      * @param separator 当 withMode 为 1，2时，需要指定分隔符。如果为 {@code null}，则默认采用 {@code ""}
      * @return 一天中的小时
      * @since 0.3.3

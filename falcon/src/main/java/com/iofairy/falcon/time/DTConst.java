@@ -31,7 +31,7 @@ public class DTConst {
     /*###################################################################################
      ************************************************************************************
      ------------------------------------------------------------------------------------
-     ***********************               星期字段设置              **********************
+     ***********************              周规则字段设置             **********************
      ------------------------------------------------------------------------------------
      ************************************************************************************
      ###################################################################################*/
@@ -48,6 +48,10 @@ public class DTConst {
      */
     public static final WeekFields MONDAY_MIN4 = WeekFields.of(DayOfWeek.MONDAY, 4);
     /**
+     * A week starts on <b>Monday</b> and the first week has a minimum of <b>7 days</b>.
+     */
+    public static final WeekFields MONDAY_MIN7 = WeekFields.of(DayOfWeek.MONDAY, 7);
+    /**
      * A week starts on <b>SUNDAY</b> and the first week has a minimum of <b>1 day</b>.
      */
     public static final WeekFields SUNDAY_MIN1 = WeekFields.of(DayOfWeek.SUNDAY, 1);
@@ -56,6 +60,10 @@ public class DTConst {
      */
     public static final WeekFields SUNDAY_MIN4 = WeekFields.of(DayOfWeek.SUNDAY, 4);
     /**
+     * A week starts on <b>SUNDAY</b> and the first week has a minimum of <b>7 days</b>.
+     */
+    public static final WeekFields SUNDAY_MIN7 = WeekFields.of(DayOfWeek.SUNDAY, 7);
+    /**
      * A week starts on <b>SATURDAY</b> and the first week has a minimum of <b>1 day</b>.
      */
     public static final WeekFields SATURDAY_MIN1 = WeekFields.of(DayOfWeek.SATURDAY, 1);
@@ -63,6 +71,11 @@ public class DTConst {
      * A week starts on <b>SATURDAY</b> and the first week has a minimum of <b>4 days</b>.
      */
     public static final WeekFields SATURDAY_MIN4 = WeekFields.of(DayOfWeek.SATURDAY, 4);
+    /**
+     * A week starts on <b>SATURDAY</b> and the first week has a minimum of <b>7 days</b>.
+     */
+    public static final WeekFields SATURDAY_MIN7 = WeekFields.of(DayOfWeek.SATURDAY, 7);
+
 
     /*###################################################################################
      ************************************************************************************
