@@ -15,12 +15,15 @@
  */
 package com.iofairy.falcon.util;
 
+import com.iofairy.top.G;
 import com.iofairy.top.O;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * Number Utils
@@ -338,5 +341,280 @@ public class Numbers {
         }
         return fs;
     }
+
+
+    /**
+     * Division calculation function used to divide two BigDecimal numbers.
+     *
+     * @param dividend       The dividend, cannot be null.
+     * @param divisor        The divisor, cannot be null.
+     * @param scale          The scale for rounding the result.
+     * @param roundingMode   The rounding mode. If null, default to {@link RoundingMode#HALF_UP}.
+     * @param alwaysSetScale flag indicating whether to always set scale.
+     *                       {@code true}, the scale will always be set. <b>Otherwise</b>,
+     *                       the scale will only be set when <b>the division is not exact</b>.
+     * @return The result of the division calculation.
+     * @throws NullPointerException if the dividend or divisor is null.
+     * @since 0.4.10
+     */
+    public static BigDecimal divide(BigDecimal dividend, BigDecimal divisor, int scale, RoundingMode roundingMode, boolean alwaysSetScale) {
+        if (G.hasNull(dividend, divisor)) throw new NullPointerException("Parameters `dividend`, `divisor` must be non-null!");
+        if (roundingMode == null) roundingMode = RoundingMode.HALF_UP;
+
+        if (alwaysSetScale) {
+            return dividend.divide(divisor, scale, roundingMode);
+        } else {
+            try {
+                return dividend.divide(divisor);
+            } catch (ArithmeticException e) {
+                if (e.getMessage() != null && e.getMessage().contains("Non-terminating decimal expansion")) {
+                    return dividend.divide(divisor, scale, roundingMode);
+                }
+                throw e;
+            }
+        }
+    }
+
+    /**
+     * Division calculation function used to divide two BigDecimal numbers.
+     *
+     * @param dividend       The dividend, cannot be null.
+     * @param divisor        The divisor, cannot be null.
+     * @param scale          The scale for rounding the result.
+     * @param alwaysSetScale flag indicating whether to always set scale.
+     *                       {@code true}, the scale will always be set. <b>Otherwise</b>,
+     *                       the scale will only be set when <b>the division is not exact</b>.
+     * @return The result of the division calculation.
+     * @throws NullPointerException if the dividend or divisor is null.
+     * @since 0.4.10
+     */
+    public static BigDecimal divide(BigDecimal dividend, BigDecimal divisor, int scale, boolean alwaysSetScale) {
+        return divide(dividend, divisor, scale, RoundingMode.HALF_UP, alwaysSetScale);
+    }
+
+    /**
+     * Division calculation function used to divide two BigDecimal numbers.
+     *
+     * @param dividend       The dividend, cannot be null.
+     * @param divisor        The divisor, cannot be null.
+     * @param alwaysSetScale flag indicating whether to always set scale.
+     *                       {@code true}, the scale will always be set. <b>Otherwise</b>,
+     *                       the scale will only be set when <b>the division is not exact</b>.
+     * @return The result of the division calculation.
+     * @throws NullPointerException if the dividend or divisor is null.
+     * @since 0.4.10
+     */
+    public static BigDecimal divide(BigDecimal dividend, BigDecimal divisor, boolean alwaysSetScale) {
+        return divide(dividend, divisor, 6, RoundingMode.HALF_UP, alwaysSetScale);
+    }
+
+    /**
+     * Division calculation function used to divide two BigDecimal numbers.
+     *
+     * @param dividend     The dividend, cannot be null.
+     * @param divisor      The divisor, cannot be null.
+     * @param scale        The scale for rounding the result.
+     * @param roundingMode The rounding mode. If null, default to {@link RoundingMode#HALF_UP}.
+     * @return The result of the division calculation.
+     * @throws NullPointerException if the dividend or divisor is null.
+     * @since 0.4.10
+     */
+    public static BigDecimal divide(BigDecimal dividend, BigDecimal divisor, int scale, RoundingMode roundingMode) {
+        return divide(dividend, divisor, scale, roundingMode, true);
+    }
+
+    /**
+     * Division calculation function used to divide two BigDecimal numbers.
+     *
+     * @param dividend The dividend, cannot be null.
+     * @param divisor  The divisor, cannot be null.
+     * @param scale    The scale for rounding the result.
+     * @return The result of the division calculation.
+     * @throws NullPointerException if the dividend or divisor is null.
+     * @since 0.4.10
+     */
+    public static BigDecimal divide(BigDecimal dividend, BigDecimal divisor, int scale) {
+        return divide(dividend, divisor, scale, RoundingMode.HALF_UP);
+    }
+
+    /**
+     * Division calculation function used to divide two BigDecimal numbers.
+     *
+     * @param dividend The dividend, cannot be null.
+     * @param divisor  The divisor, cannot be null.
+     * @return The result of the division calculation.
+     * @throws NullPointerException if the dividend or divisor is null.
+     * @since 0.4.10
+     */
+    public static BigDecimal divide(BigDecimal dividend, BigDecimal divisor) {
+        return divide(dividend, divisor, 6, RoundingMode.HALF_UP);
+    }
+
+
+    /**
+     * Division calculation function used to divide two BigInteger numbers.
+     *
+     * @param dividend       The dividend, cannot be null.
+     * @param divisor        The divisor, cannot be null.
+     * @param scale          The scale for rounding the result.
+     * @param roundingMode   The rounding mode. If null, default to {@link RoundingMode#HALF_UP}.
+     * @param alwaysSetScale flag indicating whether to always set scale.
+     *                       {@code true}, the scale will always be set. <b>Otherwise</b>,
+     *                       the scale will only be set when <b>the division is not exact</b>.
+     * @return The result of the division calculation.
+     * @throws NullPointerException if the dividend or divisor is null.
+     * @since 0.4.10
+     */
+    public static BigDecimal divide(BigInteger dividend, BigInteger divisor, int scale, RoundingMode roundingMode, boolean alwaysSetScale) {
+        if (G.hasNull(dividend, divisor)) throw new NullPointerException("Parameters `dividend`, `divisor` must be non-null!");
+        if (roundingMode == null) roundingMode = RoundingMode.HALF_UP;
+        BigDecimal decimalDividend = new BigDecimal(dividend);
+        BigDecimal decimalDivisor = new BigDecimal(divisor);
+
+        if (alwaysSetScale) {
+            return decimalDividend.divide(decimalDivisor, scale, roundingMode);
+        } else {
+            try {
+                return decimalDividend.divide(decimalDivisor);
+            } catch (ArithmeticException e) {
+                if (e.getMessage() != null && e.getMessage().contains("Non-terminating decimal expansion")) {
+                    return decimalDividend.divide(decimalDivisor, scale, roundingMode);
+                }
+                throw e;
+            }
+        }
+    }
+
+    /**
+     * Division calculation function used to divide two BigInteger numbers.
+     *
+     * @param dividend       The dividend, cannot be null.
+     * @param divisor        The divisor, cannot be null.
+     * @param scale          The scale for rounding the result.
+     * @param alwaysSetScale flag indicating whether to always set scale.
+     *                       {@code true}, the scale will always be set. <b>Otherwise</b>,
+     *                       the scale will only be set when <b>the division is not exact</b>.
+     * @return The result of the division calculation.
+     * @throws NullPointerException if the dividend or divisor is null.
+     * @since 0.4.10
+     */
+    public static BigDecimal divide(BigInteger dividend, BigInteger divisor, int scale, boolean alwaysSetScale) {
+        return divide(dividend, divisor, scale, RoundingMode.HALF_UP, alwaysSetScale);
+    }
+
+    /**
+     * Division calculation function used to divide two BigInteger numbers.
+     *
+     * @param dividend       The dividend, cannot be null.
+     * @param divisor        The divisor, cannot be null.
+     * @param alwaysSetScale flag indicating whether to always set scale.
+     *                       {@code true}, the scale will always be set. <b>Otherwise</b>,
+     *                       the scale will only be set when <b>the division is not exact</b>.
+     * @return The result of the division calculation.
+     * @throws NullPointerException if the dividend or divisor is null.
+     * @since 0.4.10
+     */
+    public static BigDecimal divide(BigInteger dividend, BigInteger divisor, boolean alwaysSetScale) {
+        return divide(dividend, divisor, 6, RoundingMode.HALF_UP, alwaysSetScale);
+    }
+
+    /**
+     * Division calculation function used to divide two BigInteger numbers.
+     *
+     * @param dividend     The dividend, cannot be null.
+     * @param divisor      The divisor, cannot be null.
+     * @param scale        The scale for rounding the result.
+     * @param roundingMode The rounding mode. If null, default to {@link RoundingMode#HALF_UP}.
+     * @return The result of the division calculation.
+     * @throws NullPointerException if the dividend or divisor is null.
+     * @since 0.4.10
+     */
+    public static BigDecimal divide(BigInteger dividend, BigInteger divisor, int scale, RoundingMode roundingMode) {
+        return divide(dividend, divisor, scale, roundingMode, true);
+    }
+
+    /**
+     * Division calculation function used to divide two BigInteger numbers.
+     *
+     * @param dividend The dividend, cannot be null.
+     * @param divisor  The divisor, cannot be null.
+     * @param scale    The scale for rounding the result.
+     * @return The result of the division calculation.
+     * @throws NullPointerException if the dividend or divisor is null.
+     * @since 0.4.10
+     */
+    public static BigDecimal divide(BigInteger dividend, BigInteger divisor, int scale) {
+        return divide(dividend, divisor, scale, RoundingMode.HALF_UP);
+    }
+
+    /**
+     * Division calculation function used to divide two BigInteger numbers.
+     *
+     * @param dividend The dividend, cannot be null.
+     * @param divisor  The divisor, cannot be null.
+     * @return The result of the division calculation.
+     * @throws NullPointerException if the dividend or divisor is null.
+     * @since 0.4.10
+     */
+    public static BigDecimal divide(BigInteger dividend, BigInteger divisor) {
+        return divide(dividend, divisor, 6, RoundingMode.HALF_UP);
+    }
+
+    /**
+     * Converts BigDecimal to a BigInteger
+     *
+     * @param bigDecimal   bigDecimal
+     * @param roundingMode The rounding mode. If null, default to {@link RoundingMode#DOWN}.
+     * @return BigInteger
+     * @see BigDecimal#toBigInteger()
+     * @since 0.4.10
+     */
+    public static BigInteger toBigInteger(BigDecimal bigDecimal, RoundingMode roundingMode) {
+        Objects.requireNonNull(bigDecimal, "Parameter `bigDecimal` must be non-null!");
+        if (roundingMode == null) roundingMode = RoundingMode.DOWN;
+        return bigDecimal.setScale(0, roundingMode).toBigInteger();
+    }
+
+    /**
+     * Converts BigDecimal to a BigInteger
+     *
+     * @param bigDecimal bigDecimal
+     * @return BigInteger
+     * @see BigDecimal#toBigInteger()
+     * @since 0.4.10
+     */
+    public static BigInteger toBigInteger(BigDecimal bigDecimal) {
+        Objects.requireNonNull(bigDecimal, "Parameter `bigDecimal` must be non-null!");
+        return bigDecimal.toBigInteger();
+    }
+
+    /**
+     * Converts BigDecimal to a long
+     *
+     * @param bigDecimal   bigDecimal
+     * @param roundingMode The rounding mode. If null, default to {@link RoundingMode#DOWN}.
+     * @return long value
+     * @see BigDecimal#longValue()
+     * @since 0.4.10
+     */
+    public static long longValue(BigDecimal bigDecimal, RoundingMode roundingMode) {
+        Objects.requireNonNull(bigDecimal, "Parameter `bigDecimal` must be non-null!");
+        if (roundingMode == null) roundingMode = RoundingMode.DOWN;
+        return bigDecimal.setScale(0, roundingMode).longValue();
+    }
+
+    /**
+     * Converts BigDecimal to a long
+     *
+     * @param bigDecimal bigDecimal
+     * @return long value
+     * @see BigDecimal#longValue()
+     * @since 0.4.10
+     */
+    public static long longValue(BigDecimal bigDecimal) {
+        Objects.requireNonNull(bigDecimal, "Parameter `bigDecimal` must be non-null!");
+        return bigDecimal.longValue();
+    }
+
 
 }

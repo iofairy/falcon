@@ -263,37 +263,70 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
             long millis = this.millis;
             long micros = this.micros;
             long nanos = this.nanos;
+
+            long maxValueLimit = 100000000000000000L;
+
             ChronoUnit chronoUnit = (ChronoUnit) unit;
             switch (chronoUnit) {
                 case CENTURIES:
-                    centuries = centuries + amount;
+                    centuries += amount;
                     break;
                 case YEARS:
-                    years = years + amount;
+                    years += amount;
                     break;
                 case MONTHS:
-                    months = months + amount;
+                    months += amount;
                     break;
                 case DAYS:
-                    days = days + amount;
+                    days += amount;
                     break;
                 case HOURS:
-                    hours = hours + amount;
+                    hours += amount;
                     break;
                 case MINUTES:
-                    minutes = minutes + amount;
+                    minutes += amount;
                     break;
                 case SECONDS:
-                    seconds = seconds + amount;
+                    seconds += amount;
                     break;
                 case MILLIS:
-                    millis = millis + amount;
+                    // In most cases, numerical overflow can be avoided.
+                    if (Math.abs(amount) > maxValueLimit) {
+                        long numberOfHours = amount / 3600000L;
+                        long remainingMillis = amount % 3600000L;
+
+                        hours += numberOfHours;
+                        millis += remainingMillis;
+                    } else {
+                        millis += amount;
+                    }
+
                     break;
                 case MICROS:
-                    micros = micros + amount;
+                    // In most cases, numerical overflow can be avoided.
+                    if (Math.abs(amount) > maxValueLimit) {
+                        long numberOfHours = amount / 3600000000L;
+                        long remainingMicros = amount % 3600000000L;
+
+                        hours += numberOfHours;
+                        micros += remainingMicros;
+                    } else {
+                        micros += amount;
+                    }
+
                     break;
                 case NANOS:
-                    nanos = nanos + amount;
+                    // In most cases, numerical overflow can be avoided.
+                    if (Math.abs(amount) > maxValueLimit) {
+                        long numberOfHours = amount / 3600000000000L;
+                        long remainingNanos = amount % 3600000000000L;
+
+                        hours += numberOfHours;
+                        nanos += remainingNanos;
+                    } else {
+                        nanos += amount;
+                    }
+
                     break;
             }
             return new SignedInterval(centuries, years, months, days, hours, minutes, seconds, millis, micros, nanos);
@@ -327,37 +360,70 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
             long millis = this.millis;
             long micros = this.micros;
             long nanos = this.nanos;
+
+            long maxValueLimit = 100000000000000000L;
+
             ChronoUnit chronoUnit = (ChronoUnit) unit;
             switch (chronoUnit) {
                 case CENTURIES:
-                    centuries = centuries - amount;
+                    centuries -= amount;
                     break;
                 case YEARS:
-                    years = years - amount;
+                    years -= amount;
                     break;
                 case MONTHS:
-                    months = months - amount;
+                    months -= amount;
                     break;
                 case DAYS:
-                    days = days - amount;
+                    days -= amount;
                     break;
                 case HOURS:
-                    hours = hours - amount;
+                    hours -= amount;
                     break;
                 case MINUTES:
-                    minutes = minutes - amount;
+                    minutes -= amount;
                     break;
                 case SECONDS:
-                    seconds = seconds - amount;
+                    seconds -= amount;
                     break;
                 case MILLIS:
-                    millis = millis - amount;
+                    // In most cases, numerical overflow can be avoided.
+                    if (Math.abs(amount) > maxValueLimit) {
+                        long numberOfHours = amount / 3600000L;
+                        long remainingMillis = amount % 3600000L;
+
+                        hours -= numberOfHours;
+                        millis -= remainingMillis;
+                    } else {
+                        millis -= amount;
+                    }
+
                     break;
                 case MICROS:
-                    micros = micros - amount;
+                    // In most cases, numerical overflow can be avoided.
+                    if (Math.abs(amount) > maxValueLimit) {
+                        long numberOfHours = amount / 3600000000L;
+                        long remainingMicros = amount % 3600000000L;
+
+                        hours -= numberOfHours;
+                        micros -= remainingMicros;
+                    } else {
+                        micros -= amount;
+                    }
+
                     break;
                 case NANOS:
-                    nanos = nanos - amount;
+                    // In most cases, numerical overflow can be avoided.
+                    if (Math.abs(amount) > maxValueLimit) {
+                        long numberOfHours = amount / 3600000000000L;
+                        long remainingNanos = amount % 3600000000000L;
+
+                        hours -= numberOfHours;
+                        nanos -= remainingNanos;
+                    } else {
+                        nanos -= amount;
+                    }
+
                     break;
             }
             return new SignedInterval(centuries, years, months, days, hours, minutes, seconds, millis, micros, nanos);

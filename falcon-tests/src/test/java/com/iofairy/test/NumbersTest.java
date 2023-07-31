@@ -6,6 +6,7 @@ import com.iofairy.top.G;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,38 +47,38 @@ public class NumbersTest {
         Double[] doubles16 = Numbers.round(ns2);
         double[] doubles17 = Numbers.round(fs3);
 
-        System.out.println(G.toString(doubles0));   // [NaN, Infinity, 1.0, -Infinity, 10.0002, 897.669, 9999999999.12]
-        System.out.println(G.toString(doubles1));   // [NaN, -Infinity, null, -Infinity, 10.0002, 897.669, 9999999999.12]
-        System.out.println(G.toString(doubles2));   // [NaN, Infinity, -Infinity, -10.0002, 897.669]
-        System.out.println(G.toString(doubles3));   // [NaN, Infinity, 1.0, null, -Infinity, 10.0002, 897.669, 100.1, 9999999999.0, 9999999999.12]
+        System.out.println(G.toString(doubles0));   // [NaN, ∞, 1.0, -∞, 10.0002, 897.669, 9999999999.12]
+        System.out.println(G.toString(doubles1));   // [NaN, -∞, null, -∞, 10.0002, 897.669, 9999999999.12]
+        System.out.println(G.toString(doubles2));   // [NaN, ∞, -∞, -10.0002, 897.669]
+        System.out.println(G.toString(doubles3));   // [NaN, ∞, 1.0, null, -∞, 10.0002, 897.669, 100.1, 9999999999.0, 9999999999.12]
         System.out.println(G.toString(doubles4));   // []
-        System.out.println(G.toString(doubles5));   // [NaN, Infinity, -Infinity, -10.0002, 897.669]
-        System.out.println(G.toString(doubles6));   // [NaN, Infinity, 1.0, null, -Infinity, 10.0002, 897.669, 100.1, 9999999999.0, 9999999999.12]
+        System.out.println(G.toString(doubles5));   // [NaN, ∞, -∞, -10.0002, 897.669]
+        System.out.println(G.toString(doubles6));   // [NaN, ∞, 1.0, null, -∞, 10.0002, 897.669, 100.1, 9999999999.0, 9999999999.12]
         System.out.println(G.toString(doubles7));   // null
-        System.out.println(G.toString(doubles10));  // [NaN, Infinity, 1.0, -Infinity, 10.0, 897.67, 9999999999.12]
-        System.out.println(G.toString(doubles11));  // [NaN, -Infinity, null, -Infinity, 10.0, 897.67, 9999999999.12]
-        System.out.println(G.toString(doubles12));  // [NaN, Infinity, -Infinity, -10.0, 897.67]
-        System.out.println(G.toString(doubles13));  // [NaN, Infinity, 1.0, null, -Infinity, 10.0, 897.67, 100.1, 9999999999.0, 9999999999.12]
+        System.out.println(G.toString(doubles10));  // [NaN, ∞, 1.0, -∞, 10.0, 897.67, 9999999999.12]
+        System.out.println(G.toString(doubles11));  // [NaN, -∞, null, -∞, 10.0, 897.67, 9999999999.12]
+        System.out.println(G.toString(doubles12));  // [NaN, ∞, -∞, -10.0, 897.67]
+        System.out.println(G.toString(doubles13));  // [NaN, ∞, 1.0, null, -∞, 10.0, 897.67, 100.1, 9999999999.0, 9999999999.12]
         System.out.println(G.toString(doubles14));  // []
-        System.out.println(G.toString(doubles15));  // [NaN, Infinity, -Infinity, -10.0, 897.67]
-        System.out.println(G.toString(doubles16));  // [NaN, Infinity, 1.0, null, -Infinity, 10.0, 897.67, 100.1, 9999999999.0, 9999999999.12]
+        System.out.println(G.toString(doubles15));  // [NaN, ∞, -∞, -10.0, 897.67]
+        System.out.println(G.toString(doubles16));  // [NaN, ∞, 1.0, null, -∞, 10.0, 897.67, 100.1, 9999999999.0, 9999999999.12]
         System.out.println(G.toString(doubles17));  // null
 
-        assertEquals(G.toString(doubles0), "[NaN, Infinity, 1.0, -Infinity, 10.0002, 897.669, 9999999999.12]");
-        assertEquals(G.toString(doubles1), "[NaN, -Infinity, null, -Infinity, 10.0002, 897.669, 9999999999.12]");
-        assertEquals(G.toString(doubles2), "[NaN, Infinity, -Infinity, -10.0002, 897.669]");
-        assertEquals(G.toString(doubles3), "[NaN, Infinity, 1.0, null, -Infinity, 10.0002, 897.669, 100.1, 9999999999.0, 9999999999.12]");
+        assertEquals(G.toString(doubles0), "[NaN, ∞, 1.0, -∞, 10.0002, 897.669, 9999999999.12]");
+        assertEquals(G.toString(doubles1), "[NaN, -∞, null, -∞, 10.0002, 897.669, 9999999999.12]");
+        assertEquals(G.toString(doubles2), "[NaN, ∞, -∞, -10.0002, 897.669]");
+        assertEquals(G.toString(doubles3), "[NaN, ∞, 1.0, null, -∞, 10.0002, 897.669, 100.1, 9999999999.0, 9999999999.12]");
         assertEquals(G.toString(doubles4), "[]");
-        assertEquals(G.toString(doubles5), "[NaN, Infinity, -Infinity, -10.0002, 897.669]");
-        assertEquals(G.toString(doubles6), "[NaN, Infinity, 1.0, null, -Infinity, 10.0002, 897.669, 100.1, 9999999999.0, 9999999999.12]");
+        assertEquals(G.toString(doubles5), "[NaN, ∞, -∞, -10.0002, 897.669]");
+        assertEquals(G.toString(doubles6), "[NaN, ∞, 1.0, null, -∞, 10.0002, 897.669, 100.1, 9999999999.0, 9999999999.12]");
         assertEquals(G.toString(doubles7), "null");
-        assertEquals(G.toString(doubles10), "[NaN, Infinity, 1.0, -Infinity, 10.0, 897.67, 9999999999.12]");
-        assertEquals(G.toString(doubles11), "[NaN, -Infinity, null, -Infinity, 10.0, 897.67, 9999999999.12]");
-        assertEquals(G.toString(doubles12), "[NaN, Infinity, -Infinity, -10.0, 897.67]");
-        assertEquals(G.toString(doubles13), "[NaN, Infinity, 1.0, null, -Infinity, 10.0, 897.67, 100.1, 9999999999.0, 9999999999.12]");
+        assertEquals(G.toString(doubles10), "[NaN, ∞, 1.0, -∞, 10.0, 897.67, 9999999999.12]");
+        assertEquals(G.toString(doubles11), "[NaN, -∞, null, -∞, 10.0, 897.67, 9999999999.12]");
+        assertEquals(G.toString(doubles12), "[NaN, ∞, -∞, -10.0, 897.67]");
+        assertEquals(G.toString(doubles13), "[NaN, ∞, 1.0, null, -∞, 10.0, 897.67, 100.1, 9999999999.0, 9999999999.12]");
         assertEquals(G.toString(doubles14), "[]");
-        assertEquals(G.toString(doubles15), "[NaN, Infinity, -Infinity, -10.0, 897.67]");
-        assertEquals(G.toString(doubles16), "[NaN, Infinity, 1.0, null, -Infinity, 10.0, 897.67, 100.1, 9999999999.0, 9999999999.12]");
+        assertEquals(G.toString(doubles15), "[NaN, ∞, -∞, -10.0, 897.67]");
+        assertEquals(G.toString(doubles16), "[NaN, ∞, 1.0, null, -∞, 10.0, 897.67, 100.1, 9999999999.0, 9999999999.12]");
         assertEquals(G.toString(doubles17), "null");
     }
 
@@ -124,19 +125,48 @@ public class NumbersTest {
 
         assertEquals(G.toString(floats0, 15), "[1.1, 1.11]");
         assertEquals(G.toString(floats1, 15), "null");
-        assertEquals(G.toString(floats2, 15), "[NaN, Infinity, -Infinity, -10.000198, 897.669]");
-        assertEquals(G.toString(floats3, 15), "[NaN, Infinity, 1.0, null, -Infinity, 10.000198, 897.669, 9865465000000000000000000000000.0, " +
+        assertEquals(G.toString(floats2, 15), "[NaN, ∞, -∞, -10.000198, 897.669]");
+        assertEquals(G.toString(floats3, 15), "[NaN, ∞, 1.0, null, -∞, 10.000198, 897.669, 9865465000000000000000000000000.0, " +
                 "10000000000.0, 10000000000.0, 9865465000000000000000000000000.0, 9464.616, 9865465000000000000000000000000.0, 64.616516]");
         assertEquals(G.toString(floats4, 15), "[]");
-        assertEquals(G.toString(floats5, 15), "[NaN, Infinity, 1.0, null, -Infinity, 10.000198, 897.669, 9865465000000000000000000000000.0, " +
+        assertEquals(G.toString(floats5, 15), "[NaN, ∞, 1.0, null, -∞, 10.000198, 897.669, 9865465000000000000000000000000.0, " +
                 "10000000000.0, 10000000000.0, 9865465000000000000000000000000.0, 9464.616, 9865465000000000000000000000000.0, 64.616516]");
         assertEquals(G.toString(doubles0, 15), "[1.100000023841858, 1.110000014305115]");
-        assertEquals(G.toString(doubles1, 15), "[NaN, Infinity, -Infinity, -10.000198364257812, 897.6690063476562]");
-        assertEquals(G.toString(doubles2, 15), "[NaN, Infinity, -Infinity, -10.000198364257812, 897.6690063476562]");
-        assertEquals(G.toString(doubles3, 15), "[NaN, Infinity, 1.0, null, -Infinity, 10.000198364257812, 897.66897975569, 9865464949466495000000000000000.0, " +
+        assertEquals(G.toString(doubles1, 15), "[NaN, ∞, -∞, -10.000198364257812, 897.6690063476562]");
+        assertEquals(G.toString(doubles2, 15), "[NaN, ∞, -∞, -10.000198364257812, 897.6690063476562]");
+        assertEquals(G.toString(doubles3, 15), "[NaN, ∞, 1.0, null, -∞, 10.000198364257812, 897.66897975569, 9865464949466495000000000000000.0, " +
                 "9999999999.0, 9999999999.12, 9865465142870303000000000000000.0, 9464.6162109375, 9865464949466495000000000000000.0, 64.6165164949495]");
         assertEquals(G.toString(doubles4, 15), "[]");
-        assertEquals(G.toString(doubles5, 15), "[NaN, Infinity, 1.0, null, -Infinity, 10.000198364257812, 897.66897975569, 9865464949466495000000000000000.0, " +
+        assertEquals(G.toString(doubles5, 15), "[NaN, ∞, 1.0, null, -∞, 10.000198364257812, 897.66897975569, 9865464949466495000000000000000.0, " +
                 "9999999999.0, 9999999999.12, 9865465142870303000000000000000.0, 9464.6162109375, 9865464949466495000000000000000.0, 64.6165164949495]");
     }
+
+    @Test
+    public void testBigDecimalDivide() {
+        BigDecimal divide01 = Numbers.divide(BigDecimal.valueOf(1), BigDecimal.valueOf(3));
+        BigDecimal divide02 = Numbers.divide(BigDecimal.valueOf(1), BigDecimal.valueOf(1024L * 1024 * 1024 * 1024L), true);
+        BigDecimal divide03 = Numbers.divide(BigDecimal.valueOf(1), BigDecimal.valueOf(1024L * 1024 * 1024 * 1024L), false);
+        BigDecimal divide04 = Numbers.divide(BigInteger.valueOf(1), BigInteger.valueOf(33333333333333333L));
+        BigDecimal divide05 = Numbers.divide(BigInteger.valueOf(1), BigInteger.valueOf(33333333333333333L), 30);
+        BigDecimal divide06 = Numbers.divide(BigInteger.valueOf(1), BigInteger.valueOf(1024L * 1024 * 1024 * 1024L), 15, true);
+        BigDecimal divide07 = Numbers.divide(BigInteger.valueOf(1), BigInteger.valueOf(1024L * 1024 * 1024 * 1024L), false);
+        System.out.println(divide01.toPlainString());     // 0.333333
+        System.out.println(divide02.toPlainString());     // 0.000000
+        System.out.println(divide03.toPlainString());     // 0.0000000000009094947017729282379150390625
+        System.out.println(divide04.toPlainString());     // 0.000000
+        System.out.println(divide05.toPlainString());     // 0.000000000000000030000000000000
+        System.out.println(divide06.toPlainString());     // 0.000000000000909
+        System.out.println(divide07.toPlainString());     // 0.0000000000009094947017729282379150390625
+
+        assertEquals(divide01.toPlainString(), "0.333333");
+        assertEquals(divide02.toPlainString(), "0.000000");
+        assertEquals(divide03.toPlainString(), "0.0000000000009094947017729282379150390625");
+        assertEquals(divide04.toPlainString(), "0.000000");
+        assertEquals(divide05.toPlainString(), "0.000000000000000030000000000000");
+        assertEquals(divide06.toPlainString(), "0.000000000000909");
+        assertEquals(divide07.toPlainString(), "0.0000000000009094947017729282379150390625");
+
+    }
+
+
 }

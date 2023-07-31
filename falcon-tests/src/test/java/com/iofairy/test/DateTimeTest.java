@@ -861,6 +861,11 @@ public class DateTimeTest {
         List<Calendar> calendars1 = dt6.datesByShift(-2, -15, ChronoUnit.HOURS, true);
         List<Calendar> calendars2 = dt6.datesByShift(3, -15, ChronoUnit.HOURS, false);
 
+        List<LocalDateTime> dateTimes1 = dt1.datesByShift(-2, 2, ChronoUnit.WEEKS, true);
+        List<LocalDateTime> dateTimes2 = dt1.datesByShift(2, -2, ChronoUnit.WEEKS, false);
+        List<LocalDateTime> dateTimes3 = dt1.datesByShift(2, 0, ChronoUnit.WEEKS, true);
+        List<LocalDateTime> dateTimes4 = dt1.datesByShift(0, 0, ChronoUnit.WEEKS, false);
+
         // List<String> dates1 = zonedDateTimes1.stream().map(G::dtDetail).collect(Collectors.toList());
         // List<String> dates2 = zonedDateTimes2.stream().map(G::dtDetail).collect(Collectors.toList());
         // List<String> dates3 = instants1.stream().map(G::dtDetail).collect(Collectors.toList());
@@ -878,6 +883,11 @@ public class DateTimeTest {
         System.out.println(G.toString(offsetDateTimes2));
         System.out.println(G.toString(calendars1));
         System.out.println(G.toString(calendars2));
+        System.out.println(G.toString(dateTimes1));
+        System.out.println(G.toString(dateTimes2));
+        System.out.println(G.toString(dateTimes3));
+        System.out.println(G.toString(dateTimes4));
+
 
         assertEquals("[2022-02-27 03:00:10.000 [Europe/Moscow +03:00], 2022-02-28 03:00:10.000 [Europe/Moscow +03:00], 2022-03-01 03:00:10.000 [Europe/Moscow +03:00], 2022-03-02 03:00:10.000 [Europe/Moscow +03:00]]", G.toString(zonedDateTimes1));
         assertEquals("[2022-02-27 00:00:10.000 [Europe/Moscow +03:00], 2022-02-27 01:00:10.000 [Europe/Moscow +03:00], 2022-02-27 02:00:10.000 [Europe/Moscow +03:00], 2022-02-27 03:00:10.000 [Europe/Moscow +03:00]]", G.toString(zonedDateTimes2));
@@ -887,6 +897,10 @@ public class DateTimeTest {
         assertEquals("[2022-02-27 00:01:40.000 [+00:00], 2022-02-27 00:03:10.000 [+00:00], 2022-02-27 00:04:40.000 [+00:00]]", G.toString(offsetDateTimes2));
         assertEquals("[2022-02-25 13:00:10.000 [America/New_York -05:00], 2022-02-26 04:00:10.000 [America/New_York -05:00], 2022-02-26 19:00:10.000 [America/New_York -05:00]]", G.toString(calendars1));
         assertEquals("[2022-02-27 10:00:10.000 [America/New_York -05:00], 2022-02-28 01:00:10.000 [America/New_York -05:00], 2022-02-28 16:00:10.000 [America/New_York -05:00]]", G.toString(calendars2));
+        assertEquals("[2022-01-30 08:00:10.000, 2022-02-13 08:00:10.000, 2022-02-27 08:00:10.000]", G.toString(dateTimes1));
+        assertEquals("[2022-03-13 08:00:10.000, 2022-03-27 08:00:10.000]", G.toString(dateTimes2));
+        assertEquals("[2022-02-27 08:00:10.000]", G.toString(dateTimes3));
+        assertEquals("[]", G.toString(dateTimes4));
     }
 
     @Test
@@ -1026,6 +1040,55 @@ public class DateTimeTest {
         assertEquals("[2022-02-28 10:57:10.700 [America/New_York -05:00], 2022-02-28 10:58:40.700 [America/New_York -05:00]]", G.toString(calendars14));
 
     }
+
+    @Test
+    public void testDatesFromRange1() {
+        LocalDateTime ldt1 = LocalDateTime.of(2022, 2, 27, 8, 0, 10, 100);
+        LocalDateTime ldt2 = LocalDateTime.of(2022, 3, 30, 8, 0, 11, 100);
+        DateTime<LocalDateTime> dt01 = DateTime.of(ldt1);
+        DateTime<LocalDateTime> dt02 = DateTime.of(ldt2);
+
+        List<LocalDateTime> dateTimes01 = dt01.datesFromRange(dt02, 2, ChronoUnit.WEEKS, CLOSED);
+        List<LocalDateTime> dateTimes02 = dt02.datesFromRange(dt01, -2, ChronoUnit.WEEKS, CLOSED);
+        List<LocalDateTime> dateTimes03 = dt01.datesFromRange(dt02, 2, ChronoUnit.WEEKS, CLOSED_OPEN);
+        List<LocalDateTime> dateTimes04 = dt02.datesFromRange(dt01, -2, ChronoUnit.WEEKS, CLOSED_OPEN);
+        List<LocalDateTime> dateTimes05 = dt01.datesFromRange(dt02, 2, ChronoUnit.WEEKS, OPEN);
+        List<LocalDateTime> dateTimes06 = dt02.datesFromRange(dt01, -2, ChronoUnit.WEEKS, OPEN);
+        List<LocalDateTime> dateTimes07 = dt01.datesFromRange(dt02, 2, ChronoUnit.WEEKS, OPEN_CLOSED);
+        List<LocalDateTime> dateTimes08 = dt02.datesFromRange(dt01, -2, ChronoUnit.WEEKS, OPEN_CLOSED);
+        List<LocalDateTime> dateTimes09 = dt01.datesFromRange(dt01, 2, ChronoUnit.WEEKS, CLOSED);
+        List<LocalDateTime> dateTimes10 = dt01.datesFromRange(dt01, 2, ChronoUnit.WEEKS, CLOSED_OPEN);
+        List<LocalDateTime> dateTimes11 = dt01.datesFromRange(dt01, -2, ChronoUnit.WEEKS, OPEN);
+        List<LocalDateTime> dateTimes12 = dt01.datesFromRange(dt01, -2, ChronoUnit.WEEKS, OPEN_CLOSED);
+
+        System.out.println(G.toString(dateTimes01));
+        System.out.println(G.toString(dateTimes02));
+        System.out.println(G.toString(dateTimes03));
+        System.out.println(G.toString(dateTimes04));
+        System.out.println(G.toString(dateTimes05));
+        System.out.println(G.toString(dateTimes06));
+        System.out.println(G.toString(dateTimes07));
+        System.out.println(G.toString(dateTimes08));
+        System.out.println(G.toString(dateTimes09));
+        System.out.println(G.toString(dateTimes10));
+        System.out.println(G.toString(dateTimes11));
+        System.out.println(G.toString(dateTimes12));
+
+        assertEquals(G.toString(dateTimes01), "[2022-02-27 08:00:10.000, 2022-03-13 08:00:10.000, 2022-03-27 08:00:10.000]");
+        assertEquals(G.toString(dateTimes02), "[2022-03-02 08:00:11.000, 2022-03-16 08:00:11.000, 2022-03-30 08:00:11.000]");
+        assertEquals(G.toString(dateTimes03), "[2022-02-27 08:00:10.000, 2022-03-13 08:00:10.000, 2022-03-27 08:00:10.000]");
+        assertEquals(G.toString(dateTimes04), "[2022-03-02 08:00:11.000, 2022-03-16 08:00:11.000, 2022-03-30 08:00:11.000]");
+        assertEquals(G.toString(dateTimes05), "[2022-03-13 08:00:10.000, 2022-03-27 08:00:10.000]");
+        assertEquals(G.toString(dateTimes06), "[2022-03-02 08:00:11.000, 2022-03-16 08:00:11.000]");
+        assertEquals(G.toString(dateTimes07), "[2022-03-13 08:00:10.000, 2022-03-27 08:00:10.000]");
+        assertEquals(G.toString(dateTimes08), "[2022-03-02 08:00:11.000, 2022-03-16 08:00:11.000]");
+        assertEquals(G.toString(dateTimes09), "[2022-02-27 08:00:10.000]");
+        assertEquals(G.toString(dateTimes10), "[2022-02-27 08:00:10.000]");
+        assertEquals(G.toString(dateTimes11), "[]");
+        assertEquals(G.toString(dateTimes12), "[]");
+
+    }
+
 
     @Test
     public void testParse() {

@@ -768,6 +768,10 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      */
     @SuppressWarnings("unchecked")
     public List<T> datesByShift(int shiftTimes, int amountUnit, ChronoUnit chronoUnit, boolean includeCurrentTime) {
+        if (chronoUnit == ChronoUnit.WEEKS) {
+            chronoUnit = ChronoUnit.DAYS;
+            amountUnit = amountUnit * 7;
+        }
         if (dateTime instanceof Date) return (List<T>) DateTimeShift.datesByShift((Date) this.get(), zonedDateTime, shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
         if (dateTime instanceof Calendar) return (List<T>) DateTimeShift.datesByShift((Calendar) this.get(), shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
         return (List<T>) DateTimeShift.datesByShift((Temporal) dateTime, shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
@@ -808,6 +812,11 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     @SuppressWarnings("unchecked")
     public List<T> datesFromRange(DateTime<?> toDateTime, int amountUnit, ChronoUnit chronoUnit, IntervalType intervalType) {
         Objects.requireNonNull(toDateTime, "Parameter `toDateTime` must be non-null!");
+        if (chronoUnit == ChronoUnit.WEEKS) {
+            chronoUnit = ChronoUnit.DAYS;
+            amountUnit = amountUnit * 7;
+        }
+
         if (dateTime instanceof Date)
             return (List<T>) DateTimeShift.datesFromRange((Date) this.get(), toDateTime.toDate(), zonedDateTime, toDateTime.zonedDateTime, amountUnit, chronoUnit, intervalType);
         if (dateTime instanceof Calendar) return (List<T>) DateTimeShift.datesFromRange((Calendar) this.get(), toDateTime.toCalendar(null), amountUnit, chronoUnit, intervalType);
