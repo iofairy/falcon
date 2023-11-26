@@ -55,7 +55,9 @@ public class Strings {
      * @param str         字符串
      * @param repeatTimes 次数
      * @return 字符串
+     * @deprecated Since version 0.4.11, replaced by {@link com.iofairy.top.S#repeat(String, int)}
      */
+    @Deprecated
     public static String repeat(String str, int repeatTimes) {
         if (str == null) return null;
         if (str.length() == 0 || repeatTimes <= 0) return "";

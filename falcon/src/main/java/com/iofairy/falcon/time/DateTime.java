@@ -485,6 +485,10 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         return plus(months, ChronoUnit.MONTHS);
     }
 
+    public DateTime<T> plusWeeks(long weeks) {
+        return plus(weeks, ChronoUnit.WEEKS);
+    }
+
     public DateTime<T> plusDays(long days) {
         return plus(days, ChronoUnit.DAYS);
     }
@@ -579,6 +583,10 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         return minus(months, ChronoUnit.MONTHS);
     }
 
+    public DateTime<T> minusWeeks(long weeks) {
+        return minus(weeks, ChronoUnit.WEEKS);
+    }
+
     public DateTime<T> minusDays(long days) {
         return minus(days, ChronoUnit.DAYS);
     }
@@ -615,13 +623,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         }
 
         ZonedDateTime zdt = zonedDateTime.with(adjuster);
-        if (dateTime instanceof Date) {
-            return DateTime.from((T) Date.from(zdt.toInstant()));
-        }
-        if (dateTime instanceof Calendar) {
-            return DateTime.from((T) toCalendar((Calendar) this.get(), zdt));
-        }
-        return DateTime.from((T) zdt.toInstant());
+        return getDateTimeFromZonedDT(zdt);
     }
 
     @Override
@@ -632,13 +634,81 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         }
 
         ZonedDateTime zdt = zonedDateTime.with(field, newValue);
-        if (dateTime instanceof Date) {
-            return DateTime.from((T) Date.from(zdt.toInstant()));
+        return getDateTimeFromZonedDT(zdt);
+    }
+
+    /**
+     * Returns a copy of this {@code DateTime<T>} with the specified {@code LocalDateTime} set to a new value.
+     *
+     * @param localDateTime localDateTime
+     * @return {@code DateTime<T>}
+     * @since 0.4.11
+     */
+    public DateTime<T> withLocalDateTime(LocalDateTime localDateTime) {
+        if (dateTime instanceof LocalDateTime) return DateTime.from((T) localDateTime);
+        if (dateTime instanceof OffsetDateTime) return DateTime.from((T) OffsetDateTime.of(localDateTime, offset));
+
+        ZonedDateTime zdt = ZonedDateTime.of(localDateTime, zone);
+        if (dateTime instanceof ZonedDateTime) return DateTime.from((T) zdt);
+
+        return getDateTimeFromZonedDT(zdt);
+    }
+
+    /**
+     * Returns a copy of this {@code DateTime<T>} with the specified {@code LocalDate} set to a new value.
+     *
+     * @param localDate localDate
+     * @return {@code DateTime<T>}
+     * @since 0.4.11
+     */
+    public DateTime<T> withLocalDate(LocalDate localDate) {
+        if (dateTime instanceof LocalDateTime || dateTime instanceof OffsetDateTime || dateTime instanceof ZonedDateTime) {
+            Temporal newTemporal = ((Temporal) dateTime).with(ChronoField.YEAR, localDate.getYear())
+                    .with(ChronoField.MONTH_OF_YEAR, localDate.getMonthValue())
+                    .with(ChronoField.DAY_OF_MONTH, localDate.getDayOfMonth());
+            return DateTime.from((T) newTemporal);
         }
-        if (dateTime instanceof Calendar) {
-            return DateTime.from((T) toCalendar((Calendar) this.get(), zdt));
+
+        ZonedDateTime zdt = zonedDateTime.withYear(localDate.getYear()).withMonth(localDate.getMonthValue()).withDayOfMonth(localDate.getDayOfMonth());
+        return getDateTimeFromZonedDT(zdt);
+    }
+
+    /**
+     * Returns a copy of this {@code DateTime<T>} with the specified {@code LocalTime} set to a new value.
+     *
+     * @param localTime localTime
+     * @return {@code DateTime<T>}
+     * @since 0.4.11
+     */
+    public DateTime<T> withLocalTime(LocalTime localTime) {
+        if (dateTime instanceof LocalDateTime || dateTime instanceof OffsetDateTime || dateTime instanceof ZonedDateTime) {
+            Temporal newTemporal = ((Temporal) dateTime).with(ChronoField.HOUR_OF_DAY, localTime.getHour())
+                    .with(ChronoField.MINUTE_OF_HOUR, localTime.getMinute())
+                    .with(ChronoField.SECOND_OF_MINUTE, localTime.getSecond())
+                    .with(ChronoField.NANO_OF_SECOND, localTime.getNano());
+            return DateTime.from((T) newTemporal);
         }
-        return DateTime.from((T) zdt.toInstant());
+
+        ZonedDateTime zdt = zonedDateTime.withHour(localTime.getHour())
+                .withMinute(localTime.getMinute())
+                .withSecond(localTime.getSecond())
+                .withNano(localTime.getNano());
+
+        return getDateTimeFromZonedDT(zdt);
+    }
+
+    /**
+     * 将 ZonedDateTime 类型转化为 Date、Calendar或Instant的 DateTime类型
+     *
+     * @param zonedDT ZonedDateTime
+     * @return {@code DateTime<T>}
+     * @since 0.4.11
+     */
+    private DateTime<T> getDateTimeFromZonedDT(ZonedDateTime zonedDT) {
+        if (dateTime instanceof Date) return DateTime.from((T) Date.from(zonedDT.toInstant()));
+        if (dateTime instanceof Calendar) return DateTime.from((T) toCalendar((Calendar) this.get(), zonedDT));
+
+        return DateTime.from((T) zonedDT.toInstant());
     }
 
     public DateTime<T> withYear(int year) {

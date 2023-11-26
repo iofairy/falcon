@@ -184,6 +184,9 @@ public final class OS {
      */
     private static final boolean IS_PRE_MACOSX = os.startsWith("mac os x");
 
+    public static final boolean IS_MACOS_VENTURA_5          = macOSCompare("13.5");
+    public static final boolean IS_MACOS_VENTURA_4          = macOSCompare("13.4");
+    public static final boolean IS_MACOS_VENTURA_3          = macOSCompare("13.3");
     public static final boolean IS_MACOS_VENTURA_2          = macOSCompare("13.2");
     public static final boolean IS_MACOS_VENTURA_1          = macOSCompare("13.1");
     public static final boolean IS_MACOS_VENTURA_0          = macOSCompare("13.0");
@@ -219,6 +222,9 @@ public final class OS {
     public static final boolean IS_MAC_OS_X_PUMA            = macOSCompare("10.1");
     public static final boolean IS_MAC_OS_X_CHEETAH         = macOSCompare("10.0");
 
+    public static final boolean IS_MAC_13_5     = IS_MACOS_VENTURA_5;
+    public static final boolean IS_MAC_13_4     = IS_MACOS_VENTURA_4;
+    public static final boolean IS_MAC_13_3     = IS_MACOS_VENTURA_3;
     public static final boolean IS_MAC_13_2     = IS_MACOS_VENTURA_2;
     public static final boolean IS_MAC_13_1     = IS_MACOS_VENTURA_1;
     public static final boolean IS_MAC_13_0     = IS_MACOS_VENTURA_0;
@@ -348,7 +354,10 @@ public final class OS {
     }
 
     private static boolean isMacOS() {
-        return IS_MACOS_VENTURA_2
+        return IS_MACOS_VENTURA_5
+                || IS_MACOS_VENTURA_4
+                || IS_MACOS_VENTURA_3
+                || IS_MACOS_VENTURA_2
                 || IS_MACOS_VENTURA_1
                 || IS_MACOS_VENTURA_0
                 || IS_MACOS_MONTEREY_6
