@@ -24,6 +24,7 @@ import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * Number Utils
@@ -616,5 +617,17 @@ public class Numbers {
         return bigDecimal.longValue();
     }
 
+    /**
+     * 指定随机数位数，获取int型的随机数
+     *
+     * @param digits 随机数的位数
+     * @return int型的随机数
+     * @since 0.4.15
+     */
+    public static int randomInt(int digits) {
+        if (digits <= 0 || digits > 9) return 0;
+        int pow = (int) Math.pow(10, digits - 1);
+        return new Random().nextInt(9 * pow) + pow;
+    }
 
 }

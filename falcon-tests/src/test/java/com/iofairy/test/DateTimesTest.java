@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
+import java.time.format.TextStyle;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -434,4 +435,46 @@ public class DateTimesTest {
         System.out.println(DTConst.SATURDAY_MIN4);
 
     }
+
+    @Test
+    public void testNameOfDayOfWeek() {
+        String nameOfDayOfWeek01 = DateTimes.nameOfDayOfWeek(DayOfWeek.MONDAY, TextStyle.FULL, Locale.US);
+        String nameOfDayOfWeek02 = DateTimes.nameOfDayOfWeek(DayOfWeek.WEDNESDAY, TextStyle.SHORT, Locale.ENGLISH);
+        String nameOfDayOfWeek03 = DateTimes.nameOfDayOfWeek(DayOfWeek.WEDNESDAY, TextStyle.NARROW, Locale.ENGLISH);
+        String nameOfDayOfWeek04 = DateTimes.nameOfDayOfWeek(DayOfWeek.WEDNESDAY, TextStyle.NARROW, Locale.CHINESE);
+        String nameOfDayOfWeek05 = DateTimes.nameOfDayOfWeek(DayOfWeek.FRIDAY, TextStyle.NARROW_STANDALONE, Locale.CHINESE);
+        String nameOfDayOfWeek06 = DateTimes.nameOfDayOfWeek(DayOfWeek.WEDNESDAY, Locale.ENGLISH);
+        String nameOfDayOfWeek07 = DateTimes.nameOfDayOfWeek(DayOfWeek.SUNDAY, Locale.CHINESE);
+        String nameOfDayOfWeek08 = DateTimes.nameOfDayOfWeek(DayOfWeek.SUNDAY);
+        String nameOfDayOfWeek10 = DateTimes.nameOfDayOfWeek(DayOfWeek.TUESDAY, TextStyle.NARROW);
+
+        System.out.println(nameOfDayOfWeek01);
+        System.out.println(nameOfDayOfWeek02);
+        System.out.println(nameOfDayOfWeek03);
+        System.out.println(nameOfDayOfWeek04);
+        System.out.println(nameOfDayOfWeek05);
+        System.out.println(nameOfDayOfWeek06);
+        System.out.println(nameOfDayOfWeek07);
+        System.out.println(nameOfDayOfWeek08);
+        System.out.println(nameOfDayOfWeek10);
+        try {
+            String nameOfDayOfWeek09 = DateTimes.nameOfDayOfWeek(null);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertEquals("Parameter `dayOfWeek` must be non-null!", e.getMessage());
+        }
+
+        assertEquals("Monday", nameOfDayOfWeek01);
+        assertEquals("Wed", nameOfDayOfWeek02);
+        assertEquals("W", nameOfDayOfWeek03);
+        assertEquals("周三", nameOfDayOfWeek04);
+        assertEquals("五", nameOfDayOfWeek05);
+        assertEquals("Wednesday", nameOfDayOfWeek06);
+        assertEquals("星期日", nameOfDayOfWeek07);
+        assertEquals("星期日", nameOfDayOfWeek08);
+        assertEquals("周二", nameOfDayOfWeek10);
+
+    }
+
+
 }

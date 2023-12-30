@@ -27,6 +27,7 @@ import java.io.Serializable;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.time.format.TextStyle;
 import java.time.temporal.*;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -644,6 +645,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @return {@code DateTime<T>}
      * @since 0.4.11
      */
+    @SuppressWarnings("unchecked")
     public DateTime<T> withLocalDateTime(LocalDateTime localDateTime) {
         if (dateTime instanceof LocalDateTime) return DateTime.from((T) localDateTime);
         if (dateTime instanceof OffsetDateTime) return DateTime.from((T) OffsetDateTime.of(localDateTime, offset));
@@ -661,6 +663,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @return {@code DateTime<T>}
      * @since 0.4.11
      */
+    @SuppressWarnings("unchecked")
     public DateTime<T> withLocalDate(LocalDate localDate) {
         if (dateTime instanceof LocalDateTime || dateTime instanceof OffsetDateTime || dateTime instanceof ZonedDateTime) {
             Temporal newTemporal = ((Temporal) dateTime).with(ChronoField.YEAR, localDate.getYear())
@@ -680,6 +683,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @return {@code DateTime<T>}
      * @since 0.4.11
      */
+    @SuppressWarnings("unchecked")
     public DateTime<T> withLocalTime(LocalTime localTime) {
         if (dateTime instanceof LocalDateTime || dateTime instanceof OffsetDateTime || dateTime instanceof ZonedDateTime) {
             Temporal newTemporal = ((Temporal) dateTime).with(ChronoField.HOUR_OF_DAY, localTime.getHour())
@@ -704,6 +708,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @return {@code DateTime<T>}
      * @since 0.4.11
      */
+    @SuppressWarnings("unchecked")
     private DateTime<T> getDateTimeFromZonedDT(ZonedDateTime zonedDT) {
         if (dateTime instanceof Date) return DateTime.from((T) Date.from(zonedDT.toInstant()));
         if (dateTime instanceof Calendar) return DateTime.from((T) toCalendar((Calendar) this.get(), zonedDT));
@@ -1180,6 +1185,28 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     }
 
     /**
+     * 获取此 {@link #dateTime} 所在的月的名称
+     *
+     * @return 月份的名称
+     * @since 0.4.15
+     */
+    public String nameOfMonth() {
+        return nameOfMonth(TextStyle.FULL, Locale.getDefault());
+    }
+
+    /**
+     * 获取此 {@link #dateTime} 所在的月的名称
+     *
+     * @param textStyle 文本样式
+     * @param locale    区域设置
+     * @return 月份的名称
+     * @since 0.4.15
+     */
+    public String nameOfMonth(TextStyle textStyle, Locale locale) {
+        return getMonth().getDisplayName(textStyle, locale);
+    }
+
+    /**
      * 获取当前日期所在周的任意星期几的日期<b>（默认每周的第一天为 星期一）</b>
      *
      * @param dayOfWeek 取星期几的日期
@@ -1279,6 +1306,49 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         return WeekInfo.of(weekFields, localDateTime.toLocalDate()).baseYearMonth();
     }
 
+    /**
+     * 获取此 {@link #dateTime} 所在的星期几的名称
+     *
+     * @return 星期几的名称
+     * @since 0.4.15
+     */
+    public String nameOfDayOfWeek() {
+        return nameOfDayOfWeek(null, null);
+    }
+
+    /**
+     * 输入区域设置返回此 {@link #dateTime} 所在的星期几的名称
+     *
+     * @param locale 区域设置
+     * @return 星期几的名称
+     * @since 0.4.15
+     */
+    public String nameOfDayOfWeek(Locale locale) {
+        return nameOfDayOfWeek(null, locale);
+    }
+
+    /**
+     * 输入文本样式返回此 {@link #dateTime} 所在的星期几的名称
+     *
+     * @param textStyle 文本样式
+     * @return 星期几的名称
+     * @since 0.4.15
+     */
+    public String nameOfDayOfWeek(TextStyle textStyle) {
+        return nameOfDayOfWeek(textStyle, null);
+    }
+
+    /**
+     * 输入文本样式和区域设置返回此 {@link #dateTime} 所在的星期几的名称
+     *
+     * @param textStyle 文本样式
+     * @param locale    区域设置
+     * @return 星期几的名称
+     * @since 0.4.15
+     */
+    public String nameOfDayOfWeek(TextStyle textStyle, Locale locale) {
+        return DateTimes.nameOfDayOfWeek(getDayOfWeek(), textStyle, locale);
+    }
 
     /**
      * 获取当前日期所在周的所有7天的日期<b>（默认每周的第一天为 星期一）</b>

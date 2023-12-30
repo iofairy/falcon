@@ -17,6 +17,7 @@
 module iofairy.falcon {
     requires transitive iofairy.functional;
 
+    exports com.iofairy.falcon.base;
     exports com.iofairy.falcon.fs;
     exports com.iofairy.falcon.io;
     exports com.iofairy.falcon.os;

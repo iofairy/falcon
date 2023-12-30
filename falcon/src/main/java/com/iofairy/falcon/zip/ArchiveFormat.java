@@ -48,7 +48,8 @@ public enum ArchiveFormat {
     LZMA(EnumSet.of(COMPRESSION_ONLY), ".lzma", "lzma"),
     LZOP(EnumSet.of(COMPRESSION_ONLY), ".lzo", "lzop"),
     RZIP(EnumSet.of(COMPRESSION_ONLY), ".rz", "rzip"),
-    SNAPPY(EnumSet.of(COMPRESSION_ONLY), ".sz", "Snappy"),
+    SZ(EnumSet.of(COMPRESSION_ONLY), ".sz", "The Snappy uses either 'framing' or 'framing2'"),
+    SNAPPY(EnumSet.of(COMPRESSION_ONLY), ".snappy", "The snappy in Java"),
     XZ(EnumSet.of(COMPRESSION_ONLY), ".xz", "xz"),
     Z_PACK(EnumSet.of(COMPRESSION_ONLY), ".z", "pack"),
     Z_COMPRESS(EnumSet.of(COMPRESSION_ONLY), ".Z", "compress"),
@@ -63,7 +64,9 @@ public enum ArchiveFormat {
     RAR(EnumSet.of(MULTI_FUNCTION), ".rar", "RAR"),
     TAR_GZ(EnumSet.of(MULTI_FUNCTION), ".tar.gz", "tar with gzip"),
     TGZ(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".tgz", "tar with gzip or Slackware Package(based on tar with gzip)"),
-    TAR_Z(EnumSet.of(MULTI_FUNCTION), ".tar.Z", "tar with compress"),
+    TAZ(EnumSet.of(MULTI_FUNCTION), ".taz", "tar with gzip"),
+    TAR_Z(EnumSet.of(MULTI_FUNCTION), ".tar.z", "tar with compress (.tar.Z)"),
+    TZ(EnumSet.of(MULTI_FUNCTION), ".tz", "tar with compress (.tZ)"),
     TAR_BZ2(EnumSet.of(MULTI_FUNCTION), ".tar.bz2", "tar with bzip2"),
     TBZ2(EnumSet.of(MULTI_FUNCTION), ".tbz2", "tar with bzip2"),
     TAR_LZ(EnumSet.of(MULTI_FUNCTION), ".tar.lz", "tar with lzip"),
@@ -72,7 +75,9 @@ public enum ArchiveFormat {
     TXZ(EnumSet.of(MULTI_FUNCTION), ".txz", "tar with xz"),
     TAR_ZST(EnumSet.of(MULTI_FUNCTION), ".tar.zst", "tar with Zstandard"),
     TZST(EnumSet.of(MULTI_FUNCTION), ".tzst", "tar with Zstandard"),
+    TAR_SZ(EnumSet.of(MULTI_FUNCTION), ".tar.sz", "tar with Snappy"),
     TAR_SNAPPY(EnumSet.of(MULTI_FUNCTION), ".tar.snappy", "tar with Snappy"),
+    TAR_LZMA(EnumSet.of(MULTI_FUNCTION), ".tar.lzma", "tar with lzma"),
     ZIP(EnumSet.of(MULTI_FUNCTION), ".zip", "ZIP"),
     ZZIP(EnumSet.of(MULTI_FUNCTION), ".zz", "Zzip"),
     /*
@@ -113,13 +118,13 @@ public enum ArchiveFormat {
 
     static final Map<String, ArchiveFormat> SA_MAP = new HashMap<>();
     /**
-     * 混合压缩格式
+     * 混合压缩格式（一般是tar与其他压缩算法一起压缩）
      */
-    public static final ArchiveFormat[] MIXED_FORMATS = {TAR_GZ, TGZ, TAR_Z, TAR_BZ2, TBZ2, TAR_LZ, TLZ, TAR_XZ, TXZ, TAR_ZST, TZST, TAR_SNAPPY};
+    public static final ArchiveFormat[] MIXED_FORMATS = {TAR_GZ, TGZ, TAZ, TAR_Z, TZ, TAR_BZ2, TBZ2, TAR_LZ, TLZ, TAR_XZ, TXZ, TAR_ZST, TZST, TAR_SZ, TAR_SNAPPY, TAR_LZMA};
     /**
-     * 有多个扩展名的压缩格式
+     * 有多个扩展名的压缩格式（如：.tar.gz, .tar.Z 等）
      */
-    public static final ArchiveFormat[] MULTI_EXTS_FORMATS = {TAR_GZ, TAR_Z, TAR_BZ2, TAR_LZ, TAR_XZ, TAR_ZST, TAR_SNAPPY};
+    public static final ArchiveFormat[] MULTI_EXTS_FORMATS = {TAR_GZ, TAR_Z, TAR_BZ2, TAR_LZ, TAR_XZ, TAR_ZST, TAR_SZ, TAR_SNAPPY, TAR_LZMA};
     /**
      * 相同的格式
      */
@@ -141,12 +146,15 @@ public enum ArchiveFormat {
         CONSISTENT_FORMAT1.put(TAR_LZ, TLZ);
         CONSISTENT_FORMAT1.put(TAR_XZ, TXZ);
         CONSISTENT_FORMAT1.put(TAR_ZST, TZST);
+        CONSISTENT_FORMAT1.put(TAR_Z, TZ);
 
         CONSISTENT_FORMAT2.put(TGZ, TAR_GZ);
+        CONSISTENT_FORMAT2.put(TAZ, TAR_GZ);
         CONSISTENT_FORMAT2.put(TBZ2, TAR_BZ2);
         CONSISTENT_FORMAT2.put(TLZ, TAR_LZ);
         CONSISTENT_FORMAT2.put(TXZ, TAR_XZ);
         CONSISTENT_FORMAT2.put(TZST, TAR_ZST);
+        CONSISTENT_FORMAT2.put(TZ, TAR_Z);
     }
 
     ArchiveFormat(EnumSet<ArchiveType> archiveTypes, String extName, String description) {

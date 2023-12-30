@@ -10,6 +10,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeParseException;
+import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.UnsupportedTemporalTypeException;
@@ -1718,4 +1719,53 @@ public class DateTimeTest {
     }
 
 
+    @Test
+    public void testNameOfDayOfWeek() {
+        DateTime<Date> dt1 = DateTime.parseDate("2021-12-27 06:01:50", "yyyy-MM-dd HH:mm:ss");  // 星期一
+        DateTime<Date> dt2 = DateTime.parseDate("2021-12-29 06:01:50", "yyyy-MM-dd HH:mm:ss");  // 星期三
+        DateTime<Date> dt3 = DateTime.parseDate("2022-01-01 06:01:50", "yyyy-MM-dd HH:mm:ss");  // 星期六
+        DateTime<Date> dt4 = DateTime.parseDate("2022-01-02 06:01:50", "yyyy-MM-dd HH:mm:ss");  // 星期日
+
+        String nameOfDayOfWeek01 = dt1.nameOfDayOfWeek();
+        String nameOfDayOfWeek02 = dt2.nameOfDayOfWeek();
+        String nameOfDayOfWeek03 = dt3.nameOfDayOfWeek();
+        String nameOfDayOfWeek04 = dt4.nameOfDayOfWeek();
+        String nameOfDayOfWeek11 = dt1.nameOfDayOfWeek(TextStyle.FULL);
+        String nameOfDayOfWeek12 = dt2.nameOfDayOfWeek(TextStyle.NARROW);
+        String nameOfDayOfWeek13 = dt3.nameOfDayOfWeek(TextStyle.SHORT);
+        String nameOfDayOfWeek14 = dt4.nameOfDayOfWeek(TextStyle.NARROW_STANDALONE);
+        String nameOfDayOfWeek21 = dt1.nameOfDayOfWeek(TextStyle.FULL, Locale.ENGLISH);
+        String nameOfDayOfWeek22 = dt2.nameOfDayOfWeek(TextStyle.NARROW, Locale.ENGLISH);
+        String nameOfDayOfWeek23 = dt3.nameOfDayOfWeek(TextStyle.SHORT, Locale.ENGLISH);
+        String nameOfDayOfWeek24 = dt4.nameOfDayOfWeek(TextStyle.NARROW_STANDALONE, Locale.ENGLISH);
+
+        System.out.println(nameOfDayOfWeek01);
+        System.out.println(nameOfDayOfWeek02);
+        System.out.println(nameOfDayOfWeek03);
+        System.out.println(nameOfDayOfWeek04);
+        System.out.println(nameOfDayOfWeek11);
+        System.out.println(nameOfDayOfWeek12);
+        System.out.println(nameOfDayOfWeek13);
+        System.out.println(nameOfDayOfWeek14);
+        System.out.println(nameOfDayOfWeek21);
+        System.out.println(nameOfDayOfWeek22);
+        System.out.println(nameOfDayOfWeek23);
+        System.out.println(nameOfDayOfWeek24);
+
+        assertEquals(nameOfDayOfWeek01, "星期一");
+        assertEquals(nameOfDayOfWeek02, "星期三");
+        assertEquals(nameOfDayOfWeek03, "星期六");
+        assertEquals(nameOfDayOfWeek04, "星期日");
+
+        assertEquals(nameOfDayOfWeek11, "星期一");
+        assertEquals(nameOfDayOfWeek12, "周三");
+        assertEquals(nameOfDayOfWeek13, "周六");
+        assertEquals(nameOfDayOfWeek14, "日");
+
+        assertEquals(nameOfDayOfWeek21, "Monday");
+        assertEquals(nameOfDayOfWeek22, "W");
+        assertEquals(nameOfDayOfWeek23, "Sat");
+        assertEquals(nameOfDayOfWeek24, "S");
+
+    }
 }

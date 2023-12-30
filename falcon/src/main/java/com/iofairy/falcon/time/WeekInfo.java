@@ -6,10 +6,12 @@ import com.iofairy.top.S;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.TextStyle;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.ValueRange;
 import java.time.temporal.WeekFields;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -80,11 +82,15 @@ public class WeekInfo {
     LocalDate localDate;
     LocalDate startDayOfWeek;
     LocalDate endDayOfWeek;
+    /**
+     * DayOfWeek 内部是采用默认的 weekFields 来进行相关计算
+     */
+    DayOfWeek dayOfWeek;
 
     /**
-     * 一周中的第几天
+     * 一周中的第几天（根据指定的 {@link #weekFields} 计算一周中的天数）
      */
-    int dayOfWeek;
+    int dayIndexOfWeek;
     /*
      * 以 localDate 所在的年或月计算周信息
      */
@@ -131,6 +137,7 @@ public class WeekInfo {
     public WeekInfo(WeekFields weekFields, LocalDate localDate) {
         Objects.requireNonNull(localDate, "Parameter `dateTime` must be non-null!");
 
+        this.dayOfWeek = localDate.getDayOfWeek();
         this.weekFields = weekFields;
         this.localDate = localDate;
         if (weekFields == null) {
@@ -141,7 +148,7 @@ public class WeekInfo {
             if (this.startDayOfWeek.getMonthValue() != this.endDayOfWeek.getMonthValue()) {
                 this.endDayOfWeek = this.startDayOfWeek.withDayOfMonth(startDayOfWeek.lengthOfMonth());     // 不跨月
             }
-            this.dayOfWeek = remainder == 0 ? 7 : remainder;
+            this.dayIndexOfWeek = remainder == 0 ? 7 : remainder;
 
             this.minYear = localDate.getYear();
             this.maxYear = this.minYear;
@@ -158,7 +165,7 @@ public class WeekInfo {
         } else {
             this.startDayOfWeek = localDate.with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
             this.endDayOfWeek = this.startDayOfWeek.plusDays(6);
-            this.dayOfWeek = localDate.get(weekFields.dayOfWeek());
+            this.dayIndexOfWeek = localDate.get(weekFields.dayOfWeek());
 
             this.minYear = this.startDayOfWeek.getYear();
             this.maxYear = this.endDayOfWeek.getYear();
@@ -551,6 +558,50 @@ public class WeekInfo {
     }
 
 
+    /**
+     * 获取此{@link #localDate}所在的星期几的名称
+     *
+     * @return 星期几的名称
+     * @since 0.4.15
+     */
+    public String nameOfDayOfWeek() {
+        return nameOfDayOfWeek(null, null);
+    }
+
+    /**
+     * 输入区域设置返回此{@link #localDate}所在的星期几的名称
+     *
+     * @param locale 区域设置
+     * @return 星期几的名称
+     * @since 0.4.15
+     */
+    public String nameOfDayOfWeek(Locale locale) {
+        return nameOfDayOfWeek(null, locale);
+    }
+
+    /**
+     * 输入文本样式返回此{@link #localDate}所在的星期几的名称
+     *
+     * @param textStyle 文本样式
+     * @return 星期几的名称
+     * @since 0.4.15
+     */
+    public String nameOfDayOfWeek(TextStyle textStyle) {
+        return nameOfDayOfWeek(textStyle, null);
+    }
+
+    /**
+     * 输入文本样式和区域设置返回此{@link #localDate}所在的星期几的名称
+     *
+     * @param textStyle 文本样式
+     * @param locale    区域设置
+     * @return 星期几的名称
+     * @since 0.4.15
+     */
+    public String nameOfDayOfWeek(TextStyle textStyle, Locale locale) {
+        return DateTimes.nameOfDayOfWeek(getDayOfWeek(), textStyle, locale);
+    }
+
     public int getMinYear() {
         return minYear;
     }
@@ -607,8 +658,12 @@ public class WeekInfo {
         return endDayOfWeek;
     }
 
-    public int getDayOfWeek() {
+    public DayOfWeek getDayOfWeek() {
         return dayOfWeek;
+    }
+
+    public int getDayIndexOfWeek() {
+        return dayIndexOfWeek;
     }
 
     public int getWeekYear() {
@@ -658,10 +713,12 @@ public class WeekInfo {
 
         String weekFieldsStr = (weekFields == null ? null : weekFields.getFirstDayOfWeek()) + ", ";
         weekFieldsStr = weekFieldsStr + S.padLeftChars((weekFields == null ? null : weekFields.getMinimalDaysInFirstWeek()) + "", ' ', 11 - weekFieldsStr.length());
+        String displayName = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault());
+        String nameOfDayOfWeek  = S.padRightChars(displayName, ' ', 3);
 
         return "WeekInfo{" +
-                "[firstDayOfWeek, minDaysInFirstWeek]=(" + weekFieldsStr + ")" +
-                ", [localDate<dayOfWeek>]=(" + localDate + "<" + dayOfWeek + ">" + ", " + startDayOfWeek + " ~ " + endDayOfWeek + ")" +
+                "[dayOfWeek, firstDayOfWeek, minDaysInFirstWeek]=(" + nameOfDayOfWeek + ", " + weekFieldsStr + ")" +
+                ", [localDate<dayIndexOfWeek>]=(" + localDate + "<" + dayIndexOfWeek + ">" + ", " + startDayOfWeek + " ~ " + endDayOfWeek + ")" +
                 ", [minYear<days>, maxYear<days>, isCrossYear]=(" + minYear + "<" + daysInMinYear + ">" + ", " + maxYear + "<" + daysInMaxYear + ">" + ", " + isCrossYearStr + ")" +
                 ", [minMonth<days>, maxMonth<days>, isCrossMonth]=(" + minMonthStr + "<" + daysInMinMonth + ">" + ", " + maxMonthStr + "<" + daysInMaxMonth + ">" + ", " + isCrossMonthStr + ")" +
                 ", [weekYear, weekBasedYear]=(" + weekYear + "-W" + weekOfYearStr + ", " + weekBasedYear + "-W" + weekOfWeekBasedYearStr + ")" +

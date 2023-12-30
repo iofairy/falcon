@@ -20,10 +20,7 @@ import com.iofairy.top.O;
 import com.iofairy.tuple.Tuple;
 import com.iofairy.tuple.Tuple2;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.function.ToDoubleFunction;
@@ -289,6 +286,63 @@ public class MapKit {
      */
     public static <K, V> List<Entry<K, V>> sortByDouble(List<Entry<K, V>> entries, ToDoubleFunction<? super Entry<K, V>> keyExtractor) {
         return sortBy(entries, Comparator.comparingDouble(keyExtractor));
+    }
+
+    /**
+     * 从数组中获取 {@code Map<数组中元素, 元素位置>} 的map，以及获取 {@code Map<元素位置, 数组中元素>} 的map
+     *
+     * @param strings 数组
+     * @return tuple中存储：{@code (Map<数组中元素, 元素位置>, Map<元素位置, 数组中元素>)}
+     * @since 0.4.15
+     */
+    public static Tuple2<Map<String, Integer>, Map<Integer, String>> mapFromArray(CharSequence... strings) {
+        return mapFromList(true, G.isEmpty(strings) ? null : Arrays.asList(strings));
+    }
+
+    /**
+     * 从数组中获取 {@code Map<数组中元素, 元素位置>} 的map，以及获取 {@code Map<元素位置, 数组中元素>} 的map
+     *
+     * @param isCaseSensitive map是否大小写敏感
+     * @param strings         数组
+     * @return tuple中存储：{@code (Map<数组中元素, 元素位置>, Map<元素位置, 数组中元素>)}
+     * @since 0.4.15
+     */
+    public static Tuple2<Map<String, Integer>, Map<Integer, String>> mapFromArray(boolean isCaseSensitive, CharSequence... strings) {
+        return mapFromList(isCaseSensitive, G.isEmpty(strings) ? null : Arrays.asList(strings));
+    }
+
+    /**
+     * 从list中获取 {@code Map<list中元素, 元素位置>} 的map，以及获取 {@code Map<元素位置, list中元素>} 的map
+     *
+     * @param strings list
+     * @return tuple中存储：{@code (Map<list中元素, 元素位置>, Map<元素位置, list中元素>)}
+     * @since 0.4.15
+     */
+    public static Tuple2<Map<String, Integer>, Map<Integer, String>> mapFromList(List<? extends CharSequence> strings) {
+        return mapFromList(true, strings);
+    }
+
+    /**
+     * 从list中获取 {@code Map<list中元素, 元素位置>} 的map，以及获取 {@code Map<元素位置, list中元素>} 的map
+     *
+     * @param isCaseSensitive map是否大小写敏感
+     * @param strings         list
+     * @return tuple中存储：{@code (Map<list中元素, 元素位置>, Map<元素位置, list中元素>)}
+     * @since 0.4.15
+     */
+    public static Tuple2<Map<String, Integer>, Map<Integer, String>> mapFromList(boolean isCaseSensitive, List<? extends CharSequence> strings) {
+        Map<String, Integer> stringIndexMap = new HashMap<>();
+        Map<Integer, String> indexStringMap = new HashMap<>();
+        if (G.isEmpty(strings)) return Tuple.of(stringIndexMap, indexStringMap);
+
+        for (int i = 0; i < strings.size(); i++) {
+            CharSequence charSequence = strings.get(i);
+            String str = charSequence == null ? null : charSequence.toString();
+            str = isCaseSensitive ? str : str.toLowerCase();
+            stringIndexMap.put(str, i);
+            indexStringMap.put(i, str);
+        }
+        return Tuple.of(stringIndexMap, indexStringMap);
     }
 
 }

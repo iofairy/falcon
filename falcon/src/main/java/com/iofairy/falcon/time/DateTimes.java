@@ -24,6 +24,7 @@ import com.iofairy.tuple.Tuple2;
 import java.math.BigInteger;
 import java.time.*;
 import java.time.chrono.ChronoLocalDate;
+import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.UnsupportedTemporalTypeException;
@@ -546,6 +547,63 @@ public final class DateTimes {
      */
     public static List<String> secondsOfMinute(String minute, String separator) {
         return minutesOfHour(minute, false, separator);
+    }
+
+    /**
+     * 根据给定的星期几返回该星期几的名称。
+     *
+     * @param dayOfWeek 给定的星期几
+     * @return 给定星期几的名称
+     * @since 0.4.15
+     */
+    public static String nameOfDayOfWeek(DayOfWeek dayOfWeek) {
+        return nameOfDayOfWeek(dayOfWeek, null, null);
+    }
+
+    /**
+     * 根据给定的星期几、区域设置返回该星期几的名称。
+     *
+     * @param dayOfWeek 给定的星期几
+     * @param locale    区域设置
+     * @return 给定星期几的名称
+     * @since 0.4.15
+     */
+    public static String nameOfDayOfWeek(DayOfWeek dayOfWeek, Locale locale) {
+        return nameOfDayOfWeek(dayOfWeek, null, locale);
+    }
+
+    /**
+     * 根据给定的星期几、文本样式返回该星期几的名称。
+     *
+     * @param dayOfWeek 给定的星期几
+     * @param textStyle 文本样式
+     * @return 给定星期几的名称
+     * @since 0.4.15
+     */
+    public static String nameOfDayOfWeek(DayOfWeek dayOfWeek, TextStyle textStyle) {
+        return nameOfDayOfWeek(dayOfWeek, textStyle, null);
+    }
+
+    /**
+     * 根据给定的星期几、文本样式和区域设置返回该星期几的名称。
+     *
+     * @param dayOfWeek 给定的星期几
+     * @param textStyle 文本样式
+     * @param locale    区域设置
+     * @return 给定星期几的名称
+     * @since 0.4.15
+     */
+    public static String nameOfDayOfWeek(DayOfWeek dayOfWeek, TextStyle textStyle, Locale locale) {
+        Objects.requireNonNull(dayOfWeek, "Parameter `dayOfWeek` must be non-null!");
+
+        textStyle = textStyle == null ? TextStyle.FULL : textStyle;
+        locale = locale == null ? Locale.getDefault() : locale;
+
+        if (textStyle == TextStyle.NARROW && (Objects.equals(locale.getLanguage(), "zh"))) {
+            return "周" + dayOfWeek.getDisplayName(textStyle, locale);
+        }
+
+        return dayOfWeek.getDisplayName(textStyle, locale);
     }
 
 }
