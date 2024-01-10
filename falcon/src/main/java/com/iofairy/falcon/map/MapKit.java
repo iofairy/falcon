@@ -337,8 +337,11 @@ public class MapKit {
 
         for (int i = 0; i < strings.size(); i++) {
             CharSequence charSequence = strings.get(i);
-            String str = charSequence == null ? null : charSequence.toString();
-            str = isCaseSensitive ? str : str.toLowerCase();
+            String str = null;
+            if (charSequence != null) {
+                str = charSequence.toString();
+                str = isCaseSensitive ? str : str.toLowerCase();
+            }
             stringIndexMap.put(str, i);
             indexStringMap.put(i, str);
         }

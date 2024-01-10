@@ -6,6 +6,7 @@ import com.iofairy.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -104,6 +105,34 @@ public class MapKitTest {
         assertEquals("[123456, \"zs\", 20, \"nickname\", \"swim\"]", G.toString(values));
         System.out.println(G.toString(keys));
         System.out.println(G.toString(values));
+
+    }
+
+    @Test
+    public void testMapFromArray() {
+        Tuple2<Map<String, Integer>, Map<Integer, String>> tuple1 = MapKit.mapFromArray(null, "abc", "Abc", "1", "Column1", null);
+        Tuple2<Map<String, Integer>, Map<Integer, String>> tuple2 = MapKit.mapFromArray(false, null, "abc", "Abc", "1", "Column1", null);
+        System.out.println(tuple1);
+        System.out.println(tuple2);
+
+        assertEquals("({null=5, \"1\"=3, \"abc\"=1, \"Abc\"=2, \"Column1\"=4}, {0=null, 1=\"abc\", 2=\"Abc\", 3=\"1\", 4=\"Column1\", 5=null})", tuple1.toString());
+        assertEquals("({null=5, \"column1\"=4, \"1\"=3, \"abc\"=2}, {0=null, 1=\"abc\", 2=\"abc\", 3=\"1\", 4=\"column1\", 5=null})", tuple2.toString());
+
+    }
+
+    @Test
+    public void testMapFromList() {
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append("Column");
+        stringBuffer.append(1);
+
+        Tuple2<Map<String, Integer>, Map<Integer, String>> tuple1 = MapKit.mapFromList(Arrays.asList(null, "abc", "Abc", "1", stringBuffer, null));
+        Tuple2<Map<String, Integer>, Map<Integer, String>> tuple2 = MapKit.mapFromList(false, Arrays.asList(null, "abc", "Abc", "1", stringBuffer, null));
+        System.out.println(tuple1);
+        System.out.println(tuple2);
+
+        assertEquals("({null=5, \"1\"=3, \"abc\"=1, \"Abc\"=2, \"Column1\"=4}, {0=null, 1=\"abc\", 2=\"Abc\", 3=\"1\", 4=\"Column1\", 5=null})", tuple1.toString());
+        assertEquals("({null=5, \"column1\"=4, \"1\"=3, \"abc\"=2}, {0=null, 1=\"abc\", 2=\"abc\", 3=\"1\", 4=\"column1\", 5=null})", tuple2.toString());
 
     }
 }

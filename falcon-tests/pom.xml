@@ -5,14 +5,14 @@
     <parent>
         <artifactId>falcon-parent</artifactId>
         <groupId>com.iofairy</groupId>
-        <version>0.4.15</version>
+        <version>0.4.19</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>falcon-tests</artifactId>
 
     <properties>
-        <falcon.version>0.4.15</falcon.version>
+        <falcon.version>0.4.19</falcon.version>
     </properties>
 
     <dependencies>

@@ -15,8 +15,10 @@
  */
 package com.iofairy.falcon.string;
 
+import java.math.RoundingMode;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 
 /**
  * String utils
@@ -48,6 +50,28 @@ public class Strings {
     public static String toString(byte[][] byteArrays) {
         return toString(byteArrays, StandardCharsets.UTF_8);
     }
+
+    /**
+     * 将毫秒转成其他时间单位
+     *
+     * @param millis 毫秒数
+     * @return 带单位的时间
+     * @since 0.4.19
+     */
+    public static String convertTime(long millis) {
+        if (millis < 0) return "-" + convertTime(Math.abs(millis));
+        if (millis < 1000) return millis + "毫秒";
+
+        DecimalFormat df = new DecimalFormat("0.0");
+        df.setRoundingMode(RoundingMode.HALF_UP);
+
+        if (millis < 60000) return df.format(millis / 1000.0) + "秒";
+        if (millis < 3600000) return df.format(millis / 60000.0) + "分";
+        if (millis < 86400000) return df.format(millis / 3600000.0) + "时";
+
+        return df.format(millis / 86400000.0) + "天";
+    }
+
 
     /**
      * 重复字符串指定的次数

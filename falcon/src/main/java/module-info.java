@@ -33,6 +33,7 @@ module iofairy.falcon {
     exports com.iofairy.falcon.zip;
     exports com.iofairy.falcon.stream;
     exports com.iofairy.falcon.unit;
+    exports com.iofairy.falcon.uuid;
 
 
 }
