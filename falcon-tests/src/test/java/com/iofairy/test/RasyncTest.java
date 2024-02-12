@@ -14,13 +14,14 @@ public class RasyncTest {
     public void testRasync() {
         for (int i = 0; i < 5; i++) {
             new Thread(() -> {
-
                 Rasync<String> rasync = Rasync.of("abc", new NullPointerException("发生了空指针异常！"));
                 System.out.println(rasync);
             }).start();
         }
         Rasync<String> rasync = Rasync.of("abc", new NullPointerException("发生了空指针异常！"));
         System.out.println(rasync);
+        System.out.println(rasync.getResult());
+        System.out.println(rasync.result);
         Try.sleep(1000);
 
     }

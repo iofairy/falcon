@@ -253,4 +253,32 @@ public class IOsTest {
         assertEquals(Strings.toString(baos.toByteArrays()), "这是InputStream转为MultiByteArrayOutputStream的测试！");
     }
 
+
+    @Test
+    public void testCheckNull() {
+        try {
+            IOs.toMultiBAIS(null);
+        } catch (NullPointerException | IOException e) {
+            System.out.println(e.getMessage());
+            assertEquals(e.getMessage(), "The parameter `inputStream`  must be non-null! ");
+        }
+        try {
+            IOs.toMultiBAOS(null);
+        } catch (NullPointerException | IOException e) {
+            System.out.println(e.getMessage());
+            assertEquals(e.getMessage(), "The parameter `inputStream`  must be non-null! ");
+        }
+        try {
+            IOs.readBytes(null);
+        } catch (NullPointerException | IOException e) {
+            System.out.println(e.getMessage());
+            assertEquals(e.getMessage(), "The parameter `is`  must be non-null! ");
+        }
+        try {
+            IOs.copy(null, null, null);
+        } catch (NullPointerException | IOException e) {
+            System.out.println(e.getMessage());
+            assertEquals(e.getMessage(), "None of these parameters [inputStream, outputStream, buffer] can be null! ");
+        }
+    }
 }

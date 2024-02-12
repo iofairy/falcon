@@ -41,7 +41,10 @@ public enum JavaVersion {
     JAVA_16("16", "16", 16f, "2021-03-16"),
     JAVA_17("17", "17", 17f, "2021-09-14"),
     JAVA_18("18", "18", 18f, "2022-03-22"),
-    JAVA_19("19", "19", 18f, "2022-09-20");
+    JAVA_19("19", "19", 19f, "2022-09-20"),
+    JAVA_20("20", "20", 20f, "2023-03-21"),
+    JAVA_21("21", "21", 21f, "2023-09-19"),
+    ;
 
     /**
      * Java version name
@@ -82,12 +85,16 @@ public enum JavaVersion {
             case "1.4":
                 return JAVA_4;
             case "1.5":
+            case "5":
                 return JAVA_5;
             case "1.6":
+            case "6":
                 return JAVA_6;
             case "1.7":
+            case "7":
                 return JAVA_7;
             case "1.8":
+            case "8":
                 return JAVA_8;
             case "9":
                 return JAVA_9;
@@ -109,6 +116,12 @@ public enum JavaVersion {
                 return JAVA_17;
             case "18":
                 return JAVA_18;
+            case "19":
+                return JAVA_19;
+            case "20":
+                return JAVA_20;
+            case "21":
+                return JAVA_21;
         }
         return null;
     }

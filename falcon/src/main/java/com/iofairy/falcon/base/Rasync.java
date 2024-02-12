@@ -24,7 +24,7 @@ public class Rasync<RES> {
     /**
      * 异步调用返回结果
      */
-    public RES res;
+    public RES result;
     /**
      * 异步调用时的当前线程信息
      */
@@ -37,12 +37,12 @@ public class Rasync<RES> {
     public Rasync() {
     }
 
-    public Rasync(RES res) {
-        this.res = res;
+    public Rasync(RES result) {
+        this.result = result;
     }
 
-    public Rasync(RES res, Throwable throwable) {
-        this.res = res;
+    public Rasync(RES result, Throwable throwable) {
+        this.result = result;
         this.throwable = throwable;
     }
 
@@ -50,20 +50,20 @@ public class Rasync<RES> {
         return new Rasync<>();
     }
 
-    public static <RES> Rasync<RES> of(RES res) {
-        return new Rasync<>(res);
+    public static <RES> Rasync<RES> of(RES result) {
+        return new Rasync<>(result);
     }
 
-    public static <RES> Rasync<RES> of(RES res, Throwable throwable) {
-        return new Rasync<>(res, throwable);
+    public static <RES> Rasync<RES> of(RES result, Throwable throwable) {
+        return new Rasync<>(result, throwable);
     }
 
-    public RES getRes() {
-        return res;
+    public RES getResult() {
+        return result;
     }
 
-    public void setRes(RES res) {
-        this.res = res;
+    public void setResult(RES result) {
+        this.result = result;
     }
 
     public Thread getCurrentThread() {
@@ -85,7 +85,7 @@ public class Rasync<RES> {
     @Override
     public String toString() {
         return "Rasync{" +
-                "res=" + res +
+                "result=" + result +
                 ", currentThread=" + currentThread +
                 ", throwable=" + throwable +
                 '}';

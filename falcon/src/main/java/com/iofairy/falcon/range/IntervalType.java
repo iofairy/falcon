@@ -20,7 +20,9 @@ package com.iofairy.falcon.range;
  * 区间的分类
  *
  * @since 0.3.0
+ * @deprecated Since falcon version 0.5.0, replaced by {@link com.iofairy.range.IntervalType}
  */
+@Deprecated
 public enum IntervalType {
     OPEN("(a, b)"),
     CLOSED("[a, b]"),

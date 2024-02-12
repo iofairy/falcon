@@ -15,15 +15,14 @@
  */
 package com.iofairy.falcon.time;
 
-import com.iofairy.except.UnexpectedParameterException;
 import com.iofairy.falcon.os.OS;
-import com.iofairy.top.G;
 
 import java.time.*;
 import java.time.temporal.*;
 import java.util.*;
 
 import static java.time.temporal.ChronoUnit.*;
+import static com.iofairy.falcon.misc.Preconditions.*;
 
 /**
  * Interval
@@ -31,15 +30,17 @@ import static java.time.temporal.ChronoUnit.*;
  * @since 0.0.2
  */
 public class Interval extends SignedInterval {
+    private static final long serialVersionUID = 700005886057265L;
 
     public static final Interval ZERO = new Interval(0, 0, 0);
 
     public Interval(long centuries, long years, long months, long days, long hours, long minutes, long seconds, long millis, long micros, long nanos) {
         super(centuries, years, months, days, hours, minutes, seconds, millis, micros, nanos);
 
-        if (this.centuries < 0 || this.years < 0 || this.months < 0 || this.days < 0 || this.hours < 0 || this.minutes < 0 || this.seconds < 0
-                || this.millis < 0 || this.micros < 0 || this.nanos < 0)
-            throw new UnexpectedParameterException(OS.IS_ZH_LANG ? "Interval构造函数的所有参数都必须 ≥ 0! " : "Interval Constructor all parameters must not be negative number! ");
+        boolean hasParamsLessThan0 = this.centuries < 0 || this.years < 0 || this.months < 0 || this.days < 0 || this.hours < 0
+                || this.minutes < 0 || this.seconds < 0 || this.millis < 0 || this.micros < 0 || this.nanos < 0;
+
+        checkArgument(hasParamsLessThan0, OS.IS_ZH_LANG ? "Interval构造函数的所有参数都必须 ≥ 0! " : "Interval Constructor all parameters must not be negative number! ");
     }
 
     public Interval(long centuries, long years, long months, long days, long hours, long minutes, long seconds, long millis) {
@@ -342,10 +343,9 @@ public class Interval extends SignedInterval {
      * @return Interval
      */
     public static Interval between(Temporal startTemporal, Temporal endTemporal) {
-        if (G.hasNull(startTemporal, endTemporal)) throw new NullPointerException("Parameters `startTemporal` and `endTemporal` must be non-null!");
-
-        if (!isSupported(startTemporal) || !isSupported(endTemporal))
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `startTemporal` and `endTemporal` parameters!");
+        checkHasNullNPE(args(startTemporal, endTemporal), args("startTemporal", "endTemporal"));
+        checkTemporal(!isSupported(startTemporal) || !isSupported(endTemporal),
+                "Only [${…}] is supported for `startTemporal` and `endTemporal` parameters!", SUPPORTED_TEMPORAL_STRING);
 
         DateTime<?> startDT = startTemporal instanceof DateTime ? (DateTime<?>) startTemporal : DateTime.from(startTemporal);
         DateTime<?> endDT = endTemporal instanceof DateTime ? (DateTime<?>) endTemporal : DateTime.from(endTemporal);
@@ -381,7 +381,7 @@ public class Interval extends SignedInterval {
      * @return Interval
      */
     public static Interval between(Date startDate, Date endDate) {
-        if (G.hasNull(startDate, endDate)) throw new NullPointerException("Parameters `startDate` and `endDate` must be non-null!");
+        checkHasNullNPE(args(startDate, endDate), args("startDate", "endDate"));
         return between(DateTime.from(startDate).getZonedDateTime(), DateTime.from(endDate).getZonedDateTime());
     }
 
@@ -394,16 +394,15 @@ public class Interval extends SignedInterval {
      * @return Interval
      */
     public static Interval between(Calendar startCalendar, Calendar endCalendar) {
-        if (G.hasNull(startCalendar, endCalendar)) throw new NullPointerException("Parameters `startCalendar` and `endCalendar` must be non-null!");
+        checkHasNullNPE(args(startCalendar, endCalendar), args("startCalendar", "endCalendar"));
         return between(DateTime.from(startCalendar).getZonedDateTime(), DateTime.from(endCalendar).getZonedDateTime());
     }
 
 
     @Override
     public Temporal subtractFrom(Temporal temporal) {
-        Objects.requireNonNull(temporal, "Parameter `temporal` must be non-null!");
-        if (!isSupported(temporal))
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `temporal` parameter!");
+        checkNullNPE(temporal, args("temporal"));
+        checkTemporal(!isSupported(temporal), "Only [${…}] is supported for `temporal` parameter!", SUPPORTED_TEMPORAL_STRING);
 
         boolean isInstant = temporal instanceof Instant;
         temporal = isInstant ? ZonedDateTime.ofInstant((Instant) temporal, TZ.DEFAULT_ZONE) : temporal;

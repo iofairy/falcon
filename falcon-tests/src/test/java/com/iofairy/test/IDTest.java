@@ -22,7 +22,7 @@ public class IDTest {
         String id01 = TimedUUID.getId();
         TimedUUID timedUUID = TimedUUID.of();
         String id02 = timedUUID.randomId();
-        timedUUID = TimedUUID.of();
+        timedUUID = TimedUUID.of(56, 8, 100, true, true, 4);
         String id03 = timedUUID.randomId();
         timedUUID = TimedUUID.of(10000, 8);
         String id04 = timedUUID.randomId();
@@ -37,17 +37,23 @@ public class IDTest {
         } catch (Exception e) {
             assertEquals("参数`number`超出范围，当前位数[1]下，最大允许值[25]，无法映射到指定位数的字母！", e.getMessage());
         }
-        timedUUID = TimedUUID.of(56, 8, 100, true, true, 4);
-        String id08 = timedUUID.randomId();
 
-        System.out.println(id01);
-        System.out.println(id02);
-        System.out.println(id03);
-        System.out.println(id04);
-        System.out.println(id05);
-        System.out.println(id06);
-        System.out.println(id07);
-        System.out.println(id08);
+
+        System.out.println(id01 + "---" + id01.length());
+        System.out.println(id02 + "---" + id02.length());
+        System.out.println(id03 + "---" + id03.length());
+        System.out.println(id04 + "---" + id04.length());
+        System.out.println(id05 + "---" + id05.length());
+        System.out.println(id06 + "---" + id06.length());
+        System.out.println(id07 + "---" + id07.length());
+
+        assertEquals(25, id01.length());
+        assertEquals(25, id02.length());
+        assertEquals(49, id03.length());
+        assertEquals(25, id04.length());
+        assertEquals(46, id05.length());
+        assertEquals(43, id06.length());
+        assertEquals(43, id07.length());
 
     }
 

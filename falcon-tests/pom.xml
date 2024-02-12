@@ -5,14 +5,17 @@
     <parent>
         <artifactId>falcon-parent</artifactId>
         <groupId>com.iofairy</groupId>
-        <version>0.4.19</version>
+        <version>0.5.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>falcon-tests</artifactId>
 
     <properties>
-        <falcon.version>0.4.19</falcon.version>
+        <falcon.version>0.5.0</falcon.version>
+
+        <lombok.version>1.18.30</lombok.version>
+        <jackson.version>2.16.0</jackson.version>
     </properties>
 
     <dependencies>
@@ -22,9 +25,27 @@
             <version>${falcon.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.7.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

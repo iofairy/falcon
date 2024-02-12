@@ -15,8 +15,8 @@
  */
 package com.iofairy.falcon.time;
 
-import com.iofairy.except.UnexpectedParameterException;
-import com.iofairy.falcon.range.IntervalType;
+import com.iofairy.range.IntervalType;
+import com.iofairy.range.Range;
 import com.iofairy.si.SI;
 import com.iofairy.top.G;
 import com.iofairy.top.S;
@@ -31,6 +31,8 @@ import java.time.format.TextStyle;
 import java.time.temporal.*;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.iofairy.falcon.misc.Preconditions.*;
 
 
 /**
@@ -87,7 +89,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     /**
      * Supported date time string
      */
-    private static final String SUPPORTED_DATETIME_STRING = SUPPORTED_DATETIME.stream().map(Class::getSimpleName).collect(Collectors.joining(", "));
+    private static final String SUPPORTED_DATETIME_STRING = SUPPORTED_DATETIME.stream().map(c -> c == Date.class ? c.getName() : c.getSimpleName()).collect(Collectors.joining(", "));
 
     /**
      * excluded classes
@@ -105,18 +107,14 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
     private DateTime(T dateTime, boolean checkValue) {
         if (checkValue) {
-            Objects.requireNonNull(dateTime, "Parameter `dateTime` must be non-null!");
-            if (dateTime instanceof LocalDate) {
-                throw new UnsupportedTemporalTypeException("The `dateTime` is of type `LocalDate`, please call the `DateTime.of(LocalDate)` function!");
-            }
+            checkNullNPE(dateTime, args("dateTime"));
 
-            if (SUPPORTED_DATETIME.stream().noneMatch(c -> c.isAssignableFrom(dateTime.getClass()))) {
-                throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_DATETIME_STRING + "] is supported for `dateTime` parameter!");
-            }
-
-            if (EXCLUDED_CLASS_NAMES.contains(dateTime.getClass().getName())){
-                throw new UnsupportedTemporalTypeException(EXCLUDED_CLASS_NAMES + " are unsupported here, you can convert it to the `java.util.Date` first!");
-            }
+            checkTemporal(dateTime instanceof LocalDate,
+                    "The `dateTime` is of type `LocalDate`, please call the `DateTime.of(LocalDate)` function! ");
+            checkTemporal(SUPPORTED_DATETIME.stream().noneMatch(c -> c.isAssignableFrom(dateTime.getClass())),
+                    "Only [${…}] is supported for `dateTime` parameter! ", SUPPORTED_DATETIME_STRING);
+            checkTemporal(EXCLUDED_CLASS_NAMES.contains(dateTime.getClass().getName()),
+                    "${…} are unsupported here, you can convert it to the `java.util.Date` first! ", EXCLUDED_CLASS_NAMES);
         }
 
         this.dateTime = getDateTime(dateTime);
@@ -144,7 +142,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     }
 
     public static DateTime<LocalDateTime> of(LocalDate localDate) {
-        Objects.requireNonNull(localDate, "Parameter `localDate` must be non-null!");
+        checkNullNPE(localDate, args("localDate"));
         return new DateTime<>(localDate.atStartOfDay(), false);
     }
 
@@ -886,7 +884,8 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      */
     @SuppressWarnings("unchecked")
     public List<T> datesFromRange(DateTime<?> toDateTime, int amountUnit, ChronoUnit chronoUnit, IntervalType intervalType) {
-        Objects.requireNonNull(toDateTime, "Parameter `toDateTime` must be non-null!");
+        checkNullNPE(toDateTime, args("toDateTime"));
+
         if (chronoUnit == ChronoUnit.WEEKS) {
             chronoUnit = ChronoUnit.DAYS;
             amountUnit = amountUnit * 7;
@@ -947,6 +946,28 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     }
 
     /**
+     * 保留所提供的chronoUnit以及比chronoUnit大的单位的值，填充比 chronoUnit 小的单位的值为 0。
+     *
+     * @param chronoUnit 时间单位
+     * @return DateTime
+     * @since 0.5.0
+     */
+    public DateTime<T> withMin(ChronoUnit chronoUnit) {
+        return fill0(chronoUnit);
+    }
+
+    /**
+     * 保留所提供的chronoUnit以及比chronoUnit大的单位的值，填充比 chronoUnit 小的单位的值为 所允许的最大值。
+     *
+     * @param chronoUnit 时间单位
+     * @return DateTime
+     * @since 0.5.0
+     */
+    public DateTime<T> withMax(ChronoUnit chronoUnit) {
+        return fill9(chronoUnit);
+    }
+
+    /**
      * 获取某个月的总天数
      *
      * @return 当前月的总天数
@@ -991,7 +1012,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @since 0.3.1
      */
     public static DateTime<LocalDateTime> parse(CharSequence text) {
-        Objects.requireNonNull(text, "Parameter `text` must be non-null!");
+        checkNullNPE(text, args("text"));
 
         String dateFormat = DateTimePattern.forDTF(text.toString());
         if (S.isEmpty(dateFormat)) throw new DateTimeParseException(SI.$(DT_PARSE_ERROR_MSG_TPL, text, "DateTime.parse(CharSequence, String)"), text, 0);
@@ -999,7 +1020,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     }
 
     public static DateTime<LocalDateTime> parse(CharSequence text, String dtPattern) {
-        Objects.requireNonNull(text, "Parameter `text` must be non-null!");
+        checkNullNPE(text, args("text"));
 
         if (S.isEmpty(dtPattern)) {
             return parse(text);
@@ -1023,7 +1044,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @since 0.3.1
      */
     public static DateTime<LocalDateTime> parse(CharSequence text, DateTimeFormatter formatter) {
-        Objects.requireNonNull(text, "Parameter `text` must be non-null!");
+        checkNullNPE(text, args("text"));
         return DateTime.from(LocalDateTime.parse(text, formatter));
     }
 
@@ -1037,7 +1058,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @since 0.3.1
      */
     public static DateTime<Date> parseDate(CharSequence text) {
-        Objects.requireNonNull(text, "Parameter `text` must be non-null!");
+        checkNullNPE(text, args("text"));
 
         String dateFormat = DateTimePattern.forDTF(text.toString());
         if (S.isEmpty(dateFormat)) throw new DateTimeParseException(SI.$(DT_PARSE_ERROR_MSG_TPL, text, "DateTime.parseDate(CharSequence, String)"), text, 0);
@@ -1055,7 +1076,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @since 0.3.1
      */
     public static DateTime<Date> parseDate(CharSequence text, ZoneId zoneId) {
-        Objects.requireNonNull(text, "Parameter `text` must be non-null!");
+        checkNullNPE(text, args("text"));
 
         String dateFormat = DateTimePattern.forDTF(text.toString());
         if (S.isEmpty(dateFormat)) throw new DateTimeParseException(SI.$(DT_PARSE_ERROR_MSG_TPL, text, "DateTime.parseDate(CharSequence, String, ZoneId)"), text, 0);
@@ -1064,7 +1085,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     }
 
     public static DateTime<Date> parseDate(CharSequence text, String dtPattern) {
-        Objects.requireNonNull(text, "Parameter `text` must be non-null!");
+        checkNullNPE(text, args("text"));
 
         if (S.isEmpty(dtPattern)) {
             return parseDate(text, TZ.DEFAULT_ZONE);
@@ -1077,7 +1098,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     }
 
     public static DateTime<Date> parseDate(CharSequence text, String dtPattern, ZoneId zoneId) {
-        Objects.requireNonNull(text, "Parameter `text` must be non-null!");
+        checkNullNPE(text, args("text"));
 
         if (S.isEmpty(dtPattern)) {
             return parseDate(text, zoneId);
@@ -1090,7 +1111,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     }
 
     public static DateTime<Date> parseDate(CharSequence text, DateTimeFormatter formatter) {
-        Objects.requireNonNull(text, "Parameter `text` must be non-null!");
+        checkNullNPE(text, args("text"));
 
         return parseDate(text, formatter, TZ.DEFAULT_ZONE);
     }
@@ -1105,7 +1126,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @since 0.3.1
      */
     public static DateTime<Date> parseDate(CharSequence text, DateTimeFormatter formatter, ZoneId zoneId) {
-        Objects.requireNonNull(text, "Parameter `text` must be non-null!");
+        checkNullNPE(text, args("text"));
 
         LocalDateTime ldt = LocalDateTime.parse(text, formatter);
         ZonedDateTime zdt = ldt.atZone(zoneId == null ? TZ.DEFAULT_ZONE : zoneId);
@@ -1135,7 +1156,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
     @Override
     public long until(Temporal endExclusive, TemporalUnit unit) {
-        Objects.requireNonNull(endExclusive, "Parameter `endExclusive` must be non-null!");
+        checkNullNPE(endExclusive, args("endExclusive"));
 
         boolean isDateTime = endExclusive instanceof DateTime;
 
@@ -1214,7 +1235,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @since 0.3.4
      */
     public DateTime<T> dtInThisWeek(DayOfWeek dayOfWeek) {
-        Objects.requireNonNull(dayOfWeek, "Parameter `dayOfWeek` must be non-null!");
+        checkNullNPE(dayOfWeek, args("dayOfWeek"));
 
         return dtInThisWeek(DayOfWeek.MONDAY, dayOfWeek);
     }
@@ -1228,8 +1249,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @since 0.3.4
      */
     public DateTime<T> dtInThisWeek(DayOfWeek firstDayOfWeek, DayOfWeek dayOfWeek) {
-        if (G.hasNull(firstDayOfWeek, dayOfWeek))
-            throw new NullPointerException("Parameters `firstDayOfWeek`, `dayOfWeek` must be non-null!");
+        checkHasNullNPE(args(firstDayOfWeek, dayOfWeek), args("firstDayOfWeek", "dayOfWeek"));
 
         Tuple2<Integer, Integer> days1 = DateTimes.daysBetween(firstDayOfWeek, localDateTime.getDayOfWeek());
         Tuple2<Integer, Integer> days2 = DateTimes.daysBetween(firstDayOfWeek, dayOfWeek);
@@ -1254,7 +1274,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @since 0.3.4
      */
     public DateTime<T> firstInThisWeek(DayOfWeek firstDayOfWeek) {
-        Objects.requireNonNull(firstDayOfWeek, "Parameter `firstDayOfWeek` must be non-null!");
+        checkNullNPE(firstDayOfWeek, args("firstDayOfWeek"));
 
         TemporalAdjuster temporalAdjuster = TemporalAdjusters.previousOrSame(firstDayOfWeek);
         return this.with(temporalAdjuster);
@@ -1278,7 +1298,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @since 0.3.4
      */
     public DateTime<T> lastInThisWeek(DayOfWeek firstDayOfWeek) {
-        Objects.requireNonNull(firstDayOfWeek, "Parameter `firstDayOfWeek` must be non-null!");
+        checkNullNPE(firstDayOfWeek, args("firstDayOfWeek"));
 
         DayOfWeek lastDayOfWeek = DateTimes.getLastDayOfWeek(firstDayOfWeek);
         TemporalAdjuster temporalAdjuster = TemporalAdjusters.nextOrSame(lastDayOfWeek);
@@ -1368,7 +1388,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @since 0.3.4
      */
     public List<DateTime<T>> allDaysInThisWeek(DayOfWeek firstDayOfWeek) {
-        Objects.requireNonNull(firstDayOfWeek, "Parameter `firstDayOfWeek` must be non-null!");
+        checkNullNPE(firstDayOfWeek, args("firstDayOfWeek"));
 
         DateTime<T> firstDateTime = firstInThisWeek(firstDayOfWeek);
         List<T> ts = firstDateTime.datesByShift(6, ChronoUnit.DAYS);
@@ -1398,25 +1418,24 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @param endDT        结束 DateTime
      * @param intervalType 区间类型。
      * @return 当前 DateTime 在提供的两个 DateTime 之间，则返回 {@code true}，否则返回 {@code false}
-     * @throws UnexpectedParameterException if {@code endDT} is before {@code startDT}
      * @since 0.3.3
      */
     public boolean in(DateTime<?> startDT, DateTime<?> endDT, IntervalType intervalType) {
-        if (G.hasNull(startDT, endDT, intervalType)) throw new NullPointerException("Parameters `startDT`, `endDT`, `intervalType` must be non-null!");
-        if (startDT.isAfterOrEquals(endDT)) throw new UnexpectedParameterException("Parameter `startDT` must be before `endDT`! ");
         if (intervalType == null) intervalType = IntervalType.CLOSED;
-
-        switch (intervalType) {
-            case OPEN:
-                return this.isAfter(startDT) && this.isBefore(endDT);
-            case CLOSED:
-                return this.isAfterOrEquals(startDT) && this.isBeforeOrEquals(endDT);
-            case OPEN_CLOSED:
-                return this.isAfter(startDT) && this.isBeforeOrEquals(endDT);
-            default:  // CLOSED_OPEN
-                return this.isAfterOrEquals(startDT) && this.isBefore(endDT);
-        }
+        return in(Range.of(startDT, endDT, intervalType));
     }
+
+    /**
+     * 判断当前 DateTime 是否在提供的区间中
+     *
+     * @param dtRange dateTime区间
+     * @return 当前 DateTime 在提供的两个 DateTime 之间，则返回 {@code true}，否则返回 {@code false}
+     * @since 0.5.0
+     */
+    public boolean in(Range<DateTime<?>> dtRange) {
+        return dtRange.contains(this);
+    }
+
 
     public long toEpochSecond(){
         return instant.getEpochSecond();
@@ -1447,7 +1466,8 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
     @Override
     public int compareTo(DateTime<?> otherDT) {
-        Objects.requireNonNull(otherDT, "Parameter `otherDT` must be non-null!");
+        checkNullNPE(otherDT, args("otherDT"));
+
         Instant otherInstant = otherDT.toInstant();
         if (instant.equals(otherInstant)) return 0;
         return instant.isBefore(otherInstant) ? -1 : 1;

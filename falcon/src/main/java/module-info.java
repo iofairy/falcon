@@ -20,20 +20,20 @@ module iofairy.falcon {
     exports com.iofairy.falcon.base;
     exports com.iofairy.falcon.fs;
     exports com.iofairy.falcon.io;
+    exports com.iofairy.falcon.iterable;
+    exports com.iofairy.falcon.map;
+    exports com.iofairy.falcon.misc;
+    exports com.iofairy.falcon.nio;
     exports com.iofairy.falcon.os;
     exports com.iofairy.falcon.range;
     exports com.iofairy.falcon.reflect;
     exports com.iofairy.falcon.regex;
-    exports com.iofairy.falcon.time;
-    exports com.iofairy.falcon.util;
-    exports com.iofairy.falcon.iterable;
-    exports com.iofairy.falcon.map;
-    exports com.iofairy.falcon.nio;
-    exports com.iofairy.falcon.string;
-    exports com.iofairy.falcon.zip;
     exports com.iofairy.falcon.stream;
+    exports com.iofairy.falcon.string;
+    exports com.iofairy.falcon.time;
     exports com.iofairy.falcon.unit;
+    exports com.iofairy.falcon.util;
     exports com.iofairy.falcon.uuid;
-
+    exports com.iofairy.falcon.zip;
 
 }

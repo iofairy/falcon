@@ -18,6 +18,11 @@ module falcon.test {
     requires iofairy.falcon;
     requires java.sql;
     requires org.junit.jupiter.api;
+    requires lombok;
+    requires com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.core;
+    requires com.fasterxml.jackson.annotation;
+
 
     exports com.iofairy.test to org.junit.platform.commons;
     exports com.iofairy.test.reflect to org.junit.platform.commons;

@@ -15,7 +15,6 @@
  */
 package com.iofairy.falcon.util;
 
-import com.iofairy.top.G;
 import com.iofairy.top.O;
 
 import java.math.BigDecimal;
@@ -25,6 +24,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Random;
+
+import static com.iofairy.falcon.misc.Preconditions.*;
 
 /**
  * Number Utils
@@ -177,7 +178,7 @@ public class Numbers {
      */
     public static Double[] round(Collection<? extends Number> numbers, int newScale, RoundingMode roundingMode) {
         if (numbers == null) return null;
-        if (numbers.size() == 0) return new Double[0];
+        if (numbers.isEmpty()) return new Double[0];
         Double[] ds = new Double[numbers.size()];
         Iterator<? extends Number> iterator = numbers.iterator();
         int i = 0;
@@ -264,7 +265,7 @@ public class Numbers {
      */
     public static Double[] doubles(Collection<? extends Number> numbers) {
         if (numbers == null) return null;
-        if (numbers.size() == 0) return new Double[0];
+        if (numbers.isEmpty()) return new Double[0];
         Double[] ds = new Double[numbers.size()];
         Iterator<? extends Number> iterator = numbers.iterator();
         int i = 0;
@@ -316,7 +317,7 @@ public class Numbers {
      */
     public static Float[] floats(Collection<? extends Number> numbers) {
         if (numbers == null) return null;
-        if (numbers.size() == 0) return new Float[0];
+        if (numbers.isEmpty()) return new Float[0];
         Float[] fs = new Float[numbers.size()];
         Iterator<? extends Number> iterator = numbers.iterator();
         int i = 0;
@@ -359,7 +360,8 @@ public class Numbers {
      * @since 0.4.10
      */
     public static BigDecimal divide(BigDecimal dividend, BigDecimal divisor, int scale, RoundingMode roundingMode, boolean alwaysSetScale) {
-        if (G.hasNull(dividend, divisor)) throw new NullPointerException("Parameters `dividend`, `divisor` must be non-null!");
+        checkHasNullNPE(args(dividend, divisor), args("dividend", "divisor"));
+
         if (roundingMode == null) roundingMode = RoundingMode.HALF_UP;
 
         if (alwaysSetScale) {
@@ -467,7 +469,8 @@ public class Numbers {
      * @since 0.4.10
      */
     public static BigDecimal divide(BigInteger dividend, BigInteger divisor, int scale, RoundingMode roundingMode, boolean alwaysSetScale) {
-        if (G.hasNull(dividend, divisor)) throw new NullPointerException("Parameters `dividend`, `divisor` must be non-null!");
+        checkHasNullNPE(args(dividend, divisor), args("dividend", "divisor"));
+
         if (roundingMode == null) roundingMode = RoundingMode.HALF_UP;
         BigDecimal decimalDividend = new BigDecimal(dividend);
         BigDecimal decimalDivisor = new BigDecimal(divisor);
@@ -571,7 +574,8 @@ public class Numbers {
      * @since 0.4.10
      */
     public static BigInteger toBigInteger(BigDecimal bigDecimal, RoundingMode roundingMode) {
-        Objects.requireNonNull(bigDecimal, "Parameter `bigDecimal` must be non-null!");
+        checkNullNPE(bigDecimal, args("bigDecimal"));
+
         if (roundingMode == null) roundingMode = RoundingMode.DOWN;
         return bigDecimal.setScale(0, roundingMode).toBigInteger();
     }
@@ -585,7 +589,7 @@ public class Numbers {
      * @since 0.4.10
      */
     public static BigInteger toBigInteger(BigDecimal bigDecimal) {
-        Objects.requireNonNull(bigDecimal, "Parameter `bigDecimal` must be non-null!");
+        checkNullNPE(bigDecimal, args("bigDecimal"));
         return bigDecimal.toBigInteger();
     }
 
@@ -599,7 +603,8 @@ public class Numbers {
      * @since 0.4.10
      */
     public static long longValue(BigDecimal bigDecimal, RoundingMode roundingMode) {
-        Objects.requireNonNull(bigDecimal, "Parameter `bigDecimal` must be non-null!");
+        checkNullNPE(bigDecimal, args("bigDecimal"));
+
         if (roundingMode == null) roundingMode = RoundingMode.DOWN;
         return bigDecimal.setScale(0, roundingMode).longValue();
     }
@@ -613,7 +618,7 @@ public class Numbers {
      * @since 0.4.10
      */
     public static long longValue(BigDecimal bigDecimal) {
-        Objects.requireNonNull(bigDecimal, "Parameter `bigDecimal` must be non-null!");
+        checkNullNPE(bigDecimal, args("bigDecimal"));
         return bigDecimal.longValue();
     }
 

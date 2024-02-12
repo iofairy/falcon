@@ -16,12 +16,12 @@
 package com.iofairy.falcon.io;
 
 import com.iofairy.tcf.Close;
-import com.iofairy.top.G;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Objects;
+
+import static com.iofairy.falcon.misc.Preconditions.*;
 
 /**
  * IO流工具类
@@ -41,7 +41,7 @@ public class IOs {
      * @throws IOException 如果发生 I/O 异常，则抛出 {@code IOException}
      */
     public static MultiByteArrayInputStream toMultiBAIS(InputStream inputStream) throws IOException {
-        Objects.requireNonNull(inputStream, "Parameter `inputStream` must be non-null!");
+        checkNullNPE(inputStream, args("inputStream"));
 
         try (MultiByteArrayOutputStream multiBaos = new MultiByteArrayOutputStream()) {
             copy(inputStream, multiBaos);
@@ -58,7 +58,7 @@ public class IOs {
      * @since 0.4.2
      */
     public static MultiByteArrayOutputStream toMultiBAOS(InputStream inputStream) throws IOException {
-        Objects.requireNonNull(inputStream, "Parameter `inputStream` must be non-null!");
+        checkNullNPE(inputStream, args("inputStream"));
 
         MultiByteArrayOutputStream multiBaos = null;
         try {
@@ -94,7 +94,8 @@ public class IOs {
      * @since 0.4.6
      */
     public static long copy(final InputStream inputStream, final OutputStream outputStream, long copyLength) throws IOException {
-        if (G.hasNull(inputStream, outputStream)) throw new NullPointerException("Parameters `inputStream`, `outputStream` must be non-null!");
+        checkHasNullNPE(args(inputStream, outputStream), args("inputStream", "outputStream"));
+
         if (copyLength <= 0) return 0;
 
         byte[] buffer = new byte[(int) Math.min(DEFAULT_BUFFER_SIZE, copyLength)];
@@ -122,8 +123,7 @@ public class IOs {
      * @throws IOException 如果发生 I/O 异常，则抛出 {@code IOException}
      */
     public static long copy(final InputStream inputStream, final OutputStream outputStream, final byte[] buffer) throws IOException {
-        if (G.hasNull(inputStream, outputStream, buffer))
-            throw new NullPointerException("Parameters `inputStream`, `outputStream`, `buffer` must be non-null!");
+        checkHasNullNPE(args(inputStream, outputStream, buffer), args("inputStream", "outputStream", "buffer"));
 
         int n;
         long count = 0;
@@ -188,7 +188,7 @@ public class IOs {
      * @since 0.4.6
      */
     public static byte[][] readBytes(InputStream is, Long readLength, boolean isClose) throws IOException {
-        Objects.requireNonNull(is, "Parameter `inputStream` must be non-null!");
+        checkNullNPE(is, args("is"));
 
         MultiByteArrayOutputStream baos = null;
         try {

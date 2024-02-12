@@ -1,6 +1,5 @@
 package com.iofairy.test;
 
-import com.iofairy.except.UnexpectedParameterException;
 import com.iofairy.falcon.time.*;
 import com.iofairy.tcf.Try;
 import com.iofairy.top.G;
@@ -1103,8 +1102,21 @@ public class IntervalTest {
         assertEquals("1天5时1分57秒0毫秒", minusSI.toString());
         assertEquals("1天6时48分59秒0毫秒", interval.toString());
         assertEquals("1天5时1分57秒0毫秒", minusInterval.toString());
-        assertThrows(UnexpectedParameterException.class, () -> Interval.ofHours(-8));
-        assertThrows(UnexpectedParameterException.class, () -> Interval.of(-1, 10, 1));
+        assertThrows(IllegalArgumentException.class, () -> Interval.ofHours(-8));
+        assertThrows(IllegalArgumentException.class, () -> Interval.of(-1, 10, 1));
+
+        try {
+            Interval.ofHours(-8);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertEquals(e.getMessage(), "Interval构造函数的所有参数都必须 ≥ 0! ");
+        }
+        try {
+            Interval.of(-1, 10, 1);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertEquals(e.getMessage(), "Interval构造函数的所有参数都必须 ≥ 0! ");
+        }
 
     }
 

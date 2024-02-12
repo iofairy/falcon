@@ -47,4 +47,46 @@ public class StringsTest {
         }
 
     }
+
+
+    @Test
+    public void testConvertTime() {
+        String time01 = Strings.convertTime(-1000000);
+        String time02 = Strings.convertTime(-1);
+        String time03 = Strings.convertTime(0);
+        String time04 = Strings.convertTime(1);
+        String time05 = Strings.convertTime(500);
+        String time06 = Strings.convertTime(1000);
+        String time07 = Strings.convertTime(3000);
+        String time08 = Strings.convertTime(9000);
+        String time09 = Strings.convertTime(7000000);
+        String time10 = Strings.convertTime(86400000);
+        String time11 = Strings.convertTime(306400000);
+
+        System.out.println(time01);
+        System.out.println(time02);
+        System.out.println(time03);
+        System.out.println(time04);
+        System.out.println(time05);
+        System.out.println(time06);
+        System.out.println(time07);
+        System.out.println(time08);
+        System.out.println(time09);
+        System.out.println(time10);
+        System.out.println(time11);
+
+        assertEquals(time01, "-16.7分");
+        assertEquals(time02, "-1毫秒");
+        assertEquals(time03, "0毫秒");
+        assertEquals(time04, "1毫秒");
+        assertEquals(time05, "500毫秒");
+        assertEquals(time06, "1.0秒");
+        assertEquals(time07, "3.0秒");
+        assertEquals(time08, "9.0秒");
+        assertEquals(time09, "1.9时");
+        assertEquals(time10, "1.0天");
+        assertEquals(time11, "3.5天");
+
+    }
+
 }

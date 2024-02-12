@@ -15,18 +15,17 @@
  */
 package com.iofairy.falcon.time;
 
-import com.iofairy.falcon.range.IntervalType;
-import com.iofairy.top.G;
+import com.iofairy.range.IntervalType;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
-import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.iofairy.falcon.range.IntervalType.CLOSED;
+import static com.iofairy.range.IntervalType.CLOSED;
 import static java.time.temporal.ChronoUnit.*;
+import static com.iofairy.falcon.misc.Preconditions.*;
 
 /**
  * 偏移时间，并记录每次偏移后的时间
@@ -53,11 +52,9 @@ class DateTimeShift {
      * @since 0.3.0
      */
     public static List<Date> datesByShift(Date fromDate, ZonedDateTime zdt, int shiftTimes, int amountUnit, ChronoUnit chronoUnit, boolean includeCurrentTime) {
-        Objects.requireNonNull(chronoUnit, "Parameter `chronoUnit` must be non-null!");
-
-        if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit)) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS_STRING + "] is supported for `chronoUnit` parameter!");
-        }
+        checkNullNPE(chronoUnit, args("chronoUnit"));
+        checkTemporal(!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit),
+                "Only [${…}] is supported for `chronoUnit` parameter!", SUPPORTED_UNITS_FOR_DBS_STRING);
 
         List<Date> dates = new ArrayList<>();
         if (includeCurrentTime) dates.add(fromDate);
@@ -86,11 +83,9 @@ class DateTimeShift {
      * @since 0.3.0
      */
     public static List<Calendar> datesByShift(Calendar fromCalendar, int shiftTimes, int amountUnit, ChronoUnit chronoUnit, boolean includeCurrentTime) {
-        Objects.requireNonNull(chronoUnit, "Parameter `chronoUnit` must be non-null!");
-
-        if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit)) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS_STRING + "] is supported for `chronoUnit` parameter!");
-        }
+        checkNullNPE(chronoUnit, args("chronoUnit"));
+        checkTemporal(!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit),
+                "Only [${…}] is supported for `chronoUnit` parameter!", SUPPORTED_UNITS_FOR_DBS_STRING);
 
         Calendar calendar = DateTimes.clone(fromCalendar);
         List<Calendar> dates = new ArrayList<>();
@@ -123,13 +118,11 @@ class DateTimeShift {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Temporal> List<T> datesByShift(T fromTemporal, int shiftTimes, int amountUnit, ChronoUnit chronoUnit, boolean includeCurrentTime) {
-        Objects.requireNonNull(chronoUnit, "Parameter `chronoUnit` must be non-null!");
+        checkNullNPE(chronoUnit, args("chronoUnit"));
+        checkTemporal(!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit),
+                "Only [${…}] is supported for `chronoUnit` parameter!", SUPPORTED_UNITS_FOR_DBS_STRING);
 
-        if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit))
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS_STRING + "] is supported for `chronoUnit` parameter!");
-
-        // if (!DTConst.SUPPORTED_TEMPORAL_COMMON.contains(fromTemporal.getClass()))
-        //     throw new UnsupportedTemporalTypeException("Only [" + DTConst.SUPPORTED_TEMPORAL_COMMON_STRING + "] is supported for `temporal` parameter!");
+        // checkTemporal(!DTConst.SUPPORTED_TEMPORAL_COMMON.contains(fromTemporal.getClass()), "Only [${…}] is supported for `temporal` parameter!", DTConst.SUPPORTED_TEMPORAL_COMMON_STRING);
 
 
         List<T> dates = new ArrayList<>();
@@ -169,10 +162,9 @@ class DateTimeShift {
      * @since 0.3.0
      */
     public static List<Date> datesFromRange(Date fromDate, Date toDate, ZonedDateTime fromZdt, ZonedDateTime toZdt, int amountUnit, ChronoUnit chronoUnit, IntervalType intervalType) {
-        if (G.hasNull(toDate, chronoUnit)) throw new NullPointerException("Parameters `toDate`, `chronoUnit` must be non-null!");
-        if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit)) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS_STRING + "] is supported for `chronoUnit` parameter!");
-        }
+        checkHasNullNPE(args(toDate, chronoUnit), args("toDate", "chronoUnit"));
+        checkTemporal(!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit),
+                "Only [${…}] is supported for `chronoUnit` parameter!", SUPPORTED_UNITS_FOR_DBS_STRING);
 
         if (intervalType == null) intervalType = CLOSED;
         List<Date> dates = new ArrayList<>();
@@ -221,10 +213,9 @@ class DateTimeShift {
      * @since 0.3.0
      */
     public static List<Calendar> datesFromRange(Calendar fromCalendar, Calendar toCalendar, int amountUnit, ChronoUnit chronoUnit, IntervalType intervalType) {
-        if (G.hasNull(toCalendar, chronoUnit)) throw new NullPointerException("Parameters `toCalendar`, `chronoUnit` must be non-null!");
-        if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit)) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS_STRING + "] is supported for `chronoUnit` parameter!");
-        }
+        checkHasNullNPE(args(toCalendar, chronoUnit), args("toCalendar", "chronoUnit"));
+        checkTemporal(!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit),
+                "Only [${…}] is supported for `chronoUnit` parameter!", SUPPORTED_UNITS_FOR_DBS_STRING);
 
         if (intervalType == null) intervalType = CLOSED;
         Calendar calendar = DateTimes.clone(fromCalendar);
@@ -276,10 +267,9 @@ class DateTimeShift {
      */
     @SuppressWarnings("unchecked")
     public static <T extends Temporal> List<T> datesFromRange(T fromTemporal, Temporal toTemporal, int amountUnit, ChronoUnit chronoUnit, IntervalType intervalType) {
-        if (G.hasNull(toTemporal, chronoUnit)) throw new NullPointerException("Parameters `toTemporal`, `chronoUnit` must be non-null!");
-        if (!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit)) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_DBS_STRING + "] is supported for `chronoUnit` parameter!");
-        }
+        checkHasNullNPE(args(toTemporal, chronoUnit), args("toTemporal", "chronoUnit"));
+        checkTemporal(!SUPPORTED_UNITS_FOR_DBS.contains(chronoUnit),
+                "Only [${…}] is supported for `chronoUnit` parameter!", SUPPORTED_UNITS_FOR_DBS_STRING);
 
         if (intervalType == null) intervalType = CLOSED;
         List<T> dates = new ArrayList<>();

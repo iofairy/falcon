@@ -18,6 +18,8 @@ package com.iofairy.falcon.io;
 import java.io.*;
 import java.util.*;
 
+import static com.iofairy.falcon.misc.Preconditions.*;
+
 /**
  * A <code>MultiByteArrayInputStream</code> contains an internal buffer that contains bytes that
  * may be read from the stream.
@@ -71,8 +73,8 @@ public class MultiByteArrayInputStream extends InputStream {
      * @param bufs the input buffers.
      */
     public MultiByteArrayInputStream(byte[]... bufs) {
-        if (bufs == null || Arrays.stream(bufs).anyMatch(Objects::isNull))
-            throw new NullPointerException("Parameter `bufs` must be non-null, and any elements in the `bufs` must be non-null too! ");
+        checkConditionNPE(bufs == null || Arrays.stream(bufs).anyMatch(Objects::isNull),
+                "Parameter `bufs` must be non-null, and any elements in the `bufs` must be non-null too! ");
 
         long countSum = 0;
         if (bufs.length == 0) {
@@ -126,7 +128,8 @@ public class MultiByteArrayInputStream extends InputStream {
      *                                   or <code>len</code> is greater than <code>b.length - off</code>
      */
     public synchronized int read(byte[] b, int off, int len) {
-        if (b == null) throw new NullPointerException();
+        checkNullNPE(b, args("b"));
+
         if (off < 0 || len < 0 || len > b.length - off) throw new IndexOutOfBoundsException();
 
         if (pos >= count) return -1;

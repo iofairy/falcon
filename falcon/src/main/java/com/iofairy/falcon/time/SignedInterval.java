@@ -16,7 +16,6 @@
 package com.iofairy.falcon.time;
 
 import com.iofairy.falcon.os.OS;
-import com.iofairy.top.G;
 
 import java.math.BigInteger;
 import java.time.*;
@@ -25,6 +24,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.*;
+import static com.iofairy.falcon.misc.Preconditions.*;
 
 /**
  * SignedInterval
@@ -32,7 +32,7 @@ import static java.time.temporal.ChronoUnit.*;
  * @since 0.1.0
  */
 public class SignedInterval implements ChronoInterval, Comparable<SignedInterval> {
-    private static final long serialVersionUID = 7006057265L;
+    private static final long serialVersionUID = 70099586057265L;
 
     /**
      * 世纪（100年）
@@ -441,10 +441,9 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      * @return SignedInterval
      */
     public static SignedInterval between(Temporal startTemporal, Temporal endTemporal) {
-        if (startTemporal == null || endTemporal == null) throw new NullPointerException("Parameters `startTemporal` and `endTemporal` must be non-null!");
-
-        if (!isSupported(startTemporal) || !isSupported(endTemporal))
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `startTemporal` and `endTemporal` parameters!");
+        checkHasNullNPE(args(startTemporal, endTemporal), args("startTemporal", "endTemporal"));
+        checkTemporal(!isSupported(startTemporal) || !isSupported(endTemporal),
+                "Only [${…}] is supported for `startTemporal` and `endTemporal` parameters!", SUPPORTED_TEMPORAL_STRING);
 
         /*
          * 保存最初始的时间
@@ -554,7 +553,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      * @return SignedInterval
      */
     public static SignedInterval between(Date startDate, Date endDate) {
-        if (G.hasNull(startDate, endDate)) throw new NullPointerException("Parameters `startDate` and `endDate` must be non-null!");
+        checkHasNullNPE(args(startDate, endDate), args("startDate", "endDate"));
         return between(DateTime.from(startDate).getZonedDateTime(), DateTime.from(endDate).getZonedDateTime());
     }
 
@@ -567,7 +566,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      * @return SignedInterval
      */
     public static SignedInterval between(Calendar startCalendar, Calendar endCalendar) {
-        if (G.hasNull(startCalendar, endCalendar)) throw new NullPointerException("Parameters `startCalendar` and `endCalendar` must be non-null!");
+        checkHasNullNPE(args(startCalendar, endCalendar), args("startCalendar", "endCalendar"));
         return between(DateTime.from(startCalendar).getZonedDateTime(), DateTime.from(endCalendar).getZonedDateTime());
     }
 
@@ -618,9 +617,8 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
 
     @Override
     public Temporal addTo(Temporal temporal) {
-        Objects.requireNonNull(temporal, "Parameter `temporal` must be non-null!");
-        if (!isSupported(temporal))
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `temporal` parameter!");
+        checkNullNPE(temporal, args("temporal"));
+        checkTemporal(!isSupported(temporal), "Only [${…}] is supported for `temporal` parameter!", SUPPORTED_TEMPORAL_STRING);
 
         boolean isInstant = temporal instanceof Instant;
         temporal = isInstant ? ZonedDateTime.ofInstant((Instant) temporal, TZ.DEFAULT_ZONE) : temporal;
@@ -643,9 +641,8 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
 
     @Override
     public Temporal subtractFrom(Temporal temporal) {
-        Objects.requireNonNull(temporal, "Parameter `temporal` must be non-null!");
-        if (!isSupported(temporal))
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_STRING + "] is supported for `temporal` parameter!!");
+        checkNullNPE(temporal, args("temporal"));
+        checkTemporal(!isSupported(temporal), "Only [${…}] is supported for `temporal` parameter!!", SUPPORTED_TEMPORAL_STRING);
 
         boolean isInstant = temporal instanceof Instant;
         temporal = isInstant ? ZonedDateTime.ofInstant((Instant) temporal, TZ.DEFAULT_ZONE) : temporal;
@@ -721,7 +718,8 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
 
     @Override
     public int compareTo(SignedInterval other) {
-        Objects.requireNonNull(other);
+        checkNullNPE(other, args("other"));
+
         if (this.totalNanos != null && other.totalNanos != null) {
             return this.totalNanos.compareTo(other.totalNanos);
         }

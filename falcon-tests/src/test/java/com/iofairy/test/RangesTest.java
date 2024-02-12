@@ -1,9 +1,7 @@
 package com.iofairy.test;
 
-import com.iofairy.except.UnexpectedParameterException;
-import com.iofairy.falcon.util.RangeUtils;
 import com.iofairy.falcon.util.Ranges;
-import com.iofairy.tuple.Tuple2;
+import com.iofairy.range.Range;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -18,12 +16,12 @@ import static org.junit.jupiter.api.Assertions.*;
 public class RangesTest {
     @Test
     public void testDivideRange() {
-        List<Tuple2<Long, Long>> ranges1 = Ranges.divideRange(0, 500, 5, 0);
-        List<Tuple2<Long, Long>> ranges2 = Ranges.divideRange(-600, -100, 5, -0.1f);
-        List<Tuple2<Long, Long>> ranges3 = Ranges.divideRange(-100, 400, 5, 0.1f);
-        List<Tuple2<Long, Long>> ranges4 = Ranges.divideRange(2, 48900568, 6, -0.1f);
-        List<Tuple2<Long, Long>> ranges5 = Ranges.divideRange(0, 5, 5, 0);
-        List<Tuple2<Long, Long>> ranges6 = Ranges.divideRange(0, 5, 5, -0.2f);
+        List<Range<Long>> ranges1 = Ranges.split(0, 500, 5, 0);
+        List<Range<Long>> ranges2 = Ranges.split(-600, -100, 5, -0.1f);
+        List<Range<Long>> ranges3 = Ranges.split(-100, 400, 5, 0.1f);
+        List<Range<Long>> ranges4 = Ranges.split(2, 48900568, 6, -0.1f);
+        List<Range<Long>> ranges5 = Ranges.split(0, 5, 5, 0);
+        List<Range<Long>> ranges6 = Ranges.split(0, 5, 5, -0.2f);
         System.out.println(ranges1);
         System.out.println(ranges2);
         System.out.println(ranges3);
@@ -31,49 +29,59 @@ public class RangesTest {
         System.out.println(ranges5);
         System.out.println(ranges6);
 
-        assertEquals("[(beginInclusive: 0, endExclusive: 100), " +
-                "(beginInclusive: 100, endExclusive: 200), " +
-                "(beginInclusive: 200, endExclusive: 300), " +
-                "(beginInclusive: 300, endExclusive: 400), " +
-                "(beginInclusive: 400, endExclusive: 500)]", ranges1.toString());
+        assertEquals("[[0, 100), [100, 200), [200, 300), [300, 400), [400, 500)]", ranges1.toString());
+        assertEquals("[[-600, -478), [-478, -368), [-368, -269), [-269, -180), [-180, -100)]", ranges2.toString());
+        assertEquals("[[-100, -18), [-18, 72), [72, 171), [171, 280), [280, 400)]", ranges3.toString());
+        assertEquals("[[2, 10436576), [10436576, 19829492), [19829492, 28283116), [28283116, 35891378), [35891378, 42738813), [42738813, 48900568)]", ranges4.toString());
+        assertEquals("[[0, 1), [1, 2), [2, 3), [3, 4), [4, 5)]", ranges5.toString());
+        assertEquals("[[0, 1), [1, 2), [2, 3), [3, 4), [4, 5)]", ranges6.toString());
+        System.out.println("============================================================");
+        List<Range<Long>> ranges7 = Ranges.split(Range.openClosed(-100L, 400L), 5, 0.1f);
+        List<Range<Long>> ranges8 = Ranges.split(Range.openClosed(2L, 48900568L), 6, -0.1f);
+        System.out.println(ranges7);
+        System.out.println(ranges8);
+        assertEquals("[(-100, -18], (-18, 72], (72, 171], (171, 280], (280, 400]]", ranges7.toString());
+        assertEquals("[(2, 10436576], (10436576, 19829492], (19829492, 28283116], (28283116, 35891378], (35891378, 42738813], (42738813, 48900568]]", ranges8.toString());
+        System.out.println("============================================================");
 
-        assertEquals("[(beginInclusive: -600, endExclusive: -478), " +
-                "(beginInclusive: -478, endExclusive: -368), " +
-                "(beginInclusive: -368, endExclusive: -269), " +
-                "(beginInclusive: -269, endExclusive: -180), " +
-                "(beginInclusive: -180, endExclusive: -100)]", ranges2.toString());
+        try {
+            Ranges.split(Range.open(0L, 500L), 1, 0);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertEquals("The `range` must be half open interval! ", e.getMessage());
+        }
+        try {
+            Ranges.split(Range.closedOpen(0L, 500L), 1, 0);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertEquals("Parameter `splitCount` must ≥ 2! ", e.getMessage());
+        }
+        try {
+            Ranges.split(0, 4, 5, 0);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertEquals("(`endIndex` - `beginIndex`) must be ≥ `splitCount`! ", e.getMessage());
+        }
+        try {
+            Ranges.split(Range.closedOpen(0L, 500L), 5, -1);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertEquals("The value out of range, the current value is: [-1.0]. Parameter `skewRatio` must be in (-1, 1)! ", e.getMessage());
+        }
 
-        assertEquals("[(beginInclusive: -100, endExclusive: -18), " +
-                "(beginInclusive: -18, endExclusive: 72), " +
-                "(beginInclusive: 72, endExclusive: 171), " +
-                "(beginInclusive: 171, endExclusive: 280), " +
-                "(beginInclusive: 280, endExclusive: 400)]", ranges3.toString());
+        try {
+            Ranges.split(Range.closedOpen(null, null), 5, -1);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertEquals("The `range` must be half open interval! ", e.getMessage());
+        }
 
-        assertEquals("[(beginInclusive: 2, endExclusive: 10436576), " +
-                "(beginInclusive: 10436576, endExclusive: 19829492), " +
-                "(beginInclusive: 19829492, endExclusive: 28283116), " +
-                "(beginInclusive: 28283116, endExclusive: 35891378), " +
-                "(beginInclusive: 35891378, endExclusive: 42738813), " +
-                "(beginInclusive: 42738813, endExclusive: 48900568)]", ranges4.toString());
+        try {
+            Ranges.split(Range.closedOpen(1L, null), 5, -1);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertEquals("The `range` can't be an infinite interval! ", e.getMessage());
+        }
 
-        assertEquals("[(beginInclusive: 0, endExclusive: 1), " +
-                "(beginInclusive: 1, endExclusive: 2), " +
-                "(beginInclusive: 2, endExclusive: 3), " +
-                "(beginInclusive: 3, endExclusive: 4), " +
-                "(beginInclusive: 4, endExclusive: 5)]", ranges5.toString());
-
-        assertEquals("[(beginInclusive: 0, endExclusive: 1), " +
-                "(beginInclusive: 1, endExclusive: 2), " +
-                "(beginInclusive: 2, endExclusive: 3), " +
-                "(beginInclusive: 3, endExclusive: 4), " +
-                "(beginInclusive: 4, endExclusive: 5)]", ranges6.toString());
-
-    }
-
-    @Test
-    public void testDivideRange1() {
-        assertThrows(UnexpectedParameterException.class, () -> Ranges.divideRange(0, 500, 1, 0));
-        assertThrows(UnexpectedParameterException.class, () -> Ranges.divideRange(0, 4, 5, 0));
-        assertThrows(UnexpectedParameterException.class, () -> Ranges.divideRange(0, 500, 5, -1));
     }
 }

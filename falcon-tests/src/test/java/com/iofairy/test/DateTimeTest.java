@@ -1,8 +1,8 @@
 package com.iofairy.test;
 
-import com.iofairy.except.UnexpectedParameterException;
 import com.iofairy.falcon.os.OS;
 import com.iofairy.falcon.time.*;
+import com.iofairy.range.Range;
 import com.iofairy.top.G;
 import org.junit.jupiter.api.Test;
 
@@ -17,8 +17,7 @@ import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.iofairy.falcon.range.IntervalType.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static com.iofairy.range.IntervalType.*;
 
 /**
  * @author GG
@@ -1377,6 +1376,14 @@ public class DateTimeTest {
         DateTime<Date> date2 = DateTime.parseDate("2022-8-06 11:10:21.689");
         DateTime<Date> date3 = DateTime.parseDate("2022-8-06 10:10:21.689");
 
+        System.out.println("ldt1: " + ldt1);
+        System.out.println("ldt2: " + ldt2);
+        System.out.println("ldt3: " + ldt3);
+        System.out.println("date1: " + date1);
+        System.out.println("date2: " + date2);
+        System.out.println("date3: " + date3);
+        System.out.println("============================================================");
+
         boolean in01 = ldt1.in(date1, ldt2, CLOSED);            // true
         boolean in02 = ldt1.in(date1, ldt2, CLOSED_OPEN);       // true
         boolean in03 = ldt1.in(date1, ldt2, OPEN);              // false
@@ -1403,9 +1410,22 @@ public class DateTimeTest {
         assertTrue(in11);
         assertTrue(in12);
 
-        assertThrows(UnexpectedParameterException.class, () -> ldt1.in(date2, ldt2, CLOSED_OPEN));
-        assertThrows(UnexpectedParameterException.class, () -> ldt1.in(date2, ldt3, CLOSED_OPEN));
-        assertThrows(UnexpectedParameterException.class, () -> ldt1.in(date1, ldt1, CLOSED_OPEN));
+        boolean in13 = ldt1.in(date2, ldt2, CLOSED_OPEN);   // 空集
+        boolean in14 = ldt1.in(date2, ldt3, CLOSED_OPEN);
+        boolean in15 = ldt1.in(date1, ldt1, CLOSED_OPEN);   // 空集
+        System.out.println(date1.equals(ldt1));
+        System.out.println(in13);
+        System.out.println(in14);
+        System.out.println(in15);
+
+        assertFalse(in13);
+        assertFalse(in14);
+        assertFalse(in15);
+
+        Range<DateTime<?>> range = Range.closedOpen(date1, ldt1);
+        System.out.println(range);          // [2022-08-06 09:10:21.689, 2022-08-06 09:10:21.689)
+        System.out.println(range.toSimpleString()); // ∅
+
     }
 
     @Test
@@ -1584,7 +1604,7 @@ public class DateTimeTest {
             DateTime.of((Temporal) LocalDate.of(2023, 6, 1));
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            assertEquals(e.getMessage(), "The `dateTime` is of type `LocalDate`, please call the `DateTime.of(LocalDate)` function!");
+            assertEquals(e.getMessage(), "The `dateTime` is of type `LocalDate`, please call the `DateTime.of(LocalDate)` function! ");
         }
 
         assertEquals(-4, fromDT.until(toDT, ChronoUnit.WEEKS));
@@ -1768,4 +1788,28 @@ public class DateTimeTest {
         assertEquals(nameOfDayOfWeek24, "S");
 
     }
+
+
+    @Test
+    public void testDTThrow() {
+        try {
+            DateTime.of(new Object());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertEquals(e.getMessage(), "Only [java.util.Date, Calendar, LocalDateTime, ZonedDateTime, OffsetDateTime, Instant] is supported for `dateTime` parameter! ");
+        }
+        try {
+            new DateTime(LocalDate.of(2024, 1, 1));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertEquals(e.getMessage(), "The `dateTime` is of type `LocalDate`, please call the `DateTime.of(LocalDate)` function! ");
+        }
+        try {
+            DateTime.of(java.sql.Date.valueOf(LocalDate.of(2023, 1, 1)));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertEquals(e.getMessage(), "[java.sql.Date, java.sql.Time] are unsupported here, you can convert it to the `java.util.Date` first! ");
+        }
+    }
+
 }

@@ -21,8 +21,8 @@ import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAmount;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 
+import static com.iofairy.falcon.misc.Preconditions.*;
 /**
  * ChronoInterval
  *
@@ -38,7 +38,7 @@ public interface ChronoInterval extends TemporalAmount, Serializable {
      * @since 0.3.0
      */
     default Date addTo(Date date) {
-        Objects.requireNonNull(date, "Parameter `date` must be non-null!");
+        checkNullNPE(date, args("date"));
         return Date.from((Instant) this.addTo(date.toInstant()));
     }
 
@@ -50,7 +50,7 @@ public interface ChronoInterval extends TemporalAmount, Serializable {
      * @since 0.3.0
      */
     default Calendar addTo(Calendar calendar) {
-        Objects.requireNonNull(calendar, "Parameter `calendar` must be non-null!");
+        checkNullNPE(calendar, args("calendar"));
         return DateTime.from(this.addTo(DateTime.from(calendar).getZonedDateTime())).toCalendar(calendar.getTimeZone().toZoneId());
     }
 
@@ -65,7 +65,8 @@ public interface ChronoInterval extends TemporalAmount, Serializable {
     @Deprecated
     @SuppressWarnings("unchecked")
     default <T> DateTime<T> addTo(DateTime<T> dateTime) {
-        Objects.requireNonNull(dateTime, "Parameter `dateTime` must be non-null!");
+        checkNullNPE(dateTime, args("dateTime"));
+
         T dt = dateTime.get();
         if (dt instanceof Date) return DateTime.from((T) this.addTo((Date) dt));
         if (dt instanceof Calendar) return DateTime.from((T) this.addTo((Calendar) dt));
@@ -94,7 +95,7 @@ public interface ChronoInterval extends TemporalAmount, Serializable {
      * @since 0.3.0
      */
     default Date subtractFrom(Date date) {
-        Objects.requireNonNull(date, "Parameter `date` must be non-null!");
+        checkNullNPE(date, args("date"));
         return Date.from((Instant) this.subtractFrom(date.toInstant()));
     }
 
@@ -106,7 +107,7 @@ public interface ChronoInterval extends TemporalAmount, Serializable {
      * @since 0.3.0
      */
     default Calendar subtractFrom(Calendar calendar) {
-        Objects.requireNonNull(calendar, "Parameter `calendar` must be non-null!");
+        checkNullNPE(calendar, args("calendar"));
         return DateTime.from(this.subtractFrom(DateTime.from(calendar).getZonedDateTime())).toCalendar(calendar.getTimeZone().toZoneId());
     }
 
@@ -121,7 +122,8 @@ public interface ChronoInterval extends TemporalAmount, Serializable {
     @Deprecated
     @SuppressWarnings("unchecked")
     default <T> DateTime<T> subtractFrom(DateTime<T> dateTime) {
-        Objects.requireNonNull(dateTime, "Parameter `dateTime` must be non-null!");
+        checkNullNPE(dateTime, args("dateTime"));
+
         T dt = dateTime.get();
         if (dt instanceof Date) return DateTime.from((T) this.subtractFrom((Date) dt));
         if (dt instanceof Calendar) return DateTime.from((T) this.subtractFrom((Calendar) dt));

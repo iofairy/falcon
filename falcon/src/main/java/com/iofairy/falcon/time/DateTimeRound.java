@@ -20,11 +20,11 @@ import com.iofairy.except.OutOfBoundsException;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
-import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.*;
+import static com.iofairy.falcon.misc.Preconditions.*;
 
 /**
  * 对时间进行取整
@@ -54,9 +54,9 @@ class DateTimeRound {
      */
     public static LocalDateTime round(LocalDateTime localDateTime, ChronoUnit chronoUnit, RoundingDT roundingDT) {
         // if (localDateTime == null) return localDateTime;
-        if (!SUPPORTED_UNITS_FOR_ROUND.contains(chronoUnit)) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_ROUND_STRING + "] is supported for `chronoUnit` parameter!");
-        }
+        checkTemporal(!SUPPORTED_UNITS_FOR_ROUND.contains(chronoUnit),
+                "Only [${…}] is supported for `chronoUnit` parameter!", SUPPORTED_UNITS_FOR_ROUND_STRING);
+
         roundingDT = roundingDT == null ? RoundingDT.FLOOR : roundingDT;
 
         LocalDateTime ldt = localDateTime;
@@ -207,9 +207,9 @@ class DateTimeRound {
      */
     public static Calendar round(Calendar calendar, ChronoUnit chronoUnit, RoundingDT roundingDT) {
         // if (calendar == null) return calendar;
-        if (!SUPPORTED_UNITS_FOR_ROUND.contains(chronoUnit)) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_ROUND_STRING + "] is supported for `chronoUnit` parameter!");
-        }
+        checkTemporal(!SUPPORTED_UNITS_FOR_ROUND.contains(chronoUnit),
+                "Only [${…}] is supported for `chronoUnit` parameter!", SUPPORTED_UNITS_FOR_ROUND_STRING);
+
         roundingDT = roundingDT == null ? RoundingDT.FLOOR : roundingDT;
 
         switch (chronoUnit) {
@@ -335,9 +335,8 @@ class DateTimeRound {
     public static Calendar roundTime(Calendar calendar, ChronoUnit chronoUnit, int amountUnit, RoundingDT roundingDT) {
         // if (calendar == null) return calendar;
 
-        if (!SUPPORTED_UNITS_FOR_ROUND_TIME.contains(chronoUnit)) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_ROUND_TIME_STRING + "] is supported for `chronoUnit` parameter!");
-        }
+        checkTemporal(!SUPPORTED_UNITS_FOR_ROUND_TIME.contains(chronoUnit),
+                "Only [${…}] is supported for `chronoUnit` parameter!", SUPPORTED_UNITS_FOR_ROUND_TIME_STRING);
 
         roundingDT = roundingDT == null ? RoundingDT.FLOOR : roundingDT;
 
@@ -487,9 +486,8 @@ class DateTimeRound {
      */
     public static LocalDateTime roundTime(LocalDateTime localDateTime, ChronoUnit chronoUnit, int amountUnit, RoundingDT roundingDT) {
 
-        if (!SUPPORTED_UNITS_FOR_ROUND_TIME.contains(chronoUnit)) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_UNITS_FOR_ROUND_TIME_STRING + "] is supported for `chronoUnit` parameter!");
-        }
+        checkTemporal(!SUPPORTED_UNITS_FOR_ROUND_TIME.contains(chronoUnit),
+                "Only [${…}] is supported for `chronoUnit` parameter!", SUPPORTED_UNITS_FOR_ROUND_TIME_STRING);
 
         roundingDT = roundingDT == null ? RoundingDT.FLOOR : roundingDT;
 

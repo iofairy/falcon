@@ -12,8 +12,9 @@ import java.time.temporal.ValueRange;
 import java.time.temporal.WeekFields;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.regex.Pattern;
+
+import static com.iofairy.falcon.misc.Preconditions.*;
 
 /**
  * Week information for the specified {@link WeekFields} and {@link LocalDate}
@@ -135,7 +136,7 @@ public class WeekInfo {
     }
 
     public WeekInfo(WeekFields weekFields, LocalDate localDate) {
-        Objects.requireNonNull(localDate, "Parameter `dateTime` must be non-null!");
+        checkNullNPE(localDate, args("localDate"));
 
         this.dayOfWeek = localDate.getDayOfWeek();
         this.weekFields = weekFields;
@@ -390,8 +391,8 @@ public class WeekInfo {
      * @return 指定年的第 {@code weekNo} 周的第一天日期
      */
     public static LocalDate baseYear(WeekFields weekFields, int year, int weekNo) {
-        Objects.requireNonNull(weekFields, "Parameter `weekFields` must be non-null!");
-        if (weekNo < 0 || weekNo > 54) throw new OutOfBoundsException(weekNo, "The `weekNo`'s range is [0, 54] when getting the week of the year.");
+        checkNullNPE(weekFields, args("weekFields"));
+        checkOutOfBounds(weekNo < 0 || weekNo > 54, weekNo, "The `weekNo`'s range is [0, 54] when getting the week of the year.");
 
         ValueRange valueRange = weekRangeInYear(weekFields, year);
         int minimum = (int) valueRange.getMinimum();  // 0、1
@@ -426,7 +427,8 @@ public class WeekInfo {
      * @return 周序号范围
      */
     public static ValueRange weekRangeInMonth(WeekFields weekFields, YearMonth yearMonth) {
-        Objects.requireNonNull(yearMonth, "Parameter `yearMonth` must be non-null!");
+        checkNullNPE(yearMonth, args("yearMonth"));
+
         if (weekFields == null) {
             int daysOfMonth = yearMonth.lengthOfMonth();
             int maxWeeks = daysOfMonth / 7;
@@ -445,7 +447,7 @@ public class WeekInfo {
      * @return 周序号范围
      */
     public static ValueRange weekRangeInYear(WeekFields weekFields, int year) {
-        Objects.requireNonNull(weekFields, "Parameter `weekFields` must be non-null!");
+        checkNullNPE(weekFields, args("weekFields"));
 
         LocalDate startDate = LocalDate.of(year, 1, 1);
         LocalDate endDate = LocalDate.of(year, 12, 31);
@@ -714,7 +716,7 @@ public class WeekInfo {
         String weekFieldsStr = (weekFields == null ? null : weekFields.getFirstDayOfWeek()) + ", ";
         weekFieldsStr = weekFieldsStr + S.padLeftChars((weekFields == null ? null : weekFields.getMinimalDaysInFirstWeek()) + "", ' ', 11 - weekFieldsStr.length());
         String displayName = dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault());
-        String nameOfDayOfWeek  = S.padRightChars(displayName, ' ', 3);
+        String nameOfDayOfWeek = S.padRightChars(displayName, ' ', 3);
 
         return "WeekInfo{" +
                 "[dayOfWeek, firstDayOfWeek, minDaysInFirstWeek]=(" + nameOfDayOfWeek + ", " + weekFieldsStr + ")" +

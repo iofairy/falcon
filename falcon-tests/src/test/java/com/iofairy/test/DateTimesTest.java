@@ -461,7 +461,7 @@ public class DateTimesTest {
             String nameOfDayOfWeek09 = DateTimes.nameOfDayOfWeek(null);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            assertEquals("Parameter `dayOfWeek` must be non-null!", e.getMessage());
+            assertEquals("The parameter `dayOfWeek`  must be non-null! ", e.getMessage());
         }
 
         assertEquals("Monday", nameOfDayOfWeek01);

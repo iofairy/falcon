@@ -1,5 +1,6 @@
 package com.iofairy.falcon.unit;
 
+import com.iofairy.annos.Beta;
 import com.iofairy.except.UnexpectedParameterException;
 import com.iofairy.falcon.util.Numbers;
 import com.iofairy.tuple.Tuple;
@@ -10,13 +11,15 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.Objects;
+
+import static com.iofairy.falcon.misc.Preconditions.*;
 
 /**
  * 计算机存储单位间的换算与转换
  *
  * @since 0.4.10
  */
+@Beta
 public class Bytes implements Comparable<Bytes>, Serializable {
     private static final long serialVersionUID = 98765567006076565L;
 
@@ -168,7 +171,7 @@ public class Bytes implements Comparable<Bytes>, Serializable {
     }
 
     public static Bytes of(BigInteger totalBits, boolean isBinaryUnit) {
-        Objects.requireNonNull(totalBits, "Parameter `totalBits` must be non-null!");
+        checkNullNPE(totalBits, args("totalBits"));
         return new Bytes(totalBits, isBinaryUnit);
     }
 
@@ -277,12 +280,12 @@ public class Bytes implements Comparable<Bytes>, Serializable {
     }
 
     public Bytes plus(Bytes bytes) {
-        Objects.requireNonNull(bytes, "Parameter `bytes` must be non-null!");
+        checkNullNPE(bytes, args("bytes"));
         return new Bytes(this.bits.add(bytes.bits), isBinaryUnit);
     }
 
     public Bytes minus(Bytes bytes) {
-        Objects.requireNonNull(bytes, "Parameter `bytes` must be non-null!");
+        checkNullNPE(bytes, args("bytes"));
         return new Bytes(this.bits.subtract(bytes.bits), isBinaryUnit);
     }
 
@@ -321,7 +324,7 @@ public class Bytes implements Comparable<Bytes>, Serializable {
 
     @Override
     public int compareTo(Bytes bytes) {
-        Objects.requireNonNull(bytes, "Parameter `bytes` must be non-null!");
+        checkNullNPE(bytes, args("bytes"));
         return this.bits.compareTo(bytes.bits);
     }
 
@@ -351,7 +354,7 @@ public class Bytes implements Comparable<Bytes>, Serializable {
     }
 
     private static BigInteger toBits(BigDecimal amount, boolean isBinaryUnit, int index) {
-        Objects.requireNonNull(amount, "Parameter `amount` must be non-null!");
+        checkNullNPE(amount, args("amount"));
 
         if (index == -1) return amount.toBigInteger();
         return amount.multiply(new BigDecimal(ByteFactor.getCoef(isBinaryUnit, index))).multiply(new BigDecimal(ByteFactor.X8)).toBigInteger();
@@ -461,10 +464,8 @@ public class Bytes implements Comparable<Bytes>, Serializable {
      * @return 另一个 ByteUnit 的值
      */
     public static BigDecimal convertUnit(ByteUnit fromUnit, ByteUnit toUnit, BigDecimal amount) {
-        if (!(fromUnit instanceof ByteDecimalUnit || fromUnit instanceof ByteBinaryUnit))
-            throw new UnexpectedParameterException("Unsupported unit: " + fromUnit);
-        if (!(toUnit instanceof ByteDecimalUnit || toUnit instanceof ByteBinaryUnit))
-            throw new UnexpectedParameterException("Unsupported unit: " + toUnit);
+        checkArgument(!(fromUnit instanceof ByteDecimalUnit || fromUnit instanceof ByteBinaryUnit), "Unsupported unit: ${…}", fromUnit);
+        checkArgument(!(toUnit instanceof ByteDecimalUnit || toUnit instanceof ByteBinaryUnit), "Unsupported unit: ${…}", toUnit);
 
         BigInteger fromBits = toBits(amount, fromUnit.isBinaryUnit(), fromUnit.getIndex());
         int index = toUnit.getIndex();
@@ -492,7 +493,7 @@ public class Bytes implements Comparable<Bytes>, Serializable {
      * @return 存储单位格式化后的字符串
      */
     public static String formatByte(BigInteger bytes, boolean isBinaryUnit) {
-        Objects.requireNonNull(bytes, "Parameter `bytes` must be non-null!");
+        checkNullNPE(bytes, args("bytes"));
 
         if (bytes.compareTo(BigInteger.ZERO) < 0) return "-" + formatByte(bytes.abs(), isBinaryUnit);
 
@@ -540,7 +541,7 @@ public class Bytes implements Comparable<Bytes>, Serializable {
      * @return 存储单位格式化后的字符串
      */
     public static String formatBit(BigInteger bits, boolean isBinaryUnit) {
-        Objects.requireNonNull(bits, "Parameter `bits` must be non-null!");
+        checkNullNPE(bits, args("bits"));
 
         if (bits.compareTo(BigInteger.ZERO) < 0) return "-" + formatBit(bits.abs(), isBinaryUnit);
 

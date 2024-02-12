@@ -31,6 +31,8 @@ import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.iofairy.falcon.misc.Preconditions.*;
+
 /**
  * DateTime Utils
  *
@@ -374,10 +376,9 @@ public final class DateTimes {
      * @since 0.3.0
      */
     public static int daysOfMonth(Temporal temporal) {
-        Objects.requireNonNull(temporal, "Parameter `temporal` must be non-null!");
-        if (SUPPORTED_TEMPORAL_FOR_DOM.stream().noneMatch(c -> c.isAssignableFrom(temporal.getClass()))) {
-            throw new UnsupportedTemporalTypeException("Only [" + SUPPORTED_TEMPORAL_FOR_DOM.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")) + "] is supported for `temporal` parameter!");
-        }
+        checkNullNPE(temporal, args("temporal"));
+        checkTemporal(SUPPORTED_TEMPORAL_FOR_DOM.stream().noneMatch(c -> c.isAssignableFrom(temporal.getClass())),
+                "Only [${…}] is supported for `temporal` parameter!", SUPPORTED_TEMPORAL_FOR_DOM.stream().map(Class::getSimpleName).collect(Collectors.joining(", ")));
 
         if (temporal instanceof ChronoLocalDate) return ((ChronoLocalDate) temporal).lengthOfMonth();
         if (temporal instanceof YearMonth) return ((YearMonth) temporal).lengthOfMonth();
@@ -396,8 +397,7 @@ public final class DateTimes {
      * @since 0.3.4
      */
     public static Tuple2<Integer, Integer> daysBetween(DayOfWeek startDayOfWeek, DayOfWeek endDayOfWeek) {
-        if (G.hasNull(startDayOfWeek, endDayOfWeek))
-            throw new NullPointerException("Parameters `startDayOfWeek`, `endDayOfWeek` must be non-null!");
+        checkHasNullNPE(args(startDayOfWeek, endDayOfWeek), args("startDayOfWeek", "endDayOfWeek"));
 
         int startDayOfWeekValue = startDayOfWeek.getValue();
         int endDayOfWeekValue = endDayOfWeek.getValue();
@@ -594,7 +594,7 @@ public final class DateTimes {
      * @since 0.4.15
      */
     public static String nameOfDayOfWeek(DayOfWeek dayOfWeek, TextStyle textStyle, Locale locale) {
-        Objects.requireNonNull(dayOfWeek, "Parameter `dayOfWeek` must be non-null!");
+        checkNullNPE(dayOfWeek, args("dayOfWeek"));
 
         textStyle = textStyle == null ? TextStyle.FULL : textStyle;
         locale = locale == null ? Locale.getDefault() : locale;
