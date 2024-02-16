@@ -53,7 +53,7 @@ public class StopwatchTest {
         elapsed = stopwatch.elapsed(1, 4);
         elapsedPrint(elapsed);
         stopwatchPrint(stopwatch);
-        System.out.println("==================reset=================");
+        System.out.println("==================reset1=================");
         stopwatch.reset();
         assertEquals(stopwatch.getMarks().toString(), "{0=START}");
         stopwatchPrint(stopwatch);
@@ -70,16 +70,22 @@ public class StopwatchTest {
         Try.sleep(160);
         System.out.println("===============================sleep(160)=============================");
         stopwatchPrint(stopwatch);
-        System.out.println("==================stop=================");
+        System.out.println("==================stop1=================");
         stopwatch.stop();
         assertEquals(stopwatch.getMarks().toString(), "{0=START, 1=1, 2=STOP}");
         stopwatchPrint(stopwatch);
         Try.sleep(180);
         System.out.println("===============================sleep(180)=============================");
         stopwatchPrint(stopwatch);
-        stopwatch.clearMarks();
-        assertEquals(stopwatch.getMarks().toString(), "{0=START, 1=STOP}");
+        System.out.println("==================reset2=================");
+        stopwatch.reset();
+        assertEquals(stopwatch.getMarks().toString(), "{0=START}");
         stopwatchPrint(stopwatch);
+        System.out.println("==================stop2=================");
+        stopwatch.stop();
+        stopwatch.clearMarks();
+        stopwatchPrint(stopwatch);
+        assertEquals(stopwatch.getMarks().toString(), "{0=START, 1=STOP}");
     }
 
     private static void elapsedPrint(Stopwatch.Elapsed elapsed) {

@@ -149,7 +149,7 @@ public class Stopwatch {
      * @return Stopwatch
      */
     public Stopwatch reset() {
-        clearMarks(); // 先清，再设置 isRunning = false，因为 clearMarks 有判断 isRunning
+        clearMarks(true);
         this.isRunning = false;
         this.stopTick = 0;
         this.markIndex = 0;
@@ -280,18 +280,25 @@ public class Stopwatch {
      * 清除所有标记点（但保留最开始的标记点）
      */
     public void clearMarks() {
+        clearMarks(false);
+    }
+
+    private void clearMarks(boolean isReset) {
         this.markIndex = 0;
 
         MARK_INDEX_MAP.clear();
         INDEX_MARK_MAP.clear();
         MARK_TICK_MAP.clear();
-        if (isRunning) {
-            nanoTimeMark(0, this.startTick, START_MARK);
-        }
 
-        if (!isRunning && this.stopTick != 0) {
-            nanoTimeMark(0, this.startTick, START_MARK);
-            nanoTimeMark(1, this.stopTick, STOP_MARK);
+        if (!isReset) {
+            if (isRunning) {
+                nanoTimeMark(0, this.startTick, START_MARK);
+            } else {
+                if (this.stopTick != 0) {
+                    nanoTimeMark(0, this.startTick, START_MARK);
+                    nanoTimeMark(1, this.stopTick, STOP_MARK);
+                }
+            }
         }
     }
 
