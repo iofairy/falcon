@@ -26,4 +26,5 @@ module falcon.test {
 
     exports com.iofairy.test to org.junit.platform.commons;
     exports com.iofairy.test.reflect to org.junit.platform.commons;
+    exports com.iofairy.test.node to org.junit.platform.commons,com.fasterxml.jackson.databind,com.fasterxml.jackson.core;
 }

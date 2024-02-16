@@ -1,11 +1,13 @@
 package com.iofairy.test;
 
+import com.iofairy.except.OutOfBoundsException;
 import com.iofairy.falcon.time.DateTime;
 import com.iofairy.falcon.time.WeekInfo;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.temporal.WeekFields;
 import java.util.Date;
 
@@ -352,5 +354,18 @@ public class WeekInfoTest {
 
     }
 
+    @Test
+    public void testCheckArgument() {
+        try {
+            WeekInfo.baseMonth(YearMonth.of(2023, 1), 7);
+            throwException();
+        } catch (Exception e) {
+            assertSame(e.getClass(), OutOfBoundsException.class);
+            assertEquals(e.getMessage(), "The value out of range, the current value is: [7]. The `weekNo`'s range is [0, 6] when getting the week of the month. ");
+        }
+    }
 
+    private void throwException() {
+        throw new RuntimeException();
+    }
 }

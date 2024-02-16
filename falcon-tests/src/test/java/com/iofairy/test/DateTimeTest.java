@@ -1794,22 +1794,28 @@ public class DateTimeTest {
     public void testDTThrow() {
         try {
             DateTime.of(new Object());
+            throwException();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            assertSame(e.getClass(), UnsupportedTemporalTypeException.class);
             assertEquals(e.getMessage(), "Only [java.util.Date, Calendar, LocalDateTime, ZonedDateTime, OffsetDateTime, Instant] is supported for `dateTime` parameter! ");
         }
         try {
             new DateTime(LocalDate.of(2024, 1, 1));
+            throwException();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            assertSame(e.getClass(), UnsupportedTemporalTypeException.class);
             assertEquals(e.getMessage(), "The `dateTime` is of type `LocalDate`, please call the `DateTime.of(LocalDate)` function! ");
         }
         try {
             DateTime.of(java.sql.Date.valueOf(LocalDate.of(2023, 1, 1)));
+            throwException();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            assertSame(e.getClass(), UnsupportedTemporalTypeException.class);
             assertEquals(e.getMessage(), "[java.sql.Date, java.sql.Time] are unsupported here, you can convert it to the `java.util.Date` first! ");
         }
     }
 
+    private void throwException() {
+        throw new RuntimeException();
+    }
 }

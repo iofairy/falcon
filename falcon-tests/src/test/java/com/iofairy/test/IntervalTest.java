@@ -12,7 +12,6 @@ import java.time.temporal.Temporal;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author GG
@@ -1107,14 +1106,16 @@ public class IntervalTest {
 
         try {
             Interval.ofHours(-8);
+            throwException();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            assertSame(e.getClass(), IllegalArgumentException.class);
             assertEquals(e.getMessage(), "Interval构造函数的所有参数都必须 ≥ 0! ");
         }
         try {
             Interval.of(-1, 10, 1);
+            throwException();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            assertSame(e.getClass(), IllegalArgumentException.class);
             assertEquals(e.getMessage(), "Interval构造函数的所有参数都必须 ≥ 0! ");
         }
 
@@ -1132,5 +1133,9 @@ public class IntervalTest {
         assertEquals("1年1时6分50秒", signedInterval.toSimpleString());
         assertEquals("1年3天58分900毫秒", interval.toSimpleString());
 
+    }
+
+    private void throwException() {
+        throw new RuntimeException();
     }
 }

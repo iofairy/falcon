@@ -293,4 +293,32 @@ public class IDTest {
         System.out.println("每秒产生ID数量：" + (allIds.size() / (spendTime / 1000)));
     }
 
+    @Test
+    public void testTimedUUIDExample() {
+        for (int i = 0; i < 10; i++) {
+            String id = TimedUUID.getId();
+            System.out.println(id);
+        }
+        System.out.println("============================================================");
+        for (int i = 0; i < 10; i++) {
+            String id = TimedUUID.shortId();
+            System.out.println(id);
+        }
+        System.out.println("============================================================");
+        for (int i = 0; i < 10; i++) {
+            String id = TimedUUID.mediumId();
+            System.out.println(id);
+        }
+        System.out.println("============================================================");
+        for (int i = 0; i < 10; i++) {
+            String id = TimedUUID.longId();
+            System.out.println(id);
+        }
+        System.out.println("============================================================");
+        for (int i = 0; i < 10; i++) {
+            String id = TimedUUID.linedId();
+            System.out.println(id);
+        }
+    }
+
 }

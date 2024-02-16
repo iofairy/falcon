@@ -24,6 +24,7 @@ module iofairy.falcon {
     exports com.iofairy.falcon.map;
     exports com.iofairy.falcon.misc;
     exports com.iofairy.falcon.nio;
+    exports com.iofairy.falcon.node;
     exports com.iofairy.falcon.os;
     exports com.iofairy.falcon.range;
     exports com.iofairy.falcon.reflect;

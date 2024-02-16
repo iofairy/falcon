@@ -258,27 +258,35 @@ public class IOsTest {
     public void testCheckNull() {
         try {
             IOs.toMultiBAIS(null);
+            throwException();
         } catch (NullPointerException | IOException e) {
-            System.out.println(e.getMessage());
-            assertEquals(e.getMessage(), "The parameter `inputStream`  must be non-null! ");
+            assertSame(e.getClass(), NullPointerException.class);
+            assertEquals(e.getMessage(), "The parameter `inputStream` must be non-null! ");
         }
         try {
             IOs.toMultiBAOS(null);
+            throwException();
         } catch (NullPointerException | IOException e) {
-            System.out.println(e.getMessage());
-            assertEquals(e.getMessage(), "The parameter `inputStream`  must be non-null! ");
+            assertSame(e.getClass(), NullPointerException.class);
+            assertEquals(e.getMessage(), "The parameter `inputStream` must be non-null! ");
         }
         try {
             IOs.readBytes(null);
+            throwException();
         } catch (NullPointerException | IOException e) {
-            System.out.println(e.getMessage());
-            assertEquals(e.getMessage(), "The parameter `is`  must be non-null! ");
+            assertSame(e.getClass(), NullPointerException.class);
+            assertEquals(e.getMessage(), "The parameter `is` must be non-null! ");
         }
         try {
             IOs.copy(null, null, null);
+            throwException();
         } catch (NullPointerException | IOException e) {
-            System.out.println(e.getMessage());
+            assertSame(e.getClass(), NullPointerException.class);
             assertEquals(e.getMessage(), "None of these parameters [inputStream, outputStream, buffer] can be null! ");
         }
+    }
+
+    private void throwException() {
+        throw new RuntimeException();
     }
 }

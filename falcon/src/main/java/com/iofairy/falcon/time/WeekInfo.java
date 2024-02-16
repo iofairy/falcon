@@ -1,6 +1,5 @@
 package com.iofairy.falcon.time;
 
-import com.iofairy.except.OutOfBoundsException;
 import com.iofairy.top.S;
 
 import java.time.DayOfWeek;
@@ -353,7 +352,7 @@ public class WeekInfo {
      * @return 指定年月的第 {@code weekNo} 周的第一天日期
      */
     public static LocalDate baseMonth(WeekFields weekFields, YearMonth yearMonth, int weekNo) {
-        if (weekNo < 0 || weekNo > 6) throw new OutOfBoundsException(weekNo, "The `weekNo`'s range is [0, 6] when getting the week of the month.");
+        checkOutOfBounds(weekNo < 0 || weekNo > 6, weekNo, "The `weekNo`'s range is [0, 6] when getting the week of the month. ");
 
         ValueRange valueRange = weekRangeInMonth(weekFields, yearMonth);
         int minimum = (int) valueRange.getMinimum();  // 0、1

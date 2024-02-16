@@ -1,5 +1,7 @@
 package com.iofairy.test;
 
+import com.iofairy.except.ConditionsNotMetException;
+import com.iofairy.except.OutOfBoundsException;
 import com.iofairy.falcon.util.Ranges;
 import com.iofairy.range.Range;
 import org.junit.jupiter.api.Test;
@@ -44,44 +46,57 @@ public class RangesTest {
         assertEquals("[(2, 10436576], (10436576, 19829492], (19829492, 28283116], (28283116, 35891378], (35891378, 42738813], (42738813, 48900568]]", ranges8.toString());
         System.out.println("============================================================");
 
+    }
+
+    @Test
+    public void testCheckArgument() {
         try {
             Ranges.split(Range.open(0L, 500L), 1, 0);
+            throwException();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            assertSame(e.getClass(), ConditionsNotMetException.class);
             assertEquals("The `range` must be half open interval! ", e.getMessage());
         }
         try {
             Ranges.split(Range.closedOpen(0L, 500L), 1, 0);
+            throwException();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            assertSame(e.getClass(), ConditionsNotMetException.class);
             assertEquals("Parameter `splitCount` must ≥ 2! ", e.getMessage());
         }
         try {
             Ranges.split(0, 4, 5, 0);
+            throwException();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            assertSame(e.getClass(), ConditionsNotMetException.class);
             assertEquals("(`endIndex` - `beginIndex`) must be ≥ `splitCount`! ", e.getMessage());
         }
         try {
             Ranges.split(Range.closedOpen(0L, 500L), 5, -1);
+            throwException();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            assertSame(e.getClass(), OutOfBoundsException.class);
             assertEquals("The value out of range, the current value is: [-1.0]. Parameter `skewRatio` must be in (-1, 1)! ", e.getMessage());
         }
 
         try {
             Ranges.split(Range.closedOpen(null, null), 5, -1);
+            throwException();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            assertSame(e.getClass(), ConditionsNotMetException.class);
             assertEquals("The `range` must be half open interval! ", e.getMessage());
         }
 
         try {
             Ranges.split(Range.closedOpen(1L, null), 5, -1);
+            throwException();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            assertSame(e.getClass(), ConditionsNotMetException.class);
             assertEquals("The `range` can't be an infinite interval! ", e.getMessage());
         }
+    }
 
+    private void throwException() {
+        throw new RuntimeException();
     }
 }

@@ -708,7 +708,7 @@ public final class Preconditions {
         // 没传参数名，或只有一个参数，但是参数名为空
         boolean paramNameEmpty = length == 0 || (length == 1 && S.isBlank(paramNames[0]));
         final char SPACE = ' ';
-        String paramNamesStr = paramNameEmpty ? "" : (length == 1 ? "`" + paramNames[0] + "`" + SPACE : Arrays.asList(paramNames).toString()) + SPACE;
+        String paramNamesStr = paramNameEmpty ? "" : (length == 1 ? "`" + paramNames[0] + "`" : Arrays.asList(paramNames).toString()) + SPACE;
 
         String mustBe = type.mustBe;
         String errorReason = type.errorReason;
