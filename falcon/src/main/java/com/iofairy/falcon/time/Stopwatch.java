@@ -83,6 +83,10 @@ public class Stopwatch {
     Stopwatch() {
     }
 
+    public static Stopwatch run() {
+        return create().start();
+    }
+
     public static Stopwatch create() {
         return new Stopwatch();
     }
@@ -225,9 +229,7 @@ public class Stopwatch {
         int toIndex;
         String fromMark;
         String toMark;
-        long elapsedNanos;
-
-        elapsedNanos = Math.abs(MARK_TICK_MAP.get(from) - MARK_TICK_MAP.get(to));
+        long elapsedNanos = MARK_TICK_MAP.get(to) - MARK_TICK_MAP.get(from);
 
         /*
          * from 与 to 的类型判断

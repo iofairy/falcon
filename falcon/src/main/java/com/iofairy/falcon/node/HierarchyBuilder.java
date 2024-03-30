@@ -22,6 +22,8 @@ import com.iofairy.top.G;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.iofairy.falcon.misc.Preconditions.*;
+
 /**
  * 层级树构造器
  *
@@ -57,6 +59,24 @@ public class HierarchyBuilder<T extends Hierarchy<T, E>, E> {
     /**
      * 构建树
      *
+     * @param topParents    顶层部门父ID的值
+     * @param fillDepth     是否填充树深度
+     * @param fillAncestors 是否填充祖先列表
+     * @param fillOrder     是否填充节点在当前深度的序号
+     * @param c             比较器
+     * @return 返回层级树
+     * @since 0.5.2
+     */
+    public List<T> buildTree(List<E> topParents, boolean fillDepth, boolean fillAncestors, boolean fillOrder, Comparator<? super T> c) {
+        if (G.isEmpty(nodes)) return new ArrayList<>();
+        checkArgument(G.isEmpty(topParents), "参数`topParents`不能为空！");
+
+        return createTree(nodes, topParents, fillDepth, fillAncestors, fillOrder, c);
+    }
+
+    /**
+     * 构建树
+     *
      * @param topParents 顶层部门父ID的值
      * @param fillDepth  是否填充树深度
      * @param fillOrder  是否填充节点在当前深度的序号
@@ -64,10 +84,7 @@ public class HierarchyBuilder<T extends Hierarchy<T, E>, E> {
      * @return 返回层级树
      */
     public List<T> buildTree(List<E> topParents, boolean fillDepth, boolean fillOrder, Comparator<? super T> c) {
-        if (G.isEmpty(nodes)) return new ArrayList<>();
-        if (G.isEmpty(topParents)) throw new NullPointerException("参数`topParents`不能为空！");
-
-        return createTree(nodes, topParents, fillDepth, fillOrder, c);
+        return buildTree(topParents, fillDepth, false, fillOrder, c);
     }
 
     /**
@@ -78,7 +95,7 @@ public class HierarchyBuilder<T extends Hierarchy<T, E>, E> {
      * @return 返回层级树
      */
     public List<T> buildTree(List<E> topParents, boolean fillDepth) {
-        return buildTree(topParents, fillDepth, false, null);
+        return buildTree(topParents, fillDepth, false, false, null);
     }
 
     /**
@@ -88,7 +105,31 @@ public class HierarchyBuilder<T extends Hierarchy<T, E>, E> {
      * @return 返回层级树
      */
     public List<T> buildTree(List<E> topParents) {
-        return buildTree(topParents, false, false, null);
+        return buildTree(topParents, false, false, false, null);
+    }
+
+    /**
+     * 构建树（按租户区分）
+     *
+     * @param topParents    顶层部门父ID的值
+     * @param fillDepth     是否填充树深度
+     * @param fillAncestors 是否填充祖先列表
+     * @param fillOrder     是否填充节点在当前深度的序号
+     * @param c             比较器
+     * @return 返回层级树
+     * @since 0.5.2
+     */
+    public List<TenantTree<T>> buildTenantTree(List<E> topParents, boolean fillDepth, boolean fillAncestors, boolean fillOrder, Comparator<? super T> c) {
+        if (G.isEmpty(nodes)) return new ArrayList<>();
+        checkArgument(G.isEmpty(topParents), "参数`topParents`不能为空！");
+
+        Map<String, List<T>> tenantMap = nodes.parallelStream().collect(CollectorKit.groupingByAllowNullKey(h -> h.tenantId));
+        List<TenantTree<T>> tenantList = new ArrayList<>();
+        tenantMap.forEach((k, vs) -> {
+            List<T> parentList = createTree(vs, topParents, fillDepth, fillAncestors, fillOrder, c);
+            tenantList.add(new TenantTree<>(k, parentList));
+        });
+        return tenantList;
     }
 
     /**
@@ -101,15 +142,7 @@ public class HierarchyBuilder<T extends Hierarchy<T, E>, E> {
      * @return 返回层级树
      */
     public List<TenantTree<T>> buildTenantTree(List<E> topParents, boolean fillDepth, boolean fillOrder, Comparator<? super T> c) {
-        if (G.isEmpty(nodes)) return new ArrayList<>();
-        if (G.isEmpty(topParents)) throw new NullPointerException("参数`topParents`不能为空！");
-        Map<String, List<T>> tenantMap = nodes.parallelStream().collect(CollectorKit.groupingByAllowNullKey(h -> h.tenantId));
-        List<TenantTree<T>> tenantList = new ArrayList<>();
-        tenantMap.forEach((k, vs) -> {
-            List<T> parentList = createTree(vs, topParents, fillDepth, fillOrder, c);
-            tenantList.add(new TenantTree<>(k, parentList));
-        });
-        return tenantList;
+        return buildTenantTree(topParents, fillDepth, false, fillOrder, c);
     }
 
     /**
@@ -120,7 +153,7 @@ public class HierarchyBuilder<T extends Hierarchy<T, E>, E> {
      * @return 返回层级树
      */
     public List<TenantTree<T>> buildTenantTree(List<E> topParents, boolean fillDepth) {
-        return buildTenantTree(topParents, fillDepth, false, null);
+        return buildTenantTree(topParents, fillDepth, false, false, null);
     }
 
     /**
@@ -130,10 +163,10 @@ public class HierarchyBuilder<T extends Hierarchy<T, E>, E> {
      * @return 返回层级树
      */
     public List<TenantTree<T>> buildTenantTree(List<E> topParents) {
-        return buildTenantTree(topParents, false, false, null);
+        return buildTenantTree(topParents, false, false, false, null);
     }
 
-    private List<T> createTree(List<T> nodeList, List<E> topParents, boolean fillDepth, boolean fillOrder, Comparator<? super T> c) {
+    private List<T> createTree(List<T> nodeList, List<E> topParents, boolean fillDepth, boolean fillAncestors, boolean fillOrder, Comparator<? super T> c) {
         Map<E, List<T>> parentMap = nodeList.parallelStream().collect(CollectorKit.groupingByAllowNullKey(h -> h.parentId));
         parentMap.forEach((k, vs) -> {
             /*排序*/
@@ -160,8 +193,21 @@ public class HierarchyBuilder<T extends Hierarchy<T, E>, E> {
         }
         /*填充树深度*/
         if (fillDepth) fillDepth(parentList, 0);
+        /*填充祖先列表*/
+        if (fillAncestors) fillAncestors(parentList, new ArrayList<>());
 
         return parentList;
+    }
+
+    private void fillAncestors(List<T> list, List<E> ancestorsList) {
+        for (T t : list) {
+            List<E> ancestors = new ArrayList<>(ancestorsList);
+            ancestors.add(t.parentId);
+            t.setAncestors(ancestors);
+            if (!G.isEmpty(t.children)) {
+                fillAncestors(t.children, t.ancestors);
+            }
+        }
     }
 
     private void fillDepth(List<T> list, int depth) {

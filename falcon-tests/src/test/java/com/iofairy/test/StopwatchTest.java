@@ -50,7 +50,7 @@ public class StopwatchTest {
 
         elapsed = stopwatch.elapsed("a", 2);
         elapsedPrint(elapsed);
-        elapsed = stopwatch.elapsed(1, 4);
+        elapsed = stopwatch.elapsed(4, 1);
         elapsedPrint(elapsed);
         stopwatchPrint(stopwatch);
         System.out.println("==================reset1=================");
@@ -87,6 +87,51 @@ public class StopwatchTest {
         stopwatchPrint(stopwatch);
         assertEquals(stopwatch.getMarks().toString(), "{0=START, 1=STOP}");
     }
+
+    @Test
+    public void testStopwatch1() {
+        Stopwatch stopwatch = Stopwatch.run();
+        System.out.println(stopwatch.getMarks());
+        System.out.println("===================sleep(100)===================");
+        Try.sleep(100);
+        System.out.println("elapsed: " + stopwatch.elapsedExact(SECONDS) + "---" + stopwatch);
+        System.out.println("elapsedLast: " + stopwatch.elapsedLastExact(SECONDS) + "---" + stopwatch.elapsedlastString());
+        stopwatch.mark();
+        System.out.println(stopwatch.getMarks());
+        System.out.println("===================sleep(150)===================");
+        Try.sleep(150);
+        System.out.println("elapsed: " + stopwatch.elapsedExact(SECONDS) + "---" + stopwatch);
+        System.out.println("elapsedLast: " + stopwatch.elapsedLastExact(SECONDS) + "---" + stopwatch.elapsedlastString());
+        stopwatch.mark();
+        System.out.println(stopwatch.getMarks());
+        System.out.println("===================sleep(260)===================");
+        Try.sleep(260);
+        System.out.println("elapsed: " + stopwatch.elapsedExact(SECONDS) + "---" + stopwatch);
+        System.out.println("elapsedLast: " + stopwatch.elapsedLastExact(SECONDS) + "---" + stopwatch.elapsedlastString());
+        System.out.println("===================stop()===================");
+        stopwatch.stop();
+        System.out.println(stopwatch.getMarks());
+        System.out.println("elapsed: " + stopwatch.elapsedExact(SECONDS) + "---" + stopwatch);
+        System.out.println("elapsedLast: " + stopwatch.elapsedLastExact(SECONDS) + "---" + stopwatch.elapsedlastString());
+        System.out.println("===================sleep(150)===================");
+        Try.sleep(150);
+        System.out.println(stopwatch.getMarks());
+        System.out.println("elapsed: " + stopwatch.elapsedExact(SECONDS) + "---" + stopwatch);
+        System.out.println("elapsedLast: " + stopwatch.elapsedLastExact(SECONDS) + "---" + stopwatch.elapsedlastString());
+        System.out.println("============================================================");
+        Stopwatch.Elapsed elapsed = stopwatch.elapsed("STOP", 1);
+        System.out.println("Stopwatch.Elapsed: " + elapsed.elapsedExact(SECONDS) + "---" + elapsed + "---" + elapsed.toFullString());
+        elapsed = stopwatch.elapsed(1, "STOP");
+        System.out.println("Stopwatch.Elapsed: " + elapsed.elapsedExact(SECONDS) + "---" + elapsed + "---" + elapsed.toFullString());
+        elapsed = stopwatch.elapsed(0, 2);
+        System.out.println("Stopwatch.Elapsed: " + elapsed.elapsedExact(SECONDS) + "---" + elapsed + "---" + elapsed.toFullString());
+        System.out.println("============================================================");
+        stopwatch.reset();
+        System.out.println(stopwatch.getMarks());
+        stopwatch.mark();
+        System.out.println(stopwatch.getMarks());
+    }
+
 
     private static void elapsedPrint(Stopwatch.Elapsed elapsed) {
         System.out.println("===============elapsedPrint===============");

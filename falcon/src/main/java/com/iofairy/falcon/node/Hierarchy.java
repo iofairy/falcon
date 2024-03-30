@@ -40,6 +40,10 @@ public class Hierarchy<T extends Hierarchy<T, E>, E> implements Serializable {
      */
     protected E parentId;
     /**
+     * 祖先节点ID链（所有祖先节点ID列表）
+     */
+    protected List<E> ancestors;
+    /**
      * 本节点ID
      */
     protected E nodeId;
@@ -113,11 +117,20 @@ public class Hierarchy<T extends Hierarchy<T, E>, E> implements Serializable {
         this.children = children;
     }
 
+    public List<E> getAncestors() {
+        return ancestors;
+    }
+
+    public void setAncestors(List<E> ancestors) {
+        this.ancestors = ancestors;
+    }
+
     @Override
     public String toString() {
         return "Hierarchy{" +
                 "tenantId='" + tenantId + '\'' +
                 ", parentId=" + parentId +
+                ", ancestors=" + ancestors +
                 ", nodeId=" + nodeId +
                 ", depth=" + depth +
                 ", order=" + order +
