@@ -15,6 +15,8 @@
  */
 package com.iofairy.falcon.time;
 
+import com.iofairy.falcon.os.JavaVersion;
+import com.iofairy.falcon.os.OS;
 import com.iofairy.range.IntervalType;
 import com.iofairy.range.Range;
 import com.iofairy.si.SI;
@@ -143,7 +145,31 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
     public static DateTime<LocalDateTime> of(LocalDate localDate) {
         checkNullNPE(localDate, args("localDate"));
-        return new DateTime<>(localDate.atStartOfDay(), false);
+        return from(localDate.atStartOfDay());
+    }
+
+    public static DateTime<Date> of(long epochMillis) {
+        return from(new Date(epochMillis));
+    }
+
+    public static DateTime<Date> ofEpochSecond(long epochSeconds) {
+        return of(epochSeconds * 1000);
+    }
+
+    public static DateTime<ZonedDateTime> of(int year, int month, int dayOfMonth, int hour, int minute, int second, int nanoOfSecond, ZoneId zone) {
+        return from(ZonedDateTime.of(year, month, dayOfMonth, hour, minute, second, nanoOfSecond, zone == null ? TZ.DEFAULT_ZONE : zone));
+    }
+
+    public static DateTime<ZonedDateTime> of(int year, int month, int dayOfMonth, int hour, int minute, int second, ZoneId zone) {
+        return of(year, month, dayOfMonth, hour, minute, second, 0, zone);
+    }
+
+    public static DateTime<ZonedDateTime> of(int year, int month, int dayOfMonth, int hour, int minute, ZoneId zone) {
+        return of(year, month, dayOfMonth, hour, minute, 0, 0, zone);
+    }
+
+    public static DateTime<ZonedDateTime> of(int year, int month, int dayOfMonth, ZoneId zone) {
+        return of(year, month, dayOfMonth, 0, 0, 0, 0, zone);
     }
 
     static <T> DateTime<T> from(T dateTime) {
@@ -1014,9 +1040,11 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     public static DateTime<LocalDateTime> parse(CharSequence text) {
         checkNullNPE(text, args("text"));
 
-        String dateFormat = DateTimePattern.forDTF(text.toString());
+        String dateText = DateTimes.formatZhMillis(text.toString());
+
+        String dateFormat = DateTimePattern.forDTF(dateText);
         if (S.isEmpty(dateFormat)) throw new DateTimeParseException(SI.$(DT_PARSE_ERROR_MSG_TPL, text, "DateTime.parse(CharSequence, String)"), text, 0);
-        return parse(text, dateFormat);
+        return parse(dateText, dateFormat);
     }
 
     public static DateTime<LocalDateTime> parse(CharSequence text, String dtPattern) {
@@ -1060,10 +1088,12 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     public static DateTime<Date> parseDate(CharSequence text) {
         checkNullNPE(text, args("text"));
 
-        String dateFormat = DateTimePattern.forDTF(text.toString());
+        String dateText = DateTimes.formatZhMillis(text.toString());
+
+        String dateFormat = DateTimePattern.forDTF(dateText);
         if (S.isEmpty(dateFormat)) throw new DateTimeParseException(SI.$(DT_PARSE_ERROR_MSG_TPL, text, "DateTime.parseDate(CharSequence, String)"), text, 0);
 
-        return parseDate(text, dateFormat, TZ.DEFAULT_ZONE);
+        return parseDate(dateText, dateFormat, TZ.DEFAULT_ZONE);
     }
 
     /**
@@ -1078,10 +1108,12 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     public static DateTime<Date> parseDate(CharSequence text, ZoneId zoneId) {
         checkNullNPE(text, args("text"));
 
-        String dateFormat = DateTimePattern.forDTF(text.toString());
+        String dateText = DateTimes.formatZhMillis(text.toString());
+
+        String dateFormat = DateTimePattern.forDTF(dateText);
         if (S.isEmpty(dateFormat)) throw new DateTimeParseException(SI.$(DT_PARSE_ERROR_MSG_TPL, text, "DateTime.parseDate(CharSequence, String, ZoneId)"), text, 0);
 
-        return parseDate(text, dateFormat, zoneId);
+        return parseDate(dateText, dateFormat, zoneId);
     }
 
     public static DateTime<Date> parseDate(CharSequence text, String dtPattern) {
@@ -1135,7 +1167,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
 
     /**
-     * The date time format is compatible with {@code yyyyMMddHHmmssSSS}.<br>
+     * The date time format is compatible with {@code yyyyMMddHHmmssSSS} or {@code yyyyyMMddHHmmssSSS}.<br>
      * <b>NOTE:</b> <br>
      * Java 8 bug: <a href="https://bugs.openjdk.org/browse/JDK-8213027">DateTimeFormatter fails on parsing "yyyyMMddHHmmssSSS"</a>
      *
@@ -1145,10 +1177,15 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
      * @since 0.4.0
      */
     private static Tuple2<CharSequence, String> compatibleFormatter(CharSequence text, String dtPattern) {
-        if (text.length() == 17 && dtPattern.equals("yyyyMMddHHmmssSSS")) {
+        if (OS.J_VERSION == null || OS.J_VERSION.lte(JavaVersion.JAVA_8)) {
             String textStr = text.toString();
-            text = textStr.substring(0, 8) + "T" + textStr.substring(8);
-            dtPattern = "yyyyMMdd'T'HHmmssSSS";
+            if (text.length() == 17 && dtPattern.equals("yyyyMMddHHmmssSSS")) {
+                text = textStr.substring(0, 8) + "T" + textStr.substring(8);
+                dtPattern = "yyyyMMdd'T'HHmmssSSS";
+            } else if (text.length() == 18 && dtPattern.equals("yyyyyMMddHHmmssSSS")) {
+                text = textStr.substring(0, 9) + "T" + textStr.substring(9);
+                dtPattern = "yyyyyMMdd'T'HHmmssSSS";
+            }
         }
         return Tuple.of(text, dtPattern);
     }

@@ -28,13 +28,13 @@ Falcon是一个强大的Java工具类库，提供了多种便捷的工具类，�
 <dependency>
   <groupId>com.iofairy</groupId>
   <artifactId>falcon</artifactId>
-  <version>0.5.2</version>
+  <version>0.5.3</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-implementation 'com.iofairy:falcon:0.5.2'
+implementation 'com.iofairy:falcon:0.5.3'
 ```
 
 ## 🗺️使用指南（User Guide）
@@ -44,7 +44,7 @@ implementation 'com.iofairy:falcon:0.5.2'
     - [时间偏移(时间加减)](#时间偏移时间加减)
     - [计算两个时间间隔](#计算两个时间间隔)
 - [秒表`Stopwatch`](#秒表Stopwatch)
-- [带时间的UUID`TimedUUID`](#带时间的UUIDTimedUUID)
+- [带时间的UUID`TimedID`](#带时间的UUIDTimedID)
 
 
 
@@ -190,27 +190,43 @@ stopwatch.mark();  // 业务结束时打个标记
 System.out.println("业务1开始到业务3完成所耗时间：" + stopwatch.elapsed(0, 3));     // 业务1开始到业务3完成所耗时间：3.037(秒)
 ```
 
-## 📘带时间的UUID`TimedUUID`
-Java自带的UUID虽然保证了唯一性，但是随机生成的，不具有顺序性，导致索引效率较低。`TimedUUID`**自带时间前缀**，记录着UUID创建时间，具有一定的顺序。且可以根据业务需要，**自定义生成的UUID的长度**。
+## 📘带时间的UUID`TimedID`
+Java自带的UUID虽然保证了唯一性，但是随机生成的，不具有顺序性，导致索引效率较低。`TimedID`**自带时间前缀**，记录着UUID创建时间，具有一定的顺序。且可以根据业务需要，**自定义生成的UUID的长度**。
 ```java
-System.out.println(TimedUUID.getId());      // 240405235228529AA2MAHS8RK
-System.out.println(TimedUUID.shortId());    // 0240405235228775AA217NW1DG
-System.out.println(TimedUUID.linedId());    // 20240405235228775_A6Q78Q5APB
-System.out.println(TimedUUID.mediumId());   // 20240405235228775AAAM11V01R39B
-System.out.println(TimedUUID.longId());     // 20240405235228775AA8I2VMXBLLO4YO
+System.out.println(TimedID.getId());        // 240409064014820AADJWNSV35
+System.out.println(TimedID.newId());        // 240409064015067AAAZSRRRGE
+System.out.println(TimedID.shortId());      // 0240409064015067AA9ULRWUBJ
+System.out.println(TimedID.mediumId());     // 0240409064015067AA55DBDMO7Z3K4
+System.out.println(TimedID.longId());       // 20240409064015068AAEI0SMVHDP274A
+System.out.println(TimedID.linedId());      // 20240409064015068_A7VT0LSYBW
+System.out.println(TimedID.nid());          // 1712616015068AA54VB5KZBUX
+System.out.println(TimedID.sid());          // 1712616015068AA2BE42OPHJM8
+System.out.println(TimedID.mid());          // 1712616015068AA8JEK4Q4FQAILX2H
+System.out.println(TimedID.lid());          // 1712616015068AA55F78HAFKRP0S0ZS1
+System.out.println(TimedID._id());          // 1712616015069_AAYY7KL2ZN8XEQ
 ```
-设置自定义的默认的 TimedUUID，<u>默认的 TimedUUID 一旦设置后，无法变更</u>。
+设置自定义的默认的 TimedID，<u>默认的 TimedID 一旦设置后，无法变更</u>。
 ```java
-TimedUUID timedUUID = TimedUUID.of(0, 2, 28, 3);
-TimedUUID.setDefaultId(timedUUID);
+TimedID timedID = TimedID.Builder.newBuilder().withTimestamp(true).withStartInstant("2024-4-9 6:0:0.0").withIdLength(25).build();
+TimedID.setDefaultId(timedID);
+TimedID.setDefaultId(TimedID.TIMED_ID); // 无效设置
+for (int i = 0; i < 10; i++) {
 /*
- 通过 TimedUUID.getId() 生成默认的 TimedUUID
+ * 000003554589AABX6J4CSZBWJ
+ * 000003554856AA71Q4F2MN9J7
+ * 000003554856AA7OKJMZ1HZCE
+ * 000003554856AA8X1081ZY4UJ
+ * 000003554856AA73NY6R93QQS
+ * 000003554856AA7NKRK5HDOMA
+ * 000003554856AA9XUAO2FT6YJ
+ * 000003554857AAH0UH5M2ULG8
+ * 000003554857AA88EFGLRXXME
+ * 000003554857AAOTZOXXNQSJB
  */
-System.out.println(TimedUUID.getId());      // 0240406090446301AA681BIC7X36
-System.out.println(TimedUUID.getId());      // 0240406090446516AACH9UFLLY3K
-System.out.println(TimedUUID.getId());      // 0240406090446516AA76G2DGIJRL
+System.out.println(TimedID.getId());
+}
 
-System.out.println(timedUUID.randomId());   // 0240406091858617AA35GU5O5GKG
+System.out.println(timedID.randomId()); // 000003554857AACYV7HG33PYG
 ```
 
 

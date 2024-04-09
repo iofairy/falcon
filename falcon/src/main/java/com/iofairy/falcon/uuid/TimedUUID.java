@@ -28,7 +28,9 @@ import java.util.UUID;
  * 带时间的UUID
  *
  * @since 0.4.19
+ * @deprecated since 0.5.3, use {@link com.iofairy.falcon.uuid.TimedID} instead
  */
+@Deprecated
 public class TimedUUID {
     /**
      * 默认的 TimedUUID 实例（仅能设置一次，应在程序初始化时设置）<br>

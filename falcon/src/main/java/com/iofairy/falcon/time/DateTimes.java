@@ -29,6 +29,8 @@ import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.iofairy.falcon.misc.Preconditions.*;
@@ -604,6 +606,29 @@ public final class DateTimes {
         }
 
         return dayOfWeek.getDisplayName(textStyle, locale);
+    }
+
+    /**
+     * 如果时间格式串中包含"xxx毫秒"，且毫秒数不足3位，则补足3位，否则不做处理
+     *
+     * @param dateText 时间格式串
+     * @return 对毫秒格式化后的时间串
+     * @since 0.5.3
+     */
+    public static String formatZhMillis(String dateText) {
+        checkNullNPE(dateText, args("dateText"));
+        if (!dateText.contains("毫秒")) return dateText;
+
+        String regex = "(\\d+)毫秒";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(dateText);
+        if (!matcher.find()) return dateText;
+
+        String group = matcher.group(1);
+        if (group.length() >= 3) return dateText;
+        // 不足3位补零
+        String formattedMillis = S.padLeftChars(group, '0', 3);
+        return dateText.replaceAll(regex, formattedMillis + "毫秒");
     }
 
 }

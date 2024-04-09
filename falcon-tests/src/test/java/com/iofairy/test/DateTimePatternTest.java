@@ -1,6 +1,7 @@
 package com.iofairy.test;
 
 import com.iofairy.falcon.time.DateTimePattern;
+import com.iofairy.falcon.time.Stopwatch;
 import com.iofairy.tcf.Try;
 import com.iofairy.top.G;
 import org.junit.jupiter.api.Test;
@@ -583,27 +584,27 @@ public class DateTimePatternTest {
         assertEquals(null, dtfFormat02);
         assertEquals("2020-01-02 06:06:06.000", dtfFormat03);
         assertEquals("2020-01-02 06:06:00.000", dtfFormat04);
-        assertEquals("0999-01-02 06:06:06.600", dtfFormat05);
+        assertEquals("999-01-02 06:06:06.600", dtfFormat05);
         assertEquals("2020-01-02 06:06:06.600", dtfFormat06);
         assertEquals("2020-01-02 06:06:06.600", dtfFormat07);
         assertEquals("2020-01-02 06:06:06.000", dtfFormat08);
-        assertEquals("0999-01-02 06:06:06.000", dtfFormat09);
+        assertEquals("999-01-02 06:06:06.000", dtfFormat09);
         assertEquals(null, dtfFormat10);
         assertEquals(null, dtfFormat11);
         assertEquals(null, dtfFormat12);
         assertEquals(null, dtfFormat13);
         assertEquals("2020-01-02 06:06:06.006", dtfFormat14);
         assertEquals("2020-01-02 06:06:06.000", dtfFormat15);
-        assertEquals("0999-01-01 00:00:00.000", dtfFormat16);
+        assertEquals("999-01-01 00:00:00.000", dtfFormat16);
         assertEquals("2020-01-01 00:00:00.000", dtfFormat17);
         assertEquals("2020-01-02 00:00:00.000", dtfFormat18);
         assertEquals("2020-01-02 00:00:00.000", dtfFormat19);
         assertEquals(null, dtfFormat20);
         assertEquals(null, dtfFormat21);
         assertEquals("2020-01-02 00:00:00.000", dtfFormat22);
-        assertEquals("0999-01-02 00:00:00.000", dtfFormat23);
+        assertEquals("999-01-02 00:00:00.000", dtfFormat23);
         assertEquals("2020-01-02 00:00:00.000", dtfFormat24);
-        assertEquals("0999-01-02 00:00:00.000", dtfFormat25);
+        assertEquals("999-01-02 00:00:00.000", dtfFormat25);
         assertEquals("1970-01-01 06:06:06.000", dtfFormat26);
         assertEquals("1970-01-01 06:06:06.000", dtfFormat27);
         assertEquals(null, dtfFormat28);
@@ -616,26 +617,26 @@ public class DateTimePatternTest {
         assertNull(dtfFormat35);
         assertEquals("1999-08-07 10:05:01.000", dtfFormat36);
         assertEquals("2020-01-02 06:06:06.600", dtfFormat37);
-        assertEquals("0999-01-02 06:06:06.600", dtfFormat38);
+        assertEquals("999-01-02 06:06:06.600", dtfFormat38);
         assertNull(dtfFormat39);
         assertEquals("2020-01-02 06:06:06.600", dtfFormat40);
-        assertEquals("0999-01-02 06:06:06.600", dtfFormat41);
+        assertEquals("999-01-02 06:06:06.600", dtfFormat41);
         assertNull(dtfFormat42);
         assertEquals("2020-01-02 16:06:06.960", dtfFormat43);
-        assertEquals("0999-01-02 16:06:06.600", dtfFormat44);
+        assertEquals("999-01-02 16:06:06.600", dtfFormat44);
         assertNull(dtfFormat45);
         assertEquals("2020-01-02 06:06:06.000", dtfFormat46);
-        assertEquals("0999-01-02 06:06:06.000", dtfFormat47);
+        assertEquals("999-01-02 06:06:06.000", dtfFormat47);
         assertNull(dtfFormat48);
         assertEquals("2020-01-02 06:06:06.000", dtfFormat49);
-        assertEquals("0999-01-02 06:06:06.000", dtfFormat50);
+        assertEquals("999-01-02 06:06:06.000", dtfFormat50);
         assertNull(dtfFormat51);
         assertEquals("2020-01-02 16:06:06.000", dtfFormat52);
-        assertEquals("0999-01-02 16:06:06.000", dtfFormat53);
+        assertEquals("999-01-02 16:06:06.000", dtfFormat53);
         assertNull(dtfFormat54);
         assertNull(dtfFormat55);
         assertEquals("2009-08-07 10:05:01.550", dtfFormat56);
-        assertEquals("0999-08-03 22:15:00.007", dtfFormat57);
+        assertEquals("999-08-03 22:15:00.007", dtfFormat57);
         assertEquals("2020-01-02 06:06:06.006", dtfFormat58);
         assertEquals("2020-01-02 06:06:06.060", dtfFormat59);
         assertEquals("1970-01-01 06:06:06.006", dtfFormat60);
@@ -663,22 +664,25 @@ public class DateTimePatternTest {
 
         int times = 5000000;
 
+        Stopwatch stopwatch = Stopwatch.run();
         long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < times; i++) {
             String fm = DateTimePattern.forSDF("2020-01-2 06:6:06");
         }
-        System.out.println(times + " times cost forSDF: " + (System.currentTimeMillis() - startTime));  // 4171  3705  3975
-        startTime = System.currentTimeMillis();
+
+        System.out.println(times + " times cost forSDF: " + stopwatch.elapsedlastString()); // 692.688(毫秒)
+        stopwatch.mark();
         for (int i = 0; i < times; i++) {
             String fm = DateTimePattern.forDTF("2020-01-2 06:6:06");
         }
-        System.out.println(times + " times cost forDTF: " + (System.currentTimeMillis() - startTime));  // 3774  3405  3777
-        startTime = System.currentTimeMillis();
+        System.out.println(times + " times cost forDTF: " + stopwatch.elapsedlastString()); // 654.059(毫秒)
+        stopwatch.mark();
         for (int i = 0; i < times; i++) {
             String fm = DateTimePattern.forSDF("2020-01-2 06:6:06");
         }
-        System.out.println(times + " times cost forSDF: " + (System.currentTimeMillis() - startTime));  // 4171  3705  3975
+        System.out.println(times + " times cost forSDF: " + stopwatch.elapsedlastString()); // 571.825(毫秒)
+        stopwatch.stop();
     }
 
 }

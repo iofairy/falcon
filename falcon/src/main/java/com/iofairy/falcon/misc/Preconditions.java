@@ -22,6 +22,7 @@ import com.iofairy.top.G;
 import com.iofairy.top.O;
 import com.iofairy.top.S;
 
+import java.io.FileNotFoundException;
 import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.Arrays;
 import java.util.Collection;
@@ -464,6 +465,24 @@ public final class Preconditions {
     public static void checkOutOfBounds(boolean expression, Number number, String msgTemplate, Object... objs) {
         if (expression) {
             throw new OutOfBoundsException(number, SI.$(msgTemplate, objs));
+        }
+    }
+
+    /*==============================================================================
+     **********************    throw FileNotFoundException    **********************
+     ==============================================================================*/
+
+    /**
+     * 专门用于校验文件是否不存在的表达式，expression 为 {@code true} 则抛出 {@link FileNotFoundException} 异常
+     *
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws FileNotFoundException FileNotFoundException
+     */
+    public static void checkFileNotFound(boolean expression, String msgTemplate, Object... objs) throws FileNotFoundException {
+        if (expression) {
+            throw new FileNotFoundException(SI.$(msgTemplate, objs));
         }
     }
 

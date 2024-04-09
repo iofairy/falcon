@@ -204,6 +204,56 @@ public class DateTimeTest {
     }
 
     @Test
+    public void testOf() {
+        DateTime<Date> dateTime01 = DateTime.of(0);
+        DateTime<Date> dateTime02 = DateTime.of(1710076101113L);
+        DateTime<Date> dateTime03 = DateTime.ofEpochSecond(0);
+        DateTime<Date> dateTime04 = DateTime.ofEpochSecond(1710076101L);
+        DateTime<ZonedDateTime> dateTime05 = DateTime.of(1970, 1, 1, 0, 0, 0, 26, TZ.UTC);
+        DateTime<ZonedDateTime> dateTime06 = DateTime.of(1970, 1, 1, 8, 0, 0, 26, null);
+        DateTime<ZonedDateTime> dateTime07 = DateTime.of(2024, 3, 10, 13, 8, 21, 0, TZ.UTC);
+        DateTime<ZonedDateTime> dateTime08 = DateTime.of(2024, 3, 10, 21, 8, TZ.DEFAULT_ZONE);
+        DateTime<ZonedDateTime> dateTime09 = DateTime.of(-805, 3, 10, 21, 8, 0, 26, TZ.DEFAULT_ZONE);
+        System.out.println(dateTime01);
+        System.out.println(dateTime02);
+        System.out.println(dateTime03);
+        System.out.println(dateTime04);
+        System.out.println(dateTime05);
+        System.out.println(dateTime06);
+        System.out.println(dateTime07);
+        System.out.println(dateTime08);
+        System.out.println(dateTime05.toEpochMilli());
+        System.out.println(dateTime06.toEpochMilli());
+        System.out.println(dateTime07.toEpochMilli());
+        System.out.println(dateTime08.toEpochMilli());
+        System.out.println(dateTime09.dtDetail());
+        String dateFormat = dateTime09.format("u-MM-dd HH:mm:ss.SSSSSSSSS '['VV xxx O E']'");
+        System.out.println(dateFormat);
+        System.out.println(dateTime09.toDate());
+        System.out.println(dateTime09.toDate().getTime());
+        System.out.println(dateTime09.toEpochMilli());
+
+        assertEquals(dateTime01.toString(), "1970-01-01 08:00:00.000");
+        assertEquals(dateTime02.toString(), "2024-03-10 21:08:21.113");
+        assertEquals(dateTime03.toString(), "1970-01-01 08:00:00.000");
+        assertEquals(dateTime04.toString(), "2024-03-10 21:08:21.000");
+        assertEquals(dateTime05.toString(), "1970-01-01 00:00:00.000 [UTC +00:00]");
+        assertEquals(dateTime06.toString(), "1970-01-01 08:00:00.000");
+        assertEquals(dateTime07.toString(), "2024-03-10 13:08:21.000 [UTC +00:00]");
+        assertEquals(dateTime08.toString(), "2024-03-10 21:08:00.000");
+        assertEquals(0L, dateTime05.toEpochMilli());
+        assertEquals(0L, dateTime06.toEpochMilli());
+        assertEquals(1710076101000L, dateTime07.toEpochMilli());
+        assertEquals(1710076080000L, dateTime08.toEpochMilli());
+
+        assertEquals(dateTime09.dtDetail(), "806-03-10 21:08:00.000000026 [Asia/Shanghai +08:05 GMT+8:05:43 周五]");
+        assertEquals(dateFormat, "-805-03-10 21:08:00.000000026 [Asia/Shanghai +08:05 GMT+8:05:43 周五]");
+        assertEquals(dateTime09.toDate().toString(), "Fri Mar 18 21:02:17 CST 806");
+        assertEquals(dateTime09.toDate().getTime(), -87564625063000L);
+        assertEquals(dateTime09.toEpochMilli(), -87564625063000L);
+    }
+
+    @Test
     public void testDateTimeFormat() {
         LocalDateTime ldt = LocalDateTime.of(2022, 2, 27, 8, 0, 10, 100987456);
         ZonedDateTime zdt = ldt.atZone(TZ.DEFAULT_ZONE);
@@ -1155,6 +1205,8 @@ public class DateTimeTest {
         DateTime<LocalDateTime> dt11 = DateTime.parse("20220810170650");    // 2022-08-10 17:06:50.000000000 [周三]
         DateTime<LocalDateTime> dt12 = DateTime.parse("20220810170650666"); // 2022-08-10 17:06:50.666000000 [周三]
         DateTime<LocalDateTime> dt13 = DateTime.parse("20220810T170650666"); // 2022-08-10 17:06:50.666000000 [周三]
+        DateTime<LocalDateTime> dt14 = DateTime.parse("2点5分10秒98毫秒");       // 1970-01-01 02:05:10.098000000 [周四]
+        DateTime<LocalDateTime> dt15 = DateTime.parse("120220810170650666", "yyyyyMMddHHmmssSSS");
         DateTime<Date> dt00 = DateTime.parseDate("2022-8-01 10:5:15", TZ.UTC);  // 2022-08-01 18:05:15.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
         DateTime<Date> dt01 = DateTime.parseDate("2022-8-01T10:5:15");  // 2022-08-01 10:05:15.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
         DateTime<Date> dt02 = DateTime.parseDate("2022-8-01T10:5:15.987");  // 2022-08-01 10:05:15.987000000 [Asia/Shanghai +08:00 GMT+8 周一]
@@ -1164,6 +1216,11 @@ public class DateTimeTest {
         DateTime<Date> dt06 = DateTime.parseDate("2022-8-01T10:5:15.98");   // 2022-08-01 10:05:15.980000000 [Asia/Shanghai +08:00 GMT+8 周一]
         DateTime<Date> dt07 = DateTime.parseDate("20220810T170650666");     // 2022-08-10 17:06:50.666000000 [Asia/Shanghai +08:00 GMT+8 周三]
         DateTime<Date> dt08 = DateTime.parseDate("20220810170650666"); // 2022-08-10 17:06:50.666000000 [Asia/Shanghai +08:00 GMT+8 周三]
+        DateTime<Date> dt20 = DateTime.parseDate("2点5分10秒98毫秒");        // 1970-01-01 02:05:10.098000000 [Asia/Shanghai +08:00 GMT+8 周四]
+        DateTime<Date> dt21 = DateTime.parseDate("2点5分10秒098毫秒");       // 1970-01-01 02:05:10.098000000 [Asia/Shanghai +08:00 GMT+8 周四]
+        DateTime<Date> dt22 = DateTime.parseDate("2023年10月1日2点5分10秒1毫秒");   // 2023-10-01 02:05:10.001000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt23 = DateTime.parseDate("2023年10月1日2时5分10秒100毫秒"); // 2023-10-01 02:05:10.100000000 [Asia/Shanghai +08:00 GMT+8 周日]
+        DateTime<Date> dt24 = DateTime.parseDate("020220810170650666", "yyyyyMMddHHmmssSSS");
 
         System.out.println(dt0.dtDetail());         // 2022-08-01 10:05:15.000000000 [周一]
         System.out.println(dt1.dtDetail());         // 2022-08-01 10:05:15.000000000 [周一]
@@ -1179,6 +1236,8 @@ public class DateTimeTest {
         System.out.println(dt11.dtDetail());        // 2022-08-10 17:06:50.000000000 [周三]
         System.out.println(dt12.dtDetail());        // 2022-08-10 17:06:50.666000000 [周三]
         System.out.println(dt13.dtDetail());        // 2022-08-10 17:06:50.666000000 [周三]
+        System.out.println(dt14.dtDetail());
+        System.out.println(dt15.dtDetail());
         System.out.println("============================================================================");
         System.out.println(dt00.dtDetail());        // 2022-08-01 18:05:15.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
         System.out.println(dt01.dtDetail());        // 2022-08-01 10:05:15.000000000 [Asia/Shanghai +08:00 GMT+8 周一]
@@ -1189,12 +1248,17 @@ public class DateTimeTest {
         System.out.println(dt06.dtDetail());        // 2022-08-01 10:05:15.980000000 [Asia/Shanghai +08:00 GMT+8 周一]
         System.out.println(dt07.dtDetail());        // 2022-08-10 17:06:50.666000000 [Asia/Shanghai +08:00 GMT+8 周三]
         System.out.println(dt08.dtDetail());        // 2022-08-10 17:06:50.666000000 [Asia/Shanghai +08:00 GMT+8 周三]
+        System.out.println(dt20.dtDetail());
+        System.out.println(dt21.dtDetail());
+        System.out.println(dt22.dtDetail());
+        System.out.println(dt23.dtDetail());
+        System.out.println(dt24.dtDetail());
 
         assertEquals(dt0.dtDetail(), "2022-08-01 10:05:15.000000000 [周一]");
         assertEquals(dt1.dtDetail(), "2022-08-01 10:05:15.000000000 [周一]");
         assertEquals(dt2.dtDetail(), "2022-08-01 10:05:15.987000000 [周一]");
         assertEquals(dt3.dtDetail(), "2022-01-01 00:00:00.000000000 [周六]");
-        assertEquals(dt4.dtDetail(), "0999-01-01 00:00:00.000000000 [周二]");
+        assertEquals(dt4.dtDetail(), "999-01-01 00:00:00.000000000 [周二]");
         assertEquals(dt5.dtDetail(), "1970-01-01 10:05:00.000000000 [周四]");
         assertEquals(dt6.dtDetail(), "2022-08-01 10:05:15.980000000 [周一]");
         assertEquals(dt7.dtDetail(), "2022-08-01 00:00:00.000000000 [周一]");
@@ -1204,15 +1268,21 @@ public class DateTimeTest {
         assertEquals(dt11.dtDetail(), "2022-08-10 17:06:50.000000000 [周三]");
         assertEquals(dt12.dtDetail(), "2022-08-10 17:06:50.666000000 [周三]");
         assertEquals(dt13.dtDetail(), "2022-08-10 17:06:50.666000000 [周三]");
+        assertEquals(dt14.dtDetail(), "1970-01-01 02:05:10.098000000 [周四]");
+
         assertEquals(dt00.dtDetail(), "2022-08-01 18:05:15.000000000 [Asia/Shanghai +08:00 GMT+8 周一]");
         assertEquals(dt01.dtDetail(), "2022-08-01 10:05:15.000000000 [Asia/Shanghai +08:00 GMT+8 周一]");
         assertEquals(dt02.dtDetail(), "2022-08-01 10:05:15.987000000 [Asia/Shanghai +08:00 GMT+8 周一]");
         assertEquals(dt03.dtDetail(), "2022-01-01 00:00:00.000000000 [Asia/Shanghai +08:00 GMT+8 周六]");
-        assertEquals(dt04.dtDetail(), "0999-01-01 00:00:00.000000000 [Asia/Shanghai +08:05 GMT+8:05:43 周二]");
+        assertEquals(dt04.dtDetail(), "999-01-01 00:00:00.000000000 [Asia/Shanghai +08:05 GMT+8:05:43 周二]");
         assertEquals(dt05.dtDetail(), "1970-01-01 15:05:00.000000000 [Asia/Shanghai +08:00 GMT+8 周四]");
         assertEquals(dt06.dtDetail(), "2022-08-01 10:05:15.980000000 [Asia/Shanghai +08:00 GMT+8 周一]");
         assertEquals(dt07.dtDetail(), "2022-08-10 17:06:50.666000000 [Asia/Shanghai +08:00 GMT+8 周三]");
         assertEquals(dt08.dtDetail(), "2022-08-10 17:06:50.666000000 [Asia/Shanghai +08:00 GMT+8 周三]");
+        assertEquals(dt20.dtDetail(), "1970-01-01 02:05:10.098000000 [Asia/Shanghai +08:00 GMT+8 周四]");
+        assertEquals(dt21.dtDetail(), "1970-01-01 02:05:10.098000000 [Asia/Shanghai +08:00 GMT+8 周四]");
+        assertEquals(dt22.dtDetail(), "2023-10-01 02:05:10.001000000 [Asia/Shanghai +08:00 GMT+8 周日]");
+        assertEquals(dt23.dtDetail(), "2023-10-01 02:05:10.100000000 [Asia/Shanghai +08:00 GMT+8 周日]");
 
         assertThrows(DateTimeParseException.class, () -> DateTime.parse("2022081017065066"));
         assertThrows(DateTimeParseException.class, () -> DateTime.parseDate("20228"));
