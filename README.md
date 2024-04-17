@@ -1,6 +1,6 @@
 # 📚falcon
 Falcon是一个强大的Java工具类库，提供了多种便捷的工具类，帮助开发者更方便的处理时间，UUID，集合等。
-+ 💡<u>**不可变且线程安全**</u>的**时间处理类**`DateTime<T>`，提供**统一**的时间API
++ 🔥<u>**不可变且线程安全**</u>的**时间处理类**`DateTime<T>`，提供**统一**的时间API
   - 🔺强大的时间处理API
     - **自动识别**解析多种时间格式串
     - 指定时间单位的**取整操作**（四舍五入、向上/下取整）
@@ -38,17 +38,17 @@ implementation 'com.iofairy:falcon:0.5.3'
 ```
 
 ## 🗺️使用指南（User Guide）
-- [强大的时间处理API](#强大的时间处理API)
+- [🔥强大的时间处理API](#强大的时间处理API)
     - [自动识别时间字符串](#自动识别时间字符串)
     - [时间取整操作](#时间取整操作)
     - [时间偏移(时间加减)](#时间偏移时间加减)
     - [计算两个时间间隔](#计算两个时间间隔)
-- [秒表`Stopwatch`](#秒表Stopwatch)
-- [带时间的UUID`TimedID`](#带时间的UUIDTimedID)
+- [🔥秒表`Stopwatch`](#秒表Stopwatch)
+- [🔥带时间的UUID`TimedID`](#带时间的UUIDTimedID)
 
 
 
-## 📘强大的时间处理API
+## 🔥强大的时间处理API
 ### 自动识别时间字符串
 ```java
 DateTime<Date> dt00 = DateTime.parseDate("2022-8-01 10:5:15", TZ.UTC);
@@ -160,7 +160,7 @@ System.out.println(interval2);      // 1年10月5天9时14分13秒190毫秒
 ```
 
 
-## 📘秒表`Stopwatch`
+## 🔥秒表`Stopwatch`
 **秒表**`Stopwatch`：方便<u>测试各个代码片段或任意多个连续代码片段的执行时间</u>。一个独立的秒表从运行开始到结束之前，便具有**分段记录**、**持续记录**与**实时记录**的功能  
 秒表中的**标记**`Stopwatch.mark()`：可在每个代码片段（业务）开始或结束时打个标记。 一方面是<u>代码片段（业务）间的分界点</u>；同时，也类似于savepoint（保存点），保存当时的时间
 ```java
@@ -190,7 +190,7 @@ stopwatch.mark();  // 业务结束时打个标记
 System.out.println("业务1开始到业务3完成所耗时间：" + stopwatch.elapsed(0, 3));     // 业务1开始到业务3完成所耗时间：3.037(秒)
 ```
 
-## 📘带时间的UUID`TimedID`
+## 🔥带时间的UUID`TimedID`
 Java自带的UUID虽然保证了唯一性，但是随机生成的，不具有顺序性，导致索引效率较低。`TimedID`**自带时间前缀**，记录着UUID创建时间，具有一定的顺序。且可以根据业务需要，**自定义生成的UUID的长度**。
 ```java
 System.out.println(TimedID.getId());        // 240409064014820AADJWNSV35
