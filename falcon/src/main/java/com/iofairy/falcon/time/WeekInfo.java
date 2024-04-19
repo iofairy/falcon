@@ -1,5 +1,6 @@
 package com.iofairy.falcon.time;
 
+import com.iofairy.falcon.os.OS;
 import com.iofairy.top.S;
 
 import java.time.DayOfWeek;
@@ -352,7 +353,9 @@ public class WeekInfo {
      * @return 指定年月的第 {@code weekNo} 周的第一天日期
      */
     public static LocalDate baseMonth(WeekFields weekFields, YearMonth yearMonth, int weekNo) {
-        checkOutOfBounds(weekNo < 0 || weekNo > 6, weekNo, "The `weekNo`'s range is [0, 6] when getting the week of the month. ");
+        checkOutOfBounds(weekNo < 0 || weekNo > 6, weekNo,
+                OS.IS_ZH_LANG ? "指定月中的周序号时，参数`weekNo`的取值范围为：[0, 6]。"
+                        : "The `weekNo`'s range is [0, 6] when getting the week of the month. ");
 
         ValueRange valueRange = weekRangeInMonth(weekFields, yearMonth);
         int minimum = (int) valueRange.getMinimum();  // 0、1
@@ -391,7 +394,9 @@ public class WeekInfo {
      */
     public static LocalDate baseYear(WeekFields weekFields, int year, int weekNo) {
         checkNullNPE(weekFields, args("weekFields"));
-        checkOutOfBounds(weekNo < 0 || weekNo > 54, weekNo, "The `weekNo`'s range is [0, 54] when getting the week of the year.");
+        checkOutOfBounds(weekNo < 0 || weekNo > 54, weekNo,
+                OS.IS_ZH_LANG ? "指定年中的周序号时，参数`weekNo`的取值范围为：[0, 54]。"
+                        : "The `weekNo`'s range is [0, 54] when getting the week of the year.");
 
         ValueRange valueRange = weekRangeInYear(weekFields, year);
         int minimum = (int) valueRange.getMinimum();  // 0、1

@@ -76,7 +76,7 @@ public class RangesTest {
             throwException();
         } catch (Exception e) {
             assertSame(e.getClass(), OutOfBoundsException.class);
-            assertEquals("The value out of range, the current value is: [-1.0]. Parameter `skewRatio` must be in (-1, 1)! ", e.getMessage());
+            assertEquals("数值超出所允许的范围，当前值为：[-1.0]。参数`skewRatio`的取值范围为：(-1, 1)。", e.getMessage());
         }
 
         try {

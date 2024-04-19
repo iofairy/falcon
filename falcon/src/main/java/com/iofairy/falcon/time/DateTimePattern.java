@@ -260,6 +260,8 @@ public class DateTimePattern {
     public static final String FM_DTF_HcMcSS            = "H:m:s[.SSS][.SS][.S]";
     public static final String FM_DTF_HzMzSzSz          = "H时m分s秒[SSS毫秒]";  // 只能接收3位数的毫秒值，1位数的毫秒识别有问题：如 6毫秒，会被解析成 600毫秒；6毫秒应该写成 006 毫秒
     public static final String FM_DTF_HoMzSzSz          = "H点m分s秒[SSS毫秒]";  // 只能接收3位数的毫秒值，1位数的毫秒识别有问题：如 6毫秒，会被解析成 600毫秒；6毫秒应该写成 006 毫秒
+    public static final String FM_DTF_MzSz              = "m分s秒";
+    public static final String FM_DTF_MzSzSz            = "m分s秒[SSS毫秒]";  // 只能接收3位数的毫秒值，1位数的毫秒识别有问题：如 6毫秒，会被解析成 600毫秒；6毫秒应该写成 006 毫秒
 
     /*###################################################################################
      ************************************************************************************
@@ -271,79 +273,81 @@ public class DateTimePattern {
     /*
      * DateTimeFormatter for Year
      */
-    public static final DateTimeFormatter DTF_Y = forY(FM_DTF_Y);
-    public static final DateTimeFormatter DTF_Y_ZH = forY(FM_DTF_Yz);
+    public static final DateTimeFormatter DTF_Y = buildDTF(FM_DTF_Y);
+    public static final DateTimeFormatter DTF_Y_ZH = buildDTF(FM_DTF_Yz);
     /*
      * DateTimeFormatter for Year, Month
      */
-    public static final DateTimeFormatter DTF_YM = forYM(FM_YM);
-    public static final DateTimeFormatter DTF_YM_DASH = forYM(FM_DTF_YdM);
-    public static final DateTimeFormatter DTF_YM_SLASH = forYM(FM_DTF_YsM);
-    public static final DateTimeFormatter DTF_YM_DOT = forYM(FM_DTF_YoM);
-    public static final DateTimeFormatter DTF_YM_ZH = forYM(FM_DTF_YzMz);
+    public static final DateTimeFormatter DTF_YM = buildDTF(FM_YM);
+    public static final DateTimeFormatter DTF_YM_DASH = buildDTF(FM_DTF_YdM);
+    public static final DateTimeFormatter DTF_YM_SLASH = buildDTF(FM_DTF_YsM);
+    public static final DateTimeFormatter DTF_YM_DOT = buildDTF(FM_DTF_YoM);
+    public static final DateTimeFormatter DTF_YM_ZH = buildDTF(FM_DTF_YzMz);
     /*
      * DateTimeFormatter for Year, Month, Day
      */
-    public static final DateTimeFormatter DTF_YMD = forYMD(FM_YMD);
-    public static final DateTimeFormatter DTF_YMD_DASH = forYMD(FM_DTF_YdMdD);
-    public static final DateTimeFormatter DTF_YMD_SLASH = forYMD(FM_DTF_YsMsD);
-    public static final DateTimeFormatter DTF_YMD_DOT = forYMD(FM_DTF_YoMoD);
-    public static final DateTimeFormatter DTF_YMD_ZH = forYMD(FM_DTF_YzMzDz);
+    public static final DateTimeFormatter DTF_YMD = buildDTF(FM_YMD);
+    public static final DateTimeFormatter DTF_YMD_DASH = buildDTF(FM_DTF_YdMdD);
+    public static final DateTimeFormatter DTF_YMD_SLASH = buildDTF(FM_DTF_YsMsD);
+    public static final DateTimeFormatter DTF_YMD_DOT = buildDTF(FM_DTF_YoMoD);
+    public static final DateTimeFormatter DTF_YMD_ZH = buildDTF(FM_DTF_YzMzDz);
     /*
      * DateTimeFormatter for Year, Month, Day, Hour
      */
-    public static final DateTimeFormatter DTF_YMDH = forYMDTime(FM_YMDH);
-    public static final DateTimeFormatter DTF_YMDH_DASH = forYMDTime(FM_DTF_YdMdDH);
-    public static final DateTimeFormatter DTF_YMDH_SLASH = forYMDTime(FM_DTF_YsMsDH);
-    public static final DateTimeFormatter DTF_YMDH_DOT = forYMDTime(FM_DTF_YoMoDH);
-    public static final DateTimeFormatter DTF_YMDH_ZHS = forYMDTime(FM_DTF_YzMzDzHz);
-    public static final DateTimeFormatter DTF_YMDH_ZHD = forYMDTime(FM_DTF_YzMzDzHo);
+    public static final DateTimeFormatter DTF_YMDH = buildDTF(FM_YMDH);
+    public static final DateTimeFormatter DTF_YMDH_DASH = buildDTF(FM_DTF_YdMdDH);
+    public static final DateTimeFormatter DTF_YMDH_SLASH = buildDTF(FM_DTF_YsMsDH);
+    public static final DateTimeFormatter DTF_YMDH_DOT = buildDTF(FM_DTF_YoMoDH);
+    public static final DateTimeFormatter DTF_YMDH_ZHS = buildDTF(FM_DTF_YzMzDzHz);
+    public static final DateTimeFormatter DTF_YMDH_ZHD = buildDTF(FM_DTF_YzMzDzHo);
     /*
      * DateTimeFormatter for Year, Month, Day, Hour, Minute
      */
-    public static final DateTimeFormatter DTF_YMDHM = forYMDTime(FM_YMDHM);
-    public static final DateTimeFormatter DTF_YMDHM_DASH = forYMDTime(FM_DTF_YdMdDHcM);
-    public static final DateTimeFormatter DTF_YMDHM_SLASH = forYMDTime(FM_DTF_YsMsDHcM);
-    public static final DateTimeFormatter DTF_YMDHM_DOT = forYMDTime(FM_DTF_YoMoDHcM);
-    public static final DateTimeFormatter DTF_YMDHM_ZHS = forYMDTime(FM_DTF_YzMzDzHzMz);
-    public static final DateTimeFormatter DTF_YMDHM_ZHD = forYMDTime(FM_DTF_YzMzDzHoMz);
+    public static final DateTimeFormatter DTF_YMDHM = buildDTF(FM_YMDHM);
+    public static final DateTimeFormatter DTF_YMDHM_DASH = buildDTF(FM_DTF_YdMdDHcM);
+    public static final DateTimeFormatter DTF_YMDHM_SLASH = buildDTF(FM_DTF_YsMsDHcM);
+    public static final DateTimeFormatter DTF_YMDHM_DOT = buildDTF(FM_DTF_YoMoDHcM);
+    public static final DateTimeFormatter DTF_YMDHM_ZHS = buildDTF(FM_DTF_YzMzDzHzMz);
+    public static final DateTimeFormatter DTF_YMDHM_ZHD = buildDTF(FM_DTF_YzMzDzHoMz);
     /*
      * DateTimeFormatter for Year, Month, Day, Hour, Minute, Second
      */
-    public static final DateTimeFormatter DTF_YMDHMS = forYMDTime(FM_YMDHMS);
-    public static final DateTimeFormatter DTF_YMDHMS_DASH = forYMDTime(FM_DTF_YdMdDHcMcS);
-    public static final DateTimeFormatter DTF_YMDHMS_SLASH = forYMDTime(FM_DTF_YsMsDHcMcS);
-    public static final DateTimeFormatter DTF_YMDHMS_DOT = forYMDTime(FM_DTF_YoMoDHcMcS);
-    public static final DateTimeFormatter DTF_YMDHMS_ZHS = forYMDTime(FM_DTF_YzMzDzHzMzSz);
-    public static final DateTimeFormatter DTF_YMDHMS_ZHD = forYMDTime(FM_DTF_YzMzDzHoMzSz);
-    public static final DateTimeFormatter DTF_YMDHMS_T = forYMDTime(FM_YMDTHMS);
-    public static final DateTimeFormatter DTF_YMDHMS_DASH_T = forYMDTime(FM_DTF_YdMdDTHcMcS);
-    public static final DateTimeFormatter DTF_YMDHMS_SLASH_T = forYMDTime(FM_DTF_YsMsDTHcMcS);
-    public static final DateTimeFormatter DTF_YMDHMS_DOT_T = forYMDTime(FM_DTF_YoMoDTHcMcS);
+    public static final DateTimeFormatter DTF_YMDHMS = buildDTF(FM_YMDHMS);
+    public static final DateTimeFormatter DTF_YMDHMS_DASH = buildDTF(FM_DTF_YdMdDHcMcS);
+    public static final DateTimeFormatter DTF_YMDHMS_SLASH = buildDTF(FM_DTF_YsMsDHcMcS);
+    public static final DateTimeFormatter DTF_YMDHMS_DOT = buildDTF(FM_DTF_YoMoDHcMcS);
+    public static final DateTimeFormatter DTF_YMDHMS_ZHS = buildDTF(FM_DTF_YzMzDzHzMzSz);
+    public static final DateTimeFormatter DTF_YMDHMS_ZHD = buildDTF(FM_DTF_YzMzDzHoMzSz);
+    public static final DateTimeFormatter DTF_YMDHMS_T = buildDTF(FM_YMDTHMS);
+    public static final DateTimeFormatter DTF_YMDHMS_DASH_T = buildDTF(FM_DTF_YdMdDTHcMcS);
+    public static final DateTimeFormatter DTF_YMDHMS_SLASH_T = buildDTF(FM_DTF_YsMsDTHcMcS);
+    public static final DateTimeFormatter DTF_YMDHMS_DOT_T = buildDTF(FM_DTF_YoMoDTHcMcS);
 
     /*
      * DateTimeFormatter for Year, Month, Day, Hour, Minute, Second, Milli
      */
-    public static final DateTimeFormatter DTF_YMDHMSS = forYMDTime(FM_YMDHMSS);
-    public static final DateTimeFormatter DTF_YMDHMSS_DASH = forYMDTime(FM_DTF_YdMdDHcMcSS);
-    public static final DateTimeFormatter DTF_YMDHMSS_SLASH = forYMDTime(FM_DTF_YsMsDHcMcSS);
-    public static final DateTimeFormatter DTF_YMDHMSS_DOT = forYMDTime(FM_DTF_YoMoDHcMcSS);
-    public static final DateTimeFormatter DTF_YMDHMSS_ZHS = forYMDTime(FM_DTF_YzMzDzHzMzSzSz);
-    public static final DateTimeFormatter DTF_YMDHMSS_ZHD = forYMDTime(FM_DTF_YzMzDzHoMzSzSz);
-    public static final DateTimeFormatter DTF_YMDHMSS_T = forYMDTime(FM_YMDTHMSS);
-    public static final DateTimeFormatter DTF_YMDHMSS_DASH_T = forYMDTime(FM_DTF_YdMdDTHcMcSS);
-    public static final DateTimeFormatter DTF_YMDHMSS_SLASH_T = forYMDTime(FM_DTF_YsMsDTHcMcSS);
-    public static final DateTimeFormatter DTF_YMDHMSS_DOT_T = forYMDTime(FM_DTF_YoMoDTHcMcSS);
+    public static final DateTimeFormatter DTF_YMDHMSS = buildDTF(FM_YMDHMSS);
+    public static final DateTimeFormatter DTF_YMDHMSS_DASH = buildDTF(FM_DTF_YdMdDHcMcSS);
+    public static final DateTimeFormatter DTF_YMDHMSS_SLASH = buildDTF(FM_DTF_YsMsDHcMcSS);
+    public static final DateTimeFormatter DTF_YMDHMSS_DOT = buildDTF(FM_DTF_YoMoDHcMcSS);
+    public static final DateTimeFormatter DTF_YMDHMSS_ZHS = buildDTF(FM_DTF_YzMzDzHzMzSzSz);
+    public static final DateTimeFormatter DTF_YMDHMSS_ZHD = buildDTF(FM_DTF_YzMzDzHoMzSzSz);
+    public static final DateTimeFormatter DTF_YMDHMSS_T = buildDTF(FM_YMDTHMSS);
+    public static final DateTimeFormatter DTF_YMDHMSS_DASH_T = buildDTF(FM_DTF_YdMdDTHcMcSS);
+    public static final DateTimeFormatter DTF_YMDHMSS_SLASH_T = buildDTF(FM_DTF_YsMsDTHcMcSS);
+    public static final DateTimeFormatter DTF_YMDHMSS_DOT_T = buildDTF(FM_DTF_YoMoDTHcMcSS);
 
-    public static final DateTimeFormatter DTF_HM = forTime(FM_DTF_HcM);
-    public static final DateTimeFormatter DTF_HM_ZHS = forTime(FM_DTF_HzMz);
-    public static final DateTimeFormatter DTF_HM_ZHD = forTime(FM_DTF_HoMz);
-    public static final DateTimeFormatter DTF_HMS = forTime(FM_DTF_HcMcS);
-    public static final DateTimeFormatter DTF_HMS_ZHS = forTime(FM_DTF_HzMzSz);
-    public static final DateTimeFormatter DTF_HMS_ZHD = forTime(FM_DTF_HoMzSz);
-    public static final DateTimeFormatter DTF_HMSS = forTime(FM_DTF_HcMcSS);
-    public static final DateTimeFormatter DTF_HMSS_ZHS = forTime(FM_DTF_HzMzSzSz);
-    public static final DateTimeFormatter DTF_HMSS_ZHD = forTime(FM_DTF_HoMzSzSz);
+    public static final DateTimeFormatter DTF_HM = buildDTF(FM_DTF_HcM);
+    public static final DateTimeFormatter DTF_HM_ZHS = buildDTF(FM_DTF_HzMz);
+    public static final DateTimeFormatter DTF_HM_ZHD = buildDTF(FM_DTF_HoMz);
+    public static final DateTimeFormatter DTF_HMS = buildDTF(FM_DTF_HcMcS);
+    public static final DateTimeFormatter DTF_HMS_ZHS = buildDTF(FM_DTF_HzMzSz);
+    public static final DateTimeFormatter DTF_HMS_ZHD = buildDTF(FM_DTF_HoMzSz);
+    public static final DateTimeFormatter DTF_HMSS = buildDTF(FM_DTF_HcMcSS);
+    public static final DateTimeFormatter DTF_HMSS_ZHS = buildDTF(FM_DTF_HzMzSzSz);
+    public static final DateTimeFormatter DTF_HMSS_ZHD = buildDTF(FM_DTF_HoMzSzSz);
+    public static final DateTimeFormatter DTF_MS_ZHD = buildDTF(FM_DTF_MzSz);
+    public static final DateTimeFormatter DTF_MSS_ZHD = buildDTF(FM_DTF_MzSzSz);
 
     private static final Map<String, DateTimeFormatter> DTF_MAP = new HashMap<>();
 
@@ -453,6 +457,8 @@ public class DateTimePattern {
         DTF_MAP.put(FM_HcMcSS, DTF_HMSS);
         DTF_MAP.put(FM_HzMzSzSz, DTF_HMSS_ZHS);
         DTF_MAP.put(FM_HoMzSzSz, DTF_HMSS_ZHD);
+        DTF_MAP.put(FM_DTF_MzSz, DTF_MS_ZHD);
+        DTF_MAP.put(FM_DTF_MzSzSz, DTF_MSS_ZHD);
     }
 
     /*###################################################################################
@@ -476,92 +482,35 @@ public class DateTimePattern {
     }
 
     /**
-     * 为 LocalDateTime 创建 DateTimeFormatter
+     * 创建带默认值的 {@code DateTimeFormatter}
      *
      * @param pattern 只精确到 年
      * @return DateTimeFormatter
-     * @since 0.3.1
+     * @since 0.5.4
      */
-    private static DateTimeFormatter forY(String pattern) {
+    public static DateTimeFormatter buildDTF(String pattern) {
         return new DateTimeFormatterBuilder()
                 .appendPattern(pattern)
+                .parseDefaulting(ChronoField.YEAR_OF_ERA, 1970)
+                // .parseDefaulting(ChronoField.YEAR, 1970)
                 .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
                 .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
                 .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
                 .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
                 .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
-                .parseDefaulting(ChronoField.MILLI_OF_SECOND, 0)
+                .parseDefaulting(ChronoField.NANO_OF_SECOND, 0)
                 .toFormatter();
     }
 
-    /**
-     * 为 LocalDateTime 创建 DateTimeFormatter
-     *
-     * @param pattern 只精确到 年月
-     * @return DateTimeFormatter
-     * @since 0.3.1
-     */
-    private static DateTimeFormatter forYM(String pattern) {
-        return new DateTimeFormatterBuilder()
-                .appendPattern(pattern)
-                .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
-                .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
-                .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
-                .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
-                .parseDefaulting(ChronoField.MILLI_OF_SECOND, 0)
-                .toFormatter();
-    }
-
-    /**
-     * 为 LocalDateTime 创建 DateTimeFormatter
-     *
-     * @param pattern 只精确到 年月日
-     * @return DateTimeFormatter
-     * @since 0.3.1
-     */
-    private static DateTimeFormatter forYMD(String pattern) {
-        return new DateTimeFormatterBuilder()
-                .appendPattern(pattern)
-                .parseDefaulting(ChronoField.HOUR_OF_DAY, 0)
-                .parseDefaulting(ChronoField.MINUTE_OF_HOUR, 0)
-                .parseDefaulting(ChronoField.SECOND_OF_MINUTE, 0)
-                .parseDefaulting(ChronoField.MILLI_OF_SECOND, 0)
-                .toFormatter();
-    }
-
-    /**
-     * 为 LocalDateTime 创建 DateTimeFormatter
-     *
-     * @param pattern 只精确到 年月日以及时间（时分秒毫秒）
-     * @return DateTimeFormatter
-     * @since 0.3.1
-     */
-    private static DateTimeFormatter forYMDTime(String pattern) {
-        return new DateTimeFormatterBuilder()
-                .appendPattern(pattern)
-                .toFormatter();
-    }
-
-    /**
-     * 为 LocalDateTime 创建 DateTimeFormatter
-     *
-     * @param pattern 支持几种格式：时、时分、时分秒、时分秒毫秒
-     * @return DateTimeFormatter
-     * @since 0.3.1
-     */
-    private static DateTimeFormatter forTime(String pattern) {
-        return new DateTimeFormatterBuilder()
-                .appendPattern(pattern)
-                .parseDefaulting(ChronoField.YEAR, 1970)
-                .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
-                .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
-                .toFormatter();
-    }
 
     /**
      * Pattern for Java8 new date api {@link java.time.LocalDateTime})
      * using {@link java.time.format.DateTimeFormatter} <br>
-     * 通过给定的时间串解析出匹配的时间格式串，适用于 {@link java.time.format.DateTimeFormatter}
+     * 通过给定的时间串解析出匹配的时间格式串，适用于 {@link java.time.format.DateTimeFormatter}<br>
+     * <b>注：</b><br>
+     * 与 {@link #forSDF(String)} 相比，此函数<b>省略了一些不完整的时间格式解析</b>。
+     * 比如：对于日期格式，必须要带<b>“年”</b>的部分；对于时间格式，则必须要带<b>“时”</b>的部分
+     *
      *
      * @param dateTime 时间串
      * @return 时间格式串，如：yyyy-MM-dd HH:mm:ss.SSS
@@ -618,7 +567,7 @@ public class DateTimePattern {
                     case COLON:
                         return matchPattern(HcM, dateTime, FM_DTF_HcM);
                     case ZH_TIME:
-                        return matchPattern(cs(HzMz, HoMz), dateTime, FM_DTF_HzMz, FM_DTF_HoMz);
+                        return matchPattern(cs(HzMz, HoMz, MzSz), dateTime, FM_DTF_HzMz, FM_DTF_HoMz, FM_DTF_MzSz);
                     case ZH_DATE:
                         return matchPattern(Yz, dateTime, FM_DTF_Yz);
                 }
@@ -636,7 +585,7 @@ public class DateTimePattern {
                     case COLON:
                         return matchPattern(cs(HcMcS, HcM), dateTime, FM_DTF_HcMcS, FM_DTF_HcM);
                     case ZH_TIME:
-                        return matchPattern(cs(HzMz, HoMz), dateTime, FM_DTF_HzMz, FM_DTF_HoMz);
+                        return matchPattern(cs(HzMz, HoMz, MzSz), dateTime, FM_DTF_HzMz, FM_DTF_HoMz, FM_DTF_MzSz);
                     case ZH_DATE:
                         return matchPattern(Yz, dateTime, FM_DTF_Yz);
                 }
@@ -656,7 +605,7 @@ public class DateTimePattern {
                     case COLON:
                         return matchPattern(HcMcS, dateTime, FM_DTF_HcMcS);
                     case ZH_TIME:
-                        return matchPattern(cs(HzMzSz, HoMzSz, HzMz, HoMz), dateTime, FM_DTF_HzMzSz, FM_DTF_HoMzSz, FM_DTF_HzMz, FM_DTF_HoMz);
+                        return matchPattern(cs(HzMzSz, HoMzSz, HzMz, HoMz, MzSz), dateTime, FM_DTF_HzMzSz, FM_DTF_HoMzSz, FM_DTF_HzMz, FM_DTF_HoMz, FM_DTF_MzSz);
                     case ZH_DATE:
                         return matchPattern(YzMz, dateTime, FM_DTF_YzMz);
                 }
@@ -675,6 +624,8 @@ public class DateTimePattern {
                         return matchPattern(cs(YoMoD, YoM), dateTime, FM_DTF_YoMoD, FM_DTF_YoM);
                     case COLON:
                         return matchPattern(HcMcS, dateTime, FM_DTF_HcMcS);
+                    case ZH_TIME_MS:
+                        return matchPattern(MzSzSz, dateTime, FM_DTF_MzSzSz);
                     case ZH_TIME:
                         return matchPattern(cs(HzMzSz, HoMzSz), dateTime, FM_DTF_HzMzSz, FM_DTF_HoMzSz);
                     case ZH_DATE:
@@ -698,6 +649,8 @@ public class DateTimePattern {
                             return matchPattern(YdMdD, dateTime, FM_DTF_YdMdD);
                         case DOT:
                             return matchPattern(YoMoD, dateTime, FM_DTF_YoMoD);
+                        case ZH_TIME_MS:
+                            return matchPattern(MzSzSz, dateTime, FM_DTF_MzSzSz);
                         case ZH_TIME:
                             return matchPattern(cs(HzMzSz, HoMzSz), dateTime, FM_DTF_HzMzSz, FM_DTF_HoMzSz);
                         case ZH_DATE:
@@ -726,7 +679,7 @@ public class DateTimePattern {
                     case DOT:
                         return matchPattern(YoMoD, dateTime, FM_DTF_YoMoD);
                     case ZH_TIME_MS:
-                        return matchPattern(cs(HzMzSzSSSz, HoMzSzSSSz), dateTime, FM_DTF_HzMzSzSz, FM_DTF_HoMzSzSz);
+                        return matchPattern(cs(HzMzSzSSSz, HoMzSzSSSz, MzSzSz), dateTime, FM_DTF_HzMzSzSz, FM_DTF_HoMzSzSz, FM_DTF_MzSzSz);
                     case ZH_TIME:
                         return matchPattern(cs(HzMzSz, HoMzSz), dateTime, FM_DTF_HzMzSz, FM_DTF_HoMzSz);
                     case ZH_DATE:
@@ -755,7 +708,7 @@ public class DateTimePattern {
                         case DOT:
                             return matchPattern(YoMoD, dateTime, FM_DTF_YoMoD);
                         case ZH_TIME_MS:
-                            return matchPattern(cs(HzMzSzSSSz, HoMzSzSSSz), dateTime, FM_DTF_HzMzSzSz, FM_DTF_HoMzSzSz);
+                            return matchPattern(cs(HzMzSzSSSz, HoMzSzSSSz, MzSzSz), dateTime, FM_DTF_HzMzSzSz, FM_DTF_HoMzSzSz, FM_DTF_MzSzSz);
                         case ZH_ZH:
                             return matchPattern(cs(YzMzDzHz, YzMzDzHo), dateTime, FM_DTF_YzMzDzHz, FM_DTF_YzMzDzHo);
                         case ZH_DATE:
@@ -779,7 +732,7 @@ public class DateTimePattern {
                     case DOT_COLON:
                         return matchPattern(cs(YoMoDHcM, YoMoDH), dateTime, FM_DTF_YoMoDHcM, FM_DTF_YoMoDH);
                     case ZH_TIME_MS:
-                        return matchPattern(cs(HzMzSzSSSz, HoMzSzSSSz), dateTime, FM_DTF_HzMzSzSz, FM_DTF_HoMzSzSz);
+                        return matchPattern(cs(HzMzSzSSSz, HoMzSzSSSz, MzSzSz), dateTime, FM_DTF_HzMzSzSz, FM_DTF_HoMzSzSz, FM_DTF_MzSzSz);
                     case ZH_ZH:
                         return matchPattern(cs(YzMzDzHz, YzMzDzHo), dateTime, FM_DTF_YzMzDzHz, FM_DTF_YzMzDzHo);
                     case ZH_DATE:

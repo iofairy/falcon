@@ -1,8 +1,10 @@
 package com.iofairy.falcon.unit;
 
-import com.iofairy.except.OutOfBoundsException;
+import com.iofairy.falcon.os.OS;
 
 import java.math.BigInteger;
+
+import static com.iofairy.falcon.misc.Preconditions.*;
 
 /**
  * 字节单位相互转换的因子（系数）
@@ -39,7 +41,8 @@ public class ByteFactor {
     public static final BigInteger YB_COEF = X1000.pow(8);
 
     public static BigInteger getCoef(boolean isBinaryUnit, int index) {
-        if (index < 0 || index > 8) throw new OutOfBoundsException(index, "The `index` can only be in the range [0, 8].");
+        checkOutOfBounds(index < 0 || index > 8, index, OS.IS_ZH_LANG ? "参数`index`的取值范围为：[0, 8]。" : "The `index` can only be in the range [0, 8].");
+
         if (isBinaryUnit) {
             switch (index) {
                 case 0:

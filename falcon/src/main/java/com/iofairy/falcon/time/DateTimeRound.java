@@ -15,7 +15,7 @@
  */
 package com.iofairy.falcon.time;
 
-import com.iofairy.except.OutOfBoundsException;
+import com.iofairy.falcon.os.OS;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -637,13 +637,9 @@ class DateTimeRound {
      */
     private static void checkValidAmountUnit(ChronoUnit chronoUnit, int amountUnit) {
         if (chronoUnit == HOURS) {
-            if (amountUnit < -24 || amountUnit > 24) {
-                throw new OutOfBoundsException(amountUnit, "The `amountUnit`'s range is [-24, 24] when `chronoUnit` is `HOURS`.");
-            }
+            checkOutOfBounds(amountUnit < -24 || amountUnit > 24, amountUnit, OS.IS_ZH_LANG ? "当`chronoUnit`为`HOURS`时，参数`amountUnit`的取值范围为：[-24, 24]。" : "The `amountUnit`'s range is [-24, 24] when `chronoUnit` is `HOURS`.");
         } else {
-            if (amountUnit < -60 || amountUnit > 60) {
-                throw new OutOfBoundsException(amountUnit, "The `amountUnit`'s range is [-60, 60] when `chronoUnit` is `MINUTES` or `SECONDS`.");
-            }
+            checkOutOfBounds(amountUnit < -60 || amountUnit > 60, amountUnit, OS.IS_ZH_LANG ? "当`chronoUnit`为`MINUTES`或`SECONDS`时，参数`amountUnit`的取值范围为：[-60, 60]。" : "The `amountUnit`'s range is [-60, 60] when `chronoUnit` is `MINUTES` or `SECONDS`.");
         }
     }
 

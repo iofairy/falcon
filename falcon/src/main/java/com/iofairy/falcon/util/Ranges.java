@@ -17,6 +17,7 @@ package com.iofairy.falcon.util;
 
 import com.iofairy.except.UnexpectedParameterException;
 
+import com.iofairy.falcon.os.OS;
 import com.iofairy.range.Range;
 import com.iofairy.tuple.Tuple;
 import com.iofairy.tuple.Tuple2;
@@ -71,7 +72,7 @@ public class Ranges {
         long dataCount = range.end - range.start;
         checkCondition(splitCount < 2, "Parameter `splitCount` must ≥ 2! ");
         checkCondition(dataCount < splitCount, "(`range.end` - `range.start`) must be ≥ `splitCount`! ");
-        checkOutOfBounds(skewRatio <= -1 || skewRatio >= 1, skewRatio, "Parameter `skewRatio` must be in (-1, 1)! ");
+        checkOutOfBounds(skewRatio <= -1 || skewRatio >= 1, skewRatio, OS.IS_ZH_LANG ? "参数`skewRatio`的取值范围为：(-1, 1)。" : "Parameter `skewRatio` must be in (-1, 1)! ");
 
         /*
          * x 为首个range大小

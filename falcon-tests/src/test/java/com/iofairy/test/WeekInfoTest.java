@@ -361,7 +361,7 @@ public class WeekInfoTest {
             throwException();
         } catch (Exception e) {
             assertSame(e.getClass(), OutOfBoundsException.class);
-            assertEquals(e.getMessage(), "The value out of range, the current value is: [7]. The `weekNo`'s range is [0, 6] when getting the week of the month. ");
+            assertEquals(e.getMessage(), "数值超出所允许的范围，当前值为：[7]。指定月中的周序号时，参数`weekNo`的取值范围为：[0, 6]。");
         }
     }
 

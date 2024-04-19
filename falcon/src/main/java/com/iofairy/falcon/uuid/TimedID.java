@@ -15,6 +15,7 @@
  */
 package com.iofairy.falcon.uuid;
 
+import com.iofairy.falcon.os.OS;
 import com.iofairy.falcon.time.DateTime;
 import com.iofairy.top.S;
 
@@ -451,11 +452,12 @@ public class TimedID {
      * @return 指定位数的字母<b>（大写）</b>
      */
     public static String numberToLetters(int number, int letterLength) {
-        if (number < 0 || letterLength < 1 || letterLength > 6) throw new IllegalArgumentException("参数`number`应为非负数，`letterLength`取值范围为[1, 6]！");
+        checkOutOfBounds(number < 0, number, OS.IS_ZH_LANG ? "参数`number`应为非负数！" : "Parameter `number` must be non-negative! ");
+        checkOutOfBounds(letterLength < 1 || letterLength > 6, number, OS.IS_ZH_LANG ? "参数`letterLength`取值范围为：[1, 6]！" : "Parameter `letterLength` must be in [1, 6]! ");
 
         int maxNumber = (int) Math.pow(26, letterLength) - 1;
-        if (number > maxNumber)
-            throw new IllegalArgumentException("参数`number`超出范围，当前位数[" + letterLength + "]下，最大允许值[" + maxNumber + "]，无法映射到指定位数的字母！");
+
+        checkArgument(number > maxNumber, "参数`number`超出范围，当前位数[${letterLength}]下，最大允许值[${maxNumber}]，无法映射到指定位数的字母！", letterLength, maxNumber);
 
         char[] letters = new char[letterLength];
 

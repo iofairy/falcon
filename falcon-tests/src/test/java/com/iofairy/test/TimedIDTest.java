@@ -1,5 +1,6 @@
 package com.iofairy.test;
 
+import com.iofairy.except.OutOfBoundsException;
 import com.iofairy.falcon.iterable.CollectionKit;
 import com.iofairy.falcon.uuid.TimedID;
 import com.iofairy.falcon.uuid.TimedUUID;
@@ -37,6 +38,8 @@ public class TimedIDTest {
         TimedID timedID1 = TimedID.Builder.newBuilder().withTimestamp(true).withStartInstant("20240101000000000").withIdLength(25).build();
         TimedID timedID2 = TimedID.Builder.newBuilder().withTimestamp(true).withStartInstant(Instant.now()).withIdLength(25).build();
         TimedID timedID3 = TimedID.Builder.newBuilder().withTimestamp(true).withStartInstant("2024-04-08 22:53:00.000").withIdLength(25).build();
+        TimedID timedID4 = TimedID.Builder.newBuilder().withYearLength(5).build();
+
         try {
             TimedID.Builder.newBuilder().withTimestamp(true).withStartInstant(Instant.now().plusSeconds(1)).withIdLength(25).build();
         } catch (Exception e) {
@@ -68,9 +71,14 @@ public class TimedIDTest {
         System.out.println(timedID2);
         System.out.println(timedID2.randomId());
         TimedID.setDefaultId(timedID2);
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 5; i++) {
             System.out.println(TimedID.getId());
         }
+
+        for (int i = 0; i < 5; i++) {
+            System.out.println(timedID4.randomId());    // 020240419072646356AABAIXO
+        }
+
 
         assertEquals(id01.length(), 25);
         assertEquals(id02.length(), 26);
@@ -98,10 +106,11 @@ public class TimedIDTest {
     private static void performance() {
         AtomicInteger atomicInteger = new AtomicInteger();
         Thread thread = new Thread(() -> {
-            for (int j = 0; j < 1000000; j++) {
+            for (int j = 0; j < 10000000; j++) {
                 // TimedUUID.getId();      // 44612
-                // TimedID.getId();        // 45857
-                TimedID.mid();          // 52866
+                TimedID.getId();        // 45857
+                // TimedID.mid();          // 52866
+                // IdUtil.getSnowflakeNextId();// 1020078
 
                 atomicInteger.incrementAndGet();
             }
@@ -195,10 +204,73 @@ public class TimedIDTest {
         }
     }
 
+    @Test
+    public void testException() {
+        TimedID.Builder.newBuilder().withWorkerNum(0).build();
+        TimedID.Builder.newBuilder().withWorkerNum(1).build();
+        TimedID.Builder.newBuilder().withWorkerIdLength(1).build();
+        TimedID.Builder.newBuilder().withWorkerIdLength(6).build();
+        TimedID.Builder.newBuilder().withWorkerNum(0).withWorkerIdLength(1).build();
+        TimedID.Builder.newBuilder().withWorkerNum(20).withWorkerIdLength(1).build();
+        TimedID.Builder.newBuilder().withWorkerNum(0).withWorkerIdLength(6).build();
+        TimedID.Builder.newBuilder().withWorkerNum(308915775).withWorkerIdLength(6).build();
 
+        try {
+            TimedID.Builder.newBuilder().withWorkerNum(-1).build();
+            throwException();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertSame(e.getClass(), OutOfBoundsException.class);
+            assertEquals(e.getMessage(), "数值超出所允许的范围，当前值为：[-1]。参数`number`应为非负数！");
+        }
+        try {
+            TimedID.numberToLetters(0, 0);
+            throwException();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertSame(e.getClass(), OutOfBoundsException.class);
+            assertEquals(e.getMessage(), "数值超出所允许的范围，当前值为：[0]。参数`letterLength`取值范围为：[1, 6]！");
+        }
+        try {
+            TimedID.numberToLetters(0, 7);
+            throwException();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertSame(e.getClass(), OutOfBoundsException.class);
+            assertEquals(e.getMessage(), "数值超出所允许的范围，当前值为：[0]。参数`letterLength`取值范围为：[1, 6]！");
+        }
+        try {
+            TimedID.Builder.newBuilder().withWorkerNum(26).withWorkerIdLength(1).build();
+            throwException();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertSame(e.getClass(), IllegalArgumentException.class);
+            assertEquals(e.getMessage(), "参数`number`超出范围，当前位数[1]下，最大允许值[25]，无法映射到指定位数的字母！");
+        }
+        try {
+            TimedID.Builder.newBuilder().withWorkerNum(20000).withWorkerIdLength(3).build();
+            throwException();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertSame(e.getClass(), IllegalArgumentException.class);
+            assertEquals(e.getMessage(), "参数`number`超出范围，当前位数[3]下，最大允许值[17575]，无法映射到指定位数的字母！");
+        }
+        try {
+            TimedID.Builder.newBuilder().withWorkerNum(308915776).withWorkerIdLength(6).build();
+            throwException();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            assertSame(e.getClass(), IllegalArgumentException.class);
+            assertEquals(e.getMessage(), "参数`number`超出范围，当前位数[6]下，最大允许值[308915775]，无法映射到指定位数的字母！");
+        }
 
+    }
 
-
+    /*
+     * --------------
+     * TimedUUID 测试
+     * --------------
+     */
     @Test
     public void testTimedUUID() {
         System.out.println("===========testTimedUUID===========");
@@ -454,6 +526,10 @@ public class TimedIDTest {
             String id = TimedUUID.linedId();
             System.out.println(id);
         }
+    }
+
+    private void throwException() {
+        throw new RuntimeException();
     }
 
 }
