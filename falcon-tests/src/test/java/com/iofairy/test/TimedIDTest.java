@@ -148,7 +148,7 @@ public class TimedIDTest {
 
     @Test
     public void testDefaultId1() {
-        TimedID timedID = TimedID.Builder.newBuilder().withTimestamp(true).withStartInstant("2024-4-9 6:0:0.0").withIdLength(25).build();
+        TimedID timedID = TimedID.Builder.newBuilder().withTimestamp(true).withStartInstant("2024-5-7 20:0:0.0").withIdLength(25).build();
         TimedID.setDefaultId(timedID);
         TimedID.setDefaultId(TimedID.TIMED_ID); // 无效设置
         for (int i = 0; i < 10; i++) {

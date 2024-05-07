@@ -26,6 +26,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import static com.iofairy.falcon.misc.Preconditions.*;
 
@@ -117,6 +118,14 @@ public class TimedID {
      * 28位（含xx位时间戳）的带 _(下划线) 的 TimedUUID 实例
      */
     public static final TimedID TS_ID_UNDERLINE = Builder.newBuilder().withTimestamp(true).withUnderline(true).withIdLength(28).withWorkerIdLength(1).build();
+
+    /*#####################################################
+     *********             其他全局对象             *********
+     #####################################################*/
+    /**
+     * 去除UUID中的横线的正则表达式
+     */
+    private static final Pattern PATTERN = Pattern.compile("-");
 
     /*###################################################################################
      ************************************************************************************
@@ -415,12 +424,7 @@ public class TimedID {
 
     private static String uuidToBase36() {
         String hexUuid = UUID.randomUUID().toString();
-        String[] split = hexUuid.split("-");
-        if (split.length == 5) {
-            hexUuid = split[0] + split[4] + split[1] + split[2] + split[3];
-        } else {
-            hexUuid = hexUuid.replaceAll("-", "");
-        }
+        hexUuid = PATTERN.matcher(hexUuid).replaceAll("");
 
         int radix = 36;
         BigInteger bigInteger = new BigInteger(hexUuid, 16);
