@@ -487,6 +487,24 @@ public final class Preconditions {
     }
 
     /*==============================================================================
+     **********************    throw RuntimeException    **********************
+     ==============================================================================*/
+
+    /**
+     * 校验运行时异常，expression 为 {@code true} 则抛出 {@link RuntimeException} 异常
+     *
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws RuntimeException RuntimeException
+     */
+    public static void checkRuntimeException(boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new RuntimeException(SI.$(msgTemplate, objs));
+        }
+    }
+
+    /*==============================================================================
      ****************          throw IllegalStateException          ****************
      ==============================================================================*/
 
