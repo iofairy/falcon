@@ -35,19 +35,19 @@ public class TimedIDTest {
         String id09 = TimedID.lid();
         String id10 = TimedID._id();
 
-        TimedID timedID1 = TimedID.Builder.newBuilder().withTimestamp(true).withStartInstant("20240101000000000").withIdLength(25).build();
-        TimedID timedID2 = TimedID.Builder.newBuilder().withTimestamp(true).withStartInstant(Instant.now()).withIdLength(25).build();
-        TimedID timedID3 = TimedID.Builder.newBuilder().withTimestamp(true).withStartInstant("2024-04-08 22:53:00.000").withIdLength(25).build();
-        TimedID timedID4 = TimedID.Builder.newBuilder().withYearLength(5).build();
+        TimedID timedID1 = TimedID.newBuilder().withTimestamp(true).withStartInstant("20240101000000000").withIdLength(25).build();
+        TimedID timedID2 = TimedID.newBuilder().withTimestamp(true).withStartInstant(Instant.now()).withIdLength(25).build();
+        TimedID timedID3 = TimedID.newBuilder().withTimestamp(true).withStartInstant("2024-04-08 22:53:00.000").withIdLength(25).build();
+        TimedID timedID4 = TimedID.newBuilder().withYearLength(5).build();
 
         try {
-            TimedID.Builder.newBuilder().withTimestamp(true).withStartInstant(Instant.now().plusSeconds(1)).withIdLength(25).build();
+            TimedID.newBuilder().withTimestamp(true).withStartInstant(Instant.now().plusSeconds(1)).withIdLength(25).build();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             assertNotNull(e.getMessage());
         }
         try {
-            TimedID.Builder.newBuilder().withTimestamp(true).withStartInstant("2999-1-1").withIdLength(25).build();
+            TimedID.newBuilder().withTimestamp(true).withStartInstant("2999-1-1").withIdLength(25).build();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             assertNotNull(e.getMessage());
@@ -58,7 +58,7 @@ public class TimedIDTest {
         System.out.println("id02: " + id02);    // id02: 0240409064015067AA9ULRWUBJ
         System.out.println("id03: " + id03);    // id03: 0240409064015067AA55DBDMO7Z3K4
         System.out.println("id04: " + id04);    // id04: 20240409064015068AAEI0SMVHDP274A
-        System.out.println("id05: " + id05);    // id05: 20240409064015068_A7VT0LSYBW
+        System.out.println("id05: " + id05);    // id05: 0240610215244828_A9CE6NTLK2RAW
         System.out.println("id06: " + id06);    // id06: 1712616015068AA54VB5KZBUX
         System.out.println("id07: " + id07);    // id07: 1712616015068AA2BE42OPHJM8
         System.out.println("id08: " + id08);    // id08: 1712616015068AA8JEK4Q4FQAILX2H
@@ -84,12 +84,12 @@ public class TimedIDTest {
         assertEquals(id02.length(), 26);
         assertEquals(id03.length(), 30);
         assertEquals(id04.length(), 32);
-        assertEquals(id05.length(), 28);
+        assertEquals(id05.length(), 30);
         assertEquals(id06.length(), 25);
         assertEquals(id07.length(), 26);
         assertEquals(id08.length(), 30);
         assertEquals(id09.length(), 32);
-        assertEquals(id10.length(), 28);
+        assertEquals(id10.length(), 30);
 
     }
 
@@ -148,7 +148,7 @@ public class TimedIDTest {
 
     @Test
     public void testDefaultId1() {
-        TimedID timedID = TimedID.Builder.newBuilder().withTimestamp(true).withStartInstant("2024-5-7 20:0:0.0").withIdLength(25).build();
+        TimedID timedID = TimedID.newBuilder().withTimestamp(true).withStartInstant("2024-5-7 20:0:0.0").withIdLength(25).build();
         TimedID.setDefaultId(timedID);
         TimedID.setDefaultId(TimedID.TIMED_ID); // 无效设置
         for (int i = 0; i < 10; i++) {
@@ -172,33 +172,43 @@ public class TimedIDTest {
 
     @Test
     public void testPrintId() {
+        System.out.println("===========TimedID.newId()===========");
         for (int i = 0; i < 5; i++) {
             System.out.println(TimedID.newId());
         }
+        System.out.println("===========TimedID.shortId()===========");
         for (int i = 0; i < 5; i++) {
             System.out.println(TimedID.shortId());
         }
+        System.out.println("===========TimedID.mediumId()===========");
         for (int i = 0; i < 5; i++) {
             System.out.println(TimedID.mediumId());
         }
+        System.out.println("===========TimedID.longId()===========");
         for (int i = 0; i < 5; i++) {
             System.out.println(TimedID.longId());
         }
+        System.out.println("===========TimedID.linedId()===========");
         for (int i = 0; i < 5; i++) {
             System.out.println(TimedID.linedId());
         }
+        System.out.println("===========TimedID.nid()===========");
         for (int i = 0; i < 5; i++) {
             System.out.println(TimedID.nid());
         }
+        System.out.println("===========TimedID.sid()===========");
         for (int i = 0; i < 5; i++) {
             System.out.println(TimedID.sid());
         }
+        System.out.println("===========TimedID.mid()===========");
         for (int i = 0; i < 5; i++) {
             System.out.println(TimedID.mid());
         }
+        System.out.println("===========TimedID.lid()===========");
         for (int i = 0; i < 5; i++) {
             System.out.println(TimedID.lid());
         }
+        System.out.println("===========TimedID._id()===========");
         for (int i = 0; i < 5; i++) {
             System.out.println(TimedID._id());
         }
@@ -206,17 +216,17 @@ public class TimedIDTest {
 
     @Test
     public void testException() {
-        TimedID.Builder.newBuilder().withWorkerNum(0).build();
-        TimedID.Builder.newBuilder().withWorkerNum(1).build();
-        TimedID.Builder.newBuilder().withWorkerIdLength(1).build();
-        TimedID.Builder.newBuilder().withWorkerIdLength(6).build();
-        TimedID.Builder.newBuilder().withWorkerNum(0).withWorkerIdLength(1).build();
-        TimedID.Builder.newBuilder().withWorkerNum(20).withWorkerIdLength(1).build();
-        TimedID.Builder.newBuilder().withWorkerNum(0).withWorkerIdLength(6).build();
-        TimedID.Builder.newBuilder().withWorkerNum(308915775).withWorkerIdLength(6).build();
+        TimedID.newBuilder().withWorkerNum(0).build();
+        TimedID.newBuilder().withWorkerNum(1).build();
+        TimedID.newBuilder().withWorkerIdLength(1).build();
+        TimedID.newBuilder().withWorkerIdLength(6).build();
+        TimedID.newBuilder().withWorkerNum(0).withWorkerIdLength(1).build();
+        TimedID.newBuilder().withWorkerNum(20).withWorkerIdLength(1).build();
+        TimedID.newBuilder().withWorkerNum(0).withWorkerIdLength(6).build();
+        TimedID.newBuilder().withWorkerNum(308915775).withWorkerIdLength(6).build();
 
         try {
-            TimedID.Builder.newBuilder().withWorkerNum(-1).build();
+            TimedID.newBuilder().withWorkerNum(-1).build();
             throwException();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -240,7 +250,7 @@ public class TimedIDTest {
             assertEquals(e.getMessage(), "数值超出所允许的范围，当前值为：[0]。参数`letterLength`取值范围为：[1, 6]！");
         }
         try {
-            TimedID.Builder.newBuilder().withWorkerNum(26).withWorkerIdLength(1).build();
+            TimedID.newBuilder().withWorkerNum(26).withWorkerIdLength(1).build();
             throwException();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -248,7 +258,7 @@ public class TimedIDTest {
             assertEquals(e.getMessage(), "参数`number`超出范围，当前位数[1]下，最大允许值[25]，无法映射到指定位数的字母！");
         }
         try {
-            TimedID.Builder.newBuilder().withWorkerNum(20000).withWorkerIdLength(3).build();
+            TimedID.newBuilder().withWorkerNum(20000).withWorkerIdLength(3).build();
             throwException();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -256,7 +266,7 @@ public class TimedIDTest {
             assertEquals(e.getMessage(), "参数`number`超出范围，当前位数[3]下，最大允许值[17575]，无法映射到指定位数的字母！");
         }
         try {
-            TimedID.Builder.newBuilder().withWorkerNum(308915776).withWorkerIdLength(6).build();
+            TimedID.newBuilder().withWorkerNum(308915776).withWorkerIdLength(6).build();
             throwException();
         } catch (Exception e) {
             System.out.println(e.getMessage());

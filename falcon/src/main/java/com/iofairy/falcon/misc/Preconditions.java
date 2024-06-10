@@ -15,8 +15,7 @@
  */
 package com.iofairy.falcon.misc;
 
-import com.iofairy.except.ConditionsNotMetException;
-import com.iofairy.except.OutOfBoundsException;
+import com.iofairy.except.*;
 import com.iofairy.si.SI;
 import com.iofairy.top.G;
 import com.iofairy.top.O;
@@ -487,6 +486,64 @@ public final class Preconditions {
     }
 
     /*==============================================================================
+     ********************    throw IllegalQueryResultException    ********************
+     ==============================================================================*/
+
+    /**
+     * 检测非法的查询结果异常。expression 为 {@code true} 则抛出 {@link IllegalQueryResultException} 异常
+     *
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws IllegalQueryResultException IllegalQueryResultException
+     * @since 0.5.5
+     */
+    public static void checkQueryResult(boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new IllegalQueryResultException(SI.$(msgTemplate, objs));
+        }
+    }
+
+
+    /*==============================================================================
+     ********************    throw RequestFailureException    ********************
+     ==============================================================================*/
+
+    /**
+     * 检测请求失败的异常。expression 为 {@code true} 则抛出 {@link RequestFailureException} 异常
+     *
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws RequestFailureException RequestFailureException
+     * @since 0.5.5
+     */
+    public static void checkRequest(boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new RequestFailureException(SI.$(msgTemplate, objs));
+        }
+    }
+
+    /*==============================================================================
+     ********************    throw UnexpectedResultException    ********************
+     ==============================================================================*/
+
+    /**
+     * 检测预期外的结果异常。expression 为 {@code true} 则抛出 {@link UnexpectedResultException} 异常
+     *
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws UnexpectedResultException UnexpectedResultException
+     * @since 0.5.5
+     */
+    public static void checkResult(boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new UnexpectedResultException(SI.$(msgTemplate, objs));
+        }
+    }
+
+    /*==============================================================================
      **********************    throw RuntimeException    **********************
      ==============================================================================*/
 
@@ -497,8 +554,9 @@ public final class Preconditions {
      * @param msgTemplate 信息模板
      * @param objs        信息参数
      * @throws RuntimeException RuntimeException
+     * @since 0.5.5
      */
-    public static void checkRuntimeException(boolean expression, String msgTemplate, Object... objs) {
+    public static void checkRuntime(boolean expression, String msgTemplate, Object... objs) {
         if (expression) {
             throw new RuntimeException(SI.$(msgTemplate, objs));
         }

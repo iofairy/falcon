@@ -78,46 +78,46 @@ public class TimedID {
     /**
      * 25位（含15位时间）的 TimedUUID 实例
      */
-    public static final TimedID TIMED_ID = Builder.newBuilder().withYearLength(2).build();
+    public static final TimedID TIMED_ID = newBuilder().withYearLength(2).build();
     /**
      * 26位（含16位时间）的 TimedUUID 实例
      */
-    public static final TimedID TIMED_ID26 = Builder.newBuilder().withIdLength(26).build();
+    public static final TimedID TIMED_ID26 = newBuilder().withIdLength(26).build();
     /**
      * 30位（含16位时间）的 TimedUUID 实例
      */
-    public static final TimedID TIMED_ID30 = Builder.newBuilder().withIdLength(30).build();
+    public static final TimedID TIMED_ID30 = newBuilder().withIdLength(30).build();
     /**
      * 32位（含17位时间）的 TimedUUID 实例
      */
-    public static final TimedID TIMED_ID32 = Builder.newBuilder().withIdLength(32).withYearLength(4).build();
+    public static final TimedID TIMED_ID32 = newBuilder().withIdLength(32).withYearLength(4).build();
     /**
-     * 28位（含17位时间）的带 _(下划线) 的 TimedUUID 实例
+     * 30位（含16位时间）的带 _(下划线) 的 TimedUUID 实例
      */
-    public static final TimedID TIMED_ID_UNDERLINE = Builder.newBuilder().withUnderline(true).withIdLength(28).withYearLength(4).withWorkerIdLength(1).build();
+    public static final TimedID TIMED_ID_UNDERLINE = newBuilder().withUnderline(true).withIdLength(30).withWorkerIdLength(1).build();
     /*#####################################################
      *********           TimedID带时间戳           *********
      #####################################################*/
     /**
      * 25位（含xx位时间戳）的 TimedUUID 实例
      */
-    public static final TimedID TS_ID = Builder.newBuilder().withTimestamp(true).build();
+    public static final TimedID TS_ID = newBuilder().withTimestamp(true).build();
     /**
      * 26位（含xx位时间戳）的 TimedUUID 实例
      */
-    public static final TimedID TS_ID26 = Builder.newBuilder().withTimestamp(true).withIdLength(26).build();
+    public static final TimedID TS_ID26 = newBuilder().withTimestamp(true).withIdLength(26).build();
     /**
      * 30位（含xx位时间戳）的 TimedUUID 实例
      */
-    public static final TimedID TS_ID30 = Builder.newBuilder().withTimestamp(true).withIdLength(30).build();
+    public static final TimedID TS_ID30 = newBuilder().withTimestamp(true).withIdLength(30).build();
     /**
      * 32位（含xx位时间戳）的 TimedUUID 实例
      */
-    public static final TimedID TS_ID32 = Builder.newBuilder().withTimestamp(true).withIdLength(32).build();
+    public static final TimedID TS_ID32 = newBuilder().withTimestamp(true).withIdLength(32).build();
     /**
-     * 28位（含xx位时间戳）的带 _(下划线) 的 TimedUUID 实例
+     * 30位（含xx位时间戳）的带 _(下划线) 的 TimedUUID 实例
      */
-    public static final TimedID TS_ID_UNDERLINE = Builder.newBuilder().withTimestamp(true).withUnderline(true).withIdLength(28).withWorkerIdLength(1).build();
+    public static final TimedID TS_ID_UNDERLINE = newBuilder().withTimestamp(true).withUnderline(true).withIdLength(30).withWorkerIdLength(1).build();
 
     /*#####################################################
      *********             其他全局对象             *********
@@ -296,6 +296,10 @@ public class TimedID {
                 .toFormatter();
     }
 
+    public static Builder newBuilder() {
+        return Builder.newBuilder();
+    }
+
     /**
      * 从 {@link #DEFAULT_ID} 获取随机ID
      *
@@ -344,7 +348,7 @@ public class TimedID {
     }
 
     /**
-     * 从 {@link #TIMED_ID_UNDERLINE} 获取 <b>28位（含17位时间）的带 _(下划线)</b> 随机ID
+     * 从 {@link #TIMED_ID_UNDERLINE} 获取 <b>30位（含16位时间）的带 _(下划线)</b> 随机ID
      *
      * @return 随机ID
      */
@@ -389,7 +393,7 @@ public class TimedID {
     }
 
     /**
-     * 从 {@link #TS_ID_UNDERLINE} 获取 <b>28位（含xx位时间戳）的带 _(下划线)</b> 随机ID
+     * 从 {@link #TS_ID_UNDERLINE} 获取 <b>30位（含xx位时间戳）的带 _(下划线)</b> 随机ID
      *
      * @return 随机ID
      */

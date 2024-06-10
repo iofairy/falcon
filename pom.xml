@@ -6,11 +6,12 @@
 
     <groupId>com.iofairy</groupId>
     <artifactId>falcon-parent</artifactId>
-    <version>0.5.4</version>
+    <version>0.5.5</version>
     <modules>
         <module>falcon</module>
         <module>falcon-tests</module>
     </modules>
+
 
     <packaging>pom</packaging>
     <name>Falcon Maven Parent</name>
@@ -22,7 +23,7 @@
         <maven.compiler.target>9</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <functional.version>0.5.4</functional.version>
+        <functional.version>0.5.5</functional.version>
     </properties>
 
     <licenses>
