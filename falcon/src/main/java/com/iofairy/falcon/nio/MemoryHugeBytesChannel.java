@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.iofairy.falcon.misc.Preconditions.*;
+
 /**
  * 支持超大内存操作的Channel
  *
@@ -170,8 +172,7 @@ public class MemoryHugeBytesChannel implements SeekableByteChannel {
     @Override
     public synchronized SeekableByteChannel position(long newPosition) throws IOException {
         ensureOpen();
-
-        if (newPosition < 0) throw new IllegalArgumentException("`newPosition` cannot be negative.");
+        checkArgument(newPosition < 0, "`newPosition` cannot be negative.");
 
         position = newPosition;
         return this;
@@ -185,8 +186,7 @@ public class MemoryHugeBytesChannel implements SeekableByteChannel {
     @Override
     public synchronized SeekableByteChannel truncate(long newSize) throws IOException {
         ensureOpen();
-
-        if (newSize < 0) throw new IllegalArgumentException("`newSize` cannot be negative.");
+        checkArgument(newSize < 0, "`newSize` cannot be negative.");
 
         if (newSize >= this.size) {
             if (this.position > newSize) {
