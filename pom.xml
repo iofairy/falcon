@@ -6,7 +6,7 @@
 
     <groupId>com.iofairy</groupId>
     <artifactId>falcon-parent</artifactId>
-    <version>0.5.5</version>
+    <version>0.5.8</version>
     <modules>
         <module>falcon</module>
         <module>falcon-tests</module>
@@ -23,7 +23,7 @@
         <maven.compiler.target>9</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <functional.version>0.5.5</functional.version>
+        <functional.version>0.5.8</functional.version>
     </properties>
 
     <licenses>

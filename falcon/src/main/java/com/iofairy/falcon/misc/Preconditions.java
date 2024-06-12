@@ -16,6 +16,7 @@
 package com.iofairy.falcon.misc;
 
 import com.iofairy.except.*;
+import com.iofairy.except.ai.*;
 import com.iofairy.si.SI;
 import com.iofairy.top.G;
 import com.iofairy.top.O;
@@ -486,7 +487,7 @@ public final class Preconditions {
     }
 
     /*==============================================================================
-     ********************    throw IllegalQueryResultException    ********************
+     *******************    throw IllegalQueryResultException    *******************
      ==============================================================================*/
 
     /**
@@ -500,13 +501,33 @@ public final class Preconditions {
      */
     public static void checkQueryResult(boolean expression, String msgTemplate, Object... objs) {
         if (expression) {
-            throw new IllegalQueryResultException(SI.$(msgTemplate, objs));
+            throw new IllegalQueryResultException(msgTemplate, objs);
         }
     }
 
 
     /*==============================================================================
-     ********************    throw RequestFailureException    ********************
+     *******************    throw CircularReferencesException    *******************
+     ==============================================================================*/
+
+    /**
+     * 检测是否存在循环引用。expression 为 {@code true} 则抛出 {@link CircularReferencesException} 异常
+     *
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws CircularReferencesException CircularReferencesException
+     * @since 0.5.8
+     */
+    public static void checkCircularReferences(boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new CircularReferencesException(msgTemplate, objs);
+        }
+    }
+
+
+    /*==============================================================================
+     ********************     throw RequestFailureException     ********************
      ==============================================================================*/
 
     /**
@@ -520,7 +541,7 @@ public final class Preconditions {
      */
     public static void checkRequest(boolean expression, String msgTemplate, Object... objs) {
         if (expression) {
-            throw new RequestFailureException(SI.$(msgTemplate, objs));
+            throw new RequestFailureException(msgTemplate, objs);
         }
     }
 
@@ -539,7 +560,102 @@ public final class Preconditions {
      */
     public static void checkResult(boolean expression, String msgTemplate, Object... objs) {
         if (expression) {
-            throw new UnexpectedResultException(SI.$(msgTemplate, objs));
+            throw new UnexpectedResultException(msgTemplate, objs);
+        }
+    }
+
+    /*==============================================================================
+     ********************           throw AIException           ********************
+     ==============================================================================*/
+
+    /**
+     * 检测AI相关错误。expression 为 {@code true} 则抛出 {@link AIException} 异常
+     *
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws AIException AIException
+     * @since 0.5.8
+     */
+    public static void checkAIError(boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new AIException(msgTemplate, objs);
+        }
+    }
+
+    /*==============================================================================
+     ********************         throw AICallException         ********************
+     ==============================================================================*/
+
+    /**
+     * 检测调用AI服务错误。expression 为 {@code true} 则抛出 {@link AICallException} 异常
+     *
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws AICallException AICallException
+     * @since 0.5.8
+     */
+    public static void checkAICall(boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new AICallException(msgTemplate, objs);
+        }
+    }
+
+    /*==============================================================================
+     ********************       throw AIRequestException        ********************
+     ==============================================================================*/
+
+    /**
+     * 检测请求AI服务错误。expression 为 {@code true} 则抛出 {@link AIRequestException} 异常
+     *
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws AIRequestException AIRequestException
+     * @since 0.5.8
+     */
+    public static void checkAIRequest(boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new AIRequestException(msgTemplate, objs);
+        }
+    }
+
+    /*==============================================================================
+     ********************      throw AITrainingException        ********************
+     ==============================================================================*/
+
+    /**
+     * 检测AI训练错误。expression 为 {@code true} 则抛出 {@link AITrainingException} 异常
+     *
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws AITrainingException AITrainingException
+     * @since 0.5.8
+     */
+    public static void checkAITraining(boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new AITrainingException(msgTemplate, objs);
+        }
+    }
+
+    /*==============================================================================
+     ********************      throw AIInferenceException       ********************
+     ==============================================================================*/
+
+    /**
+     * 检测请求AI服务错误。expression 为 {@code true} 则抛出 {@link AIInferenceException} 异常
+     *
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws AIInferenceException AIInferenceException
+     * @since 0.5.8
+     */
+    public static void checkAIInference(boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new AIInferenceException(msgTemplate, objs);
         }
     }
 

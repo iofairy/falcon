@@ -51,5 +51,23 @@ public class MemoryHugeBytesChannelTest {
         System.out.println(s2);
         assertEquals(s2, "Hello, this is MemoryHugeBytesChannel Unit Test! ");
 
+        hugeBytesChannel.truncate(5);
+        String s3 = Strings.toString(hugeBytesChannel.toByteArrays());
+        System.out.println(s3);
+        assertEquals(s3, "Hello");
+
+        try {
+            hugeBytesChannel.position(-1);
+            throwException();
+        } catch (Exception e) {
+            assertSame(e.getClass(), IllegalArgumentException.class);
+            System.out.println(e.getMessage());
+            assertEquals(e.getMessage(), "`newPosition` cannot be negative.");
+        }
+
+    }
+
+    private void throwException() {
+        throw new RuntimeException();
     }
 }
