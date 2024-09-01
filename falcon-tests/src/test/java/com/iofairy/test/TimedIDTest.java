@@ -2,7 +2,7 @@ package com.iofairy.test;
 
 import com.iofairy.except.OutOfBoundsException;
 import com.iofairy.falcon.iterable.CollectionKit;
-import com.iofairy.falcon.uuid.TimedID;
+import com.iofairy.falcon.id.TimedID;
 import com.iofairy.falcon.uuid.TimedUUID;
 import com.iofairy.tcf.Try;
 import org.junit.jupiter.api.Test;

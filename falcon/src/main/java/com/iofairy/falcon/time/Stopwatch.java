@@ -191,6 +191,12 @@ public class Stopwatch {
         return unit.convert(elapsedLastNanos(), NANOSECONDS);
     }
 
+    /**
+     * 离上次标记点所经过的时间（精确到小数点后4位），如果 {@code isRunning == false}，则返回停止点到上次标记点的时间
+     *
+     * @param unit 时间单位
+     * @return 离上次标记点所经过的时间（精确到小数点后4位），如果 {@code isRunning == false}，则返回停止点到上次标记点的时间
+     */
     public double elapsedLastExact(TimeUnit unit) {
         return getElapsedDouble(unit, elapsedLastNanos());
     }
@@ -209,9 +215,72 @@ public class Stopwatch {
      *
      * @return 离上次标记点所经过的时间格式化后的字符串，如果 {@code isRunning == false}，则返回停止点到上次标记点的时间格式化后的字符串
      */
+    public String elapsedLastString() {
+        return elapsedString(elapsedLastNanos());
+    }
+
+    /**
+     * 离上次标记点所经过的时间格式化后的字符串，如果 {@code isRunning == false}，则返回停止点到上次标记点的时间格式化后的字符串
+     *
+     * @return 离上次标记点所经过的时间格式化后的字符串，如果 {@code isRunning == false}，则返回停止点到上次标记点的时间格式化后的字符串
+     * @deprecated since 0.5.10, use {@link Stopwatch#elapsedLastString} instead
+     */
+    @Deprecated
     public String elapsedlastString() {
         return elapsedString(elapsedLastNanos());
     }
+
+
+    /**
+     * 离上次标记点所经过的时间并<b>打个标记点{@link #mark()}</b>，如果 {@code isRunning == false}，则返回停止点到上次标记点的时间
+     *
+     * @param unit 时间单位
+     * @return 离上次标记点所经过的时间，如果 {@code isRunning == false}，则返回停止点到上次标记点的时间
+     * @since 0.5.10
+     */
+    public long elapsedLastAndMark(TimeUnit unit) {
+        long elapsed = elapsedLast(unit);
+        mark();
+        return elapsed;
+    }
+
+    /**
+     * 离上次标记点所经过的时间（精确到小数点后4位）并<b>打个标记点{@link #mark()}</b>，如果 {@code isRunning == false}，则返回停止点到上次标记点的时间
+     *
+     * @param unit 时间单位
+     * @return 离上次标记点所经过的时间（精确到小数点后4位），如果 {@code isRunning == false}，则返回停止点到上次标记点的时间
+     * @since 0.5.10
+     */
+    public double elapsedLastExactAndMark(TimeUnit unit) {
+        double elapsedLastExact = elapsedLastExact(unit);
+        mark();
+        return elapsedLastExact;
+    }
+
+    /**
+     * 离上次标记点所经过的时间并<b>打个标记点{@link #mark()}</b>，如果 {@code isRunning == false}，则返回停止点到上次标记点的时间
+     *
+     * @return 离上次标记点所经过的时间，如果 {@code isRunning == false}，则返回停止点到上次标记点的时间
+     * @since 0.5.10
+     */
+    public Duration elapsedLastAndMark() {
+        Duration elapsedLast = elapsedLast();
+        mark();
+        return elapsedLast;
+    }
+
+    /**
+     * 离上次标记点所经过的时间格式化后的字符串并<b>打个标记点{@link #mark()}</b>，如果 {@code isRunning == false}，则返回停止点到上次标记点的时间格式化后的字符串
+     *
+     * @return 离上次标记点所经过的时间格式化后的字符串，如果 {@code isRunning == false}，则返回停止点到上次标记点的时间格式化后的字符串
+     * @since 0.5.10
+     */
+    public String elapsedLastStringAndMark() {
+        String elapsedString = elapsedLastString();
+        mark();
+        return elapsedString;
+    }
+
 
     /**
      * 根据起止标记点，获取时长

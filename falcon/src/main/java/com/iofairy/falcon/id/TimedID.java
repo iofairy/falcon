@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.iofairy.falcon.uuid;
+package com.iofairy.falcon.id;
 
 import com.iofairy.falcon.os.OS;
 import com.iofairy.falcon.time.DateTime;
@@ -28,15 +28,14 @@ import java.time.temporal.ChronoField;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import static com.iofairy.falcon.misc.Preconditions.*;
+import static com.iofairy.falcon.misc.Preconditions.checkArgument;
+import static com.iofairy.falcon.misc.Preconditions.checkOutOfBounds;
 
 /**
- * 带时间的UUID
+ * 带时间的ID
  *
- * @since 0.5.3
- * @deprecated since 0.5.10, use {@link com.iofairy.falcon.id.TimedID} instead
+ * @since 0.5.10
  */
-@Deprecated
 public class TimedID {
     /*###################################################################################
      ************************************************************************************

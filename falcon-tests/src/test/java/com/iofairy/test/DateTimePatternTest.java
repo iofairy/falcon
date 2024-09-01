@@ -665,23 +665,20 @@ public class DateTimePatternTest {
         int times = 5000000;
 
         Stopwatch stopwatch = Stopwatch.run();
-        long startTime = System.currentTimeMillis();
 
         for (int i = 0; i < times; i++) {
             String fm = DateTimePattern.forSDF("2020-01-2 06:6:06");
         }
 
-        System.out.println(times + " times cost forSDF: " + stopwatch.elapsedlastString()); // 692.688(毫秒)
-        stopwatch.mark();
+        System.out.println(times + " times cost forSDF: " + stopwatch.elapsedLastStringAndMark()); // 692.688(毫秒)
         for (int i = 0; i < times; i++) {
             String fm = DateTimePattern.forDTF("2020-01-2 06:6:06");
         }
-        System.out.println(times + " times cost forDTF: " + stopwatch.elapsedlastString()); // 654.059(毫秒)
-        stopwatch.mark();
+        System.out.println(times + " times cost forDTF: " + stopwatch.elapsedLastStringAndMark()); // 654.059(毫秒)
         for (int i = 0; i < times; i++) {
             String fm = DateTimePattern.forSDF("2020-01-2 06:6:06");
         }
-        System.out.println(times + " times cost forSDF: " + stopwatch.elapsedlastString()); // 571.825(毫秒)
+        System.out.println(times + " times cost forSDF: " + stopwatch.elapsedLastString()); // 571.825(毫秒)
         stopwatch.stop();
     }
 

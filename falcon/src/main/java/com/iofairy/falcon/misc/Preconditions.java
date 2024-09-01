@@ -18,9 +18,7 @@ package com.iofairy.falcon.misc;
 import com.iofairy.except.*;
 import com.iofairy.except.ai.*;
 import com.iofairy.si.SI;
-import com.iofairy.top.G;
-import com.iofairy.top.O;
-import com.iofairy.top.S;
+import com.iofairy.top.*;
 
 import java.io.FileNotFoundException;
 import java.time.temporal.UnsupportedTemporalTypeException;
@@ -410,6 +408,21 @@ public final class Preconditions {
         }
     }
 
+    /**
+     * expression 为 {@code true} 则抛出异常
+     *
+     * @param code        状态码
+     * @param expression  条件
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @since 0.5.10
+     */
+    public static void checkCondition(String code, boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new ConditionsNotMetException(msgTemplate, objs).setCode(code);
+        }
+    }
+
 
     private static void throwConditionsNotMetException400(String msgTemplate, Object... objs) {
         throw new ConditionsNotMetException(msgTemplate, objs).setCode("400");
@@ -487,6 +500,41 @@ public final class Preconditions {
     }
 
     /*==============================================================================
+     *******************          throw GeneralException         *******************
+     ==============================================================================*/
+
+    /**
+     * 通用异常。expression 为 {@code true} 则抛出 {@link GeneralException} 异常
+     *
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws GeneralException GeneralException
+     * @since 0.5.10
+     */
+    public static void checkGeneralException(boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new GeneralException(msgTemplate, objs);
+        }
+    }
+
+    /**
+     * 检测非法的查询结果异常。expression 为 {@code true} 则抛出 {@link GeneralException} 异常
+     *
+     * @param code        状态码
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws GeneralException GeneralException
+     * @since 0.5.10
+     */
+    public static void checkGeneralException(String code, boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new GeneralException(msgTemplate, objs).setCode(code);
+        }
+    }
+
+    /*==============================================================================
      *******************    throw IllegalQueryResultException    *******************
      ==============================================================================*/
 
@@ -502,6 +550,22 @@ public final class Preconditions {
     public static void checkQueryResult(boolean expression, String msgTemplate, Object... objs) {
         if (expression) {
             throw new IllegalQueryResultException(msgTemplate, objs);
+        }
+    }
+
+    /**
+     * 检测非法的查询结果异常。expression 为 {@code true} 则抛出 {@link IllegalQueryResultException} 异常
+     *
+     * @param code        状态码
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws IllegalQueryResultException IllegalQueryResultException
+     * @since 0.5.10
+     */
+    public static void checkQueryResult(String code, boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new IllegalQueryResultException(msgTemplate, objs).setCode(code);
         }
     }
 
@@ -525,6 +589,22 @@ public final class Preconditions {
         }
     }
 
+    /**
+     * 检测是否存在循环引用。expression 为 {@code true} 则抛出 {@link CircularReferencesException} 异常
+     *
+     * @param code        状态码
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws CircularReferencesException CircularReferencesException
+     * @since 0.5.10
+     */
+    public static void checkCircularReferences(String code, boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new CircularReferencesException(msgTemplate, objs).setCode(code);
+        }
+    }
+
 
     /*==============================================================================
      ********************     throw RequestFailureException     ********************
@@ -542,6 +622,22 @@ public final class Preconditions {
     public static void checkRequest(boolean expression, String msgTemplate, Object... objs) {
         if (expression) {
             throw new RequestFailureException(msgTemplate, objs);
+        }
+    }
+
+    /**
+     * 检测请求失败的异常。expression 为 {@code true} 则抛出 {@link RequestFailureException} 异常
+     *
+     * @param code        状态码
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws RequestFailureException RequestFailureException
+     * @since 0.5.10
+     */
+    public static void checkRequest(String code, boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new RequestFailureException(msgTemplate, objs).setCode(code);
         }
     }
 
@@ -564,6 +660,22 @@ public final class Preconditions {
         }
     }
 
+    /**
+     * 检测预期外的结果异常。expression 为 {@code true} 则抛出 {@link UnexpectedResultException} 异常
+     *
+     * @param code        状态码
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws UnexpectedResultException UnexpectedResultException
+     * @since 0.5.10
+     */
+    public static void checkResult(String code, boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new UnexpectedResultException(msgTemplate, objs).setCode(code);
+        }
+    }
+
     /*==============================================================================
      ********************           throw AIException           ********************
      ==============================================================================*/
@@ -580,6 +692,22 @@ public final class Preconditions {
     public static void checkAIError(boolean expression, String msgTemplate, Object... objs) {
         if (expression) {
             throw new AIException(msgTemplate, objs);
+        }
+    }
+
+    /**
+     * 检测AI相关错误。expression 为 {@code true} 则抛出 {@link AIException} 异常
+     *
+     * @param code        状态码
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws AIException AIException
+     * @since 0.5.10
+     */
+    public static void checkAIError(String code, boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new AIException(msgTemplate, objs).setCode(code);
         }
     }
 
@@ -602,6 +730,22 @@ public final class Preconditions {
         }
     }
 
+    /**
+     * 检测调用AI服务错误。expression 为 {@code true} 则抛出 {@link AICallException} 异常
+     *
+     * @param code        状态码
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws AICallException AICallException
+     * @since 0.5.10
+     */
+    public static void checkAICall(String code, boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new AICallException(msgTemplate, objs).setCode(code);
+        }
+    }
+
     /*==============================================================================
      ********************       throw AIRequestException        ********************
      ==============================================================================*/
@@ -618,6 +762,22 @@ public final class Preconditions {
     public static void checkAIRequest(boolean expression, String msgTemplate, Object... objs) {
         if (expression) {
             throw new AIRequestException(msgTemplate, objs);
+        }
+    }
+
+    /**
+     * 检测请求AI服务错误。expression 为 {@code true} 则抛出 {@link AIRequestException} 异常
+     *
+     * @param code        状态码
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws AIRequestException AIRequestException
+     * @since 0.5.10
+     */
+    public static void checkAIRequest(String code, boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new AIRequestException(msgTemplate, objs).setCode(code);
         }
     }
 
@@ -640,6 +800,22 @@ public final class Preconditions {
         }
     }
 
+    /**
+     * 检测AI训练错误。expression 为 {@code true} 则抛出 {@link AITrainingException} 异常
+     *
+     * @param code        状态码
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws AITrainingException AITrainingException
+     * @since 0.5.10
+     */
+    public static void checkAITraining(String code, boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new AITrainingException(msgTemplate, objs).setCode(code);
+        }
+    }
+
     /*==============================================================================
      ********************      throw AIInferenceException       ********************
      ==============================================================================*/
@@ -656,6 +832,22 @@ public final class Preconditions {
     public static void checkAIInference(boolean expression, String msgTemplate, Object... objs) {
         if (expression) {
             throw new AIInferenceException(msgTemplate, objs);
+        }
+    }
+
+    /**
+     * 检测请求AI服务错误。expression 为 {@code true} 则抛出 {@link AIInferenceException} 异常
+     *
+     * @param code        状态码
+     * @param expression  条件表达式
+     * @param msgTemplate 信息模板
+     * @param objs        信息参数
+     * @throws AIInferenceException AIInferenceException
+     * @since 0.5.10
+     */
+    public static void checkAIInference(String code, boolean expression, String msgTemplate, Object... objs) {
+        if (expression) {
+            throw new AIInferenceException(msgTemplate, objs).setCode(code);
         }
     }
 
@@ -905,7 +1097,9 @@ public final class Preconditions {
 
 
     /**
-     * 根据 错误信息类型 和 参数名，动态生成错误信息。
+     * 根据 错误信息类型 和 参数名，动态生成错误信息。<br>
+     * 注：<br>
+     * <b>参数与所提供的参数名可能不是一一对应的关系，所以无法准确判断出具体是哪个参数有问题，只能笼统的抛出错误信息</b>
      *
      * @param type       错误信息类型。如果 type 为 null，则默认为 {@link ErrorMsgType#NULL}
      * @param paramNames 参数名

@@ -19,6 +19,7 @@ module iofairy.falcon {
 
     exports com.iofairy.falcon.base;
     exports com.iofairy.falcon.fs;
+    exports com.iofairy.falcon.id;
     exports com.iofairy.falcon.io;
     exports com.iofairy.falcon.iterable;
     exports com.iofairy.falcon.map;

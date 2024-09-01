@@ -1,5 +1,6 @@
 package com.iofairy.test;
 
+import com.iofairy.except.BaseRuntimeException;
 import com.iofairy.except.ConditionsNotMetException;
 import com.iofairy.falcon.misc.ErrorMsgType;
 import org.junit.jupiter.api.Test;
@@ -329,6 +330,46 @@ public class PreconditionsTest {
             assertEquals(e.getMessage(), "At least one of these parameters [name, id] can't be null! ");
         }
     }
+
+
+    @Test
+    public void testPreconditions1() {
+        try {
+            checkCondition(true, "orderId: ${0}, orderName: ${?}, `orderStatus` must be non-empty! ", 10000, "'order_test'");
+            throwException();
+        } catch (BaseRuntimeException e) {
+            assertEquals("400", e.getCode());
+            assertEquals("orderId: 10000, orderName: 'order_test', `orderStatus` must be non-empty! ", e.getMessage());
+        }
+
+        try {
+            checkCondition("-10", true, "orderId: ${0}, orderName: ${?}, `orderStatus` must be non-empty! ", 10000, "'order_test1'");
+            throwException();
+        } catch (BaseRuntimeException e) {
+            assertEquals("-10", e.getCode());
+            assertEquals("orderId: 10000, orderName: 'order_test1', `orderStatus` must be non-empty! ", e.getMessage());
+        }
+
+        try {
+            checkGeneralException(true, "orderId: ${0}, orderName: ${?}, `orderStatus` must be non-empty! ", 10000, "'order_test2'");
+            throwException();
+        } catch (BaseRuntimeException e) {
+            assertNull(e.getCode());
+            assertEquals("orderId: 10000, orderName: 'order_test2', `orderStatus` must be non-empty! ", e.getMessage());
+        }
+
+        try {
+            checkGeneralException("-50", true, "orderId: ${0}, orderName: ${?}, `orderStatus` must be non-empty! ", 10000, "'order_test3'");
+            throwException();
+        } catch (BaseRuntimeException e) {
+            assertEquals("-50", e.getCode());
+            assertEquals("orderId: 10000, orderName: 'order_test3', `orderStatus` must be non-empty! ", e.getMessage());
+        }
+
+    }
+
+
+
 
     private void throwException() {
         throw new RuntimeException();

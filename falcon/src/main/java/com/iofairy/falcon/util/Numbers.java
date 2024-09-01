@@ -221,7 +221,7 @@ public class Numbers {
     public static Double round(Number number, int newScale, RoundingMode roundingMode) {
         if (number == null) return null;
         if (O.isInfinityOrNaN(number)) return number.doubleValue();
-        if (O.isFloat(number) || number instanceof BigDecimal) {
+        if (O.isFloat(number)) {
             return round(O.toBigDecimal(number), newScale, roundingMode);
         } else {
             return newScale < 0 ? round(O.toBigDecimal(number), newScale, roundingMode) : number.doubleValue();

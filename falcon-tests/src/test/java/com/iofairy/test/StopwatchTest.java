@@ -5,6 +5,8 @@ import com.iofairy.tcf.Try;
 import org.junit.jupiter.api.Test;
 
 
+import java.util.concurrent.TimeUnit;
+
 import static java.util.concurrent.TimeUnit.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -95,29 +97,29 @@ public class StopwatchTest {
         System.out.println("===================sleep(100)===================");
         Try.sleep(100);
         System.out.println("elapsed: " + stopwatch.elapsedExact(SECONDS) + "---" + stopwatch);
-        System.out.println("elapsedLast: " + stopwatch.elapsedLastExact(SECONDS) + "---" + stopwatch.elapsedlastString());
+        System.out.println("elapsedLast: " + stopwatch.elapsedLastExact(SECONDS) + "---" + stopwatch.elapsedLastString());
         stopwatch.mark();
         System.out.println(stopwatch.getMarks());
         System.out.println("===================sleep(150)===================");
         Try.sleep(150);
         System.out.println("elapsed: " + stopwatch.elapsedExact(SECONDS) + "---" + stopwatch);
-        System.out.println("elapsedLast: " + stopwatch.elapsedLastExact(SECONDS) + "---" + stopwatch.elapsedlastString());
+        System.out.println("elapsedLast: " + stopwatch.elapsedLastExact(SECONDS) + "---" + stopwatch.elapsedLastString());
         stopwatch.mark();
         System.out.println(stopwatch.getMarks());
         System.out.println("===================sleep(260)===================");
         Try.sleep(260);
         System.out.println("elapsed: " + stopwatch.elapsedExact(SECONDS) + "---" + stopwatch);
-        System.out.println("elapsedLast: " + stopwatch.elapsedLastExact(SECONDS) + "---" + stopwatch.elapsedlastString());
+        System.out.println("elapsedLast: " + stopwatch.elapsedLastExact(SECONDS) + "---" + stopwatch.elapsedLastString());
         System.out.println("===================stop()===================");
         stopwatch.stop();
         System.out.println(stopwatch.getMarks());
         System.out.println("elapsed: " + stopwatch.elapsedExact(SECONDS) + "---" + stopwatch);
-        System.out.println("elapsedLast: " + stopwatch.elapsedLastExact(SECONDS) + "---" + stopwatch.elapsedlastString());
+        System.out.println("elapsedLast: " + stopwatch.elapsedLastExact(SECONDS) + "---" + stopwatch.elapsedLastString());
         System.out.println("===================sleep(150)===================");
         Try.sleep(150);
         System.out.println(stopwatch.getMarks());
         System.out.println("elapsed: " + stopwatch.elapsedExact(SECONDS) + "---" + stopwatch);
-        System.out.println("elapsedLast: " + stopwatch.elapsedLastExact(SECONDS) + "---" + stopwatch.elapsedlastString());
+        System.out.println("elapsedLast: " + stopwatch.elapsedLastExact(SECONDS) + "---" + stopwatch.elapsedLastString());
         System.out.println("============================================================");
         Stopwatch.Elapsed elapsed = stopwatch.elapsed("STOP", 1);
         System.out.println("Stopwatch.Elapsed: " + elapsed.elapsedExact(SECONDS) + "---" + elapsed + "---" + elapsed.toFullString());
@@ -130,6 +132,80 @@ public class StopwatchTest {
         System.out.println(stopwatch.getMarks());
         stopwatch.mark();
         System.out.println(stopwatch.getMarks());
+    }
+
+    @Test
+    public void testStopwatch2() {
+        Stopwatch stopwatch = Stopwatch.create();
+        stopwatchPrint(stopwatch);
+        String marks = stopwatch.getMarks().toString();
+        System.out.println(marks);
+        assertEquals(marks, "{}");
+        stopwatch.clearMarks();
+        stopwatchPrint(stopwatch);
+
+        marks = stopwatch.getMarks().toString();
+        System.out.println(marks);
+
+        assertEquals(marks, "{}");
+        System.out.println("==================start=================");
+        stopwatch.start();
+
+        Try.sleep(115);
+        System.out.println("===============================sleep(115)=============================");
+        System.out.println(stopwatch.elapsedLastAndMark().toMillis());
+
+        marks = stopwatch.getMarks().toString();
+        System.out.println("sleep(115): " + marks);
+        assertEquals(marks, "{0=START, 1=MARK1}");
+
+        Try.sleep(1200);
+        System.out.println("===============================sleep(1200)=============================");
+        System.out.println(stopwatch.elapsedLastAndMark(MILLISECONDS));
+
+        marks = stopwatch.getMarks().toString();
+        System.out.println("sleep(1200): " + marks);
+        assertEquals(marks, "{0=START, 1=MARK1, 2=MARK2}");
+
+        Try.sleep(150);
+        System.out.println("===============================sleep(150)=============================");
+        System.out.println(stopwatch.elapsedLastExactAndMark(SECONDS));
+
+        marks = stopwatch.getMarks().toString();
+        System.out.println("sleep(150): " + marks);
+        assertEquals(marks, "{0=START, 1=MARK1, 2=MARK2, 3=MARK3}");
+
+        Try.sleep(200);
+        System.out.println("===============================sleep(200)=============================");
+        System.out.println(stopwatch.elapsedLastStringAndMark());
+
+        marks = stopwatch.getMarks().toString();
+        System.out.println("sleep(200): " + marks);
+        assertEquals(marks, "{0=START, 1=MARK1, 2=MARK2, 3=MARK3, 4=MARK4}");
+
+        Stopwatch.Elapsed elapsed = stopwatch.elapsed("MARK1", 0);
+        elapsedPrint(elapsed);
+
+        Try.sleep(1500);
+        System.out.println("===============================sleep(1500)=============================");
+        stopwatch.mark("b");
+        stopwatch.mark();
+
+        marks = stopwatch.getMarks().toString();
+        System.out.println("sleep(1500): " + marks);
+        assertEquals(marks, "{0=START, 1=MARK1, 2=MARK2, 3=MARK3, 4=MARK4, 5=b, 6=MARK6}");
+
+        elapsed = stopwatch.elapsed(4, 1);
+        elapsedPrint(elapsed);
+
+        try {
+            elapsed = stopwatch.elapsed("a", 2);
+            throwException();
+        } catch (Exception e) {
+            assertSame(e.getClass(), IllegalArgumentException.class);
+            assertEquals(e.getMessage(), "Not found for this mark point [a]. ");
+        }
+
     }
 
 
@@ -152,7 +228,7 @@ public class StopwatchTest {
         System.out.println("stopwatch.elapsedLast(MILLISECONDS): " + stopwatch.elapsedLast(MILLISECONDS));
         System.out.println("stopwatch.elapsedLastExact(MILLISECONDS): " + stopwatch.elapsedLastExact(MILLISECONDS));
         System.out.println("stopwatch.elapsedLast().toMillis(): " + stopwatch.elapsedLast().toMillis());
-        System.out.println("stopwatch.elapsedlastString(): " + stopwatch.elapsedlastString());
+        System.out.println("stopwatch.elapsedlastString(): " + stopwatch.elapsedLastString());
         System.out.println("stopwatch.getMarks(): " + stopwatch.getMarks());
         System.out.println("stopwatch.isRunning(): " + stopwatch.isRunning()
                 + "---stopwatch.getElapsedNanos(): " + stopwatch.getElapsedNanos()
