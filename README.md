@@ -164,30 +164,34 @@ System.out.println(interval2);      // 1年10月5天9时14分13秒190毫秒
 **秒表**`Stopwatch`：方便<u>测试各个代码片段或任意多个连续代码片段的执行时间</u>。一个独立的秒表从运行开始到结束之前，便具有**分段记录**、**持续记录**与**实时记录**的功能  
 秒表中的**标记**`Stopwatch.mark()`：可在每个代码片段（业务）开始或结束时打个标记。 一方面是<u>代码片段（业务）间的分界点</u>；同时，也类似于savepoint（保存点），保存当时的时间
 ```java
+/*
+ elapsedLastStringAndMark 方法：返回秒表距离上次标记处耗时，并打上新的标记
+ 等同于：
+ stopwatch.elapsedLastString();
+ stopwatch.mark();
+ */
 Stopwatch stopwatch = Stopwatch.run();
+
 // >> 开始业务1
 Try.sleep(1000);  // ... 执行一些操作
 // << 结束业务1
-System.out.println("秒表总耗时：" + stopwatch);                                    // 秒表总耗时：1.011(秒)
-System.out.println("秒表距离上次标记处耗时1：" + stopwatch.elapsedlastString());    // 秒表距离上次标记处耗时1：1.023(秒)
+ System.out.println("sleep(1000)。秒表总耗时：" + stopwatch + "---" + "秒表距离上次标记处耗时1：" + stopwatch.elapsedLastStringAndMark()); // 输出：sleep(1000)。秒表总耗时：1.003(秒)---秒表距离上次标记处耗时1：1.01(秒)
 
-stopwatch.mark();  // 业务2开始时打个标记
 // >> 开始业务2
 Try.sleep(500);  // ... 执行一些操作
 // << 结束业务2
-System.out.println("秒表总耗时：" + stopwatch);                                    // 秒表总耗时：1.525(秒)
-System.out.println("秒表距离上次标记处耗时2：" + stopwatch.elapsedlastString());    // 秒表距离上次标记处耗时2：502.751(毫秒)
+System.out.println("sleep(500)。秒表总耗时：" + stopwatch + "---" + "秒表距离上次标记处耗时2：" + stopwatch.elapsedLastString()); // 输出：sleep(500)。秒表总耗时：1.518(秒)---秒表距离上次标记处耗时2：507.527(毫秒)
 
-stopwatch.mark();  // 业务3开始时打个标记
+stopwatch.mark();  // 业务开始时打个标记
 // >> 开始业务3
 Try.sleep(1500);  // ... 执行一些操作
 // << 结束业务3
-System.out.println("秒表总耗时：" + stopwatch);                                    // 秒表总耗时：3.037(秒)
-System.out.println("秒表距离上次标记处耗时3：" + stopwatch.elapsedlastString());    // 秒表距离上次标记处耗时3：1.511(秒)
-stopwatch.mark();  // 业务结束时打个标记
+System.out.println("sleep(1500)。秒表总耗时：" + stopwatch + "---" + "秒表距离上次标记处耗时3：" + stopwatch.elapsedLastStringAndMark()); // 输出：sleep(1500)。秒表总耗时：3.034(秒)---秒表距离上次标记处耗时3：1.516(秒)
 
 // 业务1开始到业务3完成所耗时间
-System.out.println("业务1开始到业务3完成所耗时间：" + stopwatch.elapsed(0, 3));     // 业务1开始到业务3完成所耗时间：3.037(秒)
+Stopwatch.Elapsed elapsed = stopwatch.elapsed(0, 3);
+System.out.println("业务1开始到业务3完成所耗时间：" + elapsed + "---" + elapsed.toFullString()); // 输出：业务1开始到业务3完成所耗时间：3.034(秒)---3.034(秒) (index: 0 -> 3, mark: START -> MARK3)
+
 ```
 
 ## 🔥带时间的UUID`TimedID`
