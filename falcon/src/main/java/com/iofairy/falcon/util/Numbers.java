@@ -15,7 +15,10 @@
  */
 package com.iofairy.falcon.util;
 
+import com.iofairy.falcon.os.OS;
+import com.iofairy.si.SI;
 import com.iofairy.top.O;
+import com.iofairy.top.S;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -633,6 +636,78 @@ public class Numbers {
         if (digits <= 0 || digits > 9) return 0;
         int pow = (int) Math.pow(10, digits - 1);
         return new Random().nextInt(9 * pow) + pow;
+    }
+
+    /**
+     * 对数计算
+     *
+     * @param base          底数
+     * @param antilogarithm 真数
+     * @return 对数值
+     * @since 0.5.11
+     */
+    public static double log(double base, double antilogarithm) {
+        return Math.log(antilogarithm) / Math.log(base);
+    }
+
+    /**
+     * 将指定进制的数字字符串转换为另一个进制的数字字符串
+     *
+     * @param numberStr 指定进制的数字字符串
+     * @param fromRadix 源进制的基数
+     * @param toRadix   目标进制的基数
+     * @return 目标进制的数字字符串
+     * @since 0.5.11
+     */
+    public static String radixConversion(String numberStr, int fromRadix, int toRadix) {
+        return radixConversion(numberStr, fromRadix, toRadix, true);
+    }
+
+    /**
+     * 将指定进制的数字字符串转换为另一个进制的数字字符串
+     *
+     * @param numberStr   指定进制的数字字符串
+     * @param fromRadix   源进制的基数
+     * @param toRadix     目标进制的基数
+     * @param paddingZero 位数不足时，左侧是否需要补0。如1位16进制，固定对应4位的2进制，当不足4位时，则补0
+     * @return 目标进制的数字字符串
+     * @since 0.5.11
+     */
+    public static String radixConversion(String numberStr, int fromRadix, int toRadix, boolean paddingZero) {
+        checkArgument(fromRadix > 36 || fromRadix < 2, "The parameter `fromRadix` must be in [2, 36], currently is [${fromRadix}]. ", fromRadix);
+        checkArgument(toRadix > 36 || toRadix < 2, "The parameter `toRadix` must be in [2, 36], currently is [${toRadix}]. ", toRadix);
+        checkBlank(numberStr, args("numberStr"));
+
+        if (fromRadix == toRadix) return numberStr;
+
+        BigInteger bigInteger = null;
+        try {
+            bigInteger = new BigInteger(numberStr, fromRadix);
+        } catch (NumberFormatException e) {
+            String errorMsg = OS.IS_ZH_LANG
+                    ? SI.$("在${fromRadix}进制下，字符串【${numberStr}】无法转成数字！", fromRadix, numberStr)
+                    : SI.$("The [${numberStr}] can't be converted to a number in base [${fromRadix}]. ", numberStr, fromRadix);
+            throw new NumberFormatException(errorMsg);
+        }
+
+        String targetNumberStr = bigInteger.toString(toRadix);
+
+        double log = log(toRadix, fromRadix);
+
+        if (paddingZero && log % 1 == 0) {      // 需要补零且 log 是一个整数，则在左侧补上指定位数的0
+            boolean negativeOrNot = numberStr.charAt(0) == '-';
+            boolean positiveOrNot = numberStr.charAt(0) == '+';
+
+            int targetBits = ((negativeOrNot || positiveOrNot) ? numberStr.length() - 1 : numberStr.length()) * (int) log;
+
+            if (negativeOrNot) {    // 负数要特殊处理（先补齐0，再添加-号），正数的+号在转换过程中会自动去除
+                return "-" + S.padLeftChars(targetNumberStr.substring(1), '0', targetBits);
+            } else {
+                return S.padLeftChars(targetNumberStr, '0', targetBits);
+            }
+        }
+
+        return targetNumberStr;
     }
 
 }

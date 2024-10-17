@@ -168,5 +168,100 @@ public class NumbersTest {
 
     }
 
+    @Test
+    public void testLog() {
+        double log1 = Numbers.log(100, 10);
+        double log2 = Numbers.log(2, 100);
+        double log3 = Numbers.log(6, 36);
+        double log4 = Numbers.log(36, 6);
+        double log5 = Numbers.log(6, 30);
+        double log6 = Numbers.log(2, 16);
+        double log7 = Numbers.log(3, 9);
+        double log8 = Numbers.log(16, 8);
+        System.out.println(log1);       // 0.5
+        System.out.println(log2);       // 6.643856189774725
+        System.out.println(log3);       // 2.0
+        System.out.println(log4);       // 0.5
+        System.out.println(log5);       // 1.8982444017039273
+        System.out.println(log6);       // 4.0
+        System.out.println(log7);       // 2.0
+        System.out.println(log8);       // 0.75
+
+        assertEquals(log1, 0.5);
+        assertEquals(log2, 6.643856189774725d);
+        assertEquals(log3, 2.0);
+        assertEquals(log4, 0.5);
+        assertEquals(log5, 1.8982444017039273);
+        assertEquals(log6, 4.0);
+        assertEquals(log7, 2.0);
+        assertEquals(log8, 0.75);
+
+    }
+
+    @Test
+    public void testRadixConversion() {
+        String number01 = Numbers.radixConversion("10010", 2, 36, true);
+        String number02 = Numbers.radixConversion("-2Za", 36, 10, true);
+        String number03 = Numbers.radixConversion("-3862", 10, 36, true);
+        String number04 = Numbers.radixConversion("-2Za", 36, 2, false);
+        String number06 = Numbers.radixConversion("-2ZA", 36, 6, true);
+        String number05 = Numbers.radixConversion("-2Za", 36, 6, false);
+        String number07 = Numbers.radixConversion("-550014", 6, 36, true);
+        String number08 = Numbers.radixConversion("2zA", 36, 2, true);
+        String number09 = Numbers.radixConversion("-10010", 2, 16, true);
+        String number10 = Numbers.radixConversion("-1c", 16, 2, true);
+        String number11 = Numbers.radixConversion("+1C", 16, 2, true);
+        System.out.println(number01);   // i
+        System.out.println(number02);   // -3862
+        System.out.println(number03);   // -2za
+        System.out.println(number04);   // -111100010110
+        System.out.println(number05);   // -25514
+        System.out.println(number06);   // -025514
+        System.out.println(number07);   // -z0a
+        System.out.println(number08);   // 111100010110
+        System.out.println(number09);   // -12
+        System.out.println(number10);   // -00011100
+        System.out.println(number11);   // 00011100
+
+        assertEquals(number01, "i");
+        assertEquals(number02, "-3862");
+        assertEquals(number03, "-2za");
+        assertEquals(number04, "-111100010110");
+        assertEquals(number05, "-25514");
+        assertEquals(number06, "-025514");
+        assertEquals(number07, "-z0a");
+        assertEquals(number08, "111100010110");
+        assertEquals(number09, "-12");
+        assertEquals(number10, "-00011100");
+        assertEquals(number11, "00011100");
+
+
+        try {
+            Numbers.radixConversion("aaaaa", 2, 4, true);
+            throwException();
+        } catch (Exception e) {
+            assertEquals(e.getClass(), NumberFormatException.class);
+            assertEquals(e.getMessage(), "在2进制下，字符串【aaaaa】无法转成数字！");
+        }
+        try {
+            Numbers.radixConversion("010101", 1, 4, true);
+            throwException();
+        } catch (Exception e) {
+            assertEquals(e.getClass(), IllegalArgumentException.class);
+            assertEquals(e.getMessage(), "The parameter `fromRadix` must be in [2, 36], currently is [1]. ");
+        }
+        try {
+            Numbers.radixConversion("010101", 2, 37, true);
+            throwException();
+        } catch (Exception e) {
+            assertEquals(e.getClass(), IllegalArgumentException.class);
+            assertEquals(e.getMessage(), "The parameter `toRadix` must be in [2, 36], currently is [37]. ");
+        }
+
+    }
+
+    private void throwException() {
+        throw new RuntimeException();
+    }
 
 }
