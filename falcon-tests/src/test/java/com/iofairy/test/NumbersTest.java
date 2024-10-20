@@ -204,24 +204,24 @@ public class NumbersTest {
         String number02 = Numbers.radixConversion("-2Za", 36, 10, true);
         String number03 = Numbers.radixConversion("-3862", 10, 36, true);
         String number04 = Numbers.radixConversion("-2Za", 36, 2, false);
-        String number06 = Numbers.radixConversion("-2ZA", 36, 6, true);
         String number05 = Numbers.radixConversion("-2Za", 36, 6, false);
+        String number06 = Numbers.radixConversion("-2ZA", 36, 6, true);
         String number07 = Numbers.radixConversion("-550014", 6, 36, true);
         String number08 = Numbers.radixConversion("2zA", 36, 2, true);
         String number09 = Numbers.radixConversion("-10010", 2, 16, true);
         String number10 = Numbers.radixConversion("-1c", 16, 2, true);
         String number11 = Numbers.radixConversion("+1C", 16, 2, true);
-        System.out.println(number01);   // i
-        System.out.println(number02);   // -3862
-        System.out.println(number03);   // -2za
-        System.out.println(number04);   // -111100010110
-        System.out.println(number05);   // -25514
-        System.out.println(number06);   // -025514
-        System.out.println(number07);   // -z0a
-        System.out.println(number08);   // 111100010110
-        System.out.println(number09);   // -12
-        System.out.println(number10);   // -00011100
-        System.out.println(number11);   // 00011100
+        System.out.println("number01: " + number01);   // i
+        System.out.println("number02: " + number02);   // -3862
+        System.out.println("number03: " + number03);   // -2za
+        System.out.println("number04: " + number04);   // -111100010110
+        System.out.println("number05: " + number05);   // -25514
+        System.out.println("number06: " + number06);   // -025514
+        System.out.println("number07: " + number07);   // -z0a
+        System.out.println("number08: " + number08);   // 111100010110
+        System.out.println("number09: " + number09);   // -12
+        System.out.println("number10: " + number10);   // -00011100
+        System.out.println("number11: " + number11);   // 00011100
 
         assertEquals(number01, "i");
         assertEquals(number02, "-3862");

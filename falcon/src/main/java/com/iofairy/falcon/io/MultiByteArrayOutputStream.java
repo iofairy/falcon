@@ -118,6 +118,21 @@ public class MultiByteArrayOutputStream extends OutputStream {
     }
 
     /**
+     * Resets the <code>count</code> field of this byte array output
+     * stream to zero, so that all currently accumulated output in the
+     * output stream is discarded. The output stream can be used again,
+     * reusing the already allocated buffer space.
+     *
+     * @return this
+     * @see MultiByteArrayOutputStream#count
+     * @since 0.5.11
+     */
+    public MultiByteArrayOutputStream resetStream() {
+        reset();
+        return this;
+    }
+
+    /**
      * Creates a newly allocated byte array. Its size is the current
      * size of this output stream and the valid contents of the buffer
      * have been copied into it.

@@ -259,6 +259,25 @@ public class MultiByteArrayInputStream extends InputStream {
     }
 
     /**
+     * Set the current marked position in the stream.
+     * MultiByteArrayInputStream objects are marked at position zero by default when constructed.
+     * They may be marked at another position within the buffer by this method.
+     * <p>
+     * If no mark has been set, then the value of the mark is the offset passed to
+     * the constructor (or 0 if the offset was not supplied).
+     *
+     * <p> Note: The <code>readAheadLimit</code> for this class
+     * has no meaning.
+     *
+     * @return this
+     * @since 0.5.11
+     */
+    public MultiByteArrayInputStream markStream(int readAheadLimit) {
+        mark(readAheadLimit);
+        return this;
+    }
+
+    /**
      * Resets the buffer to the marked position.  The marked position
      * is 0 unless another position was marked or an offset was specified
      * in the constructor.
@@ -266,6 +285,19 @@ public class MultiByteArrayInputStream extends InputStream {
     public synchronized void reset() {
         pos = mark;
         baisList.forEach(ByteArrayInputStream::reset);
+    }
+
+    /**
+     * Resets the buffer to the marked position.  The marked position
+     * is 0 unless another position was marked or an offset was specified
+     * in the constructor.
+     *
+     * @return this
+     * @since 0.5.11
+     */
+    public MultiByteArrayInputStream resetStream() {
+        reset();
+        return this;
     }
 
     /**

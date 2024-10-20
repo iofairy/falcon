@@ -5,7 +5,6 @@ import com.iofairy.falcon.io.MultiByteArrayOutputStream;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -61,15 +60,15 @@ public class MultiByteArrayStreamTest {
         byteToString(readBytes, multiBais);         // \0\0\0\0this is Multi\0\0\0\0\0\0\0\0\0\0\0\0\0  pos: 20, avail: 32
         byteToStringAndAssert(readBytes, multiBais, "\0\0\0\0this is Multi\0\0\0\0\0\0\0\0\0\0\0\0\0", 32);
 
-        multiBais.mark(0);
+        // multiBais.mark(0);
 
-        multiBais.read(readBytes, 0, 11);
+        multiBais.markStream(0).read(readBytes, 0, 11);
         byteToString(readBytes, multiBais);         // ByteArrayIn Multi\0\0\0\0\0\0\0\0\0\0\0\0\0  pos: 31, avail: 21
         byteToStringAndAssert(readBytes, multiBais, "ByteArrayIn Multi\0\0\0\0\0\0\0\0\0\0\0\0\0", 21);
 
-        multiBais.reset();
+        // multiBais.reset();
 
-        multiBais.read(readBytes, 5, 11);
+        multiBais.resetStream().read(readBytes, 5, 11);
         byteToString(readBytes, multiBais);         // ByteAByteArrayIni\0\0\0\0\0\0\0\0\0\0\0\0\0  pos: 31, avail: 21
         byteToStringAndAssert(readBytes, multiBais, "ByteAByteArrayIni\0\0\0\0\0\0\0\0\0\0\0\0\0", 21);
 
@@ -126,12 +125,12 @@ public class MultiByteArrayStreamTest {
         MultiByteArrayInputStream multiBais = new MultiByteArrayInputStream(bytes1, bytes2, bytes3, bytes4, bytes5, bytes6, bytes7, bytes8, bytes9);
         byte[] bytes = new byte[60];
         for (int i = 0; i < 60; i++) {
-            multiBais.mark(0);
-            multiBais.skip(i);
+            // multiBais.mark(0);
+            multiBais.markStream(0).skip(i);    // 这里的 mark 操作其实也没什么作用，因为后面的 reset 已经重置位置了
             int read = multiBais.read();
             bytes[i] = read == -1 ? 0 : (byte) read;
             skipByteToString(read, multiBais, i);
-            multiBais.reset();
+            multiBais.resetStream();
         }
         // printBytes(bytes);
         assertEquals("Hello, this is MultiByteArrayInputStream Unit Test! \0\0\0\0\0\0\0\0", new String(bytes));
@@ -221,10 +220,10 @@ public class MultiByteArrayStreamTest {
         while ((read = multiBais1.read()) != -1) {
             multiBaos.write(read);
         }
-        System.out.println(new String(multiBaos.toByteArrays()[0]));
+        System.out.println("multiBaos-1: " + new String(multiBaos.toByteArrays()[0]));
         assertEquals("Hello, this is MultiByteArrayInputStream Unit Test! ", new String(multiBaos.toByteArrays()[0]));
         multiBaos.reset();
-        System.out.println(new String(multiBaos.toByteArrays()[0]));
+        System.out.println("multiBaos-2: " + new String(multiBaos.toByteArrays()[0]));
         assertEquals("", new String(multiBaos.toByteArrays()[0]));
         try {
             multiBaos.write(bytes1);
@@ -237,16 +236,16 @@ public class MultiByteArrayStreamTest {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(new String(multiBaos.toByteArrays()[0]));
+        System.out.println("multiBaos-3: " + new String(multiBaos.toByteArrays()[0]));
         assertEquals("Hello, this is MultiByteArrayInputStream", new String(multiBaos.toByteArrays()[0]));
-        multiBaos.reset();
-        System.out.println(new String(multiBaos.toByteArrays()[0]));
+        // multiBaos.reset();
+        System.out.println("multiBaos-4: " + new String(multiBaos.resetStream().toByteArrays()[0]));
         assertEquals("", new String(multiBaos.toByteArrays()[0]));
 
         while ((read = multiBais2.read()) != -1) {
             multiBaos.write(read);
         }
-        System.out.println(new String(multiBaos.toByteArrays()[0]));
+        System.out.println("multiBaos-5: " + new String(multiBaos.toByteArrays()[0]));
         assertEquals("This is unit test: Reset stream and put into new bytes! ", new String(multiBaos.toByteArrays()[0]));
     }
 }
