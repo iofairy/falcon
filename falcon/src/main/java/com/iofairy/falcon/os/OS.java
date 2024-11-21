@@ -184,6 +184,18 @@ public final class OS {
      */
     private static final boolean IS_PRE_MACOSX = os.startsWith("mac os x");
 
+    public static final boolean IS_MACOS_SEQUOIA_1          = macOSCompare("15.1");
+    public static final boolean IS_MACOS_SEQUOIA_0          = macOSCompare("15.0");
+    public static final boolean IS_MACOS_SONOMA_7           = macOSCompare("14.7");
+    public static final boolean IS_MACOS_SONOMA_6           = macOSCompare("14.6");
+    public static final boolean IS_MACOS_SONOMA_5           = macOSCompare("14.5");
+    public static final boolean IS_MACOS_SONOMA_4           = macOSCompare("14.4");
+    public static final boolean IS_MACOS_SONOMA_3           = macOSCompare("14.3");
+    public static final boolean IS_MACOS_SONOMA_2           = macOSCompare("14.2");
+    public static final boolean IS_MACOS_SONOMA_1           = macOSCompare("14.1");
+    public static final boolean IS_MACOS_SONOMA_0           = macOSCompare("14.0");
+    public static final boolean IS_MACOS_VENTURA_7          = macOSCompare("13.7");
+    public static final boolean IS_MACOS_VENTURA_6          = macOSCompare("13.6");
     public static final boolean IS_MACOS_VENTURA_5          = macOSCompare("13.5");
     public static final boolean IS_MACOS_VENTURA_4          = macOSCompare("13.4");
     public static final boolean IS_MACOS_VENTURA_3          = macOSCompare("13.3");
@@ -222,6 +234,18 @@ public final class OS {
     public static final boolean IS_MAC_OS_X_PUMA            = macOSCompare("10.1");
     public static final boolean IS_MAC_OS_X_CHEETAH         = macOSCompare("10.0");
 
+    public static final boolean IS_MAC_15_1     = IS_MACOS_SEQUOIA_1;
+    public static final boolean IS_MAC_15_0     = IS_MACOS_SEQUOIA_0;
+    public static final boolean IS_MAC_14_7     = IS_MACOS_SONOMA_7;
+    public static final boolean IS_MAC_14_6     = IS_MACOS_SONOMA_6;
+    public static final boolean IS_MAC_14_5     = IS_MACOS_SONOMA_5;
+    public static final boolean IS_MAC_14_4     = IS_MACOS_SONOMA_4;
+    public static final boolean IS_MAC_14_3     = IS_MACOS_SONOMA_3;
+    public static final boolean IS_MAC_14_2     = IS_MACOS_SONOMA_2;
+    public static final boolean IS_MAC_14_1     = IS_MACOS_SONOMA_1;
+    public static final boolean IS_MAC_14_0     = IS_MACOS_SONOMA_0;
+    public static final boolean IS_MAC_13_7     = IS_MACOS_VENTURA_7;
+    public static final boolean IS_MAC_13_6     = IS_MACOS_VENTURA_6;
     public static final boolean IS_MAC_13_5     = IS_MACOS_VENTURA_5;
     public static final boolean IS_MAC_13_4     = IS_MACOS_VENTURA_4;
     public static final boolean IS_MAC_13_3     = IS_MACOS_VENTURA_3;
@@ -354,7 +378,19 @@ public final class OS {
     }
 
     private static boolean isMacOS() {
-        return IS_MACOS_VENTURA_5
+        return IS_MACOS_SEQUOIA_1
+                || IS_MACOS_SEQUOIA_0
+                || IS_MACOS_SONOMA_7
+                || IS_MACOS_SONOMA_6
+                || IS_MACOS_SONOMA_5
+                || IS_MACOS_SONOMA_4
+                || IS_MACOS_SONOMA_3
+                || IS_MACOS_SONOMA_2
+                || IS_MACOS_SONOMA_1
+                || IS_MACOS_SONOMA_0
+                || IS_MACOS_VENTURA_7
+                || IS_MACOS_VENTURA_6
+                || IS_MACOS_VENTURA_5
                 || IS_MACOS_VENTURA_4
                 || IS_MACOS_VENTURA_3
                 || IS_MACOS_VENTURA_2

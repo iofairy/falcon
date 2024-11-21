@@ -45,6 +45,7 @@ public enum JavaVersion {
     JAVA_20("20", "20", 20f, 64.0f, "2023-03-21"),
     JAVA_21("21", "21", 21f, 65.0f, "2023-09-19"),
     JAVA_22("22", "22", 22f, 66.0f, "2024-03-19"),
+    JAVA_23("23", "23", 23f, 67.0f, "2024-09-17"),
     ;
 
     /**
@@ -130,6 +131,10 @@ public enum JavaVersion {
                 return JAVA_20;
             case "21":
                 return JAVA_21;
+            case "22":
+                return JAVA_22;
+            case "23":
+                return JAVA_23;
         }
         return null;
     }
