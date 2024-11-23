@@ -478,7 +478,12 @@ public class DateTimePattern {
      */
     public static DateTimeFormatter getDTF(String pattern) {
         DateTimeFormatter dtf = DTF_MAP.get(pattern);
-        return dtf == null ? DateTimeFormatter.ofPattern(pattern) : dtf;
+        if (dtf == null) {
+            /* "y/M/d H:m:s".length() == 11, 小于11，说明时间结构不是完整的"年月日时分秒" */
+            return pattern.length() < 11 ? buildDTF(pattern) : DateTimeFormatter.ofPattern(pattern);
+        } else {
+            return dtf;
+        }
     }
 
     /**
