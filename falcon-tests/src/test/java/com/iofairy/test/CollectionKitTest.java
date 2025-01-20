@@ -462,4 +462,43 @@ public class CollectionKitTest {
         System.out.println("random5: " + random5);
 
     }
+
+    @Test
+    public void testCollectionComputation() {
+        String[] ss = {"3c", "1a", "2b", "3c", "4c"};
+        List<Integer> is = Arrays.asList(3, 5, 6, 2, 4);
+
+        List<String> difference1 = CollectionKit.difference(Arrays.asList(ss), is, (a, b) -> a.startsWith(String.valueOf(b)));
+        List<Integer> difference2 = CollectionKit.difference(is, Arrays.asList(ss), (a, b) -> a.equals(Integer.valueOf(b.substring(0, 1))));
+        List<String> intersect1 = CollectionKit.intersect(Arrays.asList(ss), is, (a, b) -> a.startsWith(String.valueOf(b)));
+        List<String> intersect2 = CollectionKit.intersect(Arrays.asList(ss), is, (a, b) -> a.startsWith(String.valueOf(b)), false);
+        List<Integer> intersect3 = CollectionKit.intersect(is, Arrays.asList(ss), (a, b) -> a.equals(Integer.valueOf(b.substring(0, 1))));
+        List<Integer> intersect4 = CollectionKit.intersect(is, Arrays.asList(ss), (a, b) -> a.equals(Integer.valueOf(b.substring(0, 1))), false);
+        Tuple2<List<String>, List<Integer>> intersectAndMinusA1 = CollectionKit.intersectAndMinusA(Arrays.asList(ss), is, (a, b) -> a.startsWith(String.valueOf(b)));
+        Tuple2<List<String>, List<Integer>> intersectAndMinusA2 = CollectionKit.intersectAndMinusA(Arrays.asList(ss), is, (a, b) -> a.startsWith(String.valueOf(b)), false);
+        Tuple2<List<String>, List<String>> intersectAndMinusB1 = CollectionKit.intersectAndMinusB(Arrays.asList(ss), is, (a, b) -> a.startsWith(String.valueOf(b)));
+        Tuple2<List<String>, List<String>> intersectAndMinusB2 = CollectionKit.intersectAndMinusB(Arrays.asList(ss), is, (a, b) -> a.startsWith(String.valueOf(b)), false);
+        // System.out.println("difference1: " + difference1);
+        // System.out.println("difference2: " + difference2);
+        // System.out.println("intersect1: " + intersect1);
+        // System.out.println("intersect2: " + intersect2);
+        // System.out.println("intersect3: " + intersect3);
+        // System.out.println("intersect4: " + intersect4);
+        // System.out.println("intersectAndMinusA1: " + intersectAndMinusA1);
+        // System.out.println("intersectAndMinusA2: " + intersectAndMinusA2);
+        // System.out.println("intersectAndMinusB1: " + intersectAndMinusB1);
+        // System.out.println("intersectAndMinusB2: " + intersectAndMinusB2);
+
+        assertEquals(difference1.toString(), "[1a]");
+        assertEquals(difference2.toString(), "[5, 6]");
+        assertEquals(intersect1.toString(), "[3c, 2b, 3c, 4c]");
+        assertEquals(intersect2.toString(), "[3c, 2b, 4c]");
+        assertEquals(intersect3.toString(), "[3, 2, 4]");
+        assertEquals(intersect4.toString(), "[3, 2, 3, 4]");
+        assertEquals(intersectAndMinusA1.toString(), "([\"3c\", \"2b\", \"3c\", \"4c\"], [5, 6])");
+        assertEquals(intersectAndMinusA2.toString(), "([\"3c\", \"2b\", \"4c\"], [5, 6])");
+        assertEquals(intersectAndMinusB1.toString(), "([\"3c\", \"2b\", \"3c\", \"4c\"], [\"1a\"])");
+        assertEquals(intersectAndMinusB2.toString(), "([\"3c\", \"2b\", \"4c\"], [\"1a\"])");
+
+    }
 }

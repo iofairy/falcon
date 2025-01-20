@@ -16,6 +16,7 @@
 package com.iofairy.falcon.iterable;
 
 import com.iofairy.falcon.map.MapKit;
+import com.iofairy.lambda.P2;
 import com.iofairy.top.G;
 import com.iofairy.tuple.Tuple;
 import com.iofairy.tuple.Tuple2;
@@ -23,6 +24,8 @@ import com.iofairy.tuple.Tuple2;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+
+import static com.iofairy.falcon.misc.Preconditions.*;
 
 /**
  * Collection Utils
@@ -219,7 +222,7 @@ public class CollectionKit {
         List<Map.Entry<Integer, List<E>>> entries = MapKit.sortBy(map, kv -> kv.getValue().size());
         for (List<E> list : sortedLists) {
             entries.get(0).getValue().addAll(list);
-//            entries = MapKit.sortBy(entries, kv -> kv.getValue().size());   // 排序效率太低
+            // entries = MapKit.sortBy(entries, kv -> kv.getValue().size());   // 排序效率太低
             fastSortForBalance(entries);    // 针对 balance 的排序算法，效率非常高
         }
 
@@ -489,6 +492,281 @@ public class CollectionKit {
     public static <T> Tuple2<T, Integer> findRandom(T[] ts, Predicate<? super T> filter) {
         if (G.isEmpty(ts)) return null;
         return findRandom(Arrays.asList(ts), filter);
+    }
+
+    /**
+     * 差集：A - B（保留A集合元素原始顺序）
+     *
+     * @param as              A集合
+     * @param bs              B集合
+     * @param equalsCondition A中元素与B中元素等价的条件
+     * @param <A>             as 的元素类型
+     * @param <B>             bs 的元素类型
+     * @return A与B的差集(A - B)
+     * @since 0.5.11
+     */
+    public static <A, B> List<A> difference(Collection<A> as, Collection<B> bs, P2<? super A, ? super B> equalsCondition) {
+        checkNullNPE(equalsCondition, args("equalsCondition"));
+
+        if (as == null) return new ArrayList<>();
+        if (G.isEmpty(as) || G.isEmpty(bs)) return new ArrayList<>(as);
+
+        List<A> results = new ArrayList<>();
+        for (A a : as) {
+            B found = search(bs, a, (p1, p2) -> equalsCondition.$(p2, p1));
+            if (found == null) {
+                results.add(a);
+            }
+        }
+        return results;
+    }
+
+    /**
+     * 交集：A ∩ B，返回A中的元素（保留元素原始顺序）
+     *
+     * @param as              A集合
+     * @param bs              B集合
+     * @param equalsCondition A中元素与B中元素等价的条件
+     * @param <A>             as 的元素类型
+     * @param <B>             bs 的元素类型
+     * @return A与B的交集
+     * @since 0.5.11
+     */
+    public static <A, B> List<A> intersect(Collection<A> as, Collection<B> bs, P2<? super A, ? super B> equalsCondition) {
+        return intersect(as, bs, equalsCondition, true);
+    }
+
+    /**
+     * 交集：A ∩ B，返回A中的元素（保留元素原始顺序）
+     *
+     * @param as               A集合
+     * @param bs               B集合
+     * @param equalsCondition  A中元素与B中元素等价的条件
+     * @param followFirstOrder 求AB交集时，{@code true}则结果集按照A中元素的顺序返回，{@code false}则结果集按照B中元素的顺序返回
+     * @param <A>              as 的元素类型
+     * @param <B>              bs 的元素类型
+     * @return A与B的交集
+     * @since 0.5.11
+     */
+    public static <A, B> List<A> intersect(Collection<A> as, Collection<B> bs, P2<? super A, ? super B> equalsCondition, boolean followFirstOrder) {
+        checkNullNPE(equalsCondition, args("equalsCondition"));
+
+        if (as == null) return new ArrayList<>();
+        if (G.isEmpty(as) || G.isEmpty(bs)) return new ArrayList<>(as);
+
+        List<A> results = new ArrayList<>();
+
+        if (followFirstOrder) {
+            List<A> tmpAs = new ArrayList<>(as);
+            final Iterator<A> it = tmpAs.iterator();
+            while (it.hasNext()) {
+                A a = it.next();
+                B found = search(bs, a, (p1, p2) -> equalsCondition.$(p2, p1));
+
+                if (found == null) {
+                    it.remove();
+                }
+            }
+
+            results = tmpAs;
+        } else {
+            for (B b : bs) {
+                A found = search(as, b, equalsCondition);
+                if (found != null) {
+                    results.add(found);
+                }
+            }
+        }
+        return results;
+    }
+
+    /**
+     * 求 <b>A与B的交集</b> 与 <b>B与A的差集(B-A)</b>。<br>
+     * A与B的交集：返回A中的元素（保留元素原始顺序）；<br>
+     * B与A的差集：返回 B-A的元素（存在于B，但不存在于A中的元素）（保留元素原始顺序）
+     *
+     * @param as              A集合
+     * @param bs              B集合
+     * @param equalsCondition A中元素与B中元素等价的条件
+     * @param <A>             as 的元素类型
+     * @param <B>             bs 的元素类型
+     * @return {@code Tuple2<A, B>}，第一个元素是A与B的交集，第二个元素是B与A的差集（B-A）
+     * @since 0.5.11
+     */
+    public static <A, B> Tuple2<List<A>, List<B>> intersectAndMinusA(Collection<A> as, Collection<B> bs, P2<? super A, ? super B> equalsCondition) {
+        return intersectAndMinusA(as, bs, equalsCondition, true);
+    }
+
+    /**
+     * 求 <b>A与B的交集</b> 与 <b>B与A的差集(B-A)</b>。<br>
+     * A与B的交集：返回A中的元素（保留元素原始顺序）；<br>
+     * B与A的差集：返回 B-A的元素（存在于B，但不存在于A中的元素）（保留元素原始顺序）
+     *
+     * @param as               A集合
+     * @param bs               B集合
+     * @param equalsCondition  A中元素与B中元素等价的条件
+     * @param followFirstOrder 求AB交集时，{@code true}则结果集按照A中元素的顺序返回，{@code false}则结果集按照B中元素的顺序返回
+     * @param <A>              as 的元素类型
+     * @param <B>              bs 的元素类型
+     * @return {@code Tuple2<A, B>}，第一个元素是A与B的交集，第二个元素是B与A的差集（B-A）
+     * @since 0.5.11
+     */
+    public static <A, B> Tuple2<List<A>, List<B>> intersectAndMinusA(Collection<A> as,
+                                                                     Collection<B> bs,
+                                                                     P2<? super A, ? super B> equalsCondition,
+                                                                     boolean followFirstOrder) {
+        checkNullNPE(equalsCondition, args("equalsCondition"));
+
+        if (bs == null) return Tuple.of(new ArrayList<>(), new ArrayList<>());
+        if (G.isEmpty(as) || G.isEmpty(bs)) return Tuple.of(new ArrayList<>(), new ArrayList<>(bs));
+
+        List<A> results = new ArrayList<>();
+
+        if (followFirstOrder) {
+            List<A> tmpAs = new ArrayList<>(as);
+            List<B> bsNotInAs = new ArrayList<>(bs);   // 不属于as但属于bs中的元素
+
+            final Iterator<A> it = tmpAs.iterator();
+            while (it.hasNext()) {
+                A a = it.next();
+                final B found = search(bs, a, (p1, p2) -> equalsCondition.$(p2, p1));
+
+                if (found == null) {
+                    it.remove();
+                } else {
+                    bsNotInAs.removeIf(e -> Objects.equals(e, found));
+                }
+            }
+            results = tmpAs;
+
+            return Tuple.of(results, bsNotInAs);
+        } else {
+            List<B> bsNotInAs = new ArrayList<>();  // 不属于as但属于bs中的元素
+
+            for (B b : bs) {
+                A found = search(as, b, equalsCondition);
+                if (found == null) {
+                    bsNotInAs.add(b);
+                } else {
+                    results.add(found);
+                }
+            }
+
+            return Tuple.of(results, bsNotInAs);
+        }
+    }
+
+    /**
+     * 求 <b>A与B的交集</b> 与 <b>A与B的差集(A-B)</b>。<br>
+     * A与B的交集：返回A中的元素（保留元素原始顺序）；<br>
+     * A与B的差集：返回 A-B的元素（存在于A，但不存在于B中的元素）（保留元素原始顺序）
+     *
+     * @param as              A集合
+     * @param bs              B集合
+     * @param equalsCondition A中元素与B中元素等价的条件
+     * @param <A>             as 的元素类型
+     * @param <B>             bs 的元素类型
+     * @return {@code Tuple2<A, B>}，第一个元素是A与B的交集，第二个元素是A与B的差集（A-B）
+     * @since 0.5.11
+     */
+    public static <A, B> Tuple2<List<A>, List<A>> intersectAndMinusB(Collection<A> as, Collection<B> bs, P2<? super A, ? super B> equalsCondition) {
+        return intersectAndMinusB(as, bs, equalsCondition, true);
+    }
+
+    /**
+     * 求 <b>A与B的交集</b> 与 <b>A与B的差集(A-B)</b>。<br>
+     * A与B的交集：返回A中的元素（保留元素原始顺序）；<br>
+     * A与B的差集：返回 A-B的元素（存在于A，但不存在于B中的元素）（保留元素原始顺序）
+     *
+     * @param as               A集合
+     * @param bs               B集合
+     * @param equalsCondition  A中元素与B中元素等价的条件
+     * @param followFirstOrder 求AB交集时，{@code true} 则结果集按照A中元素的顺序返回，{@code false}则结果集按照B中元素的顺序返回
+     * @param <A>              as 的元素类型
+     * @param <B>              bs 的元素类型
+     * @return {@code Tuple2<A, B>}，第一个元素是A与B的交集，第二个元素是A与B的差集（A-B）
+     * @since 0.5.11
+     */
+    public static <A, B> Tuple2<List<A>, List<A>> intersectAndMinusB(Collection<A> as,
+                                                                     Collection<B> bs,
+                                                                     P2<? super A, ? super B> equalsCondition,
+                                                                     boolean followFirstOrder) {
+        checkNullNPE(equalsCondition, args("equalsCondition"));
+
+        if (as == null) return Tuple.of(new ArrayList<>(), new ArrayList<>());
+        if (G.isEmpty(as) || G.isEmpty(bs)) return Tuple.of(new ArrayList<>(), new ArrayList<>(as));
+
+        List<A> results = new ArrayList<>();
+
+        if (followFirstOrder) {
+            List<A> tmpAs = new ArrayList<>(as);
+            List<A> asNotInBs = new ArrayList<>();  // 不属于bs但属于as中的元素
+
+            final Iterator<A> it = tmpAs.iterator();
+            while (it.hasNext()) {
+                A a = it.next();
+                final B found = search(bs, a, (p1, p2) -> equalsCondition.$(p2, p1));
+
+                if (found == null) {
+                    it.remove();
+                    asNotInBs.add(a);
+                }
+            }
+            results = tmpAs;
+
+            return Tuple.of(results, asNotInBs);
+        } else {
+            List<A> asNotInBs = new ArrayList<>(as);    // 不属于bs但属于as中的元素
+
+            for (B b : bs) {
+                A found = search(as, b, equalsCondition);
+                if (found != null) {
+                    results.add(found);
+                    asNotInBs.removeIf(e -> Objects.equals(e, found));
+                }
+            }
+
+            return Tuple.of(results, asNotInBs);
+        }
+    }
+
+    /**
+     * 按照 {@code equalsCondition} 的规则搜索 {@code as}中是否有 b 元素
+     *
+     * @param as              待搜索的集合
+     * @param b               搜索的元素
+     * @param equalsCondition 搜索的条件
+     * @param <A>             as 的元素类型
+     * @param <B>             搜索的元素类型
+     * @return 返回与 {@code b} 匹配的元素
+     * @since 0.5.11
+     */
+    public static <A, B> A search(Collection<A> as, B b, P2<? super A, ? super B> equalsCondition) {
+        checkNullNPE(equalsCondition, args("equalsCondition"));
+
+        if (G.isEmpty(as)) return null;
+        for (A a : as) {
+            if (equalsCondition.$(a, b)) {
+                return a;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 按照 {@code equalsCondition} 的规则搜索 {@code as}中是否有 b 元素
+     *
+     * @param as              待搜索的数组
+     * @param b               搜索的元素
+     * @param equalsCondition 搜索的条件
+     * @param <A>             as 的元素类型
+     * @param <B>             搜索的元素类型
+     * @return 返回与 {@code b} 匹配的元素
+     * @since 0.5.11
+     */
+    public static <A, B> A search(A[] as, B b, P2<? super A, ? super B> equalsCondition) {
+        if (G.isEmpty(as)) return null;
+        return search(Arrays.asList(as), b, equalsCondition);
     }
 
 }
