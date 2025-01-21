@@ -419,4 +419,15 @@ public class Interval extends SignedInterval {
         return isInstant ? ((ZonedDateTime) temporal).toInstant() : temporal;
     }
 
+    /**
+     * 计算近似值
+     *
+     * @return 当前对象
+     * @since 0.5.11
+     */
+    @Override
+    public Interval calculateApprox() {
+        return (Interval) super.calculateApprox();
+    }
+
 }

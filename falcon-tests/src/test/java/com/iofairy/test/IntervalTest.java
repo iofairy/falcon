@@ -1135,6 +1135,59 @@ public class IntervalTest {
 
     }
 
+    @Test
+    public void testCalculateApprox() {
+        SignedInterval signedInterval = SignedInterval.of(-2, 1, -240, 1, 1, -2, 530, 1, 2, 1);
+        Interval interval = Interval.of(1, 3, 1, 3, 200, -650, 0, 900, 2, 2);
+
+        System.out.println(signedInterval.toSimpleString());
+        System.out.println(interval.toSimpleString());
+        System.out.println("============================================================");
+        System.out.println(signedInterval.toFullString());
+        System.out.println("============================================================");
+        System.out.println(interval.toFullString());
+        signedInterval.calculateApprox();
+        interval.calculateApprox();
+        SignedInterval signedInterval1 = signedInterval.calculateApprox();
+        Interval interval1 = interval.calculateApprox();
+        System.out.println("============================================================");
+        System.out.println(signedInterval.toFullString());
+        System.out.println("============================================================");
+        System.out.println(interval.toFullString());
+
+        assertEquals("-2世纪1年-240月1天1时6分50秒1毫秒2微秒1纳秒", signedInterval.toSimpleString());
+        assertEquals("1世纪3年1月3天189时10分900毫秒2微秒2纳秒", interval.toSimpleString());
+        assertEquals(signedInterval1.toFullString(), "-2世纪1年-240月1天1时6分50秒1毫秒2微秒1纳秒\n" +
+                "相当于：\n" +
+                "● -218 年(近似值)\n" +
+                "● -2627 月(近似值)\n" +
+                "● -11426 周(近似值)\n" +
+                "● -79987 天(近似值)\n" +
+                "● -1919689 时(近似值)\n" +
+                "● -115181367 分(近似值)\n" +
+                "● -6910882077 秒(近似值)\n" +
+                "● -6910882077998 毫秒(近似值)\n" +
+                "● -6910882077998997 微秒(近似值)\n" +
+                "● -6910882077998997999 纳秒(近似值)");
+        assertEquals(interval1.toFullString(), "1世纪3年1月3天189时10分0秒900毫秒2微秒2纳秒\n" +
+                "相当于：\n" +
+                "● 103 年(近似值)\n" +
+                "● 1237 月(近似值)\n" +
+                "● 5380 周(近似值)\n" +
+                "● 37661 天(近似值)\n" +
+                "● 903871 时(近似值)\n" +
+                "● 54232266 分(近似值)\n" +
+                "● 3253936002 秒(近似值)\n" +
+                "● 3253936002900 毫秒(近似值)\n" +
+                "● 3253936002900002 微秒(近似值)\n" +
+                "● 3253936002900002002 纳秒(近似值)");
+        assertEquals(-79987, signedInterval1.getApproxDays());
+        assertEquals(1237, interval1.getApproxMonths());
+        assertEquals(-6910882077998997999L, signedInterval1.getApproxNanos().longValue());
+        assertEquals(3253936002900002002L, interval1.getApproxNanos().longValue());
+    }
+
+
     private void throwException() {
         throw new RuntimeException();
     }

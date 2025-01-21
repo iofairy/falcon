@@ -132,7 +132,7 @@ public class WeekInfo {
     int weekOfWeekBasedMonth;
 
     public WeekInfo(LocalDate localDate) {
-        this(DTConst.MONDAY_MIN7, localDate);
+        this(DTC.MONDAY_MIN7, localDate);
     }
 
     public WeekInfo(WeekFields weekFields, LocalDate localDate) {
@@ -317,7 +317,7 @@ public class WeekInfo {
      * @return 指定年月的第 {@code weekNo} 周的第一天日期
      */
     public static LocalDate baseMonth(int year, int month, int weekNo) {
-        return baseMonth(DTConst.MONDAY_MIN7, YearMonth.of(year, month), weekNo);
+        return baseMonth(DTC.MONDAY_MIN7, YearMonth.of(year, month), weekNo);
     }
 
     /**
@@ -341,7 +341,7 @@ public class WeekInfo {
      * @return 指定年月的第 {@code weekNo} 周的第一天日期
      */
     public static LocalDate baseMonth(YearMonth yearMonth, int weekNo) {
-        return baseMonth(DTConst.MONDAY_MIN7, yearMonth, weekNo);
+        return baseMonth(DTC.MONDAY_MIN7, yearMonth, weekNo);
     }
 
     /**
@@ -381,7 +381,7 @@ public class WeekInfo {
      * @return 指定年的第 {@code weekNo} 周的第一天日期
      */
     public static LocalDate baseYear(int year, int weekNo) {
-        return baseYear(DTConst.MONDAY_MIN7, year, weekNo);
+        return baseYear(DTC.MONDAY_MIN7, year, weekNo);
     }
 
     /**

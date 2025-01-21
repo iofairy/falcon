@@ -252,6 +252,8 @@ public class MultiByteArrayInputStream extends InputStream {
      *
      * <p> Note: The <code>readAheadLimit</code> for this class
      * has no meaning.
+     *
+     * @param readAheadLimit the current marked position in the stream
      */
     public synchronized void mark(int readAheadLimit) {
         mark = pos;
@@ -269,6 +271,7 @@ public class MultiByteArrayInputStream extends InputStream {
      * <p> Note: The <code>readAheadLimit</code> for this class
      * has no meaning.
      *
+     * @param readAheadLimit the current marked position in the stream
      * @return this
      * @since 0.5.11
      */

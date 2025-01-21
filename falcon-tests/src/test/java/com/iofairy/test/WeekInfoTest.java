@@ -12,7 +12,7 @@ import java.time.temporal.WeekFields;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static com.iofairy.falcon.time.DTConst.*;
+import static com.iofairy.falcon.time.DTC.*;
 
 /**
  * @author GG

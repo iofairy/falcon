@@ -326,7 +326,7 @@ public final class DateTimes {
             case MICROS:
                 return BigInteger.valueOf(amount);
             case NANOS:
-                return BigInteger.valueOf(0);
+                return BigInteger.ZERO;
         }
         throw new UnsupportedTemporalTypeException("Unsupported unit: " + chronoUnit);
     }
@@ -343,15 +343,15 @@ public final class DateTimes {
         if (amount == 0) return BigInteger.ZERO;
         switch (chronoUnit) {
             case HOURS:
-                return BigInteger.valueOf(amount).multiply(BigInteger.valueOf(3600000000000L));
+                return BigInteger.valueOf(amount).multiply(DTC.ONE_HOUR);
             case MINUTES:
-                return BigInteger.valueOf(amount).multiply(BigInteger.valueOf(60000000000L));
+                return BigInteger.valueOf(amount).multiply(DTC.ONE_MINUTE);
             case SECONDS:
-                return BigInteger.valueOf(amount).multiply(BigInteger.valueOf(1000000000L));
+                return BigInteger.valueOf(amount).multiply(DTC.ONE_SECOND);
             case MILLIS:
-                return BigInteger.valueOf(amount).multiply(BigInteger.valueOf(1000000L));
+                return BigInteger.valueOf(amount).multiply(DTC.ONE_MILLI);
             case MICROS:
-                return BigInteger.valueOf(amount).multiply(BigInteger.valueOf(1000L));
+                return BigInteger.valueOf(amount).multiply(DTC.ONE_MICRO);
             case NANOS:
                 return BigInteger.valueOf(amount);
         }
@@ -473,14 +473,14 @@ public final class DateTimes {
 
         switch (withMode) {
             case 0:
-                if (S.isEmpty(day)) return DTConst.HHs;
-                for (String hh : DTConst.HHs) hhs.add(day + hh);
+                if (S.isEmpty(day)) return DTC.HHs;
+                for (String hh : DTC.HHs) hhs.add(day + hh);
                 break;
             case 1:
-                for (String hh : DTConst.HHs) hhs.add(day + hh + separator + "00");
+                for (String hh : DTC.HHs) hhs.add(day + hh + separator + "00");
                 break;
             default:
-                for (String hh : DTConst.HHs) hhs.add(day + hh + separator + "00" + separator + "00");
+                for (String hh : DTC.HHs) hhs.add(day + hh + separator + "00" + separator + "00");
         }
         return hhs;
     }
@@ -497,14 +497,14 @@ public final class DateTimes {
         if (separator == null) separator = "";
         List<String> hhmms = new ArrayList<>();
         if (withZeroSecond) {
-            for (String hh : DTConst.HHs) {
-                for (String ms : DTConst.MSs) {
+            for (String hh : DTC.HHs) {
+                for (String ms : DTC.MSs) {
                     hhmms.add(hh + separator + ms + separator + "00");
                 }
             }
         } else {
-            for (String hh : DTConst.HHs) {
-                for (String ms : DTConst.MSs) {
+            for (String hh : DTC.HHs) {
+                for (String ms : DTC.MSs) {
                     hhmms.add(hh + separator + ms);
                 }
             }
@@ -528,11 +528,11 @@ public final class DateTimes {
         String hmSeparator = isEmpty ? "" : separator;  // 小时与分钟之间的分隔符
         List<String> hhmms = new ArrayList<>();
         if (withZeroSecond) {
-            for (String ms : DTConst.MSs) {
+            for (String ms : DTC.MSs) {
                 hhmms.add(hour + hmSeparator + ms + separator + "00");
             }
         } else {
-            for (String ms : DTConst.MSs) {
+            for (String ms : DTC.MSs) {
                 hhmms.add(hour + hmSeparator + ms);
             }
         }

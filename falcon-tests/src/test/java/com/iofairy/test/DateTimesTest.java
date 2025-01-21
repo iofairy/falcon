@@ -1,6 +1,6 @@
 package com.iofairy.test;
 
-import com.iofairy.falcon.time.DTConst;
+import com.iofairy.falcon.time.DTC;
 import com.iofairy.falcon.time.DateTime;
 import com.iofairy.falcon.time.DateTimes;
 import com.iofairy.falcon.time.TZ;
@@ -426,13 +426,13 @@ public class DateTimesTest {
 
     @Test
     public void testDTConst() {
-        System.out.println(DTConst.WEEK_ISO);
-        System.out.println(DTConst.MONDAY_MIN1);
-        System.out.println(DTConst.MONDAY_MIN4);
-        System.out.println(DTConst.SUNDAY_MIN1);
-        System.out.println(DTConst.SUNDAY_MIN4);
-        System.out.println(DTConst.SATURDAY_MIN1);
-        System.out.println(DTConst.SATURDAY_MIN4);
+        System.out.println(DTC.WEEK_ISO);
+        System.out.println(DTC.MONDAY_MIN1);
+        System.out.println(DTC.MONDAY_MIN4);
+        System.out.println(DTC.SUNDAY_MIN1);
+        System.out.println(DTC.SUNDAY_MIN4);
+        System.out.println(DTC.SATURDAY_MIN1);
+        System.out.println(DTC.SATURDAY_MIN4);
 
     }
 

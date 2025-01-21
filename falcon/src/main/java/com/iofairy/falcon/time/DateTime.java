@@ -156,6 +156,17 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         return of(epochSeconds * 1000);
     }
 
+    /**
+     * Get {@code DateTime<Date>} from the date string
+     *
+     * @param dateStr date string
+     * @return {@code DateTime<Date>}
+     * @since 0.5.11
+     */
+    public static DateTime<Date> of(String dateStr) {
+        return parseDate(dateStr);
+    }
+
     public static DateTime<ZonedDateTime> of(int year, int month, int dayOfMonth, int hour, int minute, int second, int nanoOfSecond, ZoneId zone) {
         return from(ZonedDateTime.of(year, month, dayOfMonth, hour, minute, second, nanoOfSecond, zone == null ? TZ.DEFAULT_ZONE : zone));
     }
@@ -246,7 +257,7 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         return zonedDateTime;
     }
 
-    public OffsetDateTime getOffsetDateTime(){
+    public OffsetDateTime getOffsetDateTime() {
         return offsetDateTime;
     }
 
@@ -315,6 +326,29 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         return zonedDateTime.withZoneSameInstant(zoneId);
     }
 
+    /**
+     * Returns a copy of this date-time with a different time-zone, retaining the instant.
+     *
+     * @param zoneId the time-zone to change to, not null
+     * @return a {@code ZonedDateTime} based on this date-time with the requested zone, not null
+     * @see ZonedDateTime#withZoneSameInstant(ZoneId)
+     * @since 0.5.11
+     */
+    public ZonedDateTime withZoneSameInstant(ZoneId zoneId) {
+        return zonedDateTime.withZoneSameInstant(zoneId);
+    }
+
+    /**
+     * Returns a copy of this date-time with a different time-zone, retaining the local date-time if possible.
+     *
+     * @param zoneId the time-zone to change to, not null
+     * @return a {@code ZonedDateTime} based on this date-time with the requested zone, not null
+     * @see ZonedDateTime#withZoneSameLocal(ZoneId)
+     * @since 0.5.11
+     */
+    public ZonedDateTime withZoneSameLocal(ZoneId zoneId) {
+        return zonedDateTime.withZoneSameLocal(zoneId);
+    }
 
     /**
      * 将 DateTime 转为 {@link ZoneOffset#UTC} 时区的 {@code OffsetDateTime}
@@ -871,8 +905,10 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
             chronoUnit = ChronoUnit.DAYS;
             amountUnit = amountUnit * 7;
         }
-        if (dateTime instanceof Date) return (List<T>) DateTimeShift.datesByShift((Date) this.get(), zonedDateTime, shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
-        if (dateTime instanceof Calendar) return (List<T>) DateTimeShift.datesByShift((Calendar) this.get(), shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
+        if (dateTime instanceof Date)
+            return (List<T>) DateTimeShift.datesByShift((Date) this.get(), zonedDateTime, shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
+        if (dateTime instanceof Calendar)
+            return (List<T>) DateTimeShift.datesByShift((Calendar) this.get(), shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
         return (List<T>) DateTimeShift.datesByShift((Temporal) dateTime, shiftTimes, amountUnit, chronoUnit, includeCurrentTime);
     }
 
@@ -919,7 +955,8 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
         if (dateTime instanceof Date)
             return (List<T>) DateTimeShift.datesFromRange((Date) this.get(), toDateTime.toDate(), zonedDateTime, toDateTime.zonedDateTime, amountUnit, chronoUnit, intervalType);
-        if (dateTime instanceof Calendar) return (List<T>) DateTimeShift.datesFromRange((Calendar) this.get(), toDateTime.toCalendar(null), amountUnit, chronoUnit, intervalType);
+        if (dateTime instanceof Calendar)
+            return (List<T>) DateTimeShift.datesFromRange((Calendar) this.get(), toDateTime.toCalendar(null), amountUnit, chronoUnit, intervalType);
         if (dateTime instanceof OffsetDateTime && toDateTime.dateTime instanceof OffsetDateTime)
             return (List<T>) DateTimeShift.datesFromRange((Temporal) dateTime, (Temporal) toDateTime.dateTime, amountUnit, chronoUnit, intervalType);
 
@@ -1092,6 +1129,12 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
 
         String dateFormat = DateTimePattern.forDTF(dateText);
         if (S.isEmpty(dateFormat)) throw new DateTimeParseException(SI.$(DT_PARSE_ERROR_MSG_TPL, text, "DateTime.parseDate(CharSequence, String)"), text, 0);
+        /*
+         带时区的时间格式解析
+         */
+        if (dateFormat.endsWith("V")) {
+            return DateTime.from(Date.from(ZonedDateTime.parse(text, DateTimePattern.getDTF(dateFormat)).toInstant()));
+        }
 
         return parseDate(dateText, dateFormat, TZ.DEFAULT_ZONE);
     }
@@ -1111,7 +1154,8 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         String dateText = DateTimes.formatZhMillis(text.toString());
 
         String dateFormat = DateTimePattern.forDTF(dateText);
-        if (S.isEmpty(dateFormat)) throw new DateTimeParseException(SI.$(DT_PARSE_ERROR_MSG_TPL, text, "DateTime.parseDate(CharSequence, String, ZoneId)"), text, 0);
+        if (S.isEmpty(dateFormat))
+            throw new DateTimeParseException(SI.$(DT_PARSE_ERROR_MSG_TPL, text, "DateTime.parseDate(CharSequence, String, ZoneId)"), text, 0);
 
         return parseDate(dateText, dateFormat, zoneId);
     }
@@ -1149,9 +1193,9 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     }
 
     /**
-     * 从 时间格式串 中获取 {@code DateTime<Date>}
+     * 从 时间字符串 中获取 {@code DateTime<Date>}
      *
-     * @param text      时间格式串
+     * @param text      时间字符串
      * @param formatter formatter
      * @param zoneId    时间格式串所属的时区。null 则为 默认时区。
      * @return {@code DateTime<Date>}
@@ -1165,6 +1209,68 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
         return DateTime.from(Date.from(zdt.toInstant()));
     }
 
+    /**
+     * 解析 时间字符串 {@code DateTime<ZonedDateTime>}
+     *
+     * @param text 时间字符串
+     * @return {@code DateTime<ZonedDateTime>}
+     * @since 0.5.11
+     */
+    public static DateTime<ZonedDateTime> parseZDT(CharSequence text) {
+        checkNullNPE(text, args("text"));
+        String dateText = DateTimes.formatZhMillis(text.toString());
+
+        String dateFormat = DateTimePattern.forDTF(dateText);
+        if (S.isEmpty(dateFormat)) throw new DateTimeParseException(SI.$(DT_PARSE_ERROR_MSG_TPL, text, "DateTime.parseZDT(CharSequence, String)"), text, 0);
+        return parseZDT(dateText, dateFormat);
+    }
+
+    /**
+     * 解析 时间字符串 {@code DateTime<ZonedDateTime>}
+     *
+     * @param text      时间字符串
+     * @param dtPattern 时间格式化串
+     * @return {@code DateTime<ZonedDateTime>}
+     * @since 0.5.11
+     */
+    public static DateTime<ZonedDateTime> parseZDT(CharSequence text, String dtPattern) {
+        checkNullNPE(text, args("text"));
+
+        if (S.isEmpty(dtPattern)) {
+            return parseZDT(text);
+        } else {
+            Tuple2<CharSequence, String> text_pattern = compatibleFormatter(text, dtPattern);
+            text = text_pattern._1;
+            dtPattern = text_pattern._2;
+            return parseZDT(text, DateTimePattern.getDTF(dtPattern));
+        }
+    }
+
+    /**
+     * 解析 时间字符串 {@code DateTime<ZonedDateTime>}
+     *
+     * @param text      时间字符串
+     * @param formatter 时间格式化器
+     * @return {@code DateTime<ZonedDateTime>}
+     * @since 0.5.11
+     */
+    public static DateTime<ZonedDateTime> parseZDT(CharSequence text, DateTimeFormatter formatter) {
+        checkNullNPE(text, args("text"));
+        ZonedDateTime parse = null;
+        try {
+            parse = ZonedDateTime.parse(text, formatter);
+        } catch (Exception e) {
+            if (e.getCause() != null && e.getCause().getCause() != null) {
+                String message = e.getCause().getCause().getMessage();
+                if (message.startsWith("Unable to obtain ZoneId from TemporalAccessor")) {
+                    parse = ZonedDateTime.parse(text, formatter.withZone(TZ.DEFAULT_ZONE));
+                }
+            } else {
+                throw e;
+            }
+        }
+        return DateTime.from(parse);
+    }
 
     /**
      * The date time format is compatible with {@code yyyyMMddHHmmssSSS} or {@code yyyyyMMddHHmmssSSS}.<br>
@@ -1474,11 +1580,11 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     }
 
 
-    public long toEpochSecond(){
+    public long toEpochSecond() {
         return instant.getEpochSecond();
     }
 
-    public long toEpochMilli(){
+    public long toEpochMilli() {
         return instant.toEpochMilli();
     }
 
@@ -1524,6 +1630,17 @@ public class DateTime<T> implements Temporal, Comparable<DateTime<?>>, Serializa
     public String toString() {
         if (dateTime instanceof Date || dateTime instanceof Calendar) return G.dtSimple(zonedDateTime);
         return G.dtSimple((Temporal) dateTime);
+    }
+
+    /**
+     * A hash code for this DateTime.
+     *
+     * @return hashCode
+     * @since 0.5.11
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(zonedDateTime);
     }
 
 }

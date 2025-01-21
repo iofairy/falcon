@@ -28,11 +28,9 @@ import java.util.stream.IntStream;
 /**
  * DateTime Constant
  *
- * @since 0.3.0
- * @deprecated since 0.5.11, use {@link com.iofairy.falcon.time.DTC} instead.
+ * @since 0.5.11
  */
-@Deprecated
-public class DTConst {
+public class DTC {
     /*###################################################################################
      ************************************************************************************
      ------------------------------------------------------------------------------------
@@ -88,31 +86,31 @@ public class DTConst {
      ------------------------------------------------------------------------------------
      ************************************************************************************
      ###################################################################################*/
-    public final static long NANO       =  ChronoUnit.NANOS.getDuration().toNanos();
-    public final static long MICRO      =  ChronoUnit.MICROS.getDuration().toNanos();
-    public final static long MILLI      =  ChronoUnit.MILLIS.getDuration().toNanos();
-    public final static long SECOND     =  ChronoUnit.SECONDS.getDuration().toNanos();
-    public final static long MINUTE     =  ChronoUnit.MINUTES.getDuration().toNanos();
-    public final static long HOUR       =  ChronoUnit.HOURS.getDuration().toNanos();
-    public final static long DAY        =  ChronoUnit.DAYS.getDuration().toNanos();
-    public final static long WEEK       =  ChronoUnit.WEEKS.getDuration().toNanos();
-    public final static long MONTH      =  ChronoUnit.MONTHS.getDuration().toNanos();
-    public final static long YEAR       =  ChronoUnit.YEARS.getDuration().toNanos();
-    public final static long DECADE     =  ChronoUnit.DECADES.getDuration().toNanos();
-    public final static long CENTURIE   =  ChronoUnit.CENTURIES.getDuration().toNanos();
+    public final static long NANO       =  ChronoUnit.NANOS.getDuration().toNanos();        // 1
+    public final static long MICRO      =  ChronoUnit.MICROS.getDuration().toNanos();       // 1000
+    public final static long MILLI      =  ChronoUnit.MILLIS.getDuration().toNanos();       // 1000000
+    public final static long SECOND     =  ChronoUnit.SECONDS.getDuration().toNanos();      // 1000000000
+    public final static long MINUTE     =  ChronoUnit.MINUTES.getDuration().toNanos();      // 60000000000
+    public final static long HOUR       =  ChronoUnit.HOURS.getDuration().toNanos();        // 3600000000000
+    public final static long DAY        =  ChronoUnit.DAYS.getDuration().toNanos();         // 86400000000000
+    public final static long WEEK       =  ChronoUnit.WEEKS.getDuration().toNanos();        // 604800000000000
+    public final static long MONTH      =  ChronoUnit.MONTHS.getDuration().toNanos();       // 2629746000000000
+    public final static long YEAR       =  ChronoUnit.YEARS.getDuration().toNanos();        // 31556952000000000
+    public final static long DECADE     =  ChronoUnit.DECADES.getDuration().toNanos();      // 315569520000000000
+    public final static long CENTURIE   =  ChronoUnit.CENTURIES.getDuration().toNanos();    // 3155695200000000000
 
-    public final static BigInteger ONE_NANO     =  BigInteger.valueOf(NANO);
-    public final static BigInteger ONE_MICRO    =  BigInteger.valueOf(MICRO);
-    public final static BigInteger ONE_MILLI    =  BigInteger.valueOf(MILLI);
-    public final static BigInteger ONE_SECOND   =  BigInteger.valueOf(SECOND);
-    public final static BigInteger ONE_MINUTE   =  BigInteger.valueOf(MINUTE);
-    public final static BigInteger ONE_HOUR     =  BigInteger.valueOf(HOUR);
-    public final static BigInteger ONE_DAY      =  BigInteger.valueOf(DAY);
-    public final static BigInteger ONE_WEEK     =  BigInteger.valueOf(WEEK);
-    public final static BigInteger ONE_MONTH    =  BigInteger.valueOf(MONTH);
-    public final static BigInteger ONE_YEAR     =  BigInteger.valueOf(YEAR);
-    public final static BigInteger ONE_DECADE   =  BigInteger.valueOf(DECADE);
-    public final static BigInteger ONE_CENTURIE =  BigInteger.valueOf(CENTURIE);
+    public final static BigInteger ONE_NANO     =  BigInteger.valueOf(NANO);                // 1
+    public final static BigInteger ONE_MICRO    =  BigInteger.valueOf(MICRO);               // 1000
+    public final static BigInteger ONE_MILLI    =  BigInteger.valueOf(MILLI);               // 1000000
+    public final static BigInteger ONE_SECOND   =  BigInteger.valueOf(SECOND);              // 1000000000
+    public final static BigInteger ONE_MINUTE   =  BigInteger.valueOf(MINUTE);              // 60000000000
+    public final static BigInteger ONE_HOUR     =  BigInteger.valueOf(HOUR);                // 3600000000000
+    public final static BigInteger ONE_DAY      =  BigInteger.valueOf(DAY);                 // 86400000000000
+    public final static BigInteger ONE_WEEK     =  BigInteger.valueOf(WEEK);                // 604800000000000
+    public final static BigInteger ONE_MONTH    =  BigInteger.valueOf(MONTH);               // 2629746000000000
+    public final static BigInteger ONE_YEAR     =  BigInteger.valueOf(YEAR);                // 31556952000000000
+    public final static BigInteger ONE_DECADE   =  BigInteger.valueOf(DECADE);              // 315569520000000000
+    public final static BigInteger ONE_CENTURIE =  BigInteger.valueOf(CENTURIE);            // 3155695200000000000
 
     /*###################################################################################
      ************************************************************************************

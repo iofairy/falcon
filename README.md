@@ -28,13 +28,13 @@ Falcon是一个强大的Java工具类库，提供了多种便捷的工具类，�
 <dependency>
   <groupId>com.iofairy</groupId>
   <artifactId>falcon</artifactId>
-  <version>0.5.10</version>
+  <version>0.5.11</version>
 </dependency>
 ```
 
 ### Gradle
 ```
-implementation 'com.iofairy:falcon:0.5.10'
+implementation 'com.iofairy:falcon:0.5.11'
 ```
 
 ## 🗺️使用指南（User Guide）

@@ -120,6 +120,12 @@ public class DateTimePattern {
     public static final Pattern YdMdDTHcMcSS    = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2}T\\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");       // yyyy-M-dTH:m:s.S
     public static final Pattern YsMsDTHcMcSS    = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2}T\\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");       // yyyy/M/dTH:m:s.S
     public static final Pattern YoMoDTHcMcSS    = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2}T\\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}");   // yyyy.M.dTH:m:s.S
+    public static final Pattern YdMdDTHcMcSZ    = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2}T\\d{1,2}:\\d{1,2}:\\d{1,2}Z");                  // yyyy-M-dTH:m:s
+    public static final Pattern YsMsDTHcMcSZ    = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2}T\\d{1,2}:\\d{1,2}:\\d{1,2}Z");                  // yyyy/M/dTH:m:s
+    public static final Pattern YoMoDTHcMcSZ    = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2}T\\d{1,2}:\\d{1,2}:\\d{1,2}Z");              // yyyy.M.dTH:m:s
+    public static final Pattern YdMdDTHcMcSSZ   = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2}T\\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}Z");       // yyyy-M-dTH:m:s.S
+    public static final Pattern YsMsDTHcMcSSZ   = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2}T\\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}Z");       // yyyy/M/dTH:m:s.S
+    public static final Pattern YoMoDTHcMcSSZ   = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2}T\\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}Z");   // yyyy.M.dTH:m:s.S
 
     public static final Pattern HzMzSzSSSz        = Pattern.compile("\\d{1,2}时\\d{1,2}分\\d{1,2}秒\\d{3}毫秒");                                 // H时m分s秒S毫秒
     public static final Pattern HoMzSzSSSz        = Pattern.compile("\\d{1,2}点\\d{1,2}分\\d{1,2}秒\\d{3}毫秒");                                 // H点m分s秒S毫秒
@@ -250,6 +256,12 @@ public class DateTimePattern {
     public static final String FM_DTF_YdMdDTHcMcSS      = "y-M-d'T'H:m:s[.SSS][.SS][.S]";
     public static final String FM_DTF_YsMsDTHcMcSS      = "y/M/d'T'H:m:s[.SSS][.SS][.S]";
     public static final String FM_DTF_YoMoDTHcMcSS      = "y.M.d'T'H:m:s[.SSS][.SS][.S]";
+    public static final String FM_DTF_YdMdDTHcMcSZ      = "y-M-d'T'H:m:sVV";
+    public static final String FM_DTF_YsMsDTHcMcSZ      = "y/M/d'T'H:m:sVV";
+    public static final String FM_DTF_YoMoDTHcMcSZ      = "y.M.d'T'H:m:sVV";
+    public static final String FM_DTF_YdMdDTHcMcSSZ     = "y-M-d'T'H:m:s[.SSS][.SS][.S]VV";
+    public static final String FM_DTF_YsMsDTHcMcSSZ     = "y/M/d'T'H:m:s[.SSS][.SS][.S]VV";
+    public static final String FM_DTF_YoMoDTHcMcSSZ     = "y.M.d'T'H:m:s[.SSS][.SS][.S]VV";
 
     public static final String FM_DTF_HcM               = "H:m";
     public static final String FM_DTF_HzMz              = "H时m分";
@@ -322,6 +334,9 @@ public class DateTimePattern {
     public static final DateTimeFormatter DTF_YMDHMS_DASH_T = buildDTF(FM_DTF_YdMdDTHcMcS);
     public static final DateTimeFormatter DTF_YMDHMS_SLASH_T = buildDTF(FM_DTF_YsMsDTHcMcS);
     public static final DateTimeFormatter DTF_YMDHMS_DOT_T = buildDTF(FM_DTF_YoMoDTHcMcS);
+    public static final DateTimeFormatter DTF_YMDHMS_DASH_TZ = buildDTF(FM_DTF_YdMdDTHcMcSZ);
+    public static final DateTimeFormatter DTF_YMDHMS_SLASH_TZ = buildDTF(FM_DTF_YsMsDTHcMcSZ);
+    public static final DateTimeFormatter DTF_YMDHMS_DOT_TZ = buildDTF(FM_DTF_YoMoDTHcMcSZ);
 
     /*
      * DateTimeFormatter for Year, Month, Day, Hour, Minute, Second, Milli
@@ -336,6 +351,9 @@ public class DateTimePattern {
     public static final DateTimeFormatter DTF_YMDHMSS_DASH_T = buildDTF(FM_DTF_YdMdDTHcMcSS);
     public static final DateTimeFormatter DTF_YMDHMSS_SLASH_T = buildDTF(FM_DTF_YsMsDTHcMcSS);
     public static final DateTimeFormatter DTF_YMDHMSS_DOT_T = buildDTF(FM_DTF_YoMoDTHcMcSS);
+    public static final DateTimeFormatter DTF_YMDHMSS_DASH_TZ = buildDTF(FM_DTF_YdMdDTHcMcSSZ);
+    public static final DateTimeFormatter DTF_YMDHMSS_SLASH_TZ = buildDTF(FM_DTF_YsMsDTHcMcSSZ);
+    public static final DateTimeFormatter DTF_YMDHMSS_DOT_TZ = buildDTF(FM_DTF_YoMoDTHcMcSSZ);
 
     public static final DateTimeFormatter DTF_HM = buildDTF(FM_DTF_HcM);
     public static final DateTimeFormatter DTF_HM_ZHS = buildDTF(FM_DTF_HzMz);
@@ -419,6 +437,9 @@ public class DateTimePattern {
         DTF_MAP.put(FM_YdMdDTHcMcS, DTF_YMDHMS_DASH_T);
         DTF_MAP.put(FM_YsMsDTHcMcS, DTF_YMDHMS_SLASH_T);
         DTF_MAP.put(FM_YoMoDTHcMcS, DTF_YMDHMS_DOT_T);
+        DTF_MAP.put(FM_DTF_YdMdDTHcMcSZ, DTF_YMDHMS_DASH_TZ);
+        DTF_MAP.put(FM_DTF_YsMsDTHcMcSZ, DTF_YMDHMS_SLASH_TZ);
+        DTF_MAP.put(FM_DTF_YoMoDTHcMcSZ, DTF_YMDHMS_DOT_TZ);
 
         DTF_MAP.put(FM_YMDHMSS, DTF_YMDHMSS);
         DTF_MAP.put(FM_DTF_YdMdDHcMcSS, DTF_YMDHMSS_DASH);
@@ -438,6 +459,9 @@ public class DateTimePattern {
         DTF_MAP.put(FM_YdMdDTHcMcSS, DTF_YMDHMSS_DASH_T);
         DTF_MAP.put(FM_YsMsDTHcMcSS, DTF_YMDHMSS_SLASH_T);
         DTF_MAP.put(FM_YoMoDTHcMcSS, DTF_YMDHMSS_DOT_T);
+        DTF_MAP.put(FM_DTF_YdMdDTHcMcSSZ, DTF_YMDHMSS_DASH_TZ);
+        DTF_MAP.put(FM_DTF_YsMsDTHcMcSSZ, DTF_YMDHMSS_SLASH_TZ);
+        DTF_MAP.put(FM_DTF_YoMoDTHcMcSSZ, DTF_YMDHMSS_DOT_TZ);
 
         DTF_MAP.put(FM_DTF_HcM, DTF_HM);
         DTF_MAP.put(FM_DTF_HzMz, DTF_HM_ZHS);
@@ -528,26 +552,53 @@ public class DateTimePattern {
         DateTimeSeparator dts = null;
         String format = null;
         /*
-         * 处理带T的时间串
+         处理带T和结尾是Z的时间串
+         14位：999-1-2T3:4:5Z
+         24位：2024-01-02T00:00:00.000Z
+
+         处理带T的时间串
+         13位：999-1-2T3:4:5
+         23位：2024-01-02T00:00:00.000
          */
-        if (length >= 13 && length <= 23 && dateTime.contains("T")) {
-            dts = checkSeparatorWithT(dateTime);
-            if (dts == null) return null;
-            switch (dts) {
-                case DASH_COLON:
-                    return matchPattern(YdMdDTHcMcS, dateTime, FM_DTF_YdMdDTHcMcS);
-                case DASH_COLON_DOT:
-                    return matchPattern(YdMdDTHcMcSS, dateTime, FM_DTF_YdMdDTHcMcSS);
-                case SLASH_COLON:
-                    return matchPattern(YsMsDTHcMcS, dateTime, FM_DTF_YsMsDTHcMcS);
-                case SLASH_COLON_DOT:
-                    return matchPattern(YsMsDTHcMcSS, dateTime, FM_DTF_YsMsDTHcMcSS);
-                case DOT_COLON:
-                    return matchPattern(YoMoDTHcMcS, dateTime, FM_DTF_YoMoDTHcMcS);
-                case DOT_COLON_DOT:
-                    return matchPattern(YoMoDTHcMcSS, dateTime, FM_DTF_YoMoDTHcMcSS);
-                default:    // NO_SEPARATOR
-                    return matchPattern(cs(YMDTHMS, YMDTHMSS), dateTime, FM_YMDTHMS, FM_YMDTHMSS);
+        if (length >= 14 && length <= 24) {
+            if (dateTime.contains("T")) {
+                dts = checkSeparatorWithT(dateTime);
+                if (dts == null) return null;
+                if (dateTime.endsWith("Z")) {
+                    switch (dts) {
+                        case DASH_COLON:
+                            return matchPattern(YdMdDTHcMcSZ, dateTime, FM_DTF_YdMdDTHcMcSZ);
+                        case DASH_COLON_DOT:
+                            return matchPattern(YdMdDTHcMcSSZ, dateTime, FM_DTF_YdMdDTHcMcSSZ);
+                        case SLASH_COLON:
+                            return matchPattern(YsMsDTHcMcSZ, dateTime, FM_DTF_YsMsDTHcMcSZ);
+                        case SLASH_COLON_DOT:
+                            return matchPattern(YsMsDTHcMcSSZ, dateTime, FM_DTF_YsMsDTHcMcSSZ);
+                        case DOT_COLON:
+                            return matchPattern(YoMoDTHcMcSZ, dateTime, FM_DTF_YoMoDTHcMcSZ);
+                        case DOT_COLON_DOT:
+                            return matchPattern(YoMoDTHcMcSSZ, dateTime, FM_DTF_YoMoDTHcMcSSZ);
+                        default:
+                            return null;
+                    }
+                } else {
+                    switch (dts) {
+                        case DASH_COLON:
+                            return matchPattern(YdMdDTHcMcS, dateTime, FM_DTF_YdMdDTHcMcS);
+                        case DASH_COLON_DOT:
+                            return matchPattern(YdMdDTHcMcSS, dateTime, FM_DTF_YdMdDTHcMcSS);
+                        case SLASH_COLON:
+                            return matchPattern(YsMsDTHcMcS, dateTime, FM_DTF_YsMsDTHcMcS);
+                        case SLASH_COLON_DOT:
+                            return matchPattern(YsMsDTHcMcSS, dateTime, FM_DTF_YsMsDTHcMcSS);
+                        case DOT_COLON:
+                            return matchPattern(YoMoDTHcMcS, dateTime, FM_DTF_YoMoDTHcMcS);
+                        case DOT_COLON_DOT:
+                            return matchPattern(YoMoDTHcMcSS, dateTime, FM_DTF_YoMoDTHcMcSS);
+                        default:    // NO_SEPARATOR
+                            return matchPattern(cs(YMDTHMS, YMDTHMSS), dateTime, FM_YMDTHMS, FM_YMDTHMSS);
+                    }
+                }
             }
         }
 

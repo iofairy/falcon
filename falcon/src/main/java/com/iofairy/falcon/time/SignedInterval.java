@@ -109,7 +109,17 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
     protected BigInteger totalMicros;   // 总微秒数
     protected BigInteger totalNanos;    // 总纳秒数
 
-    /*
+    /**
+     * 换算成每个时间单位的总时间（此为近似值）
+     */
+    protected long approxYears, approxMonths, approxWeeks, approxDays, approxHours, approxMinutes, approxSeconds, approxMillis;
+    protected BigInteger approxMicros, approxNanos;
+    /**
+     * 是否计算已经计算近似值
+     */
+    protected boolean calculateApprox = false;
+
+    /**
      * 开始时间、结束时间
      */
     protected Temporal startTime, endTime;
@@ -526,8 +536,8 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
 
         long nanos = startTemporal.until(endTemporal, NANOS);
 
-        BigInteger totalMicros = BigInteger.valueOf(totalMillis).multiply(BigInteger.valueOf(1000L)).add(BigInteger.valueOf(micros));
-        BigInteger totalNanos = totalMicros.multiply(BigInteger.valueOf(1000L)).add(BigInteger.valueOf(nanos));
+        BigInteger totalMicros = BigInteger.valueOf(totalMillis).multiply(DTC.X_1000).add(BigInteger.valueOf(micros));
+        BigInteger totalNanos = totalMicros.multiply(DTC.X_1000).add(BigInteger.valueOf(nanos));
         SignedInterval signedInterval = new SignedInterval(centuries, years, months, days, hours, minutes, seconds, millis, micros, nanos);
         signedInterval.startTime = originalStartTemporal;
         signedInterval.endTime = originalEndTemporal;
@@ -711,6 +721,126 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         return endTime;
     }
 
+    /**
+     * 间隔总年数（近似值）
+     *
+     * @return 间隔总年数（近似值）
+     * @see #totalYears
+     * @since 0.5.11
+     */
+    public long getApproxYears() {
+        return approxYears;
+    }
+
+    /**
+     * 间隔总月数（近似值）
+     *
+     * @return 间隔总月数（近似值）
+     * @see #totalYears
+     * @since 0.5.11
+     */
+    public long getApproxMonths() {
+        return approxMonths;
+    }
+
+    /**
+     * 间隔总周数（近似值）
+     *
+     * @return 间隔总周数（近似值）
+     * @see #totalYears
+     * @since 0.5.11
+     */
+    public long getApproxWeeks() {
+        return approxWeeks;
+    }
+
+    /**
+     * 间隔总天数（近似值）
+     *
+     * @return 间隔总天数（近似值）
+     * @see #totalYears
+     * @since 0.5.11
+     */
+    public long getApproxDays() {
+        return approxDays;
+    }
+
+    /**
+     * 间隔总小时数（近似值）
+     *
+     * @return 间隔总小时数（近似值）
+     * @see #totalYears
+     * @since 0.5.11
+     */
+    public long getApproxHours() {
+        return approxHours;
+    }
+
+    /**
+     * 间隔总分钟数（近似值）
+     *
+     * @return 间隔总分钟数（近似值）
+     * @see #totalYears
+     * @since 0.5.11
+     */
+    public long getApproxMinutes() {
+        return approxMinutes;
+    }
+
+    /**
+     * 间隔总秒数（近似值）
+     *
+     * @return 间隔总秒数（近似值）
+     * @see #totalYears
+     * @since 0.5.11
+     */
+    public long getApproxSeconds() {
+        return approxSeconds;
+    }
+
+    /**
+     * 间隔总毫秒数（近似值）
+     *
+     * @return 间隔总毫秒数（近似值）
+     * @see #totalYears
+     * @since 0.5.11
+     */
+    public long getApproxMillis() {
+        return approxMillis;
+    }
+
+    /**
+     * 间隔总微秒数（近似值）
+     *
+     * @return 间隔总微秒数（近似值）
+     * @see #totalYears
+     * @since 0.5.11
+     */
+    public BigInteger getApproxMicros() {
+        return approxMicros;
+    }
+
+    /**
+     * 间隔总纳秒数（近似值）
+     *
+     * @return 间隔总纳秒数（近似值）
+     * @see #totalYears
+     * @since 0.5.11
+     */
+    public BigInteger getApproxNanos() {
+        return approxNanos;
+    }
+
+    /**
+     * 是否已计算近似值
+     *
+     * @return 是否已计算近似值
+     * @since 0.5.11
+     */
+    public boolean isCalculateApprox() {
+        return calculateApprox;
+    }
+
     @Override
     public boolean equals(Object baseInterval) {
         return baseInterval instanceof SignedInterval && compareTo((SignedInterval) baseInterval) == 0;
@@ -747,17 +877,43 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         String microsStr        = OS.IS_ZH_LANG ? " 微秒\n" : " micros\n";
         String nanosStr         = OS.IS_ZH_LANG ? " 纳秒" : " nanos";
 
-        return this + equivalentlyStr +
-                "● " + totalYears + yearsStr +
-                "● " + totalMonths + monthsStr +
-                "● " + totalWeeks + weeksStr +
-                "● " + totalDays + daysStr +
-                "● " + totalHours + hoursStr +
-                "● " + totalMinutes + minutesStr +
-                "● " + totalSeconds + secondsStr +
-                "● " + totalMillis + millisStr +
-                "● " + (totalMicros == null ? "0" : totalMicros.toString()) + microsStr +
-                "● " + (totalNanos == null ? "0" : totalNanos.toString()) + nanosStr;
+        String yearsStrApprox   = OS.IS_ZH_LANG ? " 年(近似值)\n" : " years (approx.)\n";
+        String monthsStrApprox  = OS.IS_ZH_LANG ? " 月(近似值)\n" : " months (approx.)\n";
+        String weeksStrApprox   = OS.IS_ZH_LANG ? " 周(近似值)\n" : " weeks (approx.)\n";
+        String daysStrApprox    = OS.IS_ZH_LANG ? " 天(近似值)\n" : " days (approx.)\n";
+        String hoursStrApprox   = OS.IS_ZH_LANG ? " 时(近似值)\n" : " hours (approx.)\n";
+        String minutesStrApprox = OS.IS_ZH_LANG ? " 分(近似值)\n" : " minutes (approx.)\n";
+        String secondsStrApprox = OS.IS_ZH_LANG ? " 秒(近似值)\n" : " seconds (approx.)\n";
+        String millisStrApprox  = OS.IS_ZH_LANG ? " 毫秒(近似值)\n" : " millis (approx.)\n";
+        String microsStrApprox  = OS.IS_ZH_LANG ? " 微秒(近似值)\n" : " micros (approx.)\n";
+        String nanosStrApprox   = OS.IS_ZH_LANG ? " 纳秒(近似值)" : " nanos (approx.)";
+
+        if ((startTime != null && endTime != null) || !calculateApprox) {
+            return this + equivalentlyStr +
+                    "● " + totalYears + yearsStr +
+                    "● " + totalMonths + monthsStr +
+                    "● " + totalWeeks + weeksStr +
+                    "● " + totalDays + daysStr +
+                    "● " + totalHours + hoursStr +
+                    "● " + totalMinutes + minutesStr +
+                    "● " + totalSeconds + secondsStr +
+                    "● " + totalMillis + millisStr +
+                    "● " + (totalMicros == null ? "0" : totalMicros.toString()) + microsStr +
+                    "● " + (totalNanos == null ? "0" : totalNanos.toString()) + nanosStr;
+        } else {
+            return this + equivalentlyStr +
+                    "● " + approxYears + yearsStrApprox +
+                    "● " + approxMonths + monthsStrApprox +
+                    "● " + approxWeeks + weeksStrApprox +
+                    "● " + approxDays + daysStrApprox +
+                    "● " + approxHours + hoursStrApprox +
+                    "● " + approxMinutes + minutesStrApprox +
+                    "● " + approxSeconds + secondsStrApprox +
+                    "● " + approxMillis + millisStrApprox +
+                    "● " + (approxMicros == null ? "0" : approxMicros.toString()) + microsStrApprox +
+                    "● " + (approxNanos == null ? "0" : approxNanos.toString()) + nanosStrApprox;
+        }
+
     }
 
     @Override
@@ -859,6 +1015,63 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
     }
 
     /**
+     * A hash code for this interval.
+     *
+     * @return hashCode
+     * @since 0.5.11
+     */
+    @Override
+    public int hashCode() {
+        if (startTime != null && endTime != null) {
+            return Objects.hash(startTime, endTime);
+        } else {
+            long nanos = (((((hours * 60) + minutes) * 60 + seconds) * 1000 + millis) * 1000 + micros) * 1000 + this.nanos;
+            return Objects.hash(centuries * 100 + years, months, days, nanos);
+        }
+    }
+
+    /**
+     * 计算近似值
+     *
+     * @return 当前对象
+     * @since 0.5.11
+     */
+    public SignedInterval calculateApprox() {
+        if (this.calculateApprox) return this;
+        this.calculateApprox = true;
+
+        if (startTime != null && endTime != null) {
+            this.approxNanos = this.totalNanos;
+            this.approxMicros = this.totalMicros;
+            this.approxMillis = this.totalMillis;
+            this.approxSeconds = this.totalSeconds;
+            this.approxMinutes = this.totalMinutes;
+            this.approxHours = this.totalHours;
+            this.approxDays = this.totalDays;
+            this.approxWeeks = this.totalWeeks;
+            this.approxMonths = this.totalMonths;
+            this.approxYears = this.totalYears;
+            return this;
+        } else {
+            this.approxNanos = BigInteger.valueOf(this.nanos).add(BigInteger.valueOf(this.micros).multiply(DTC.ONE_MICRO)).add(BigInteger.valueOf(this.millis).multiply(DTC.ONE_MILLI))
+                    .add(BigInteger.valueOf(this.seconds).multiply(DTC.ONE_SECOND)).add(BigInteger.valueOf(this.minutes).multiply(DTC.ONE_MINUTE))
+                    .add(BigInteger.valueOf(this.hours).multiply(DTC.ONE_HOUR)).add(BigInteger.valueOf(this.days).multiply(DTC.ONE_DAY))
+                    .add(BigInteger.valueOf(this.months).multiply(DTC.ONE_MONTH)).add(BigInteger.valueOf(this.years).multiply(DTC.ONE_YEAR))
+                    .add(BigInteger.valueOf(this.centuries).multiply(DTC.ONE_CENTURIE));
+            this.approxMicros = this.approxNanos.divide(DTC.ONE_MICRO);
+            this.approxMillis = this.approxMicros.divide(DTC.MILLI_MICROS).longValue();
+            this.approxSeconds = this.approxMillis / DTC.SECOND2MILLIS;
+            this.approxMinutes = this.approxSeconds / DTC.MINUTE2SECONDS;
+            this.approxHours = this.approxMinutes / DTC.HOUR2MINUTES;
+            this.approxDays = this.approxHours / DTC.DAY2HOURS;
+            this.approxWeeks = this.approxDays / DTC.WEEK2DAYS;
+            this.approxMonths = (long) (this.approxSeconds * 1.0f / DTC.MONTH2SECONDS);
+            this.approxYears = (long) (this.approxSeconds * 1.0f / DTC.YEAR2SECONDS);
+            return this;
+        }
+    }
+
+    /**
      * 将总纳秒数转化成标准的 <b>时-分-秒-毫秒-微秒-纳秒</b>
      *
      * @param totalNanos 总纳秒数
@@ -869,19 +1082,19 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         long[] timeValues = new long[6];
 
         if (!totalNanos.equals(BigInteger.ZERO)) {
-            BigInteger[] hoursAndRemainder = totalNanos.divideAndRemainder(BigInteger.valueOf(3600000000000L));
+            BigInteger[] hoursAndRemainder = totalNanos.divideAndRemainder(DTC.ONE_HOUR);
             timeValues[0] = hoursAndRemainder[0].longValue();
             if (!hoursAndRemainder[1].equals(BigInteger.ZERO)) {
-                BigInteger[] minutesAndRemainder = hoursAndRemainder[1].divideAndRemainder(BigInteger.valueOf(60000000000L));
+                BigInteger[] minutesAndRemainder = hoursAndRemainder[1].divideAndRemainder(DTC.ONE_MINUTE);
                 timeValues[1] = minutesAndRemainder[0].longValue();
                 if (!minutesAndRemainder[1].equals(BigInteger.ZERO)) {
-                    BigInteger[] secondsAndRemainder = minutesAndRemainder[1].divideAndRemainder(BigInteger.valueOf(1000000000L));
+                    BigInteger[] secondsAndRemainder = minutesAndRemainder[1].divideAndRemainder(DTC.ONE_SECOND);
                     timeValues[2] = secondsAndRemainder[0].longValue();
                     if (!secondsAndRemainder[1].equals(BigInteger.ZERO)) {
-                        BigInteger[] millisAndRemainder = secondsAndRemainder[1].divideAndRemainder(BigInteger.valueOf(1000000L));
+                        BigInteger[] millisAndRemainder = secondsAndRemainder[1].divideAndRemainder(DTC.ONE_MILLI);
                         timeValues[3] = millisAndRemainder[0].longValue();
                         if (!millisAndRemainder[1].equals(BigInteger.ZERO)) {
-                            BigInteger[] microsAndRemainder = millisAndRemainder[1].divideAndRemainder(BigInteger.valueOf(1000L));
+                            BigInteger[] microsAndRemainder = millisAndRemainder[1].divideAndRemainder(DTC.ONE_MICRO);
                             timeValues[4] = microsAndRemainder[0].longValue();
                             timeValues[5] = microsAndRemainder[1].longValue();
                         }
