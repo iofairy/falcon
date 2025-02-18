@@ -36,7 +36,8 @@ public enum ArchiveFormat {
     LBR(EnumSet.of(ARCHIVING_ONLY), ".LBR", ".LBR"),
     MAR(EnumSet.of(ARCHIVING_ONLY), ".mar", "Mozilla ARchive"),
     SBX(EnumSet.of(ARCHIVING_ONLY), ".sbx", "SeqBox"),
-    TAR(EnumSet.of(ARCHIVING_ONLY), ".tar", "Tape archive"),
+    TAR(EnumSet.of(ARCHIVING_ONLY), ".tar", "Tape archive. TAR is used to bundle multiple files into a single archive. "),  // https://en.wikipedia.org/wiki/Tar_(computing)
+
     /*
      * COMPRESSION_ONLY
      */
@@ -53,7 +54,8 @@ public enum ArchiveFormat {
     XZ(EnumSet.of(COMPRESSION_ONLY), ".xz", "xz"),
     Z_PACK(EnumSet.of(COMPRESSION_ONLY), ".z", "pack"),
     Z_COMPRESS(EnumSet.of(COMPRESSION_ONLY), ".Z", "compress"),
-    ZSTD(EnumSet.of(COMPRESSION_ONLY), ".zst", "Zstandard"),
+    ZSTD(EnumSet.of(COMPRESSION_ONLY), ".zst", "Zstandard"),    // https://github.com/facebook/zstd, https://facebook.github.io/zstd/
+
     /*
      * MULTI_FUNCTION
      */
@@ -61,7 +63,7 @@ public enum ArchiveFormat {
     S7Z(EnumSet.of(MULTI_FUNCTION), ".s7z", "7zX"),
     ACE(EnumSet.of(MULTI_FUNCTION), ".ace", "ACE"),
     ARJ(EnumSet.of(MULTI_FUNCTION), ".arj", "ARJ"),
-    RAR(EnumSet.of(MULTI_FUNCTION), ".rar", "RAR"),
+    RAR(EnumSet.of(MULTI_FUNCTION), ".rar", "RAR supports data compression, error correction and file spanning. "),  // https://en.wikipedia.org/wiki/RAR_(file_format)
     TAR_GZ(EnumSet.of(MULTI_FUNCTION), ".tar.gz", "tar with gzip"),
     TGZ(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".tgz", "tar with gzip or Slackware Package(based on tar with gzip)"),
     TAZ(EnumSet.of(MULTI_FUNCTION), ".taz", "tar with gzip"),
@@ -80,6 +82,11 @@ public enum ArchiveFormat {
     TAR_LZMA(EnumSet.of(MULTI_FUNCTION), ".tar.lzma", "tar with lzma"),
     ZIP(EnumSet.of(MULTI_FUNCTION), ".zip", "ZIP"),
     ZZIP(EnumSet.of(MULTI_FUNCTION), ".zz", "Zzip"),
+    UC_II(EnumSet.of(MULTI_FUNCTION), ".uc", "UltraCompressor II (UC2) is a 1990s-era compression and archiving program for the PC platform (DOS, Windows, OS/2, DesqView) " +
+            "which claimed to be both faster and more compact than other compression systems. It had special support for OS/2 extended attributes. \n" +
+            "UltraCompressor 2.3 was developed to act as an alternative to the then popular PKZIP application. The main feature of the application is its ability to create large archives. " +
+            "This means that compressed archives with the UC2 file extension can hold almost 1 million files. "),  // http://fileformats.archiveteam.org/wiki/UltraCompressor_II
+
     /*
      * SOFTWARE_PACKAGING and MULTI_FUNCTION
      */
@@ -96,11 +103,14 @@ public enum ArchiveFormat {
     APKS(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".apks", "Android application package"),
     APKM(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".apkm", "Android application package"),
     CRX(EnumSet.of(SOFTWARE_PACKAGING, MULTI_FUNCTION), ".crx", "Google Chrome extension package"),
+
     /*
      * DISK_IMAGE
      */
     DMG(EnumSet.of(DISK_IMAGE, MULTI_FUNCTION), ".dmg", "Apple Disk Image"),
-    ISO(EnumSet.of(DISK_IMAGE, ARCHIVING_ONLY), ".iso", "ISO-9660 image");
+    ISO(EnumSet.of(DISK_IMAGE, ARCHIVING_ONLY), ".iso", "ISO-9660 image"),
+    WIM(EnumSet.of(DISK_IMAGE, MULTI_FUNCTION), ".wim", "Windows Image. File-based disk image format developed to deploy Microsoft Windows. "),
+    ;
 
 
     /**
@@ -140,6 +150,14 @@ public enum ArchiveFormat {
                 SA_MAP.put(ext.toLowerCase(), value);
             }
         }
+
+        // UltraCompressor II (UC2):  .uc, .uc0, .uc2, .ucn, .ur2, .ue2
+        SA_MAP.put(".uc", UC_II);
+        SA_MAP.put(".uc0", UC_II);
+        SA_MAP.put(".uc2", UC_II);
+        SA_MAP.put(".ucn", UC_II);
+        SA_MAP.put(".ur2", UC_II);
+        SA_MAP.put(".ue2", UC_II);
 
         CONSISTENT_FORMAT1.put(TAR_GZ, TGZ);
         CONSISTENT_FORMAT1.put(TAR_BZ2, TBZ2);

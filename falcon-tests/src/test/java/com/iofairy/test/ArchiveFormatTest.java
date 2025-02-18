@@ -35,6 +35,12 @@ public class ArchiveFormatTest {
         ArchiveFormat af16 = ArchiveFormat.of("tgz");
         ArchiveFormat af17 = ArchiveFormat.of("tgz", true);
         ArchiveFormat af18 = ArchiveFormat.of("zip", true);
+        ArchiveFormat af19 = ArchiveFormat.of(".Uc", true);
+        ArchiveFormat af20 = ArchiveFormat.of(".Uc0", true);
+        ArchiveFormat af21 = ArchiveFormat.of("uC2", true);
+        ArchiveFormat af22 = ArchiveFormat.of("uCn", true);
+        ArchiveFormat af23 = ArchiveFormat.of(".ur2", true);
+        ArchiveFormat af24 = ArchiveFormat.of("ue2", true);
 
 
         assertEquals(ArchiveFormat.Z_COMPRESS, af01);
@@ -55,6 +61,12 @@ public class ArchiveFormatTest {
         assertEquals(ArchiveFormat.TGZ, af16);
         assertEquals(ArchiveFormat.TAR_GZ, af17);
         assertEquals(ArchiveFormat.ZIP, af18);
+        assertEquals(ArchiveFormat.UC_II, af19);
+        assertEquals(ArchiveFormat.UC_II, af20);
+        assertEquals(ArchiveFormat.UC_II, af21);
+        assertEquals(ArchiveFormat.UC_II, af22);
+        assertEquals(ArchiveFormat.UC_II, af23);
+        assertEquals(ArchiveFormat.UC_II, af24);
     }
 
     @Test
