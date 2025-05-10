@@ -425,10 +425,7 @@ public class Bytes implements Comparable<Bytes>, Serializable {
      * @return ByteUnit 的值
      */
     public BigDecimal convertUnit(ByteUnit toUnit) {
-        int index = toUnit.getIndex();
-        if (index == -1) return new BigDecimal(bits);
-        BigInteger coef = ByteFactor.getCoef(toUnit.isBinaryUnit(), index);
-        return Numbers.divide(bits, ByteFactor.X8.multiply(coef), 99, false).stripTrailingZeros();
+        return convertUnit(toUnit.getIndex(), toUnit.isBinaryUnit());
     }
 
     /**
@@ -438,9 +435,20 @@ public class Bytes implements Comparable<Bytes>, Serializable {
      * @return ByteUnit 的值
      */
     public BigDecimal convertUnit(int unitIndex) {
+        return convertUnit(unitIndex, isBinaryUnit);
+    }
+
+    /**
+     * 将当前 Bytes 转成另一个 ByteUnit
+     *
+     * @param unitIndex    单位序号。
+     * @param isBinaryUnit 是否是二进制单位
+     * @return ByteUnit 的值
+     */
+    public BigDecimal convertUnit(int unitIndex, boolean isBinaryUnit) {
         if (unitIndex == -1) return new BigDecimal(bits);
         BigInteger coef = ByteFactor.getCoef(isBinaryUnit, unitIndex);
-        return Numbers.divide(bits, ByteFactor.X8.multiply(coef), 99, false).stripTrailingZeros();
+        return divideForConvertUnit(bits, coef);
     }
 
     /**
@@ -471,31 +479,35 @@ public class Bytes implements Comparable<Bytes>, Serializable {
         int index = toUnit.getIndex();
         if (index == -1) return new BigDecimal(fromBits);
         BigInteger coef = ByteFactor.getCoef(toUnit.isBinaryUnit(), index);
-        return Numbers.divide(fromBits, ByteFactor.X8.multiply(coef), 99, false).stripTrailingZeros();
+        return divideForConvertUnit(fromBits, coef);
+    }
+
+    private static BigDecimal divideForConvertUnit(BigInteger fromBits, BigInteger convertCoef) {
+        return Numbers.divide(fromBits, ByteFactor.X8.multiply(convertCoef), 20, false).stripTrailingZeros();
     }
 
     /**
-     * 将字节转成其他单位输出成字符串
+     * 将字节转成其他<b>尽可能大的单位</b>输出成字符串
      *
      * @param bytes        字节数
      * @param isBinaryUnit 是否二进制单位
      * @return 存储单位格式化后的字符串
      */
-    public static String formatByte(long bytes, boolean isBinaryUnit) {
-        return formatByte(BigInteger.valueOf(bytes), isBinaryUnit);
+    public static String formatBytes(long bytes, boolean isBinaryUnit) {
+        return formatBytes(BigInteger.valueOf(bytes), isBinaryUnit);
     }
 
     /**
-     * 将字节转成其他更大的单位输出成字符串
+     * 将字节转成其他<b>尽可能大的单位</b>输出成字符串
      *
      * @param bytes        字节数
      * @param isBinaryUnit 是否二进制单位
      * @return 存储单位格式化后的字符串
      */
-    public static String formatByte(BigInteger bytes, boolean isBinaryUnit) {
+    public static String formatBytes(BigInteger bytes, boolean isBinaryUnit) {
         checkNullNPE(bytes, args("bytes"));
 
-        if (bytes.compareTo(BigInteger.ZERO) < 0) return "-" + formatByte(bytes.abs(), isBinaryUnit);
+        if (bytes.compareTo(BigInteger.ZERO) < 0) return "-" + formatBytes(bytes.abs(), isBinaryUnit);
 
         BigInteger coef1 = ByteFactor.getCoef(isBinaryUnit, 1);
         if (bytes.compareTo(coef1) < 0) return bytes + ByteUnit.getUnitType(isBinaryUnit, 0);
@@ -523,34 +535,39 @@ public class Bytes implements Comparable<Bytes>, Serializable {
     }
 
     /**
-     * 将bit转成其他更大的单位输出成字符串
+     * 将bit转成其他<b>尽可能大的单位</b>输出成字符串
      *
      * @param bits         bit数
      * @param isBinaryUnit 是否二进制单位
      * @return 存储单位格式化后的字符串
      */
-    public static String formatBit(long bits, boolean isBinaryUnit) {
-        return formatBit(BigInteger.valueOf(bits), isBinaryUnit);
+    public static String formatBits(long bits, boolean isBinaryUnit) {
+        return formatBits(BigInteger.valueOf(bits), isBinaryUnit);
     }
 
     /**
-     * 将bit转成其他更大的单位输出成字符串
+     * 将bit转成其他<b>尽可能大的单位</b>输出成字符串
      *
      * @param bits         bit数
      * @param isBinaryUnit 是否二进制单位
      * @return 存储单位格式化后的字符串
      */
-    public static String formatBit(BigInteger bits, boolean isBinaryUnit) {
+    public static String formatBits(BigInteger bits, boolean isBinaryUnit) {
         checkNullNPE(bits, args("bits"));
 
-        if (bits.compareTo(BigInteger.ZERO) < 0) return "-" + formatBit(bits.abs(), isBinaryUnit);
+        if (bits.compareTo(BigInteger.ZERO) < 0) return "-" + formatBits(bits.abs(), isBinaryUnit);
 
         if (bits.compareTo(ByteFactor.X8) < 0) return bits + ByteUnit.getUnitType(isBinaryUnit, -1);
-        return formatByte(bits.divide(ByteFactor.X8), isBinaryUnit);
+        return formatBytes(bits.divide(ByteFactor.X8), isBinaryUnit);
     }
 
+    /**
+     * 将当前对象转成其他<b>尽可能大的单位</b>输出成字符串
+     *
+     * @return 当前存储单位对象格式化后的字符串
+     */
     public String format() {
-        return formatBit(bits, isBinaryUnit);
+        return formatBits(bits, isBinaryUnit);
     }
 
 

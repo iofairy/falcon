@@ -193,7 +193,7 @@ public class ByteTest {
         BigDecimal bigDecimal1 = bytes01.convertUnit(ByteBinaryUnit.MiB);
         BigDecimal bigDecimal2 = bytes02.convertUnit(ByteDecimalUnit.MB.getIndex());
         BigDecimal bigDecimal3 = bytes05.convertUnit(ByteBinaryUnit.MiB);
-        BigDecimal bigDecimal4 = bytes05.convertUnit(ByteDecimalUnit.MB.getIndex());
+        BigDecimal bigDecimal4 = bytes05.convertUnit(ByteDecimalUnit.MB);
         BigDecimal bigDecimal5 = bytes05.convertUnit(ByteDecimalUnit.PB);
         BigDecimal bigDecimal6 = bytes05.convertUnit(ByteBinaryUnit.PiB);
         System.out.println("" + bigDecimal1 + ByteBinaryUnit.MiB);      // 0.0009777545928955078125MiB
@@ -206,7 +206,7 @@ public class ByteTest {
         assertEquals("0.0009777545928955078125MiB", "" + bigDecimal1 + ByteBinaryUnit.MiB);
         assertEquals("0.00102525MB", "" + bigDecimal2 + ByteDecimalUnit.MB);
         assertEquals("1048576MiB", "" + bigDecimal3 + ByteBinaryUnit.MiB);
-        assertEquals("1048576MB", "" + bigDecimal4 + ByteDecimalUnit.MB);
+        assertEquals("1099511.627776MB", "" + bigDecimal4 + ByteDecimalUnit.MB);
         assertEquals("0.001099511627776PB", "" + bigDecimal5 + ByteDecimalUnit.PB);
         assertEquals("0.0009765625PiB", "" + bigDecimal6 + ByteBinaryUnit.PiB);
     }

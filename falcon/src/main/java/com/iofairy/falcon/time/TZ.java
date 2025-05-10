@@ -18,7 +18,8 @@ package com.iofairy.falcon.time;
 import com.iofairy.tcf.Try;
 
 import java.time.ZoneId;
-import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -31,7 +32,7 @@ public class TZ {
     /**
      * All Available Zone Ids.
      */
-    public static final List<ZoneId> ZONE_IDS = ZoneId.getAvailableZoneIds().stream().map(ZoneId::of).collect(Collectors.toList());
+    public static final Set<ZoneId> ZONE_IDS = ZoneId.getAvailableZoneIds().stream().map(TZ::getZoneId).filter(Objects::nonNull).collect(Collectors.toSet());
     /**
      * Default Time Zone
      */
@@ -245,4 +246,6 @@ public class TZ {
     private static ZoneId getZoneId(final String zoneIdName) {
         return Try.tcf(() -> ZoneId.of(zoneIdName), false);
     }
+
+
 }

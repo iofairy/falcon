@@ -1772,8 +1772,25 @@ public class DateTimeTest {
         Timestamp timestamp = new Timestamp(timeMillis);
 
         DateTime<Timestamp> timestampDT = DateTime.of(timestamp);
+        DateTime<Timestamp> timestampDT01 = timestampDT.plusDays(1);
+        DateTime<Timestamp> timestampDT02 = timestampDT.minusYears(1);
+        DateTime<Timestamp> timestampDT03 = timestampDT.minusDays(-10);
+        DateTime<Timestamp> timestampDTWithMax = timestampDT.withMax(ChronoUnit.HOURS);
+        DateTime<Timestamp> timestampDTFill0 = timestampDT.fill0(ChronoUnit.DAYS);
+        System.out.println("timestampDT: " + timestampDT);
+        System.out.println("timestampDT01: " + timestampDT01);
+        System.out.println("timestampDT02: " + timestampDT02);
+        System.out.println("timestampDT03: " + timestampDT03);
+        System.out.println("timestampDTWithMax: " + timestampDTWithMax);
+        System.out.println("timestampDTFill0: " + timestampDTFill0);
 
         assertEquals("2023-03-05 12:53:10.098", timestampDT.toString());
+        assertEquals("2023-03-06 12:53:10.098", timestampDT01.toString());
+        assertEquals("2022-03-05 12:53:10.098", timestampDT02.toString());
+        assertEquals("2023-03-15 12:53:10.098", timestampDT03.toString());
+        assertEquals("2023-03-05 12:59:59.999", timestampDTWithMax.toString());
+        assertEquals("2023-03-05 00:00:00.000", timestampDTFill0.toString());
+
         assertThrows(UnsupportedTemporalTypeException.class, () -> DateTime.of(date));
         assertThrows(UnsupportedTemporalTypeException.class, () -> DateTime.of(time));
 
@@ -2006,7 +2023,16 @@ public class DateTimeTest {
         }
     }
 
+    @Test
+    public void testZonedIds() {
+        System.out.println("===============================所有可用时区ID=============================");
+        System.out.println(ZoneId.getAvailableZoneIds());
+        System.out.println(TZ.ZONE_IDS);
+        assertEquals(ZoneId.getAvailableZoneIds().toString(), TZ.ZONE_IDS.toString());
+    }
+
     private void throwException() {
         throw new RuntimeException();
     }
+
 }
