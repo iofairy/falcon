@@ -23,11 +23,11 @@ package com.iofairy.falcon.regex;
  */
 public class MatchIndex {
     /**
-     * 匹配的字符串开始索引
+     * 匹配的字符串开始索引（包含该位置字符）
      */
     public final int start;
     /**
-     * 匹配的字符串结束索引
+     * 匹配的字符串结束索引（不包含该位置字符）
      */
     public final int end;
     /**

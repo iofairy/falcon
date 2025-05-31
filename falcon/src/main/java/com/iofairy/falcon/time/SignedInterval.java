@@ -16,7 +16,9 @@
 package com.iofairy.falcon.time;
 
 import com.iofairy.falcon.os.OS;
+import com.iofairy.falcon.util.Numbers;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.*;
 import java.time.temporal.*;
@@ -841,6 +843,54 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         return calculateApprox;
     }
 
+    /**
+     * 计算此Interval换成某个时间单位的精确值（保留3位小数）
+     *
+     * @param unit 时间单位
+     * @return 返回此Interval换成某个时间单位的精确值（保留3位小数）
+     * @since 0.5.12
+     */
+    public double unitExact(ChronoUnit unit) {
+        return unitExact(unit, 3);
+    }
+
+    /**
+     * 计算此Interval换成某个时间单位的精确值
+     *
+     * @param unit  时间单位
+     * @param scale 精确小数位数
+     * @return 返回此Interval换成某个时间单位的精确值
+     * @since 0.5.12
+     */
+    public double unitExact(ChronoUnit unit, int scale) {
+        checkNullNPE(unit, args("unit"));
+        return nanosDivide(unit, scale).doubleValue();
+    }
+
+    /**
+     * 计算此Interval换成某个时间单位的精确值（保留3位小数）
+     *
+     * @param unit 时间单位
+     * @return 返回此Interval换成某个时间单位的精确值（保留3位小数）
+     * @since 0.5.12
+     */
+    public String unitExactString(ChronoUnit unit) {
+        return unitExactString(unit, 3);
+    }
+
+    /**
+     * 计算此Interval换成某个时间单位的精确值
+     *
+     * @param unit  时间单位
+     * @param scale 精确小数位数
+     * @return 返回此Interval换成某个时间单位的精确值
+     * @since 0.5.12
+     */
+    public String unitExactString(ChronoUnit unit, int scale) {
+        checkNullNPE(unit, args("unit"));
+        return nanosDivide(unit, scale).stripTrailingZeros().toPlainString();
+    }
+
     @Override
     public boolean equals(Object baseInterval) {
         return baseInterval instanceof SignedInterval && compareTo((SignedInterval) baseInterval) == 0;
@@ -1128,6 +1178,10 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
      */
     protected BigInteger toNanos(long amount, ChronoUnit chronoUnit) {
         return DateTimes.toNanos(amount, chronoUnit);
+    }
+
+    protected BigDecimal nanosDivide(ChronoUnit unit, int scale) {
+        return Numbers.divide(totalNanos == null ? this.calculateApprox().approxNanos : totalNanos, unit.getDuration().toNanos(), scale);
     }
 
 }

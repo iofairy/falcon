@@ -1187,6 +1187,54 @@ public class IntervalTest {
         assertEquals(3253936002900002002L, interval1.getApproxNanos().longValue());
     }
 
+    @Test
+    public void testUnitExact() {
+        SignedInterval signedInterval = SignedInterval.of(-1, -23, 1, 1, -2, 530, 1);
+        Interval interval = Interval.of(3, 1, 3, 200, -650, 45, 900);
+        Interval interval1 = Interval.between(DateTime.of("2025-05-31 10:06:24"), DateTime.of("2025-05-31 8:10:11"));
+        System.out.println(signedInterval);     // -1年-23月1天1时6分50秒1毫秒
+        System.out.println(interval);           // 3年1月3天189时10分45秒900毫秒
+        System.out.println(interval1);          // 1时56分13秒0毫秒
+
+        System.out.println(signedInterval.unitExact(ChronoUnit.YEARS));             // -2.914
+        System.out.println(signedInterval.unitExact(ChronoUnit.YEARS, 5));          // -2.9138
+        System.out.println(signedInterval.unitExactString(ChronoUnit.MONTHS));      // -34.966
+        System.out.println(signedInterval.unitExactString(ChronoUnit.MONTHS, 6));   // -34.96562
+        System.out.println(signedInterval.unitExactString(ChronoUnit.DAYS));        // -1064.244
+        System.out.println(signedInterval.unitExactString(ChronoUnit.DAYS, 6));     // -1064.244213
+        System.out.println(interval.unitExact(ChronoUnit.MONTHS));                  // 37.358
+        System.out.println(interval.unitExact(ChronoUnit.MONTHS, 5));               // 37.35754
+        System.out.println(interval.unitExactString(ChronoUnit.DAYS));              // 1137.047
+        System.out.println(interval.unitExactString(ChronoUnit.DAYS, 6));           // 1137.046851
+        System.out.println(interval.unitExactString(ChronoUnit.HOURS));             // 27289.124
+        System.out.println(interval.unitExactString(ChronoUnit.HOURS, 6));          // 27289.124417
+        System.out.println(interval1.unitExact(ChronoUnit.HOURS));                  // 1.937
+        System.out.println(interval1.unitExact(ChronoUnit.HOURS, 2));               // 1.94
+        System.out.println(interval1.unitExactString(ChronoUnit.MINUTES));          // 116.217
+        System.out.println(interval1.unitExactString(ChronoUnit.MINUTES, 6));       // 116.216667
+        System.out.println(interval1.unitExactString(ChronoUnit.SECONDS));          // 6973
+        System.out.println(interval1.unitExactString(ChronoUnit.SECONDS, 6));       // 6973
+
+        assertEquals(-2.914, signedInterval.unitExact(ChronoUnit.YEARS));
+        assertEquals(-2.9138, signedInterval.unitExact(ChronoUnit.YEARS, 5));
+        assertEquals("-34.966", signedInterval.unitExactString(ChronoUnit.MONTHS));
+        assertEquals("-34.96562", signedInterval.unitExactString(ChronoUnit.MONTHS, 6));
+        assertEquals("-1064.244", signedInterval.unitExactString(ChronoUnit.DAYS));
+        assertEquals("-1064.244213", signedInterval.unitExactString(ChronoUnit.DAYS, 6));
+        assertEquals(37.358, interval.unitExact(ChronoUnit.MONTHS));
+        assertEquals(37.35754, interval.unitExact(ChronoUnit.MONTHS, 5));
+        assertEquals("1137.047", interval.unitExactString(ChronoUnit.DAYS));
+        assertEquals("1137.046851", interval.unitExactString(ChronoUnit.DAYS, 6));
+        assertEquals("27289.124", interval.unitExactString(ChronoUnit.HOURS));
+        assertEquals("27289.124417", interval.unitExactString(ChronoUnit.HOURS, 6));
+        assertEquals(1.937, interval1.unitExact(ChronoUnit.HOURS));
+        assertEquals(1.94, interval1.unitExact(ChronoUnit.HOURS, 2));
+        assertEquals("116.217", interval1.unitExactString(ChronoUnit.MINUTES));
+        assertEquals("116.216667", interval1.unitExactString(ChronoUnit.MINUTES, 6));
+        assertEquals("6973", interval1.unitExactString(ChronoUnit.SECONDS));
+        assertEquals("6973", interval1.unitExactString(ChronoUnit.SECONDS, 6));
+
+    }
 
     private void throwException() {
         throw new RuntimeException();
