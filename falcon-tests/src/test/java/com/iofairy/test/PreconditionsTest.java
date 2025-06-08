@@ -6,6 +6,8 @@ import com.iofairy.falcon.misc.ErrorMsgType;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static com.iofairy.falcon.misc.Preconditions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -303,18 +305,18 @@ public class PreconditionsTest {
             throwException();
         } catch (Exception e) {
             assertEquals(e.getClass(), ConditionsNotMetException.class);
-            assertEquals(e.getMessage(), "None of these parameters [p1, p2, p3] can be blank! ");
+            assertEquals(e.getMessage(), "None of these parameters [p1, p2, p3] can be blank! But parameter [p3] is blank! ");
         }
         System.out.println("===============================4=============================");
         checkHasBlank(Arrays.asList("1", "a", "b"), args("p1", "p2", "p3"));
 
         System.out.println("===============================5=============================");
         try {
-            checkHasNullNPE(args(" ", null, new StringBuilder("abc")));
+            checkHasNullNPE(args(" ", null, new StringBuilder("abc"), (String[]) null));
             throwException();
         } catch (Exception e) {
             assertEquals(e.getClass(), NullPointerException.class);
-            assertEquals(e.getMessage(), "None of the parameters can be null! ");
+            assertEquals(e.getMessage(), "None of the parameters can be null! But parameters with index [1, 3] are null! ");
         }
         System.out.println("===============================6=============================");
         StringBuilder s = null;
@@ -329,6 +331,83 @@ public class PreconditionsTest {
             assertEquals(e.getClass(), NullPointerException.class);
             assertEquals(e.getMessage(), "At least one of these parameters [name, id] can't be null! ");
         }
+
+        System.out.println("===============================8=============================");
+        try {
+            s = null;
+            checkHasBlank((String[]) null, args("name", "id"));
+            throwException();
+        } catch (Exception e) {
+            assertEquals(e.getClass(), ConditionsNotMetException.class);
+            assertEquals(e.getMessage(), "None of these parameters [name, id] can be blank! ");
+        }
+
+        System.out.println("===============================9=============================");
+        try {
+            s = null;
+            checkHasNull(args("abc", new Object[]{}, (List<?>) null), args("name", "ids", "list"));
+            throwException();
+        } catch (Exception e) {
+            assertEquals(e.getClass(), ConditionsNotMetException.class);
+            assertEquals(e.getMessage(), "None of these parameters [name, ids, list] can be null! But parameter [list] is null! ");
+        }
+        System.out.println("===============================10=============================");
+        try {
+            s = null;
+            checkHasEmpty(args("abc", new Object[]{}, (List<?>) null, 1), args("name", "ids", "list", "count"));
+            throwException();
+        } catch (Exception e) {
+            assertEquals(e.getClass(), ConditionsNotMetException.class);
+            assertEquals(e.getMessage(), "None of these parameters [name, ids, list, count] can be empty! But parameters [ids, list] are empty! ");
+        }
+        System.out.println("===============================11=============================");
+        try {
+            s = null;
+            checkHasEmpty(args("abc", new Object[]{}, (List<?>) null, 1), args("name", "ids"));
+            throwException();
+        } catch (Exception e) {
+            assertEquals(e.getClass(), ConditionsNotMetException.class);
+            assertEquals(e.getMessage(), "None of these parameters [name, ids] can be empty! But parameters with index [1, 2] are empty! ");
+        }
+
+        System.out.println("===============================12=============================");
+        try {
+            s = null;
+            listErrorParams(ErrorMsgType.HAS_BLANK, Arrays.asList("abc", new Object[]{}, (List<?>) null), args("name", "ids"));
+            throwException();
+        } catch (Exception e) {
+            assertEquals(e.getClass(), ClassCastException.class);
+            assertEquals(e.getMessage(), "The `ErrorMsgType.HAS_BLANK` can only be used to validate a `Collection<? extends CharSequence>`. ");
+        }
+
+        System.out.println("===============================13=============================");
+        try {
+            s = null;
+            checkAllEmpty(args("", new Object[]{}, (List<?>) null, new HashMap<>()), args("name", "ids", "list", "map"));
+            throwException();
+        } catch (Exception e) {
+            assertEquals(e.getClass(), ConditionsNotMetException.class);
+            assertEquals(e.getMessage(), "At least one of these parameters [name, ids, list, map] can't be empty! ");
+        }
+        System.out.println("===============================14=============================");
+        try {
+            s = null;
+            checkAllEmpty(args("", "a", "b"));
+            throwException();
+        } catch (Exception e) {
+            assertEquals(e.getClass(), RuntimeException.class);
+            assertNull(e.getMessage());
+        }
+        System.out.println("===============================15=============================");
+        try {
+            s = null;
+            checkAllEmpty(args("", null, ""));
+            throwException();
+        } catch (Exception e) {
+            assertEquals(e.getClass(), ConditionsNotMetException.class);
+            assertEquals(e.getMessage(), "At least one parameter can't be empty! ");
+        }
+
     }
 
 

@@ -22,8 +22,7 @@ import com.iofairy.top.*;
 
 import java.io.FileNotFoundException;
 import java.time.temporal.UnsupportedTemporalTypeException;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 
 import static com.iofairy.falcon.misc.ErrorMsgType.*;
 
@@ -38,6 +37,8 @@ import static com.iofairy.falcon.misc.ErrorMsgType.*;
  * @since 0.5.0
  */
 public final class Preconditions {
+
+    private final static String[] NULL_STR_ARRAY = null;
 
     private Preconditions() {
     }
@@ -59,7 +60,7 @@ public final class Preconditions {
      ==============================================================================*/
     public static void checkBlank(CharSequence cs) {
         if (S.isBlank(cs)) {
-            throwConditionsNotMetException400(getErrorMsg(BLANK, (String[]) null));
+            throwConditionsNotMetException400(getErrorMsg(BLANK, NULL_STR_ARRAY));
         }
     }
 
@@ -77,7 +78,7 @@ public final class Preconditions {
 
     public static void checkEmpty(Object o) {
         if (G.isEmpty(o)) {
-            throwConditionsNotMetException400(getErrorMsg(EMPTY, (String[]) null));
+            throwConditionsNotMetException400(getErrorMsg(EMPTY, NULL_STR_ARRAY));
         }
     }
 
@@ -95,7 +96,7 @@ public final class Preconditions {
 
     public static void checkNull(Object o) {
         if (o == null) {
-            throwConditionsNotMetException400(getErrorMsg(NULL, (String[]) null));
+            throwConditionsNotMetException400(getErrorMsg(NULL, NULL_STR_ARRAY));
         }
     }
 
@@ -113,7 +114,7 @@ public final class Preconditions {
 
     public static void checkNotBlank(CharSequence cs) {
         if (!S.isBlank(cs)) {
-            throwConditionsNotMetException400(getErrorMsg(NOT_BLANK, (String[]) null));
+            throwConditionsNotMetException400(getErrorMsg(NOT_BLANK, NULL_STR_ARRAY));
         }
     }
 
@@ -131,7 +132,7 @@ public final class Preconditions {
 
     public static void checkNotEmpty(Object o) {
         if (!G.isEmpty(o)) {
-            throwConditionsNotMetException400(getErrorMsg(NOT_EMPTY, (String[]) null));
+            throwConditionsNotMetException400(getErrorMsg(NOT_EMPTY, NULL_STR_ARRAY));
         }
     }
 
@@ -149,7 +150,7 @@ public final class Preconditions {
 
     public static void checkNotNull(Object o) {
         if (o != null) {
-            throwConditionsNotMetException400(getErrorMsg(NOT_NULL, (String[]) null));
+            throwConditionsNotMetException400(getErrorMsg(NOT_NULL, NULL_STR_ARRAY));
         }
     }
 
@@ -167,7 +168,8 @@ public final class Preconditions {
 
     public static void checkHasBlank(CharSequence[] cs) {
         if (S.hasBlank(cs)) {
-            throwConditionsNotMetException400(getErrorMsg(HAS_BLANK, (String[]) null));
+            String errorMsg = getErrorMsg(HAS_BLANK, NULL_STR_ARRAY) + getErrorParamsString(HAS_BLANK, cs, NULL_STR_ARRAY);
+            throwConditionsNotMetException400(errorMsg);
         }
     }
 
@@ -179,31 +181,35 @@ public final class Preconditions {
 
     public static void checkHasBlank(CharSequence[] cs, String[] paramNames) {
         if (S.hasBlank(cs)) {
-            throwConditionsNotMetException400(getErrorMsg(HAS_BLANK, paramNames));
+            String errorMsg = getErrorMsg(HAS_BLANK, paramNames) + getErrorParamsString(HAS_BLANK, cs, paramNames);
+            throwConditionsNotMetException400(errorMsg);
         }
     }
 
-    public static void checkHasEmpty(CharSequence[] cs) {
-        if (S.hasEmpty(cs)) {
-            throwConditionsNotMetException400(getErrorMsg(HAS_EMPTY, (String[]) null));
+    public static void checkHasEmpty(Object[] os) {
+        if (G.hasEmpty(os)) {
+            String errorMsg = getErrorMsg(HAS_EMPTY, NULL_STR_ARRAY) + getErrorParamsString(HAS_EMPTY, os, NULL_STR_ARRAY);
+            throwConditionsNotMetException400(errorMsg);
         }
     }
 
-    public static void checkHasEmpty(CharSequence[] cs, String msgTemplate, Object... objs) {
-        if (S.hasEmpty(cs)) {
+    public static void checkHasEmpty(Object[] os, String msgTemplate, Object... objs) {
+        if (G.hasEmpty(os)) {
             throwConditionsNotMetException400(msgTemplate, objs);
         }
     }
 
-    public static void checkHasEmpty(CharSequence[] cs, String[] paramNames) {
-        if (S.hasEmpty(cs)) {
-            throwConditionsNotMetException400(getErrorMsg(HAS_EMPTY, paramNames));
+    public static void checkHasEmpty(Object[] os, String[] paramNames) {
+        if (G.hasEmpty(os)) {
+            String errorMsg = getErrorMsg(HAS_EMPTY, paramNames) + getErrorParamsString(HAS_EMPTY, os, paramNames);
+            throwConditionsNotMetException400(errorMsg);
         }
     }
 
     public static void checkHasNull(Object[] os) {
         if (G.hasNull(os)) {
-            throwConditionsNotMetException400(getErrorMsg(HAS_NULL, (String[]) null));
+            String errorMsg = getErrorMsg(HAS_NULL, NULL_STR_ARRAY) + getErrorParamsString(HAS_NULL, os, NULL_STR_ARRAY);
+            throwConditionsNotMetException400(errorMsg);
         }
     }
 
@@ -215,13 +221,15 @@ public final class Preconditions {
 
     public static void checkHasNull(Object[] os, String[] paramNames) {
         if (G.hasNull(os)) {
-            throwConditionsNotMetException400(getErrorMsg(HAS_NULL, paramNames));
+            String errorMsg = getErrorMsg(HAS_NULL, paramNames) + getErrorParamsString(HAS_NULL, os, paramNames);
+            throwConditionsNotMetException400(errorMsg);
         }
     }
 
     public static void checkHasBlank(Collection<? extends CharSequence> cs) {
         if (S.hasBlank(cs)) {
-            throwConditionsNotMetException400(getErrorMsg(HAS_BLANK, (String[]) null));
+            String errorMsg = getErrorMsg(HAS_BLANK, NULL_STR_ARRAY) + getErrorParamsString(HAS_BLANK, cs, NULL_STR_ARRAY);
+            throwConditionsNotMetException400(errorMsg);
         }
     }
 
@@ -233,31 +241,35 @@ public final class Preconditions {
 
     public static void checkHasBlank(Collection<? extends CharSequence> cs, String[] paramNames) {
         if (S.hasBlank(cs)) {
-            throwConditionsNotMetException400(getErrorMsg(HAS_BLANK, paramNames));
+            String errorMsg = getErrorMsg(HAS_BLANK, paramNames) + getErrorParamsString(HAS_BLANK, cs, paramNames);
+            throwConditionsNotMetException400(errorMsg);
         }
     }
 
-    public static void checkHasEmpty(Collection<? extends CharSequence> cs) {
-        if (S.hasEmpty(cs)) {
-            throwConditionsNotMetException400(getErrorMsg(HAS_EMPTY, (String[]) null));
+    public static void checkHasEmpty(Collection<?> os) {
+        if (G.hasEmpty(os)) {
+            String errorMsg = getErrorMsg(HAS_EMPTY, NULL_STR_ARRAY) + getErrorParamsString(HAS_EMPTY, os, NULL_STR_ARRAY);
+            throwConditionsNotMetException400(errorMsg);
         }
     }
 
-    public static void checkHasEmpty(Collection<? extends CharSequence> cs, String msgTemplate, Object... objs) {
-        if (S.hasEmpty(cs)) {
+    public static void checkHasEmpty(Collection<?> os, String msgTemplate, Object... objs) {
+        if (G.hasEmpty(os)) {
             throwConditionsNotMetException400(msgTemplate, objs);
         }
     }
 
-    public static void checkHasEmpty(Collection<? extends CharSequence> cs, String[] paramNames) {
-        if (S.hasEmpty(cs)) {
-            throwConditionsNotMetException400(getErrorMsg(HAS_EMPTY, paramNames));
+    public static void checkHasEmpty(Collection<?> os, String[] paramNames) {
+        if (G.hasEmpty(os)) {
+            String errorMsg = getErrorMsg(HAS_EMPTY, paramNames) + getErrorParamsString(HAS_EMPTY, os, paramNames);
+            throwConditionsNotMetException400(errorMsg);
         }
     }
 
     public static void checkHasNull(Collection<?> os) {
         if (G.hasNull(os)) {
-            throwConditionsNotMetException400(getErrorMsg(HAS_NULL, (String[]) null));
+            String errorMsg = getErrorMsg(HAS_NULL, NULL_STR_ARRAY) + getErrorParamsString(HAS_NULL, os, NULL_STR_ARRAY);
+            throwConditionsNotMetException400(errorMsg);
         }
     }
 
@@ -269,14 +281,15 @@ public final class Preconditions {
 
     public static void checkHasNull(Collection<?> os, String[] paramNames) {
         if (G.hasNull(os)) {
-            throwConditionsNotMetException400(getErrorMsg(HAS_NULL, paramNames));
+            String errorMsg = getErrorMsg(HAS_NULL, paramNames) + getErrorParamsString(HAS_NULL, os, paramNames);
+            throwConditionsNotMetException400(errorMsg);
         }
     }
 
 
     public static void checkAllBlank(CharSequence[] cs) {
         if (S.allBlank(cs)) {
-            throwConditionsNotMetException400(getErrorMsg(ALL_BLANK, (String[]) null));
+            throwConditionsNotMetException400(getErrorMsg(ALL_BLANK, NULL_STR_ARRAY));
         }
     }
 
@@ -292,27 +305,27 @@ public final class Preconditions {
         }
     }
 
-    public static void checkAllEmpty(CharSequence[] cs) {
-        if (S.allEmpty(cs)) {
-            throwConditionsNotMetException400(getErrorMsg(ALL_EMPTY, (String[]) null));
+    public static void checkAllEmpty(Object[] os) {
+        if (G.allEmpty(os)) {
+            throwConditionsNotMetException400(getErrorMsg(ALL_EMPTY, NULL_STR_ARRAY));
         }
     }
 
-    public static void checkAllEmpty(CharSequence[] cs, String msgTemplate, Object... objs) {
-        if (S.allEmpty(cs)) {
+    public static void checkAllEmpty(Object[] os, String msgTemplate, Object... objs) {
+        if (G.allEmpty(os)) {
             throwConditionsNotMetException400(msgTemplate, objs);
         }
     }
 
-    public static void checkAllEmpty(CharSequence[] cs, String[] paramNames) {
-        if (S.allEmpty(cs)) {
+    public static void checkAllEmpty(Object[] os, String[] paramNames) {
+        if (G.allEmpty(os)) {
             throwConditionsNotMetException400(getErrorMsg(ALL_EMPTY, paramNames));
         }
     }
 
     public static void checkAllNull(Object[] os) {
         if (G.allNull(os)) {
-            throwConditionsNotMetException400(getErrorMsg(ALL_NULL, (String[]) null));
+            throwConditionsNotMetException400(getErrorMsg(ALL_NULL, NULL_STR_ARRAY));
         }
     }
 
@@ -331,7 +344,7 @@ public final class Preconditions {
 
     public static void checkAllBlank(Collection<? extends CharSequence> cs) {
         if (S.allBlank(cs)) {
-            throwConditionsNotMetException400(getErrorMsg(ALL_BLANK, (String[]) null));
+            throwConditionsNotMetException400(getErrorMsg(ALL_BLANK, NULL_STR_ARRAY));
         }
     }
 
@@ -347,27 +360,27 @@ public final class Preconditions {
         }
     }
 
-    public static void checkAllEmpty(Collection<? extends CharSequence> cs) {
-        if (S.allEmpty(cs)) {
-            throwConditionsNotMetException400(getErrorMsg(ALL_EMPTY, (String[]) null));
+    public static void checkAllEmpty(Collection<?> os) {
+        if (G.allEmpty(os)) {
+            throwConditionsNotMetException400(getErrorMsg(ALL_EMPTY, NULL_STR_ARRAY));
         }
     }
 
-    public static void checkAllEmpty(Collection<? extends CharSequence> cs, String msgTemplate, Object... objs) {
-        if (S.allEmpty(cs)) {
+    public static void checkAllEmpty(Collection<?> os, String msgTemplate, Object... objs) {
+        if (G.allEmpty(os)) {
             throwConditionsNotMetException400(msgTemplate, objs);
         }
     }
 
-    public static void checkAllEmpty(Collection<? extends CharSequence> cs, String[] paramNames) {
-        if (S.allEmpty(cs)) {
+    public static void checkAllEmpty(Collection<?> os, String[] paramNames) {
+        if (G.allEmpty(os)) {
             throwConditionsNotMetException400(getErrorMsg(ALL_EMPTY, paramNames));
         }
     }
 
     public static void checkAllNull(Collection<?> os) {
         if (G.allNull(os)) {
-            throwConditionsNotMetException400(getErrorMsg(ALL_NULL, (String[]) null));
+            throwConditionsNotMetException400(getErrorMsg(ALL_NULL, NULL_STR_ARRAY));
         }
     }
 
@@ -922,7 +935,7 @@ public final class Preconditions {
      */
     public static void checkNullNPE(Object o) {
         if (o == null) {
-            throw new NullPointerException(getErrorMsg(NULL, (String[]) null));
+            throw new NullPointerException(getErrorMsg(NULL, NULL_STR_ARRAY));
         }
     }
 
@@ -958,7 +971,8 @@ public final class Preconditions {
      */
     public static void checkHasNullNPE(Object[] os) {
         if (G.hasNull(os)) {
-            throw new NullPointerException(getErrorMsg(HAS_NULL, (String[]) null));
+            String errorMsg = getErrorMsg(HAS_NULL, NULL_STR_ARRAY) + getErrorParamsString(HAS_NULL, os, NULL_STR_ARRAY);
+            throw new NullPointerException(errorMsg);
         }
     }
 
@@ -983,7 +997,8 @@ public final class Preconditions {
      */
     public static void checkHasNullNPE(Object[] os, String[] paramNames) {
         if (G.hasNull(os)) {
-            throw new NullPointerException(getErrorMsg(HAS_NULL, paramNames));
+            String errorMsg = getErrorMsg(HAS_NULL, paramNames) + getErrorParamsString(HAS_NULL, os, paramNames);
+            throw new NullPointerException(errorMsg);
         }
     }
 
@@ -994,7 +1009,8 @@ public final class Preconditions {
      */
     public static void checkHasNullNPE(Collection<?> os) {
         if (G.hasNull(os)) {
-            throw new NullPointerException(getErrorMsg(HAS_NULL, (String[]) null));
+            String errorMsg = getErrorMsg(HAS_NULL, NULL_STR_ARRAY) + getErrorParamsString(HAS_NULL, os, NULL_STR_ARRAY);
+            throw new NullPointerException(errorMsg);
         }
     }
 
@@ -1019,7 +1035,8 @@ public final class Preconditions {
      */
     public static void checkHasNullNPE(Collection<?> os, String[] paramNames) {
         if (G.hasNull(os)) {
-            throw new NullPointerException(getErrorMsg(HAS_NULL, paramNames));
+            String errorMsg = getErrorMsg(HAS_NULL, paramNames) + getErrorParamsString(HAS_NULL, os, paramNames);
+            throw new NullPointerException(errorMsg);
         }
     }
 
@@ -1030,7 +1047,7 @@ public final class Preconditions {
      */
     public static void checkAllNullNPE(Object[] os) {
         if (G.allNull(os)) {
-            throw new NullPointerException(getErrorMsg(ALL_NULL, (String[]) null));
+            throw new NullPointerException(getErrorMsg(ALL_NULL, NULL_STR_ARRAY));
         }
     }
 
@@ -1066,7 +1083,7 @@ public final class Preconditions {
      */
     public static void checkAllNullNPE(Collection<?> os) {
         if (G.allNull(os)) {
-            throw new NullPointerException(getErrorMsg(ALL_NULL, (String[]) null));
+            throw new NullPointerException(getErrorMsg(ALL_NULL, NULL_STR_ARRAY));
         }
     }
 
@@ -1145,6 +1162,113 @@ public final class Preconditions {
                 break;
         }
         return errorMsg;
+    }
+
+    /**
+     * 返回导致错误的【参数序号】或【参数名】
+     *
+     * @param type       错误信息类型。如果 type 为 null，则默认为 {@link ErrorMsgType#HAS_NULL}。<br>
+     *                   <b>注：{@link ErrorMsgType#HAS_BLANK} 只能用于校验 CharSequence 类型的集合</b>
+     * @param os         待校验的集合
+     * @param paramNames 校验的参数名称数组
+     * @return 导致错误的【参数序号】或【参数名】
+     * @since 0.5.12
+     */
+    public static List<Object> listErrorParams(ErrorMsgType type, Collection<?> os, String... paramNames) {
+        if (type == null) type = HAS_NULL;
+        List<Object> params = new ArrayList<>();
+        if (G.isEmpty(os)) return params;
+
+        int i = 0;
+        if (G.isEmpty(paramNames) || os.size() != paramNames.length) {   // 返回导致错误的【参数的序号】
+            for (Object o : os) {
+                switch (type) {
+                    case HAS_NULL:
+                        if (o == null) params.add(i);
+                        break;
+                    case HAS_EMPTY:
+                        if (G.isEmpty(o)) params.add(i);
+                        break;
+                    case HAS_BLANK:     // ErrorMsgType#HAS_BLANK 只能用于校验 CharSequence 类型的集合
+                        CharSequence s = null;
+                        try {
+                            s = (CharSequence) o;
+                        } catch (Exception e) {
+                            throw new ClassCastException("The `ErrorMsgType.HAS_BLANK` can only be used to validate a `Collection<? extends CharSequence>`. ");
+                        }
+                        if (S.isBlank(s)) params.add(i);
+                        break;
+                }
+                i++;
+            }
+        } else {        // 返回导致错误的【参数的名称】
+            for (Object o : os) {
+                String paramName = paramNames[i];
+                switch (type) {
+                    case HAS_NULL:
+                        if (o == null) params.add(paramName);
+                        break;
+                    case HAS_EMPTY:
+                        if (G.isEmpty(o)) params.add(paramName);
+                        break;
+                    case HAS_BLANK:     // ErrorMsgType#HAS_BLANK 只能用于校验 CharSequence 类型的集合
+                        CharSequence s = null;
+                        try {
+                            s = (CharSequence) o;
+                        } catch (Exception e) {
+                            throw new ClassCastException("The `ErrorMsgType.HAS_BLANK` can only be used to validate a `Collection<? extends CharSequence>`. ");
+                        }
+                        if (S.isBlank(s)) params.add(paramName);
+                        break;
+                }
+                i++;
+            }
+        }
+
+        return params;
+    }
+
+    /**
+     * 根据错误参数列表构建错误提示信息
+     *
+     * @param type       错误信息类型。如果 type 为 null，则默认为 {@link ErrorMsgType#HAS_NULL}。<br>
+     * @param os         待校验的集合
+     * @param paramNames 校验的参数名称数组
+     * @return 错误提示信息
+     * @since 0.5.12
+     */
+    public static String getErrorParamsString(ErrorMsgType type, Collection<?> os, String... paramNames) {
+        if (os == null) return "";
+        List<Object> objs = listErrorParams(type, os, paramNames);
+        if (G.isEmpty(objs)) return "";
+        Object o = objs.get(0);
+        if (o instanceof Integer) {
+            if (objs.size() == 1) {
+                return SI.$("But parameter with index ${?} is ${?}! ", objs, type.errorReason);
+            } else {
+                return SI.$("But parameters with index ${?} are ${?}! ", objs, type.errorReason);
+            }
+        } else {
+            if (objs.size() == 1) {
+                return SI.$("But parameter ${?} is ${?}! ", objs, type.errorReason);
+            } else {
+                return SI.$("But parameters ${?} are ${?}! ", objs, type.errorReason);
+            }
+        }
+    }
+
+    /**
+     * 根据错误参数列表构建错误提示信息
+     *
+     * @param type       错误信息类型。如果 type 为 null，则默认为 {@link ErrorMsgType#HAS_NULL}。<br>
+     * @param os         待校验的数组
+     * @param paramNames 校验的参数名称数组
+     * @return 错误提示信息
+     * @since 0.5.12
+     */
+    public static String getErrorParamsString(ErrorMsgType type, Object[] os, String... paramNames) {
+        if (os == null) return "";
+        return getErrorParamsString(type, Arrays.asList(os), paramNames);
     }
 
 }

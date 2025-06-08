@@ -274,7 +274,7 @@ public class IOsTest {
             throwException();
         } catch (NullPointerException | IOException e) {
             assertSame(e.getClass(), NullPointerException.class);
-            assertEquals(e.getMessage(), "None of these parameters [inputStream, outputStream, buffer] can be null! ");
+            assertEquals(e.getMessage(), "None of these parameters [inputStream, outputStream, buffer] can be null! But parameters [inputStream, outputStream, buffer] are null! ");
         }
     }
 
