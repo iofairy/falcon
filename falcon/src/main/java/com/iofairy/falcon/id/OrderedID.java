@@ -16,7 +16,7 @@
 package com.iofairy.falcon.id;
 
 import com.iofairy.except.IDGenerateException;
-import com.iofairy.falcon.os.OS;
+import com.iofairy.os.OS;
 import com.iofairy.lambda.RT1;
 
 import java.util.HashMap;
@@ -24,13 +24,15 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.iofairy.falcon.misc.Preconditions.*;
+import static com.iofairy.validator.Preconditions.*;
 
 /**
  * 根据不同的ID分类（不同的Key）有序生成ID（自增ID）
  *
  * @since 0.5.11
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.id.OrderedID} instead
  */
+@Deprecated
 public final class OrderedID {
 
     private final static ConcurrentHashMap<String, AtomicLong> ID_GENERATORS = new ConcurrentHashMap<>();

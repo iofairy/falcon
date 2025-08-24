@@ -17,7 +17,7 @@ package com.iofairy.falcon.util;
 
 import com.iofairy.except.UnexpectedParameterException;
 
-import com.iofairy.falcon.os.OS;
+import com.iofairy.os.OS;
 import com.iofairy.range.Range;
 import com.iofairy.tuple.Tuple;
 import com.iofairy.tuple.Tuple2;
@@ -28,13 +28,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static com.iofairy.falcon.misc.Preconditions.*;
+import static com.iofairy.validator.Preconditions.*;
 
 /**
  * Range Utils
  *
  * @since 0.3.0
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.range.Ranges} instead
  */
+@Deprecated
 public class Ranges {
 
     /**

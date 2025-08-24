@@ -383,7 +383,7 @@ public class DateTimePatternTest {
         String forDTF50 = DateTimePattern.forDTF("999-1-2T6:06:6");             // y-M-d'T'H:m:s
         String forDTF51 = DateTimePattern.forDTF("20-1-2T06:6:6");      // null
         String forDTF52 = DateTimePattern.forDTF("2020.1.2T16:6:6");            // y.M.d'T'H:m:s
-        String forDTF53 = DateTimePattern.forDTF("999.1.2T16:6:6");             // y.M.d'T'H:m:s
+        String forDTF53 = DateTimePattern.forDTF("999.1.2T6:6:6");             // y.M.d'T'H:m:s
         String forDTF54 = DateTimePattern.forDTF("20.1.2T16:6:6");      // null
         String forDTF55 = DateTimePattern.forDTF("2020.1.2T16:6");      // null
         String forDTF56 = DateTimePattern.forDTF("20090807T100501550");         // yyyyMMdd'T'HHmmssSSS
@@ -406,6 +406,15 @@ public class DateTimePatternTest {
         String forDTF73 = DateTimePattern.forDTF("2020.01.2T6:16:6.036Z");    // y.M.d'T'H:m:s[.SSS][.SS][.S]VV
         String forDTF74 = DateTimePattern.forDTF("2020-01-02T06:16:26.036Z"); // y-M-d'T'H:m:s[.SSS][.SS][.S]VV
         String forDTF75 = DateTimePattern.forDTF("2020.01.02T06:16:26.036Z"); // y.M.d'T'H:m:s[.SSS][.SS][.S]VV
+        String forDTF76 = DateTimePattern.forDTF("999-1-2 6:6:6 [GMT+04:00 +04:00]");               //
+        String forDTF77 = DateTimePattern.forDTF("999/1/2 6:6:6.6 [Asia/Shanghai +08:00]");         //
+        String forDTF78 = DateTimePattern.forDTF("2025-01-02 06:16:26.036 [Asia/Shanghai +08:00]"); //
+        String forDTF79 = DateTimePattern.forDTF("999-1-2 6:6:6 [+04:00]");                         //
+        String forDTF80 = DateTimePattern.forDTF("999.1.2 6:6:6.6 [+08:00]");                       //
+        String forDTF81 = DateTimePattern.forDTF("2025-01-02 06:16:26.036 [+08:00]");               //
+        String forDTF82 = DateTimePattern.forDTF("2025.01.02 06:16:26.036 [+08:00]");               //
+        String forDTF83 = DateTimePattern.forDTF("2025/01/02 06:16:26.036 [+08:00 +08:00]");        //
+        String forDTF84 = DateTimePattern.forDTF("2025.01.02 06:16:26.036 [GMT+04:00 +04:00]");     //
 
         // System.out.println("forDTF01: " + forDTF01);
         // System.out.println("forDTF02: " + forDTF02);
@@ -480,6 +489,16 @@ public class DateTimePatternTest {
         // System.out.println("forDTF71: " + forDTF71);
         // System.out.println("forDTF72: " + forDTF72);
         // System.out.println("forDTF73: " + forDTF73);
+        // System.out.println("forDTF76: " + forDTF76);
+        // System.out.println("forDTF77: " + forDTF77);
+        // System.out.println("forDTF78: " + forDTF78);
+        // System.out.println("forDTF79: " + forDTF79);
+        // System.out.println("forDTF80: " + forDTF80);
+        // System.out.println("forDTF81: " + forDTF81);
+        // System.out.println("forDTF82: " + forDTF82);
+        // System.out.println("forDTF83: " + forDTF83);
+        // System.out.println("forDTF84: " + forDTF84);
+        System.out.println("============================================================");
 
         String dtfFormat01 = dtfFormat(null, "2020年1月2日6时6分6秒6毫秒");   // null
         String dtfFormat02 = dtfFormat(null, "1月2日6时6分6秒6毫秒");        // null
@@ -533,7 +552,7 @@ public class DateTimePatternTest {
         String dtfFormat50 = dtfFormat("y-M-d'T'H:m:s", "999-1-2T6:06:6");           // 0999-01-02 06:06:06.000
         String dtfFormat51 = dtfFormat(null, "20-1-2T06:6:6");            // null
         String dtfFormat52 = dtfFormat("y.M.d'T'H:m:s", "2020.1.2T16:6:6");          // 2020-01-02 16:06:06.000
-        String dtfFormat53 = dtfFormat("y.M.d'T'H:m:s", "999.1.2T16:6:6");           // 0999-01-02 16:06:06.000
+        String dtfFormat53 = dtfFormat("y.M.d'T'H:m:s", "999.1.2T6:6:6");           // 0999-01-02 16:06:06.000
         String dtfFormat54 = dtfFormat(null, "20.1.2T16:6:6");            // null
         String dtfFormat55 = dtfFormat(null, "2020.1.2T16:6");            // null
         String dtfFormat56 = dtfFormat("yyyyMMdd'T'HHmmssSSS", "20090807T100501550");       // 2009-08-07 10:05:01.550
@@ -556,6 +575,15 @@ public class DateTimePatternTest {
         String dtfFormat73 = dtfFormat("y.M.d'T'H:m:s[.SSS][.SS][.S]VV", "2020.01.2T6:16:6.036Z");     // 2020-01-02 06:16:06.036 [Z +00:00]
         String dtfFormat74 = dtfFormat("y-M-d'T'H:m:s[.SSS][.SS][.S]VV", "2020-01-02T06:16:26.536Z");  // 2020-01-02 06:16:26.536 [Z +00:00]
         String dtfFormat75 = dtfFormat("y.M.d'T'H:m:s[.SSS][.SS][.S]VV", "2020.01.02T06:16:26.536Z");  // 2020-01-02 06:16:26.536 [Z +00:00]
+        String dtfFormat76 = dtfFormat("y-M-d H:m:s '['VV xxx']'", "999-1-2 6:6:6 [GMT+04:00 +04:00]");
+        String dtfFormat77 = dtfFormat("y/M/d H:m:s[.SSS][.SS][.S] '['VV xxx']'", "999/1/2 6:6:6.6 [Asia/Shanghai +08:00]");
+        String dtfFormat78 = dtfFormat("y-M-d H:m:s[.SSS][.SS][.S] '['VV xxx']'", "2025-01-02 06:16:26.036 [Asia/Shanghai +08:00]");
+        String dtfFormat79 = dtfFormat("y-M-d H:m:s '['xxx']'", "999-1-2 6:6:6 [+04:00]");
+        String dtfFormat80 = dtfFormat("y.M.d H:m:s[.SSS][.SS][.S] '['xxx']'", "999.1.2 6:6:6.6 [+08:00]");
+        String dtfFormat81 = dtfFormat("y-M-d H:m:s[.SSS][.SS][.S] '['xxx']'", "2025-01-02 06:16:26.036 [+08:00]");
+        String dtfFormat82 = dtfFormat("y.M.d H:m:s[.SSS][.SS][.S] '['xxx']'", "2025.01.02 06:16:26.036 [+08:00]");
+        String dtfFormat83 = dtfFormat("y/M/d H:m:s[.SSS][.SS][.S] '['VV xxx']'", "2025/01/02 06:16:26.036 [+08:00 +08:00]");
+        String dtfFormat84 = dtfFormat("y.M.d H:m:s[.SSS][.SS][.S] '['VV xxx']'", "2025.01.02 06:16:26.036 [GMT+04:00 +04:00]");
 
         System.out.println("dtfFormat01: " + dtfFormat01);
         System.out.println("dtfFormat02: " + dtfFormat02);
@@ -632,6 +660,15 @@ public class DateTimePatternTest {
         System.out.println("dtfFormat73: " + dtfFormat73);
         System.out.println("dtfFormat74: " + dtfFormat74);
         System.out.println("dtfFormat75: " + dtfFormat75);
+        System.out.println("dtfFormat76: " + dtfFormat76);
+        System.out.println("dtfFormat77: " + dtfFormat77);
+        System.out.println("dtfFormat78: " + dtfFormat78);
+        System.out.println("dtfFormat79: " + dtfFormat79);
+        System.out.println("dtfFormat80: " + dtfFormat80);
+        System.out.println("dtfFormat81: " + dtfFormat81);
+        System.out.println("dtfFormat82: " + dtfFormat82);
+        System.out.println("dtfFormat83: " + dtfFormat83);
+        System.out.println("dtfFormat84: " + dtfFormat84);
 
         assertEquals(null, dtfFormat01);
         assertEquals(null, dtfFormat02);
@@ -685,7 +722,7 @@ public class DateTimePatternTest {
         assertEquals("999-01-02 06:06:06.000", dtfFormat50);
         assertNull(dtfFormat51);
         assertEquals("2020-01-02 16:06:06.000", dtfFormat52);
-        assertEquals("999-01-02 16:06:06.000", dtfFormat53);
+        assertEquals("999-01-02 06:06:06.000", dtfFormat53);
         assertNull(dtfFormat54);
         assertNull(dtfFormat55);
         assertEquals("2009-08-07 10:05:01.550", dtfFormat56);
@@ -708,6 +745,15 @@ public class DateTimePatternTest {
         assertEquals("2020-01-02 06:16:06.036 [Z +00:00]", dtfFormat73);
         assertEquals("2020-01-02 06:16:26.536 [Z +00:00]", dtfFormat74);
         assertEquals("2020-01-02 06:16:26.536 [Z +00:00]", dtfFormat75);
+        assertEquals("999-01-02 06:06:06.000 [GMT+04:00 +04:00]", dtfFormat76);
+        assertEquals("999-01-02 06:11:49.600", dtfFormat77);
+        assertEquals("2025-01-02 06:16:26.036", dtfFormat78);
+        assertEquals("999-01-02 06:06:06.000 [+04:00 +04:00]", dtfFormat79);
+        assertEquals("999-01-02 06:06:06.600 [+08:00 +08:00]", dtfFormat80);
+        assertEquals("2025-01-02 06:16:26.036 [+08:00 +08:00]", dtfFormat81);
+        assertEquals("2025-01-02 06:16:26.036 [+08:00 +08:00]", dtfFormat82);
+        assertEquals("2025-01-02 06:16:26.036 [+08:00 +08:00]", dtfFormat83);
+        assertEquals("2025-01-02 06:16:26.036 [GMT+04:00 +04:00]", dtfFormat84);
 
     }
 
@@ -721,7 +767,7 @@ public class DateTimePatternTest {
         }
 
         DateTimeFormatter dtf = DateTimePattern.getDTF(format);
-        if (format.endsWith("V")) {
+        if (format.contains("V") || format.contains("x")) {
             return G.toString(ZonedDateTime.parse(dateTime, dtf));
         }
         LocalDateTime ldt = LocalDateTime.parse(dateTime, dtf);

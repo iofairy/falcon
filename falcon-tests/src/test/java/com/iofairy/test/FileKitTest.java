@@ -3,7 +3,7 @@ package com.iofairy.test;
 import com.iofairy.falcon.fs.FileInFolder;
 import com.iofairy.falcon.fs.FileKit;
 import com.iofairy.falcon.fs.FilePath;
-import com.iofairy.falcon.os.OS;
+import com.iofairy.os.OS;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

@@ -15,7 +15,7 @@
  */
 package com.iofairy.falcon.id;
 
-import com.iofairy.falcon.os.OS;
+import com.iofairy.os.OS;
 import com.iofairy.falcon.time.DateTime;
 import com.iofairy.top.S;
 
@@ -28,14 +28,15 @@ import java.time.temporal.ChronoField;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-import static com.iofairy.falcon.misc.Preconditions.checkArgument;
-import static com.iofairy.falcon.misc.Preconditions.checkOutOfBounds;
+import static com.iofairy.validator.Preconditions.*;
 
 /**
  * 带时间的ID
  *
  * @since 0.5.10
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.id.TimedID} instead
  */
+@Deprecated
 public class TimedID {
     /*###################################################################################
      ************************************************************************************

@@ -15,24 +15,37 @@
  */
 package com.iofairy.falcon.time;
 
-import com.iofairy.falcon.os.OS;
-import com.iofairy.falcon.util.Numbers;
+import com.iofairy.os.OS;
+import com.iofairy.tcf.Try;
+import com.iofairy.top.G;
+import com.iofairy.top.O;
+import com.iofairy.top.S;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.time.*;
-import java.time.temporal.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalUnit;
+import java.time.temporal.UnsupportedTemporalTypeException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static com.iofairy.validator.Preconditions.*;
 import static java.time.temporal.ChronoUnit.*;
-import static com.iofairy.falcon.misc.Preconditions.*;
 
 /**
  * SignedInterval
  *
  * @since 0.1.0
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.time.SignedInterval} instead
  */
+@Deprecated
 public class SignedInterval implements ChronoInterval, Comparable<SignedInterval> {
     private static final long serialVersionUID = 70099586057265L;
 
@@ -136,6 +149,30 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
     public static final List<Class<? extends Temporal>> SUPPORTED_TEMPORAL =
             Collections.unmodifiableList(Arrays.asList(ZonedDateTime.class, OffsetDateTime.class, LocalDateTime.class, Instant.class, DateTime.class));
     protected static final String SUPPORTED_TEMPORAL_STRING = SUPPORTED_TEMPORAL.stream().map(Class::getSimpleName).collect(Collectors.joining(", "));
+
+    /**
+     * Interval format Pattern
+     */
+    protected static class IntervalPattern {
+        public static final Pattern c   = Pattern.compile("c(?!'(?<='c'))");
+        public static final Pattern y   = Pattern.compile("y(?!'(?<='y'))");
+        public static final Pattern M   = Pattern.compile("M(?!'(?<='M'))");
+        public static final Pattern d   = Pattern.compile("d(?!'(?<='d'))");
+        public static final Pattern H   = Pattern.compile("H(?!'(?<='H'))");
+        public static final Pattern m   = Pattern.compile("m(?!'(?<='m'))");
+        public static final Pattern s   = Pattern.compile("s(?!'(?<='s'))");
+        public static final Pattern S   = Pattern.compile("S(?!'(?<='S'))");
+        public static final Pattern QcQ = Pattern.compile("'c'");
+        public static final Pattern QyQ = Pattern.compile("'y'");
+        public static final Pattern QMQ = Pattern.compile("'M'");
+        public static final Pattern QdQ = Pattern.compile("'d'");
+        public static final Pattern QHQ = Pattern.compile("'H'");
+        public static final Pattern QmQ = Pattern.compile("'m'");
+        public static final Pattern QsQ = Pattern.compile("'s'");
+        public static final Pattern QSQ = Pattern.compile("'S'");
+        public static final Pattern totalPattern = Pattern.compile("(t[cyMdHmsS])(\\d*)");
+    }
+
 
     public SignedInterval(long centuries, long years, long months, long days, long hours, long minutes, long seconds, long millis, long micros, long nanos) {
         this.centuries = centuries;
@@ -914,6 +951,120 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         } else return Long.compare(thisMonths, otherMonths);
     }
 
+
+    /**
+     * Format Interval info to string. <br><br>
+     * <p>
+     * The following pattern letters are defined:
+     * <pre>
+     *  Symbol        Meaning
+     *  ------        -------
+     *   c            centuries
+     *   y            years
+     *   M            months
+     *   d            days
+     *   H            hours
+     *   m            minutes
+     *   s            seconds
+     *   tc           total centuries
+     *   ty           total years
+     *   tM           total months
+     *   td           total days
+     *   tH           total hours
+     *   tm           total minutes
+     *   ts           total seconds
+     *   'c'          c char literal
+     *   'y'          y char literal
+     *   'M'          M char literal
+     *   'd'          d char literal
+     *   'H'          H char literal
+     *   'm'          m char literal
+     *   's'          s char literal
+     *
+     *   '            escape for text
+     *   ''           single quote
+     * </pre>
+     * <p>
+     *
+     * @param pattern the pattern to use
+     * @return the formatted string based on the pattern, not null
+     * @since 0.6.0
+     */
+    public String format(String pattern) {
+        if (S.isBlank(pattern)) return pattern;
+        calculateApprox();  // 计算近似值
+
+        /*
+         替换总时间pattern
+         */
+        Matcher matcher = IntervalPattern.totalPattern.matcher(pattern);
+        StringBuffer formatResult = new StringBuffer();
+        while (matcher.find()) {
+            String unit = matcher.group(1);
+            int scale = Try.tcf(() -> Integer.parseInt(matcher.group(2)), 0, false);
+            /*
+             scale 大于 15 时，scale = 0
+             */
+            if (scale > 15) scale = 0;
+
+            Number totalValue = 0;
+            switch (unit) {
+                case "tc":
+                    totalValue = scale == 0 ? (Number) (approxYears / 100) : unitExact(CENTURIES, scale);
+                    break;
+                case "ty":
+                    totalValue = scale == 0 ? (Number) approxYears : unitExact(YEARS, scale);
+                    break;
+                case "tM":
+                    totalValue = scale == 0 ? (Number) approxMonths : unitExact(MONTHS, scale);
+                    break;
+                case "td":
+                    totalValue = scale == 0 ? (Number) approxDays : unitExact(DAYS, scale);
+                    break;
+                case "tH":
+                    totalValue = scale == 0 ? (Number) approxHours : unitExact(HOURS, scale);
+                    break;
+                case "tm":
+                    totalValue = scale == 0 ? (Number) approxMinutes : unitExact(MINUTES, scale);
+                    break;
+                case "ts":
+                    totalValue = scale == 0 ? (Number) approxSeconds : unitExact(SECONDS, scale);
+                    break;
+                case "tS":
+                    totalValue = scale == 0 ? (Number) approxMillis : unitExact(MILLIS, scale);
+                    break;
+            }
+
+            String totalString = G.toString(totalValue, scale);
+            matcher.appendReplacement(formatResult, totalString);
+        }
+        matcher.appendTail(formatResult);
+        String result = formatResult.toString();
+
+        /*
+         替换单时间pattern
+         */
+        result = IntervalPattern.c.matcher(result).replaceAll(String.valueOf(centuries));
+        result = IntervalPattern.y.matcher(result).replaceAll(String.valueOf(years));
+        result = IntervalPattern.M.matcher(result).replaceAll(String.valueOf(months));
+        result = IntervalPattern.d.matcher(result).replaceAll(String.valueOf(days));
+        result = IntervalPattern.H.matcher(result).replaceAll(String.valueOf(hours));
+        result = IntervalPattern.m.matcher(result).replaceAll(String.valueOf(minutes));
+        result = IntervalPattern.s.matcher(result).replaceAll(String.valueOf(seconds));
+        result = IntervalPattern.S.matcher(result).replaceAll(String.valueOf(millis));
+        result = IntervalPattern.QcQ.matcher(result).replaceAll("c");
+        result = IntervalPattern.QyQ.matcher(result).replaceAll("y");
+        result = IntervalPattern.QMQ.matcher(result).replaceAll("M");
+        result = IntervalPattern.QdQ.matcher(result).replaceAll("d");
+        result = IntervalPattern.QHQ.matcher(result).replaceAll("H");
+        result = IntervalPattern.QmQ.matcher(result).replaceAll("m");
+        result = IntervalPattern.QsQ.matcher(result).replaceAll("s");
+        result = IntervalPattern.QSQ.matcher(result).replaceAll("S");
+
+        return result;
+    }
+
+
     public String toFullString() {
         String equivalentlyStr  = OS.IS_ZH_LANG ? "\n相当于：\n" : "\nAlternative time units: \n";
         String yearsStr         = OS.IS_ZH_LANG ? " 年\n" : " years\n";
@@ -938,7 +1089,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
         String microsStrApprox  = OS.IS_ZH_LANG ? " 微秒(近似值)\n" : " micros (approx.)\n";
         String nanosStrApprox   = OS.IS_ZH_LANG ? " 纳秒(近似值)" : " nanos (approx.)";
 
-        if ((startTime != null && endTime != null) || !calculateApprox) {
+        if (startTime != null && endTime != null) {
             return this + equivalentlyStr +
                     "● " + totalYears + yearsStr +
                     "● " + totalMonths + monthsStr +
@@ -951,6 +1102,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
                     "● " + (totalMicros == null ? "0" : totalMicros.toString()) + microsStr +
                     "● " + (totalNanos == null ? "0" : totalNanos.toString()) + nanosStr;
         } else {
+            calculateApprox();      // 计算近似值
             return this + equivalentlyStr +
                     "● " + approxYears + yearsStrApprox +
                     "● " + approxMonths + monthsStrApprox +
@@ -1181,7 +1333,7 @@ public class SignedInterval implements ChronoInterval, Comparable<SignedInterval
     }
 
     protected BigDecimal nanosDivide(ChronoUnit unit, int scale) {
-        return Numbers.divide(totalNanos == null ? this.calculateApprox().approxNanos : totalNanos, unit.getDuration().toNanos(), scale);
+        return O.divide(totalNanos == null ? this.calculateApprox().approxNanos : totalNanos, unit.getDuration().toNanos(), scale);
     }
 
 }

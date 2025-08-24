@@ -20,7 +20,9 @@ package com.iofairy.falcon.os;
  * See: <a href="https://en.wikipedia.org/wiki/Java_(programming_language)#Versions">Java Versions</a>
  *
  * @since 0.2.4
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.os.JavaVersion} instead
  */
+@Deprecated
 public enum JavaVersion {
     JAVA_0("1.0", "1.0", 1.0f, 45.0f, "1996-01-23"),
     JAVA_1("1.1", "1.1", 1.1f, 45.0f, "1997-02-19"),

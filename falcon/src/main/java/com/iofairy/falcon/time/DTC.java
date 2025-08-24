@@ -29,7 +29,9 @@ import java.util.stream.IntStream;
  * DateTime Constant
  *
  * @since 0.5.11
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.time.DTC} instead
  */
+@Deprecated
 public class DTC {
     /*###################################################################################
      ************************************************************************************

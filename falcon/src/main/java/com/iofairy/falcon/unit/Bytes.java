@@ -2,7 +2,7 @@ package com.iofairy.falcon.unit;
 
 import com.iofairy.annos.Beta;
 import com.iofairy.except.UnexpectedParameterException;
-import com.iofairy.falcon.util.Numbers;
+import com.iofairy.top.O;
 import com.iofairy.tuple.Tuple;
 import com.iofairy.tuple.Tuple2;
 
@@ -12,7 +12,7 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
-import static com.iofairy.falcon.misc.Preconditions.*;
+import static com.iofairy.validator.Preconditions.*;
 
 /**
  * 计算机存储单位间的换算与转换
@@ -483,7 +483,7 @@ public class Bytes implements Comparable<Bytes>, Serializable {
     }
 
     private static BigDecimal divideForConvertUnit(BigInteger fromBits, BigInteger convertCoef) {
-        return Numbers.divide(fromBits, ByteFactor.X8.multiply(convertCoef), 20, false).stripTrailingZeros();
+        return O.divide(fromBits, ByteFactor.X8.multiply(convertCoef), 20, false).stripTrailingZeros();
     }
 
     /**
@@ -517,21 +517,21 @@ public class Bytes implements Comparable<Bytes>, Serializable {
         int scale = 3;
 
         BigInteger coef2 = ByteFactor.getCoef(isBinaryUnit, 2);
-        if (bytes.compareTo(coef2) < 0) return df.format(Numbers.divide(bytes, coef1, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 1);
+        if (bytes.compareTo(coef2) < 0) return df.format(O.divide(bytes, coef1, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 1);
         BigInteger coef3 = ByteFactor.getCoef(isBinaryUnit, 3);
-        if (bytes.compareTo(coef3) < 0) return df.format(Numbers.divide(bytes, coef2, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 2);
+        if (bytes.compareTo(coef3) < 0) return df.format(O.divide(bytes, coef2, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 2);
         BigInteger coef4 = ByteFactor.getCoef(isBinaryUnit, 4);
-        if (bytes.compareTo(coef4) < 0) return df.format(Numbers.divide(bytes, coef3, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 3);
+        if (bytes.compareTo(coef4) < 0) return df.format(O.divide(bytes, coef3, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 3);
         BigInteger coef5 = ByteFactor.getCoef(isBinaryUnit, 5);
-        if (bytes.compareTo(coef5) < 0) return df.format(Numbers.divide(bytes, coef4, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 4);
+        if (bytes.compareTo(coef5) < 0) return df.format(O.divide(bytes, coef4, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 4);
         BigInteger coef6 = ByteFactor.getCoef(isBinaryUnit, 6);
-        if (bytes.compareTo(coef6) < 0) return df.format(Numbers.divide(bytes, coef5, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 5);
+        if (bytes.compareTo(coef6) < 0) return df.format(O.divide(bytes, coef5, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 5);
         BigInteger coef7 = ByteFactor.getCoef(isBinaryUnit, 7);
-        if (bytes.compareTo(coef7) < 0) return df.format(Numbers.divide(bytes, coef6, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 6);
+        if (bytes.compareTo(coef7) < 0) return df.format(O.divide(bytes, coef6, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 6);
         BigInteger coef8 = ByteFactor.getCoef(isBinaryUnit, 8);
-        if (bytes.compareTo(coef8) < 0) return df.format(Numbers.divide(bytes, coef7, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 7);
+        if (bytes.compareTo(coef8) < 0) return df.format(O.divide(bytes, coef7, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 7);
 
-        return df.format(Numbers.divide(bytes, coef8, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 8);
+        return df.format(O.divide(bytes, coef8, scale, roundingMode)) + ByteUnit.getUnitType(isBinaryUnit, 8);
     }
 
     /**

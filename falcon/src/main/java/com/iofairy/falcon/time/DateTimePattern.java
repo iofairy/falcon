@@ -31,7 +31,9 @@ import static com.iofairy.pattern.Pattern.*;
  * 时间格式化解析类
  *
  * @since 0.0.2
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.time.DateTimePattern} instead
  */
+@Deprecated
 public class DateTimePattern {
     /*
      * DASH:  d   -
@@ -126,6 +128,18 @@ public class DateTimePattern {
     public static final Pattern YdMdDTHcMcSSZ   = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2}T\\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}Z");       // yyyy-M-dTH:m:s.S
     public static final Pattern YsMsDTHcMcSSZ   = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2}T\\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}Z");       // yyyy/M/dTH:m:s.S
     public static final Pattern YoMoDTHcMcSSZ   = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2}T\\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3}Z");   // yyyy.M.dTH:m:s.S
+    public static final Pattern YdMdDHcMcSZo    = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2} \\[.+ .\\d{2}:\\d{2}]");                  // yyyy-M-d H:m:s [VV xxx]
+    public static final Pattern YsMsDHcMcSZo    = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2} \\[.+ .\\d{2}:\\d{2}]");                  // yyyy/M/d H:m:s
+    public static final Pattern YoMoDHcMcSZo    = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2} \\[.+ .\\d{2}:\\d{2}]");              // yyyy.M.d H:m:s
+    public static final Pattern YdMdDHcMcSSZo   = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3} \\[.+ .\\d{2}:\\d{2}]");       // yyyy-M-d H:m:s.S
+    public static final Pattern YsMsDHcMcSSZo   = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3} \\[.+ .\\d{2}:\\d{2}]");       // yyyy/M/d H:m:s.S
+    public static final Pattern YoMoDHcMcSSZo   = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3} \\[.+ .\\d{2}:\\d{2}]");   // yyyy.M.d H:m:s.S
+    public static final Pattern YdMdDHcMcSOs    = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2} \\[.\\d{2}:\\d{2}]");                  // yyyy-M-d H:m:s
+    public static final Pattern YsMsDHcMcSOs    = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2} \\[.\\d{2}:\\d{2}]");                  // yyyy/M/d H:m:s
+    public static final Pattern YoMoDHcMcSOs    = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2} \\[.\\d{2}:\\d{2}]");              // yyyy.M.d H:m:s
+    public static final Pattern YdMdDHcMcSSOs   = Pattern.compile("\\d{3,4}-\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3} \\[.\\d{2}:\\d{2}]");       // yyyy-M-d H:m:s.S
+    public static final Pattern YsMsDHcMcSSOs   = Pattern.compile("\\d{3,4}/\\d{1,2}/\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3} \\[.\\d{2}:\\d{2}]");       // yyyy/M/d H:m:s.S
+    public static final Pattern YoMoDHcMcSSOs   = Pattern.compile("\\d{3,4}\\.\\d{1,2}\\.\\d{1,2} \\d{1,2}:\\d{1,2}:\\d{1,2}\\.\\d{1,3} \\[.\\d{2}:\\d{2}]");   // yyyy.M.d H:m:s.S
 
     public static final Pattern HzMzSzSSSz        = Pattern.compile("\\d{1,2}时\\d{1,2}分\\d{1,2}秒\\d{3}毫秒");                                 // H时m分s秒S毫秒
     public static final Pattern HoMzSzSSSz        = Pattern.compile("\\d{1,2}点\\d{1,2}分\\d{1,2}秒\\d{3}毫秒");                                 // H点m分s秒S毫秒
@@ -263,6 +277,19 @@ public class DateTimePattern {
     public static final String FM_DTF_YsMsDTHcMcSSZ     = "y/M/d'T'H:m:s[.SSS][.SS][.S]VV";
     public static final String FM_DTF_YoMoDTHcMcSSZ     = "y.M.d'T'H:m:s[.SSS][.SS][.S]VV";
 
+    public static final String FM_DTF_YdMdDHcMcSZo      = "y-M-d H:m:s '['VV xxx']'";
+    public static final String FM_DTF_YsMsDHcMcSZo      = "y/M/d H:m:s '['VV xxx']'";
+    public static final String FM_DTF_YoMoDHcMcSZo      = "y.M.d H:m:s '['VV xxx']'";
+    public static final String FM_DTF_YdMdDHcMcSSZo     = "y-M-d H:m:s[.SSS][.SS][.S] '['VV xxx']'";
+    public static final String FM_DTF_YsMsDHcMcSSZo     = "y/M/d H:m:s[.SSS][.SS][.S] '['VV xxx']'";
+    public static final String FM_DTF_YoMoDHcMcSSZo     = "y.M.d H:m:s[.SSS][.SS][.S] '['VV xxx']'";
+    public static final String FM_DTF_YdMdDHcMcSOs      = "y-M-d H:m:s '['xxx']'";
+    public static final String FM_DTF_YsMsDHcMcSOs      = "y/M/d H:m:s '['xxx']'";
+    public static final String FM_DTF_YoMoDHcMcSOs      = "y.M.d H:m:s '['xxx']'";
+    public static final String FM_DTF_YdMdDHcMcSSOs     = "y-M-d H:m:s[.SSS][.SS][.S] '['xxx']'";
+    public static final String FM_DTF_YsMsDHcMcSSOs     = "y/M/d H:m:s[.SSS][.SS][.S] '['xxx']'";
+    public static final String FM_DTF_YoMoDHcMcSSOs     = "y.M.d H:m:s[.SSS][.SS][.S] '['xxx']'";
+
     public static final String FM_DTF_HcM               = "H:m";
     public static final String FM_DTF_HzMz              = "H时m分";
     public static final String FM_DTF_HoMz              = "H点m分";
@@ -366,6 +393,23 @@ public class DateTimePattern {
     public static final DateTimeFormatter DTF_HMSS_ZHD = buildDTF(FM_DTF_HoMzSzSz);
     public static final DateTimeFormatter DTF_MS_ZHD = buildDTF(FM_DTF_MzSz);
     public static final DateTimeFormatter DTF_MSS_ZHD = buildDTF(FM_DTF_MzSzSz);
+
+    /*
+     * DateTimeFormatter with zone or zone offset
+     */
+    public static final DateTimeFormatter DTF_YMDHMS_DASH_ZO = buildDTF(FM_DTF_YdMdDHcMcSZo);
+    public static final DateTimeFormatter DTF_YMDHMS_SLASH_ZO = buildDTF(FM_DTF_YsMsDHcMcSZo);
+    public static final DateTimeFormatter DTF_YMDHMS_DOT_ZO = buildDTF(FM_DTF_YoMoDHcMcSZo);
+    public static final DateTimeFormatter DTF_YMDHMSS_DASH_ZO = buildDTF(FM_DTF_YdMdDHcMcSSZo);
+    public static final DateTimeFormatter DTF_YMDHMSS_SLASH_ZO = buildDTF(FM_DTF_YsMsDHcMcSSZo);
+    public static final DateTimeFormatter DTF_YMDHMSS_DOT_ZO = buildDTF(FM_DTF_YoMoDHcMcSSZo);
+    public static final DateTimeFormatter DTF_YMDHMS_DASH_OS = buildDTF(FM_DTF_YdMdDHcMcSOs);
+    public static final DateTimeFormatter DTF_YMDHMS_SLASH_OS = buildDTF(FM_DTF_YsMsDHcMcSOs);
+    public static final DateTimeFormatter DTF_YMDHMS_DOT_OS = buildDTF(FM_DTF_YoMoDHcMcSOs);
+    public static final DateTimeFormatter DTF_YMDHMSS_DASH_OS = buildDTF(FM_DTF_YdMdDHcMcSSOs);
+    public static final DateTimeFormatter DTF_YMDHMSS_SLASH_OS = buildDTF(FM_DTF_YsMsDHcMcSSOs);
+    public static final DateTimeFormatter DTF_YMDHMSS_DOT_OS = buildDTF(FM_DTF_YoMoDHcMcSSOs);
+
 
     private static final Map<String, DateTimeFormatter> DTF_MAP = new HashMap<>();
 
@@ -483,6 +527,20 @@ public class DateTimePattern {
         DTF_MAP.put(FM_HoMzSzSz, DTF_HMSS_ZHD);
         DTF_MAP.put(FM_DTF_MzSz, DTF_MS_ZHD);
         DTF_MAP.put(FM_DTF_MzSzSz, DTF_MSS_ZHD);
+
+        DTF_MAP.put(FM_DTF_YdMdDHcMcSZo, DTF_YMDHMS_DASH_ZO);
+        DTF_MAP.put(FM_DTF_YsMsDHcMcSZo, DTF_YMDHMS_SLASH_ZO);
+        DTF_MAP.put(FM_DTF_YoMoDHcMcSZo, DTF_YMDHMS_DOT_ZO);
+        DTF_MAP.put(FM_DTF_YdMdDHcMcSSZo, DTF_YMDHMSS_DASH_ZO);
+        DTF_MAP.put(FM_DTF_YsMsDHcMcSSZo, DTF_YMDHMSS_SLASH_ZO);
+        DTF_MAP.put(FM_DTF_YoMoDHcMcSSZo, DTF_YMDHMSS_DOT_ZO);
+        DTF_MAP.put(FM_DTF_YdMdDHcMcSOs, DTF_YMDHMS_DASH_OS);
+        DTF_MAP.put(FM_DTF_YsMsDHcMcSOs, DTF_YMDHMS_SLASH_OS);
+        DTF_MAP.put(FM_DTF_YoMoDHcMcSOs, DTF_YMDHMS_DOT_OS);
+        DTF_MAP.put(FM_DTF_YdMdDHcMcSSOs, DTF_YMDHMSS_DASH_OS);
+        DTF_MAP.put(FM_DTF_YsMsDHcMcSSOs, DTF_YMDHMSS_SLASH_OS);
+        DTF_MAP.put(FM_DTF_YoMoDHcMcSSOs, DTF_YMDHMSS_DOT_OS);
+
     }
 
     /*###################################################################################
@@ -547,10 +605,56 @@ public class DateTimePattern {
     public static String forDTF(final String dateTime) {
         if (S.isBlank(dateTime)) return null;
         int length = dateTime.length();
-        if (length < 3 || length > 25) return null;
+        if (length < 3) return null;
 
         DateTimeSeparator dts = null;
         String format = null;
+
+        /*
+         处理带时区偏移量或时区的时间串
+         999-1-2 6:0:6.5 [Asia/Dubai +04:00]
+         999-1-2 6:0:6.5 [+04:00]
+         999-1-2 6:0:6 [Asia/Dubai +04:00]
+         999-1-2 6:0:6 [+04:00]
+         */
+        if (length >= 16 && dateTime.endsWith("]")) {
+            dts = checkSeparatorWithZone(dateTime);
+            if (dts == null) return null;
+            switch (dts) {
+                case DASH_COLON:
+                    format = matchPattern(YdMdDHcMcSZo, dateTime, FM_DTF_YdMdDHcMcSZo);
+                    if (format != null) return format;
+                    return matchPattern(YdMdDHcMcSOs, dateTime, FM_DTF_YdMdDHcMcSOs);
+                case DASH_COLON_DOT:
+                    format = matchPattern(YdMdDHcMcSSZo, dateTime, FM_DTF_YdMdDHcMcSSZo);
+                    if (format != null) return format;
+                    return matchPattern(YdMdDHcMcSSOs, dateTime, FM_DTF_YdMdDHcMcSSOs);
+                case SLASH_COLON:
+                    format = matchPattern(YsMsDHcMcSZo, dateTime, FM_DTF_YsMsDHcMcSZo);
+                    if (format != null) return format;
+                    return matchPattern(YsMsDHcMcSOs, dateTime, FM_DTF_YsMsDHcMcSOs);
+                case SLASH_COLON_DOT:
+                    format = matchPattern(YsMsDHcMcSSZo, dateTime, FM_DTF_YsMsDHcMcSSZo);
+                    if (format != null) return format;
+                    return matchPattern(YsMsDHcMcSSOs, dateTime, FM_DTF_YsMsDHcMcSSOs);
+                case DOT_COLON:
+                    format = matchPattern(YoMoDHcMcSZo, dateTime, FM_DTF_YoMoDHcMcSZo);
+                    if (format != null) return format;
+                    return matchPattern(YoMoDHcMcSOs, dateTime, FM_DTF_YoMoDHcMcSOs);
+                case DOT_COLON_DOT:
+                    format = matchPattern(YoMoDHcMcSSZo, dateTime, FM_DTF_YoMoDHcMcSSZo);
+                    if (format != null) return format;
+                    return matchPattern(YoMoDHcMcSSOs, dateTime, FM_DTF_YoMoDHcMcSSOs);
+                default:
+                    return null;
+            }
+        }
+
+        /*
+         长度判断
+         */
+        if (length > 25) return null;
+
         /*
          处理带T和结尾是Z的时间串
          14位：999-1-2T3:4:5Z
@@ -560,7 +664,7 @@ public class DateTimePattern {
          13位：999-1-2T3:4:5
          23位：2024-01-02T00:00:00.000
          */
-        if (length >= 14 && length <= 24) {
+        if (length >= 13 && length <= 24) {
             if (dateTime.contains("T")) {
                 dts = checkSeparatorWithT(dateTime);
                 if (dts == null) return null;
@@ -1876,6 +1980,46 @@ public class DateTimePattern {
 
         return NO_SEPARATOR;
     }
+
+
+    /**
+     * 为带时区的时间串检测分隔符类型
+     *
+     * @param dateTime 时间串
+     * @return 时间串的分隔符类型
+     */
+    private static DateTimeSeparator checkSeparatorWithZone(String dateTime) {
+        if (dateTime.contains(":")) {
+            DateTimeSeparator dts = match(dateTime, CONTAIN)
+                    .when("-", v -> DASH_COLON)
+                    .when("/", v -> SLASH_COLON)
+                    .when(".", v -> DOT)     // 先检测 - / 再检测 . ，因为 秒与毫秒可能用 . 分隔
+                    .orElse(v -> COLON);
+
+            switch (dts) {
+                case DASH_COLON:
+                    return dateTime.contains(".") ? DASH_COLON_DOT : DASH_COLON;
+                case SLASH_COLON:
+                    return dateTime.contains(".") ? SLASH_COLON_DOT : SLASH_COLON;
+                case DOT:
+                    String tmpDateTime = dateTime.substring(0, dateTime.indexOf("["));
+                    DateTimeSeparator dtsFromColon = getDtsFromColonDotPosition(colonDotPosition(tmpDateTime));
+                    if (dtsFromColon == null) return null;
+                    switch (dtsFromColon) {
+                        case DOT_COLON:
+                        case DOT_COLON_DOT:
+                            return dtsFromColon;
+                        default:
+                            return null;    // 不合法的时间串
+                    }
+                default:
+                    return null;        // 不合法的时间串
+            }
+        }
+
+        return null;
+    }
+
 
     /**
      * 针对特定情况的快速检测分隔符类型

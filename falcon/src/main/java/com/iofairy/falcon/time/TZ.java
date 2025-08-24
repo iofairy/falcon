@@ -27,7 +27,9 @@ import java.util.stream.Collectors;
  * 时区
  *
  * @since 0.1.0
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.time.TZ} instead
  */
+@Deprecated
 public class TZ {
     /**
      * All Available Zone Ids.

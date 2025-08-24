@@ -22,12 +22,14 @@ import java.time.temporal.TemporalAmount;
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.iofairy.falcon.misc.Preconditions.*;
+import static com.iofairy.validator.Preconditions.*;
 /**
  * ChronoInterval
  *
  * @since 0.1.0
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.time.ChronoInterval} instead
  */
+@Deprecated
 public interface ChronoInterval extends TemporalAmount, Serializable {
 
     /**

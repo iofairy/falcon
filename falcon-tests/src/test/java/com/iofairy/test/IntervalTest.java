@@ -816,7 +816,8 @@ public class IntervalTest {
         System.out.println(between4);    // 1年9月30天23时59分59秒13毫秒896微秒500纳秒
 
         DateTime<LocalDateTime> dt1 = between1.plusTo(DateTime.of(ldt1));
-        DateTime<Calendar> dt2 = between2.minusFrom(DateTime.of(calendar1));
+        DateTime<Calendar> temporal = DateTime.of(calendar1);
+        DateTime<Calendar> dt2 = between2.minusFrom(temporal);
         DateTime<Date> dt3 = between3.plusTo(DateTime.of(date1));
         DateTime<Instant> dt4 = between4.minusFrom(DateTime.of(instant2));
         System.out.println(dt1.dtDetail());     // 2022-06-10 03:33:10.000896500 [周五]
@@ -839,15 +840,15 @@ public class IntervalTest {
         ZonedDateTime fromZDT = LocalDateTime.of(2022, 2, 10, 3, 0).atZone(TZ.NEW_YORK);
         ZonedDateTime toZDT = LocalDateTime.of(2022, 6, 10, 3, 0).atZone(TZ.NEW_YORK);
         /*
-         * dateDT
-         * datetime: 1900-01-01 00:00:00.000+0800 （这里的+0800是当前默认时区的偏移量，不是 当时默认时区的偏移量，当时偏移量应为：+08:05:43），这应该是 date 的bug。
-         * localDateTime: 1900-01-01 00:05:43.000
+         dateDT
+         datetime: 1900-01-01 00:00:00.000+0800 （这里的+0800是当前默认时区的偏移量，不是 当时默认时区的偏移量，当时偏移量应为：+08:05:43），这应该是 date 的bug。
+         localDateTime: 1900-01-01 00:05:43.000
          */
         DateTime<Date> dateDT = DateTime.of(Try.tcf(() -> new SimpleDateFormat("yyyy-MM-dd").parse("1900-1-1"), false));
         /*
-         * fromDT1
-         * datetime: 1899-12-31 23:54:17.000+0800 （这里的+0800是当前默认时区的偏移量，不是 当时默认时区的偏移量，当时偏移量应为：+08:05:43），这应该是 date 的bug。
-         * localDateTime: 1900-01-01 00:00:00.000
+         fromDT1
+         datetime: 1899-12-31 23:54:17.000+0800 （这里的+0800是当前默认时区的偏移量，不是 当时默认时区的偏移量，当时偏移量应为：+08:05:43），这应该是 date 的bug。
+         localDateTime: 1900-01-01 00:00:00.000
          */
         DateTime<Date> fromDT1 = DateTime.parseDate("1900-1-1");
         DateTime<ZonedDateTime> toDT1 = DateTime.of(LocalDateTime.of(2009, 7, 6, 0, 0).atZone(TZ.DEFAULT_ZONE));
@@ -1234,6 +1235,32 @@ public class IntervalTest {
         assertEquals("6973", interval1.unitExactString(ChronoUnit.SECONDS));
         assertEquals("6973", interval1.unitExactString(ChronoUnit.SECONDS, 6));
 
+    }
+
+
+    @Test
+    public void testFormat() {
+        SignedInterval signedInterval = SignedInterval.of(-1, 1, -240, 1, 1, -2, 530, 1, 2, 1);
+        Interval interval = Interval.of(1, 3, 1, 3, 200, -650, 0, 900, 2, 2);
+        System.out.println(signedInterval.toFullString());
+        System.out.println(interval.toFullString());
+        System.out.println("============================================================");
+        String format1 = signedInterval.format("c'c' y年 M'M' d天");
+        String format2 = interval.format("c'c' y年 M'M' d天");
+        String format3 = signedInterval.format("ty'y'ear's' tM2'm'onth's' td3'd' tH小时");
+        String format4 = interval.format("ty'y'ear's' tM2'm'onth's' td3'd' tH小时");
+        String format5 = signedInterval.format("'c c'");
+        System.out.println(format1);
+        System.out.println(format2);
+        System.out.println(format3);
+        System.out.println(format4);
+        System.out.println(format5);
+
+        assertEquals(format1, "-1c 1年 -240M 1天");
+        assertEquals(format2, "1c 3年 1M 3天");
+        assertEquals(format3, "-118years -1427.97months -43462.811d -1043107小时");
+        assertEquals(format4, "103years 1237.36months 37661.296d 903871小时");
+        assertEquals(format5, "'-1 -1'");
     }
 
     private void throwException() {

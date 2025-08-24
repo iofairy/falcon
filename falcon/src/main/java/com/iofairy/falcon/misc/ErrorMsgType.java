@@ -19,7 +19,9 @@ package com.iofairy.falcon.misc;
  * 错误的消息类型
  *
  * @since 0.5.0
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.validator.ErrorMsgType} instead
  */
+@Deprecated
 public enum ErrorMsgType {
     NULL("null", "non-null"),
     NOT_NULL("non-null", "null"),

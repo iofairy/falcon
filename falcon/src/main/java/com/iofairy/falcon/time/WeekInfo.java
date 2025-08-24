@@ -1,6 +1,6 @@
 package com.iofairy.falcon.time;
 
-import com.iofairy.falcon.os.OS;
+import com.iofairy.os.OS;
 import com.iofairy.top.S;
 
 import java.time.DayOfWeek;
@@ -14,13 +14,15 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import static com.iofairy.falcon.misc.Preconditions.*;
+import static com.iofairy.validator.Preconditions.*;
 
 /**
  * Week information for the specified {@link WeekFields} and {@link LocalDate}
  *
  * @since 0.4.8
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.time.WeekInfo} instead
  */
+@Deprecated
 public class WeekInfo {
     static final Pattern Y = Pattern.compile("Y(?!'(?<='Y'))");
     static final Pattern M = Pattern.compile("M(?!'(?<='M'))");

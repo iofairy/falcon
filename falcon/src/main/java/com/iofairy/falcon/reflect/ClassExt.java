@@ -15,7 +15,7 @@
  */
 package com.iofairy.falcon.reflect;
 
-import com.iofairy.falcon.os.OS;
+import com.iofairy.os.OS;
 import com.iofairy.top.G;
 import com.iofairy.top.S;
 
@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.iofairy.falcon.os.JavaVersion.*;
+import static com.iofairy.os.JavaVersion.*;
 
 /**
  * Class info extension <br>

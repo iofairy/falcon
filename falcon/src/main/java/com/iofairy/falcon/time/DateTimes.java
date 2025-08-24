@@ -24,6 +24,8 @@ import com.iofairy.tuple.Tuple2;
 import java.math.BigInteger;
 import java.time.*;
 import java.time.chrono.ChronoLocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
@@ -33,13 +35,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static com.iofairy.falcon.misc.Preconditions.*;
+import static com.iofairy.validator.Preconditions.*;
 
 /**
  * DateTime Utils
  *
  * @since 0.3.0
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.time.DateTimes} instead
  */
+@Deprecated
 public final class DateTimes {
     /**
      * Supported temporal for {@code daysOfMonth} methods.
@@ -302,6 +306,25 @@ public final class DateTimes {
     public static Date clone(Date date) {
         if (date == null) return null;
         return (Date) date.clone();
+    }
+
+    /**
+     * Add TimeZone to given DateTimeFormatter
+     *
+     * @param formatter DateTimeFormatter
+     * @return DateTimeFormatter with TimeZone
+     * @since 0.6.0
+     */
+    public static DateTimeFormatter withTimeZone(DateTimeFormatter formatter) {
+        return new DateTimeFormatterBuilder()
+                .append(formatter)
+                .optionalStart()
+                .appendLiteral(' ')
+                .appendLiteral('[')
+                .parseCaseSensitive()
+                .appendZoneRegionId()
+                .appendLiteral(']')
+                .toFormatter();
     }
 
     /**

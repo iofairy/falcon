@@ -15,20 +15,22 @@
  */
 package com.iofairy.falcon.time;
 
-import com.iofairy.falcon.os.OS;
+import com.iofairy.os.OS;
 
 import java.time.*;
 import java.time.temporal.*;
 import java.util.*;
 
 import static java.time.temporal.ChronoUnit.*;
-import static com.iofairy.falcon.misc.Preconditions.*;
+import static com.iofairy.validator.Preconditions.*;
 
 /**
  * Interval
  *
  * @since 0.0.2
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.time.Interval} instead
  */
+@Deprecated
 public class Interval extends SignedInterval {
     private static final long serialVersionUID = 700005886057265L;
 

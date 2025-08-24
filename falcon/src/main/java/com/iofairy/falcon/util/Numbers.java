@@ -15,7 +15,7 @@
  */
 package com.iofairy.falcon.util;
 
-import com.iofairy.falcon.os.OS;
+import com.iofairy.os.OS;
 import com.iofairy.si.SI;
 import com.iofairy.top.O;
 import com.iofairy.top.S;
@@ -25,10 +25,9 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Objects;
 import java.util.Random;
 
-import static com.iofairy.falcon.misc.Preconditions.*;
+import static com.iofairy.validator.Preconditions.*;
 
 /**
  * Number Utils
@@ -361,7 +360,9 @@ public class Numbers {
      * @return Quotient.
      * @throws NullPointerException if the dividend or divisor is null.
      * @since 0.4.10
+     * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.top.O#divide(Number, Number, int, RoundingMode, boolean)} instead
      */
+    @Deprecated
     public static BigDecimal divide(Number dividend, Number divisor, int scale, RoundingMode roundingMode, boolean alwaysSetScale) {
         checkHasNullNPE(args(dividend, divisor), args("dividend", "divisor"));
 
@@ -395,7 +396,9 @@ public class Numbers {
      * @return Quotient.
      * @throws NullPointerException if the dividend or divisor is null.
      * @since 0.4.10
+     * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.top.O#divide(Number, Number, int, boolean)} instead
      */
+    @Deprecated
     public static BigDecimal divide(Number dividend, Number divisor, int scale, boolean alwaysSetScale) {
         return divide(dividend, divisor, scale, RoundingMode.HALF_UP, alwaysSetScale);
     }
@@ -411,7 +414,9 @@ public class Numbers {
      * @return Quotient.
      * @throws NullPointerException if the dividend or divisor is null.
      * @since 0.4.10
+     * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.top.O#divide(Number, Number, boolean)} instead
      */
+    @Deprecated
     public static BigDecimal divide(Number dividend, Number divisor, boolean alwaysSetScale) {
         return divide(dividend, divisor, 6, RoundingMode.HALF_UP, alwaysSetScale);
     }
@@ -426,7 +431,9 @@ public class Numbers {
      * @return Quotient.
      * @throws NullPointerException if the dividend or divisor is null.
      * @since 0.4.10
+     * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.top.O#divide(Number, Number, int, RoundingMode)} instead
      */
+    @Deprecated
     public static BigDecimal divide(Number dividend, Number divisor, int scale, RoundingMode roundingMode) {
         return divide(dividend, divisor, scale, roundingMode, true);
     }
@@ -440,7 +447,9 @@ public class Numbers {
      * @return Quotient.
      * @throws NullPointerException if the dividend or divisor is null.
      * @since 0.4.10
+     * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.top.O#divide(Number, Number, int)} instead
      */
+    @Deprecated
     public static BigDecimal divide(Number dividend, Number divisor, int scale) {
         return divide(dividend, divisor, scale, RoundingMode.HALF_UP);
     }
@@ -453,7 +462,9 @@ public class Numbers {
      * @return Quotient.
      * @throws NullPointerException if the dividend or divisor is null.
      * @since 0.4.10
+     * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.top.O#divide(Number, Number)} instead
      */
+    @Deprecated
     public static BigDecimal divide(Number dividend, Number divisor) {
         return divide(dividend, divisor, 6, RoundingMode.HALF_UP);
     }
@@ -472,7 +483,9 @@ public class Numbers {
      * @return Quotient.
      * @throws NullPointerException if the dividend or divisor is null.
      * @since 0.5.12
+     * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.top.O#dividePower(Number, Number, int, RoundingMode, boolean)} instead
      */
+    @Deprecated
     public static Number dividePower(Number dividend, Number divisor, int scale, RoundingMode roundingMode, boolean alwaysSetScale) {
         checkHasNullNPE(args(dividend, divisor), args("dividend", "divisor"));
 
@@ -513,7 +526,9 @@ public class Numbers {
      * @return Quotient.
      * @throws NullPointerException if the dividend or divisor is null.
      * @since 0.5.12
+     * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.top.O#dividePower(Number, Number, int, boolean)} instead
      */
+    @Deprecated
     public static Number dividePower(Number dividend, Number divisor, int scale, boolean alwaysSetScale) {
         return dividePower(dividend, divisor, scale, RoundingMode.HALF_UP, alwaysSetScale);
     }
@@ -529,7 +544,9 @@ public class Numbers {
      * @return Quotient.
      * @throws NullPointerException if the dividend or divisor is null.
      * @since 0.5.12
+     * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.top.O#dividePower(Number, Number, boolean)} instead
      */
+    @Deprecated
     public static Number dividePower(Number dividend, Number divisor, boolean alwaysSetScale) {
         return dividePower(dividend, divisor, 6, RoundingMode.HALF_UP, alwaysSetScale);
     }
@@ -544,7 +561,9 @@ public class Numbers {
      * @return Quotient.
      * @throws NullPointerException if the dividend or divisor is null.
      * @since 0.5.12
+     * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.top.O#dividePower(Number, Number, int, RoundingMode)} instead
      */
+    @Deprecated
     public static Number dividePower(Number dividend, Number divisor, int scale, RoundingMode roundingMode) {
         return dividePower(dividend, divisor, scale, roundingMode, true);
     }
@@ -558,7 +577,9 @@ public class Numbers {
      * @return Quotient.
      * @throws NullPointerException if the dividend or divisor is null.
      * @since 0.5.12
+     * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.top.O#dividePower(Number, Number, int)} instead
      */
+    @Deprecated
     public static Number dividePower(Number dividend, Number divisor, int scale) {
         return dividePower(dividend, divisor, scale, RoundingMode.HALF_UP);
     }
@@ -571,7 +592,9 @@ public class Numbers {
      * @return Quotient.
      * @throws NullPointerException if the dividend or divisor is null.
      * @since 0.5.12
+     * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.top.O#dividePower(Number, Number)} instead
      */
+    @Deprecated
     public static Number dividePower(Number dividend, Number divisor) {
         return dividePower(dividend, divisor, 6, RoundingMode.HALF_UP);
     }

@@ -15,7 +15,7 @@
  */
 package com.iofairy.falcon.fs;
 
-import com.iofairy.falcon.os.OS;
+import com.iofairy.os.OS;
 import com.iofairy.string.Ascii;
 import com.iofairy.top.G;
 import com.iofairy.top.S;

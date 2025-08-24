@@ -4,7 +4,6 @@ import com.iofairy.falcon.time.DTC;
 import com.iofairy.falcon.time.DateTime;
 import com.iofairy.falcon.time.DateTimes;
 import com.iofairy.falcon.time.TZ;
-import com.iofairy.falcon.util.DateTimeUtils;
 import com.iofairy.top.G;
 import com.iofairy.tuple.Tuple2;
 import org.junit.jupiter.api.Test;
@@ -327,10 +326,6 @@ public class DateTimesTest {
         assertEquals("2019-12-31 22:01:50", sdf.format(utcCalendar.getTime()));
         System.out.println("-------------------------");
 
-        Calendar calendar = DateTimeUtils.calendarToLocal(utcCalendar);
-        System.out.println("calendar: \n" + calendar);
-        System.out.println("calendar date: \n" + sdf.format(calendar.getTime()));
-        assertEquals("2020-01-01 06:01:50", sdf.format(calendar.getTime()));
     }
 
     @Test
@@ -352,11 +347,6 @@ public class DateTimesTest {
         assertEquals("2019-12-31 22:01:50", sdf.format(utcCalendar.getTime()));
         System.out.println("-------------------------");
 
-        // ZoneId.of("Australia/Victoria")  +11:00
-        Calendar calendar = DateTimeUtils.calendarToTZ(utcCalendar, ZoneId.of("Australia/Victoria"));
-        System.out.println("calendar: \n" + calendar);
-        System.out.println("calendar date: \n" + sdf.format(calendar.getTime()));
-        assertEquals("2020-01-01 09:01:50", sdf.format(calendar.getTime()));
     }
 
     @Test
@@ -378,11 +368,6 @@ public class DateTimesTest {
         assertEquals("2019-12-31 22:01:50", sdf.format(localCalendar.getTime()));
         System.out.println("-------------------------");
 
-        // ZoneId.of("Australia/Victoria")  +11:00
-        Calendar calendar = DateTimeUtils.calendarToTZ(localCalendar, ZoneId.of("Australia/Victoria"));
-        System.out.println("calendar: \n" + calendar);
-        System.out.println("calendar date: \n" + sdf.format(calendar.getTime()));
-        assertEquals("2020-01-01 01:01:50", sdf.format(calendar.getTime()));
     }
 
     @Test

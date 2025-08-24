@@ -15,7 +15,7 @@
  */
 package com.iofairy.falcon.time;
 
-import com.iofairy.falcon.os.OS;
+import com.iofairy.os.OS;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -24,13 +24,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.time.temporal.ChronoUnit.*;
-import static com.iofairy.falcon.misc.Preconditions.*;
+import static com.iofairy.validator.Preconditions.*;
 
 /**
  * 对时间进行取整
  *
  * @since 0.3.0
  */
+@Deprecated
 class DateTimeRound {
     /**
      * Supported units for {@code round} methods.

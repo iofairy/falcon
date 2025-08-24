@@ -35,7 +35,6 @@ module iofairy.falcon {
     exports com.iofairy.falcon.time;
     exports com.iofairy.falcon.unit;
     exports com.iofairy.falcon.util;
-    exports com.iofairy.falcon.uuid;
     exports com.iofairy.falcon.zip;
 
 }

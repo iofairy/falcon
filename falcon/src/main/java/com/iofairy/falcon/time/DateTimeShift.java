@@ -25,13 +25,14 @@ import java.util.stream.Collectors;
 
 import static com.iofairy.range.IntervalType.CLOSED;
 import static java.time.temporal.ChronoUnit.*;
-import static com.iofairy.falcon.misc.Preconditions.*;
+import static com.iofairy.validator.Preconditions.*;
 
 /**
  * 偏移时间，并记录每次偏移后的时间
  *
  * @since 0.3.0
  */
+@Deprecated
 class DateTimeShift {
     /**
      * Supported units for {@code datesByShift} and {@code datesFromRange} methods.

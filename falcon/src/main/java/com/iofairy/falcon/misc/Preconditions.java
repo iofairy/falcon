@@ -31,11 +31,13 @@ import static com.iofairy.falcon.misc.ErrorMsgType.*;
  *
  * <b>NOTE: </b>You'd better import this class first using <b>static import</b>:
  * <blockquote><pre>{@code
- * import static com.iofairy.falcon.misc.Preconditions.*;
+ * import static com.iofairy.validator.Preconditions.*;
  * }</pre></blockquote>
  *
  * @since 0.5.0
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.validator.Preconditions} instead
  */
+@Deprecated
 public final class Preconditions {
 
     private final static String[] NULL_STR_ARRAY = null;

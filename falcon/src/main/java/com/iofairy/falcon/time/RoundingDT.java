@@ -20,7 +20,9 @@ package com.iofairy.falcon.time;
  * 对日期取整
  *
  * @since 0.3.0
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.time.RoundingDT} instead
  */
+@Deprecated
 public enum RoundingDT {
     /**
      * 对日期向上取整

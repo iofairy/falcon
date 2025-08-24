@@ -19,7 +19,9 @@ package com.iofairy.falcon.time;
  * 时间串分隔符的类型
  *
  * @since 0.0.2
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.time.DateTimeSeparator} instead
  */
+@Deprecated
 public enum DateTimeSeparator {
     /**
      * 带 - 的日期串<br>

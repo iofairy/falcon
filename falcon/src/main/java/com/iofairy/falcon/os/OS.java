@@ -26,7 +26,9 @@ import java.util.Locale;
  * 获取操作系统信息类
  *
  * @since 0.0.1
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.os.OS} instead
  */
+@Deprecated
 public final class OS {
     /**
      * Operating System name. <br>

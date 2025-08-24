@@ -18,7 +18,7 @@ package com.iofairy.falcon.io;
 import java.io.*;
 import java.util.*;
 
-import static com.iofairy.falcon.misc.Preconditions.*;
+import static com.iofairy.validator.Preconditions.*;
 
 /**
  * A <code>MultiByteArrayInputStream</code> contains an internal buffer that contains bytes that

@@ -1,10 +1,10 @@
 package com.iofairy.falcon.unit;
 
-import com.iofairy.falcon.os.OS;
+import com.iofairy.os.OS;
 
 import java.math.BigInteger;
 
-import static com.iofairy.falcon.misc.Preconditions.*;
+import static com.iofairy.validator.Preconditions.*;
 
 /**
  * 字节单位相互转换的因子（系数）

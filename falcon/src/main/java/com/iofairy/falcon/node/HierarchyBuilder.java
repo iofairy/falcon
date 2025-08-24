@@ -22,7 +22,7 @@ import com.iofairy.top.G;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.iofairy.falcon.misc.Preconditions.*;
+import static com.iofairy.validator.Preconditions.*;
 
 /**
  * 层级树构造器

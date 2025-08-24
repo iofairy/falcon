@@ -16,7 +16,7 @@
 package com.iofairy.falcon.time;
 
 import com.iofairy.annos.Beta;
-import com.iofairy.falcon.os.OS;
+import com.iofairy.os.OS;
 import com.iofairy.si.SI;
 import com.iofairy.top.G;
 import com.iofairy.tuple.Tuple;
@@ -32,22 +32,18 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-import static com.iofairy.falcon.misc.Preconditions.*;
-import static java.util.concurrent.TimeUnit.DAYS;
-import static java.util.concurrent.TimeUnit.HOURS;
-import static java.util.concurrent.TimeUnit.MICROSECONDS;
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.MINUTES;
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static com.iofairy.validator.Preconditions.*;
+import static java.util.concurrent.TimeUnit.*;
 
 /**
  * Stopwatch <br>
  * 秒表
  *
  * @since 0.5.0
+ * @deprecated since <b>Falcon v0.6.0</b>，use {@link com.iofairy.time.Stopwatch} instead
  */
 @Beta
+@Deprecated
 public class Stopwatch {
     private long startTick;
     private long lastMarkTick;
