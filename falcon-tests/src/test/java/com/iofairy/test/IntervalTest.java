@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version 1.0
  * @date 2021/10/1 8:44
  */
+@Deprecated
 public class IntervalTest {
     @Test
     public void testSignedInterval() {

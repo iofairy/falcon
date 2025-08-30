@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @version 1.0
  * @date 2021/10/1 20:54
  */
+@Deprecated
 public class DateTimePatternTest {
     @Test
     public void testForDate() {

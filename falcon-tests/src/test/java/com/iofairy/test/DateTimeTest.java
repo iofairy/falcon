@@ -25,6 +25,7 @@ import static com.iofairy.range.IntervalType.*;
  * @version 1.0
  * @date 2022/7/24 21:57
  */
+@Deprecated
 public class DateTimeTest {
 
     @Test

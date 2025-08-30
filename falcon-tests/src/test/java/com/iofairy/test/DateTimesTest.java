@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author GG
  * @version 1.0
  */
+@Deprecated
 public class DateTimesTest {
 
     @Test

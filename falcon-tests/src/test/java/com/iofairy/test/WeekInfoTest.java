@@ -18,6 +18,7 @@ import static com.iofairy.falcon.time.DTC.*;
  * @author GG
  * @version 1.0
  */
+@Deprecated
 public class WeekInfoTest {
 
     @Test

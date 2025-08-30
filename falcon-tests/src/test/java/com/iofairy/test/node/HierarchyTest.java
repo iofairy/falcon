@@ -3,7 +3,7 @@ package com.iofairy.test.node;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iofairy.falcon.node.HierarchyBuilder;
 import com.iofairy.falcon.node.TenantTree;
-import com.iofairy.falcon.time.DateTime;
+import com.iofairy.time.DateTime;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 
@@ -24,17 +24,17 @@ public class HierarchyTest {
     @SneakyThrows
     @Test
     public void testBuildTree() {
-        DateTime<Date> dateTime = DateTime.parseDate("2024/01/01 10:35:30");
+        DateTime dateTime = DateTime.parse("2024/01/01 10:35:30");
 
-        DateTime<Date> dateTime01 = dateTime.minusHours(5);
-        DateTime<Date> dateTime02 = dateTime.minusDays(1);
-        DateTime<Date> dateTime03 = dateTime.minusSeconds(50);
-        DateTime<Date> dateTime04 = dateTime.minusMinutes(-35);
-        DateTime<Date> dateTime05 = dateTime.plusHours(5);
-        DateTime<Date> dateTime06 = dateTime.plusDays(1);
-        DateTime<Date> dateTime07 = dateTime.plusSeconds(50);
+        DateTime dateTime01 = dateTime.minusHours(5);
+        DateTime dateTime02 = dateTime.minusDays(1);
+        DateTime dateTime03 = dateTime.minusSeconds(50);
+        DateTime dateTime04 = dateTime.minusMinutes(-35);
+        DateTime dateTime05 = dateTime.plusHours(5);
+        DateTime dateTime06 = dateTime.plusDays(1);
+        DateTime dateTime07 = dateTime.plusSeconds(50);
         Date dateTime08 = null;
-        DateTime<Date> dateTime09 = dateTime.plusMinutes(-20);
+        DateTime dateTime09 = dateTime.plusMinutes(-20);
 
         /*
           问题：
@@ -47,32 +47,32 @@ public class HierarchyTest {
           1、顶级部门的父ID 不应该是一个真实的部门ID。也就是不应该有一条记录的部门ID与顶级部门的父ID一致。
           2、不应该存在两个相同的部门ID。
          */
-        // Dept dept1 = new Dept(null, null, 0, "部门0", dateTime01.get());
-        Dept dept2 = new Dept(null, 0, 1, "部门1", dateTime02.get());
-        Dept dept3 = new Dept(null, null, 2, "部门2", dateTime03.get());
-        Dept dept4 = new Dept("tenant1", null, 3, "部门3", dateTime04.get());
-        Dept dept5 = new Dept("tenant1", 0, 4, "部门4", dateTime05.get());
-        Dept dept6 = new Dept("tenant2", null, 5, "部门5", dateTime06.get());
-        Dept dept7 = new Dept("tenant2", 0, 6, "部门6", dateTime07.get());
+        // Dept dept1 = new Dept(null, null, 0, "部门0", dateTime01.toDate());
+        Dept dept2 = new Dept(null, 0, 1, "部门1", dateTime02.toDate());
+        Dept dept3 = new Dept(null, null, 2, "部门2", dateTime03.toDate());
+        Dept dept4 = new Dept("tenant1", null, 3, "部门3", dateTime04.toDate());
+        Dept dept5 = new Dept("tenant1", 0, 4, "部门4", dateTime05.toDate());
+        Dept dept6 = new Dept("tenant2", null, 5, "部门5", dateTime06.toDate());
+        Dept dept7 = new Dept("tenant2", 0, 6, "部门6", dateTime07.toDate());
         Dept dept8 = new Dept("tenant2", 0, 7, "部门7", dateTime08);
-        Dept dept10 = new Dept(null, 1, 10, "部门10", dateTime09.get());
-        Dept dept11 = new Dept(null, 1, 11, "部门11", dateTime01.get());
+        Dept dept10 = new Dept(null, 1, 10, "部门10", dateTime09.toDate());
+        Dept dept11 = new Dept(null, 1, 11, "部门11", dateTime01.toDate());
         Dept dept12 = new Dept(null, 1, 12, "部门12", dateTime08);
-        Dept dept13 = new Dept(null, 2, 13, "部门13", dateTime09.get());
-        Dept dept14 = new Dept(null, 2, 14, "部门14", dateTime01.get());
-        Dept dept15 = new Dept("tenant1", 3, 15, "部门15", dateTime02.get());
+        Dept dept13 = new Dept(null, 2, 13, "部门13", dateTime09.toDate());
+        Dept dept14 = new Dept(null, 2, 14, "部门14", dateTime01.toDate());
+        Dept dept15 = new Dept("tenant1", 3, 15, "部门15", dateTime02.toDate());
         Dept dept16 = new Dept("tenant1", 3, 16, "部门16", dateTime08);
-        Dept dept17 = new Dept("tenant2", 5, 17, "部门17", dateTime03.get());
+        Dept dept17 = new Dept("tenant2", 5, 17, "部门17", dateTime03.toDate());
         Dept dept18 = new Dept("tenant2", 5, 18, "部门18", dateTime08);
-        Dept dept19 = new Dept("tenant2", 6, 19, "部门19", dateTime04.get());
-        Dept dept20 = new Dept("tenant2", 7, 20, "部门20", dateTime05.get());
-        Dept dept21 = new Dept("tenant2", 7, 21, "部门21", dateTime06.get());
+        Dept dept19 = new Dept("tenant2", 6, 19, "部门19", dateTime04.toDate());
+        Dept dept20 = new Dept("tenant2", 7, 20, "部门20", dateTime05.toDate());
+        Dept dept21 = new Dept("tenant2", 7, 21, "部门21", dateTime06.toDate());
         Dept dept22 = new Dept("tenant2", 7, 22, "部门22", dateTime08);
         Dept dept112 = new Dept(null, 12, 112, "部门112", dateTime08);
-        Dept dept113 = new Dept(null, 13, 113, "部门113", dateTime09.get());
+        Dept dept113 = new Dept(null, 13, 113, "部门113", dateTime09.toDate());
         Dept dept116 = new Dept("tenant1", 16, 116, "部门116", dateTime08);
-        Dept dept117 = new Dept("tenant2", 17, 117, "部门117", dateTime03.get());
-        Dept dept1110 = new Dept(null, 113, 1110, "部门1110", dateTime09.get());
+        Dept dept117 = new Dept("tenant2", 17, 117, "部门117", dateTime03.toDate());
+        Dept dept1110 = new Dept(null, 113, 1110, "部门1110", dateTime09.toDate());
 
         List<Dept> depts = Arrays.asList(
                 // dept1,
@@ -131,17 +131,17 @@ public class HierarchyTest {
     @SneakyThrows
     @Test
     public void testBuildTree1() {
-        DateTime<Date> dateTime = DateTime.parseDate("2024/01/01 10:35:30");
+        DateTime dateTime = DateTime.parse("2024/01/01 10:35:30");
 
-        DateTime<Date> dateTime01 = dateTime.minusHours(5);
-        DateTime<Date> dateTime02 = dateTime.minusDays(1);
-        DateTime<Date> dateTime03 = dateTime.minusSeconds(50);
-        DateTime<Date> dateTime04 = dateTime.minusMinutes(-35);
-        DateTime<Date> dateTime05 = dateTime.plusHours(5);
-        DateTime<Date> dateTime06 = dateTime.plusDays(1);
-        DateTime<Date> dateTime07 = dateTime.plusSeconds(50);
+        DateTime dateTime01 = dateTime.minusHours(5);
+        DateTime dateTime02 = dateTime.minusDays(1);
+        DateTime dateTime03 = dateTime.minusSeconds(50);
+        DateTime dateTime04 = dateTime.minusMinutes(-35);
+        DateTime dateTime05 = dateTime.plusHours(5);
+        DateTime dateTime06 = dateTime.plusDays(1);
+        DateTime dateTime07 = dateTime.plusSeconds(50);
         Date dateTime08 = null;
-        DateTime<Date> dateTime09 = dateTime.plusMinutes(-20);
+        DateTime dateTime09 = dateTime.plusMinutes(-20);
 
         /*
           问题：
@@ -154,32 +154,32 @@ public class HierarchyTest {
           1、顶级部门的父ID 不应该是一个真实的部门ID。也就是不应该有一条记录的部门ID与顶级部门的父ID一致。
           2、不应该存在两个相同的部门ID。
          */
-        // Dept dept1 = new Dept(null, null, 0, "部门0", dateTime01.get());
-        Dept1 dept2 = new Dept1(null, "0", "1", "部门1", dateTime02.get());
-        Dept1 dept3 = new Dept1(null, null, "2", "部门2", dateTime03.get());
-        Dept1 dept4 = new Dept1("tenant1", null, "3", "部门3", dateTime04.get());
-        Dept1 dept5 = new Dept1("tenant1", "0", "4", "部门4", dateTime05.get());
-        Dept1 dept6 = new Dept1("tenant2", null, "5", "部门5", dateTime06.get());
-        Dept1 dept7 = new Dept1("tenant2", "0", "6", "部门6", dateTime07.get());
+        // Dept dept1 = new Dept(null, null, 0, "部门0", dateTime01.toDate());
+        Dept1 dept2 = new Dept1(null, "0", "1", "部门1", dateTime02.toDate());
+        Dept1 dept3 = new Dept1(null, null, "2", "部门2", dateTime03.toDate());
+        Dept1 dept4 = new Dept1("tenant1", null, "3", "部门3", dateTime04.toDate());
+        Dept1 dept5 = new Dept1("tenant1", "0", "4", "部门4", dateTime05.toDate());
+        Dept1 dept6 = new Dept1("tenant2", null, "5", "部门5", dateTime06.toDate());
+        Dept1 dept7 = new Dept1("tenant2", "0", "6", "部门6", dateTime07.toDate());
         Dept1 dept8 = new Dept1("tenant2", "0", "7", "部门7", dateTime08);
-        Dept1 dept10 = new Dept1(null, "1", "10", "部门10", dateTime09.get());
-        Dept1 dept11 = new Dept1(null, "1", "11", "部门11", dateTime01.get());
+        Dept1 dept10 = new Dept1(null, "1", "10", "部门10", dateTime09.toDate());
+        Dept1 dept11 = new Dept1(null, "1", "11", "部门11", dateTime01.toDate());
         Dept1 dept12 = new Dept1(null, "1", "12", "部门12", dateTime08);
-        Dept1 dept13 = new Dept1(null, "2", "13", "部门13", dateTime09.get());
-        Dept1 dept14 = new Dept1(null, "2", "14", "部门14", dateTime01.get());
-        Dept1 dept15 = new Dept1("tenant1", "3", "15", "部门15", dateTime02.get());
+        Dept1 dept13 = new Dept1(null, "2", "13", "部门13", dateTime09.toDate());
+        Dept1 dept14 = new Dept1(null, "2", "14", "部门14", dateTime01.toDate());
+        Dept1 dept15 = new Dept1("tenant1", "3", "15", "部门15", dateTime02.toDate());
         Dept1 dept16 = new Dept1("tenant1", "3", "16", "部门16", dateTime08);
-        Dept1 dept17 = new Dept1("tenant2", "5", "17", "部门17", dateTime03.get());
+        Dept1 dept17 = new Dept1("tenant2", "5", "17", "部门17", dateTime03.toDate());
         Dept1 dept18 = new Dept1("tenant2", "5", "18", "部门18", dateTime08);
-        Dept1 dept19 = new Dept1("tenant2", "6", "19", "部门19", dateTime04.get());
-        Dept1 dept20 = new Dept1("tenant2", "7", "20", "部门20", dateTime05.get());
-        Dept1 dept21 = new Dept1("tenant2", "7", "21", "部门21", dateTime06.get());
+        Dept1 dept19 = new Dept1("tenant2", "6", "19", "部门19", dateTime04.toDate());
+        Dept1 dept20 = new Dept1("tenant2", "7", "20", "部门20", dateTime05.toDate());
+        Dept1 dept21 = new Dept1("tenant2", "7", "21", "部门21", dateTime06.toDate());
         Dept1 dept22 = new Dept1("tenant2", "7", "22", "部门22", dateTime08);
         Dept1 dept112 = new Dept1(null, "12", "112", "部门112", dateTime08);
-        Dept1 dept113 = new Dept1(null, "13", "113", "部门113", dateTime09.get());
+        Dept1 dept113 = new Dept1(null, "13", "113", "部门113", dateTime09.toDate());
         Dept1 dept116 = new Dept1("tenant1", "16", "116", "部门116", dateTime08);
-        Dept1 dept117 = new Dept1("tenant2", "17", "117", "部门117", dateTime03.get());
-        Dept1 dept1110 = new Dept1(null, "113", "1110", "部门1110", dateTime09.get());
+        Dept1 dept117 = new Dept1("tenant2", "17", "117", "部门117", dateTime03.toDate());
+        Dept1 dept1110 = new Dept1(null, "113", "1110", "部门1110", dateTime09.toDate());
 
         List<Dept1> depts = Arrays.asList(
                 // dept1,
@@ -243,46 +243,46 @@ public class HierarchyTest {
     @SneakyThrows
     @Test
     public void testBuildTreeDuplicateDept() {
-        DateTime<Date> dateTime = DateTime.parseDate("2024/01/01 10:35:30");
+        DateTime dateTime = DateTime.parse("2024/01/01 10:35:30");
 
-        DateTime<Date> dateTime01 = dateTime.minusHours(5);
-        DateTime<Date> dateTime02 = dateTime.minusDays(1);
-        DateTime<Date> dateTime03 = dateTime.minusSeconds(50);
-        DateTime<Date> dateTime04 = dateTime.minusMinutes(-35);
-        DateTime<Date> dateTime05 = dateTime.plusHours(5);
-        DateTime<Date> dateTime06 = dateTime.plusDays(1);
-        DateTime<Date> dateTime07 = dateTime.plusSeconds(50);
+        DateTime dateTime01 = dateTime.minusHours(5);
+        DateTime dateTime02 = dateTime.minusDays(1);
+        DateTime dateTime03 = dateTime.minusSeconds(50);
+        DateTime dateTime04 = dateTime.minusMinutes(-35);
+        DateTime dateTime05 = dateTime.plusHours(5);
+        DateTime dateTime06 = dateTime.plusDays(1);
+        DateTime dateTime07 = dateTime.plusSeconds(50);
         Date dateTime08 = null;
-        DateTime<Date> dateTime09 = dateTime.plusMinutes(-20);
+        DateTime dateTime09 = dateTime.plusMinutes(-20);
 
-        // Dept dept1 = new Dept(null, null, 0, "部门0", dateTime01.get());
-        Dept dept2 = new Dept(null, 0, 1, "部门1", dateTime02.get());
-        Dept dept3 = new Dept(null, null, 2, "部门2", dateTime03.get());
-        Dept dept4 = new Dept("tenant1", null, 3, "部门3", dateTime04.get());
-        Dept dept5 = new Dept("tenant1", 0, 4, "部门4", dateTime05.get());
-        Dept dept6 = new Dept("tenant2", null, 5, "部门5", dateTime06.get());
-        Dept dept7 = new Dept("tenant2", 0, 6, "部门6", dateTime07.get());
+        // Dept dept1 = new Dept(null, null, 0, "部门0", dateTime01.toDate());
+        Dept dept2 = new Dept(null, 0, 1, "部门1", dateTime02.toDate());
+        Dept dept3 = new Dept(null, null, 2, "部门2", dateTime03.toDate());
+        Dept dept4 = new Dept("tenant1", null, 3, "部门3", dateTime04.toDate());
+        Dept dept5 = new Dept("tenant1", 0, 4, "部门4", dateTime05.toDate());
+        Dept dept6 = new Dept("tenant2", null, 5, "部门5", dateTime06.toDate());
+        Dept dept7 = new Dept("tenant2", 0, 6, "部门6", dateTime07.toDate());
         Dept dept8 = new Dept("tenant2", 0, 7, "部门7", dateTime08);
-        Dept dept10 = new Dept(null, 1, 10, "部门10", dateTime09.get());
-        Dept dept11 = new Dept(null, 1, 11, "部门11", dateTime01.get());
+        Dept dept10 = new Dept(null, 1, 10, "部门10", dateTime09.toDate());
+        Dept dept11 = new Dept(null, 1, 11, "部门11", dateTime01.toDate());
         Dept dept12 = new Dept(null, 1, 12, "部门12", dateTime08);
         Dept dept12_dup = new Dept(null, 2, 12, "部门12_重复", dateTime08);
-        Dept dept13 = new Dept(null, 2, 13, "部门13", dateTime09.get());
-        Dept dept13_dup = new Dept(null, 2, 13, "部门13_重复", dateTime09.get());
-        Dept dept14 = new Dept(null, 2, 14, "部门14", dateTime01.get());
-        Dept dept15 = new Dept("tenant1", 3, 15, "部门15", dateTime02.get());
+        Dept dept13 = new Dept(null, 2, 13, "部门13", dateTime09.toDate());
+        Dept dept13_dup = new Dept(null, 2, 13, "部门13_重复", dateTime09.toDate());
+        Dept dept14 = new Dept(null, 2, 14, "部门14", dateTime01.toDate());
+        Dept dept15 = new Dept("tenant1", 3, 15, "部门15", dateTime02.toDate());
         Dept dept16 = new Dept("tenant1", 3, 16, "部门16", dateTime08);
-        Dept dept17 = new Dept("tenant2", 5, 17, "部门17", dateTime03.get());
+        Dept dept17 = new Dept("tenant2", 5, 17, "部门17", dateTime03.toDate());
         Dept dept18 = new Dept("tenant2", 5, 18, "部门18", dateTime08);
-        Dept dept19 = new Dept("tenant2", 6, 19, "部门19", dateTime04.get());
-        Dept dept20 = new Dept("tenant2", 7, 20, "部门20", dateTime05.get());
-        Dept dept21 = new Dept("tenant2", 7, 21, "部门21", dateTime06.get());
+        Dept dept19 = new Dept("tenant2", 6, 19, "部门19", dateTime04.toDate());
+        Dept dept20 = new Dept("tenant2", 7, 20, "部门20", dateTime05.toDate());
+        Dept dept21 = new Dept("tenant2", 7, 21, "部门21", dateTime06.toDate());
         Dept dept22 = new Dept("tenant2", 7, 22, "部门22", dateTime08);
         Dept dept112 = new Dept(null, 12, 112, "部门112", dateTime08);
-        Dept dept113 = new Dept(null, 13, 113, "部门113", dateTime09.get());
+        Dept dept113 = new Dept(null, 13, 113, "部门113", dateTime09.toDate());
         Dept dept116 = new Dept("tenant1", 16, 116, "部门116", dateTime08);
-        Dept dept117 = new Dept("tenant2", 17, 117, "部门117", dateTime03.get());
-        Dept dept1110 = new Dept(null, 113, 1110, "部门1110", dateTime09.get());
+        Dept dept117 = new Dept("tenant2", 17, 117, "部门117", dateTime03.toDate());
+        Dept dept1110 = new Dept(null, 113, 1110, "部门1110", dateTime09.toDate());
 
         List<Dept> depts = Arrays.asList(
                 // dept1,
@@ -347,17 +347,17 @@ public class HierarchyTest {
     @SneakyThrows
     @Test
     public void testBuildTreeParentIDNotExist() {
-        DateTime<Date> dateTime = DateTime.parseDate("2024/01/01 10:35:30");
+        DateTime dateTime = DateTime.parse("2024/01/01 10:35:30");
 
-        DateTime<Date> dateTime01 = dateTime.minusHours(5);
-        DateTime<Date> dateTime02 = dateTime.minusDays(1);
-        DateTime<Date> dateTime03 = dateTime.minusSeconds(50);
-        DateTime<Date> dateTime04 = dateTime.minusMinutes(-35);
-        DateTime<Date> dateTime05 = dateTime.plusHours(5);
-        DateTime<Date> dateTime06 = dateTime.plusDays(1);
-        DateTime<Date> dateTime07 = dateTime.plusSeconds(50);
+        DateTime dateTime01 = dateTime.minusHours(5);
+        DateTime dateTime02 = dateTime.minusDays(1);
+        DateTime dateTime03 = dateTime.minusSeconds(50);
+        DateTime dateTime04 = dateTime.minusMinutes(-35);
+        DateTime dateTime05 = dateTime.plusHours(5);
+        DateTime dateTime06 = dateTime.plusDays(1);
+        DateTime dateTime07 = dateTime.plusSeconds(50);
         Date dateTime08 = null;
-        DateTime<Date> dateTime09 = dateTime.plusMinutes(-20);
+        DateTime dateTime09 = dateTime.plusMinutes(-20);
 
         /*
           问题：
@@ -370,32 +370,32 @@ public class HierarchyTest {
           1、顶级部门的父ID 不应该是一个真实的部门ID。也就是不应该有一条记录的部门ID与顶级部门的父ID一致。
           2、不应该存在两个相同的部门ID。
          */
-        // Dept dept1 = new Dept(null, null, 0, "部门0", dateTime01.get());
-        Dept dept2 = new Dept(null, 0, 1, "部门1", dateTime02.get());
-        Dept dept3 = new Dept(null, null, 2, "部门2", dateTime03.get());
-        Dept dept4 = new Dept("tenant1", null, 3, "部门3", dateTime04.get());
-        Dept dept5 = new Dept("tenant1", 0, 4, "部门4", dateTime05.get());
-        Dept dept6 = new Dept("tenant2", null, 5, "部门5", dateTime06.get());
-        Dept dept7 = new Dept("tenant2", 0, 6, "部门6", dateTime07.get());
+        // Dept dept1 = new Dept(null, null, 0, "部门0", dateTime01.toDate());
+        Dept dept2 = new Dept(null, 0, 1, "部门1", dateTime02.toDate());
+        Dept dept3 = new Dept(null, null, 2, "部门2", dateTime03.toDate());
+        Dept dept4 = new Dept("tenant1", null, 3, "部门3", dateTime04.toDate());
+        Dept dept5 = new Dept("tenant1", 0, 4, "部门4", dateTime05.toDate());
+        Dept dept6 = new Dept("tenant2", null, 5, "部门5", dateTime06.toDate());
+        Dept dept7 = new Dept("tenant2", 0, 6, "部门6", dateTime07.toDate());
         Dept dept8 = new Dept("tenant2", 0, 7, "部门7", dateTime08);
-        Dept dept10 = new Dept(null, 1, 10, "部门10", dateTime09.get());
-        Dept dept11 = new Dept(null, 1, 11, "部门11", dateTime01.get());
+        Dept dept10 = new Dept(null, 1, 10, "部门10", dateTime09.toDate());
+        Dept dept11 = new Dept(null, 1, 11, "部门11", dateTime01.toDate());
         // Dept dept12 = new Dept(null, 1, 12, "部门12", dateTime08);
-        Dept dept13 = new Dept(null, 2, 13, "部门13", dateTime09.get());
-        Dept dept14 = new Dept(null, 2, 14, "部门14", dateTime01.get());
-        Dept dept15 = new Dept("tenant1", 3, 15, "部门15", dateTime02.get());
+        Dept dept13 = new Dept(null, 2, 13, "部门13", dateTime09.toDate());
+        Dept dept14 = new Dept(null, 2, 14, "部门14", dateTime01.toDate());
+        Dept dept15 = new Dept("tenant1", 3, 15, "部门15", dateTime02.toDate());
         Dept dept16 = new Dept("tenant1", 3, 16, "部门16", dateTime08);
-        Dept dept17 = new Dept("tenant2", 5, 17, "部门17", dateTime03.get());
+        Dept dept17 = new Dept("tenant2", 5, 17, "部门17", dateTime03.toDate());
         Dept dept18 = new Dept("tenant2", 5, 18, "部门18", dateTime08);
-        Dept dept19 = new Dept("tenant2", 6, 19, "部门19", dateTime04.get());
-        Dept dept20 = new Dept("tenant2", 7, 20, "部门20", dateTime05.get());
-        Dept dept21 = new Dept("tenant2", 7, 21, "部门21", dateTime06.get());
+        Dept dept19 = new Dept("tenant2", 6, 19, "部门19", dateTime04.toDate());
+        Dept dept20 = new Dept("tenant2", 7, 20, "部门20", dateTime05.toDate());
+        Dept dept21 = new Dept("tenant2", 7, 21, "部门21", dateTime06.toDate());
         Dept dept22 = new Dept("tenant2", 7, 22, "部门22", dateTime08);
         Dept dept112 = new Dept(null, 12, 112, "部门112", dateTime08);
-        Dept dept113 = new Dept(null, 13, 113, "部门113", dateTime09.get());
+        Dept dept113 = new Dept(null, 13, 113, "部门113", dateTime09.toDate());
         Dept dept116 = new Dept("tenant1", 16, 116, "部门116", dateTime08);
-        Dept dept117 = new Dept("tenant2", 17, 117, "部门117", dateTime03.get());
-        Dept dept1110 = new Dept(null, 113, 1110, "部门1110", dateTime09.get());
+        Dept dept117 = new Dept("tenant2", 17, 117, "部门117", dateTime03.toDate());
+        Dept dept1110 = new Dept(null, 113, 1110, "部门1110", dateTime09.toDate());
 
         List<Dept> depts = Arrays.asList(
                 // dept1,
