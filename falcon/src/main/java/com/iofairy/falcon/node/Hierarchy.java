@@ -29,7 +29,7 @@ import java.util.List;
  * import com.iofairy.falcon.node.Hierarchy;
  * import lombok.Data;
  *
- * @Data
+ * &#64;Data
  * public class DeptHierarchy extends Hierarchy<DeptHierarchy, Integer> {
  *     private String deptName;
  *     private String email;
@@ -55,8 +55,8 @@ import java.util.List;
  *
  *     static ObjectMapper mapper = new ObjectMapper();
  *
- *     @SneakyThrows
- *     @Test
+ *     &#64;SneakyThrows
+ *     &#64;Test
  *     public void testBuildTree() {
  *         DeptHierarchy dept1 = new DeptHierarchy(null, 0, 1, "部门1", "email1@aa.com");
  *         DeptHierarchy dept2 = new DeptHierarchy(null, null, 2, "部门2", "email2@aa.com");
